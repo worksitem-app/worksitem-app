@@ -1,9 +1,9 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/laravel",
+    "name": "worksitem/worksitem",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
-    "keywords": ["laravel", "framework"],
+    "description": "Worksitem — İnşaat maliyet hesaplama, BoQ (keşif) ve teklif yönetimi SaaS platformu. 60+ hesaplayıcı, AI destekli fiyat motoru, müteahhit iş akışı.",
+    "keywords": ["laravel", "insaat", "maliyet", "boq", "kesif", "teklif", "construction", "saas"],
     "license": "MIT",
     "require": {
         "php": "^8.3",
