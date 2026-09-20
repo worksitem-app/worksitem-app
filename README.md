@@ -1,5 +1,7 @@
 # Worksitem
 
+[![Tests](https://github.com/worksitem-app/worksitem-app/actions/workflows/tests.yml/badge.svg)](https://github.com/worksitem-app/worksitem-app/actions/workflows/tests.yml)
+
 > İnşaat maliyet hesaplama, keşif (BoQ) ve teklif yönetimi SaaS platformu.
 
 Türkiye'deki müteahhitler, mimarlar ve yapı profesyonelleri için geliştirilmiş bulut tabanlı maliyet ve teklif yönetim platformu. 60+ hesaplayıcı, AI destekli fiyat motoru ve müteahhit iş akışı ile inşaat öncesi hazırlık sürecini hızlandırır.
