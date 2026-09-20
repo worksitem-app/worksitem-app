@@ -26,3 +26,17 @@ Homestead.json
 Homestead.yaml
 Thumbs.db
 
+
+# Backup dosyaları (versiyon kontrolüne girmemeli)
+*.backup
+*.backup-*
+*.backup_*
+*.bak
+*.bak2
+*.bak3
+*.bak_*
+*.before-*
+*.price_check
+price_stage_*
+*.orig
+
