@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donatı Çap/Aralık Tahvil Hesabı | WORKSİTEM</title>
+    <meta name="description" content="Projede istenen demir çapı bulunmadığında mevcut donatının eşdeğer aralığını hesaplayın ve şantiyedeki donatı tahvilini planlayın.">
+    <link rel="canonical" href="https://worksitem.com/araclar/donati-tahvil-hesaplayici">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --bg: #0b0f17; --card-bg: #151c28; --border: #21262d; --yellow: #ffb700; --text: #f0f6fc; --muted: #8b949e; --cyan: #38bdf8; --red: #ef4444; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; overflow-x: hidden; }
+        .container { max-width: 1200px; margin: 40px auto; padding: 0 4%; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+        @media(max-width: 992px) { .container { grid-template-columns: 1fr; } }
+        .form-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 30px; margin-bottom: 20px; }
+        h1 { font-family: 'Bebas Neue'; font-size: 38px; color: #fff; margin-bottom: 10px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-size: 13px; font-weight: 700; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; }
+        .form-control { width: 100%; padding: 12px; border-radius: 6px; background: #0d1117; border: 1px solid var(--border); color: white; font-family: inherit; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .res-item { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px dashed var(--border); font-size: 14px; }
+        .res-item.total { border-bottom: none; font-size: 24px; font-weight: 800; color: var(--cyan); margin-top: 15px; }
+        .ai-box { background: rgba(56, 189, 248, 0.05); border: 1px solid var(--cyan); border-radius: 8px; padding: 20px; margin-top: 20px; }
+    </style>
+    <meta property="og:image" content="https://worksitem.com/brand/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://worksitem.com/brand/og-image.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <meta name="theme-color" content="#ffffff">
+</head>
+<body>
+    <x-site.contech-header />
+    <div class="container">
+        <div>
+            <h1>🔄 Donatı Tahvil Hesabı</h1>
+            <p style="color:var(--muted); font-size:14px; margin-bottom:30px;">Şantiyede projede istenen demir çapı bulunmadığında, mevcut demiri hangi aralıkla (cm) döşemeniz gerektiğini bulun.</p>
+            <div class="form-card">
+                <div style="border-bottom:1px solid var(--border); padding-bottom:10px; margin-bottom:15px; font-weight:700; color:var(--yellow);">PROJEDE İSTENEN (GEREKEN)</div>
+                <div class="grid-2">
+                    <div class="form-group"><label>Projedeki Demir Çapı (Ø)</label><input type="number" id="d1" class="form-control" value="12" oninput="calc()"></div>
+                    <div class="form-group"><label>Projedeki Döşeme Aralığı (cm)</label><input type="number" id="s1" class="form-control" value="15" oninput="calc()"></div>
+                </div>
+                
+                <div style="border-bottom:1px solid var(--border); padding-bottom:10px; margin-bottom:15px; font-weight:700; color:var(--cyan); margin-top:10px;">ŞANTİYEDE BULUNAN (MEVCUT)</div>
+                <div class="form-group"><label>Elinizdeki Demir Çapı (Ø)</label><input type="number" id="d2" class="form-control" value="14" oninput="calc()"></div>
+            </div>
+        </div>
+        <div>
+            <div class="form-card" style="border-color:var(--cyan); position:sticky; top:20px;">
+                <div style="font-family:'Bebas Neue'; font-size:24px; color:var(--cyan); margin-bottom:15px;">📊 STATİK ÇEVRİM SONUCU</div>
+                <div class="res-item"><span>Gereken Donatı Alanı</span> <strong id="r_area_req">0 cm²/m</strong></div>
+                <div class="res-item"><span>Mevcut Demirin Tekil Alanı</span> <strong id="r_area_new">0 cm²</strong></div>
+                <div class="res-item total"><span>YENİ DÖŞEME ARALIĞI</span> <span id="r_s2">0 cm</span></div>
+                
+                <div class="ai-box">
+                    <div style="color:var(--cyan); font-family:'Bebas Neue'; font-size:22px; margin-bottom:10px;">🤖 Statik Uyarıları</div>
+                    <ul id="ai_notes" style="font-size:13px; margin:0; padding-left:15px; line-height:1.6;"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <!-- STANDART KAİNTA LEAD HUNİSİ (CTA) -->
+        <div class="no-print" style="margin-top: 40px; padding: 30px; background: #f0fdf4; border: 2px solid #bbf7d0; border-radius: 16px; text-align: center;">
+            <h3 style="color: #166534; font-size: 20px; font-weight: 800; margin-bottom: 10px;">Hesaplamayı Yaptınız, Şimdi İşi Uzmanına Bırakın</h3>
+            <p style="color: #15803d; font-size: 14px; margin-bottom: 20px;">Kainta İnşaat mühendislerinden projenize özel resmi keşif ve bütçe teklifi alın.</p>
+            <a href="/maliyet-hesapla" style="display: inline-block; background: #166534; color: #fff; padding: 16px 32px; font-size: 16px; font-weight: 800; border-radius: 8px; text-decoration: none; box-shadow: 0 4px 10px rgba(22,101,52,0.3); transition: all 0.2s;">Ön maliyet hesabına geç →</a>
+        </div>
+    <script>
+                // --- MERKEZİ ÇŞB FİYAT MOTORU & KAİNTA ÇARPANI ---
+        const CSB_PRICES = {!! isset($SYSTEM_PRICES) ? $SYSTEM_PRICES : '{}' !!};
+        const KAINTA_MULTIPLIER = {!! isset($KAINTA_MULTIPLIER) ? $KAINTA_MULTIPLIER : 1.40 !!};
+
+        function getDbPrice(key, fallback) {
+            let baseCsbPrice = CSB_PRICES[key] !== undefined ? parseFloat(CSB_PRICES[key]) : fallback;
+            // ÇŞB Ham Fiyatı x 1.40 Kainta Çarpanı
+            return baseCsbPrice * KAINTA_MULTIPLIER; 
+        }
+        
+        function getRawCsbPrice(key, fallback) {
+            // Sadece ham ÇŞB maliyeti görmek istenirse (İhale modülü vb. için çarpanı yoksay)
+            return CSB_PRICES[key] !== undefined ? parseFloat(CSB_PRICES[key]) : fallback;
+        }
+        // ------------------------------------------------
+        function calc() {
+            let d1 = parseFloat(document.getElementById('d1').value) || 0; // mm
+            let s1 = parseFloat(document.getElementById('s1').value) || 0; // cm
+            let d2 = parseFloat(document.getElementById('d2').value) || 0; // mm
+
+            // Çapı cm'ye çevirip alanını buluyoruz (A = pi * d^2 / 4)
+            let area1 = Math.PI * Math.pow((d1/10), 2) / 4; 
+            let area2 = Math.PI * Math.pow((d2/10), 2) / 4;
+
+            // 1 metredeki (100 cm) toplam donatı alanı gereksinimi
+            let reqAreaPerMeter = (100 / s1) * area1;
+
+            // Yeni aralık = (Yeni Tekil Alan * 100) / Gereken Toplam Alan
+            let s2 = (area2 * 100) / reqAreaPerMeter;
+
+            document.getElementById('r_area_req').innerText = reqAreaPerMeter.toFixed(2) + ' cm²/m';
+            document.getElementById('r_area_new').innerText = area2.toFixed(2) + ' cm²';
+            
+            // Güvenli tarafta kalmak için aşağı yuvarlama yapıyoruz (Örn: 20.4 cm çıktıysa şantiyede 20 cm döşenir)
+            let safeSpacing = Math.floor(s2);
+            document.getElementById('r_s2').innerText = 'Ø' + d2 + ' / ' + safeSpacing + ' cm';
+
+            let notes = [];
+            notes.push("Matematiksel karşılık " + s2.toFixed(2) + " cm olsa da, güvenli tarafta kalmak için şantiyede aralık aşağıya (" + safeSpacing + " cm) yuvarlanmıştır.");
+            
+            if(safeSpacing > 30) {
+                notes.push("⚠️ DİKKAT: TS500 ve TBDY 2018 yönetmeliklerine göre döşemelerde/perdelerde maksimum donatı aralığı sınırları (genellikle 1.5 katı veya 20-30 cm) aşılmamalıdır. Yeni aralığınız çok geniş!");
+            }
+            if(d2 < d1) {
+                notes.push("Daha ince çaplı demire geçiş yaptınız. Bu durum aralığı sıklaştırarak beton yerleşimini (agregaların geçişini) zorlaştırabilir. Şantiyede vibratör kullanımına ekstra dikkat ediniz.");
+            }
+            notes.push("Tahvil işlemi statik müellif (proje mühendisi) onayı olmadan kesinlikle uygulanmamalıdır.");
+            
+            let notesBox = document.getElementById('ai_notes');
+            notesBox.innerHTML = '';
+            notes.forEach(n => { let li = document.createElement('li'); li.innerText = n; li.style.marginBottom = "5px"; notesBox.appendChild(li); });
+        }
+        document.addEventListener('DOMContentLoaded', calc);
+    </script>
+    <x-site.contech-footer />
+</body>
+</html>

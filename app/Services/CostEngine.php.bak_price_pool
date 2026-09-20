@@ -1,0 +1,28 @@
+<?php
+namespace App\Services;
+
+use App\Models\UnitPrice;
+use Illuminate\Support\Facades\Cache;
+
+class CostEngine
+{
+    /**
+     * Veritabanındaki tüm güncel birim fiyatları çeker.
+     * Performans için 60 dakika önbellekte (Cache) tutar.
+     */
+    public static function getGlobalPrices()
+    {
+        return Cache::remember('global_system_prices', 3600, function () {
+            // Veritabanından çek ve Key => Price şeklinde basit bir JSON objesine dönüştür
+            return UnitPrice::pluck('price', 'key')->toArray();
+        });
+    }
+
+    /**
+     * Admin fiyatı güncellediğinde önbelleği temizlemek için kullanılır.
+     */
+    public static function clearCache()
+    {
+        Cache::forget('global_system_prices');
+    }
+}
