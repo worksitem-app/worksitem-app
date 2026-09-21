@@ -134,3 +134,51 @@
     });
 
 })();
+
+// ============================================================
+// GLOBAL KAINTA CTA TAKİBİ
+// ============================================================
+// Herhangi bir "Kainta İnşaat" içeren buton/link tıklamasını yakalar
+document.addEventListener('click', function(e) {
+    const target = e.target.closest('button, a');
+    if (!target) return;
+
+    const text = (target.innerText || target.textContent || '').toLowerCase();
+    const href = target.href || '';
+
+    // "Kainta" kelimesi geçiyor mu?
+    if (text.includes('kainta') || href.includes('kainta.com')) {
+        const toolSlug = document.body.dataset.toolSlug || 'unknown';
+        const eventType = href.includes('kainta.com') ? 'kainta_cta_click' : 'cost_cta_click';
+
+        if (window.WorksitemEvents) {
+            if (eventType === 'kainta_cta_click') {
+                window.WorksitemEvents.trackKaintaCta(toolSlug, href);
+            } else {
+                window.WorksitemEvents.trackCostCta(toolSlug, href);
+            }
+        }
+    }
+});
+
+// ============================================================
+// CALCULATOR COMPLETE TAKİBİ
+// ============================================================
+// "Hesapla", "Calculate", "Göster" gibi butonlara tıklanınca
+document.addEventListener('click', function(e) {
+    const target = e.target.closest('button');
+    if (!target) return;
+
+    const text = (target.innerText || target.textContent || '').toLowerCase();
+    const calcKeywords = ['hesapla', 'calculate', 'göster', 'sonuç', 'result', 'bütçe'];
+    const isCalc = calcKeywords.some(kw => text.includes(kw));
+
+    if (isCalc) {
+        const toolSlug = document.body.dataset.toolSlug || 'unknown';
+        if (window.WorksitemEvents) {
+            window.WorksitemEvents.trackCalculatorStart(toolSlug, {
+                button_text: text.substring(0, 50),
+            });
+        }
+    }
+});
