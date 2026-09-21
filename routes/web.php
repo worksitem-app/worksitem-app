@@ -104,8 +104,8 @@ Route::post('/leads/store', [LeadController::class, 'store'])->name('leads.store
 // WORKSITEM AI GÖRSELLEŞTİRME MODÜLLERİ
 Route::prefix('ai-tasarim')->group(function () {
     Route::get('/ic-mekan', [\App\Http\Controllers\AiDesignController::class, 'interiorIndex'])->name('ai.interior');
-    Route::post('/ic-mekan/generate', [\App\Http\Controllers\AiDesignController::class, 'generateInterior'])->name('ai.interior.generate');
-    Route::get('/merdiven-hesaplayici', [\App\Http\Controllers\ToolController::class, 'stairCalculator'])->name('tools.stair');
+    Route::post('/ic-mekan/start', [\App\Http\Controllers\AiDesignController::class, 'startGeneration'])->name('ai.interior.start');
+    Route::get('/ic-mekan/status/{id}', [\App\Http\Controllers\AiDesignController::class, 'checkStatus'])->name('ai.interior.status');    Route::get('/merdiven-hesaplayici', [\App\Http\Controllers\ToolController::class, 'stairCalculator'])->name('tools.stair');
 
 });
 
