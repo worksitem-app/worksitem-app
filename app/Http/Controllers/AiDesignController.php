@@ -26,6 +26,7 @@ class AiDesignController extends Controller
             'room_image' => 'required|image|max:5120',
             'style' => 'required|string',
             'user_prompt' => 'nullable|string|max:300',
+            'room_area' => 'nullable|numeric|min:1|max:10000',
         ]);
 
         $path = $request->file('room_image')->store('ai_inputs', 'public');
@@ -35,6 +36,8 @@ class AiDesignController extends Controller
             'style' => $request->style,
             'input_image' => $path,
             'status' => 'processing',
+            'user_prompt' => $request->input('user_prompt'),
+            'room_area' => $request->input('room_area'),
         ]);
 
         $result = $this->aiService->startAsync(
@@ -51,7 +54,11 @@ class AiDesignController extends Controller
             ], 500);
         }
 
-        $generation->update(['prediction_id' => $result['prediction_id']]);
+        // AI prompt'unu kaydet
+        $generation->update([
+            'prediction_id' => $result['prediction_id'],
+            'ai_prompt' => $result['prompt_used'] ?? null,
+        ]);
 
         return response()->json([
             'success' => true,
@@ -66,7 +73,13 @@ class AiDesignController extends Controller
         $generation = AiGeneration::findOrFail($id);
 
         if ($generation->status === 'completed' && $generation->output_image) {
-            return response()->json(['status' => 'succeeded', 'output_url' => $generation->output_image]);
+            return response()->json([
+                'status' => 'succeeded',
+                'output_url' => $generation->output_image,
+                'generation_id' => $generation->id,
+                'room_area' => $generation->room_area,
+                'can_estimate_cost' => true,
+            ]);
         }
 
         if ($generation->status === 'failed') {

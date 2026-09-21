@@ -51,8 +51,9 @@
         .lead-form { margin-top: 40px; }
         .lead-form h3 { font-size: 20px; margin-bottom: 20px; color: #fff;}
     </style>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
-<body>
+<body data-tool-slug="maliyet-hesapla">
 
     <header class="navbar">
         <a href="/"><img src="/brand/kainta-logo.jpg" alt="Kainta İnşaat" style="border-radius: 4px;"></a>
@@ -183,5 +184,6 @@
             }, 100);
         }
     </script>
+    <script src="/js/tool-events.js" defer></script>
 </body>
 </html>

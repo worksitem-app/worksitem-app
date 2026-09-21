@@ -27,8 +27,9 @@
         
         .cta-btn { display: block; width: 100%; text-align: center; background: var(--green); color: #fff; font-family: 'Bebas Neue'; font-size: 20px; padding: 15px; border-radius: 8px; text-decoration: none; margin-top: 20px; }
     </style>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
-<body>
+<body data-tool-slug="stair-calculator">
     <div style="padding:15px 4%; border-bottom:1px solid var(--border); background:#151c28;"><a href="/araclar" style="color:#fff; text-decoration:none; font-family:'Bebas Neue'; font-size:24px;">◀ WORKSİTEM ARAÇLAR</a></div>
     
     <div class="container">
@@ -178,5 +179,6 @@
 
         document.addEventListener('DOMContentLoaded', calculateStairs);
     </script>
+    <script src="/js/tool-events.js" defer></script>
 </body>
 </html>

@@ -21,8 +21,9 @@
         .result-price { font-size: 42px; font-weight: 900; color: var(--accent); margin: 5px 0 15px; }
         .chart-box { background: rgba(255,255,255,0.05); border-radius: 12px; padding: 20px; margin-top:20px; }
     </style>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
-<body>
+<body data-tool-slug="machine-cost">
 <header class="header">
     <a href="/araclar" style="text-decoration:none; color:var(--muted); font-weight:700;">← Araçlara Dön</a>
     <img src="/200.png" height="30" alt="WORKSİTEM">
@@ -99,5 +100,6 @@ document.getElementById('calcBtn').addEventListener('click', () => {
     });
 });
 </script>
+    <script src="/js/tool-events.js" defer></script>
 </body>
 </html>

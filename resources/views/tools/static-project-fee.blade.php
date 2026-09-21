@@ -17,8 +17,9 @@
         .result-val { font-size:32px; font-weight:800; color:#166534; }
         .cta { display:block; width:100%; padding:16px; background:#059669; color:#fff; text-align:center; font-weight:800; text-decoration:none; border-radius:8px; margin-top:20px; }
     </style>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
-<body>
+<body data-tool-slug="static-project-fee">
     <div class="container">
         <h1>📐 Statik Proje Bedeli Hesaplama</h1>
         <p style="color:#6b7280; margin-bottom:30px;">TMMOB (İMO) güncel katsayılarına göre minimum statik proje mühendislik hizmet bedelini hesaplayın.</p>
@@ -84,5 +85,6 @@
         }
         document.addEventListener('DOMContentLoaded', calc);
     </script>
+    <script src="/js/tool-events.js" defer></script>
 </body>
 </html>

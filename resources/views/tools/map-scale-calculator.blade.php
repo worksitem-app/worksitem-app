@@ -21,8 +21,9 @@
         .res-item.total { border-bottom: none; font-size: 20px; font-weight: 800; color: var(--cyan); margin-top: 15px; }
         .ai-box { background: rgba(56, 189, 248, 0.05); border: 1px solid var(--cyan); border-radius: 8px; padding: 20px; margin-top: 20px; }
     </style>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
-<body>
+<body data-tool-slug="map-scale-calculator">
     <div style="padding:15px 4%; border-bottom:1px solid var(--border); background:#151c28;"><a href="/araclar" style="color:#fff; text-decoration:none; font-family:'Bebas Neue'; font-size:24px;">◀ WORKSİTEM ARAÇLAR</a></div>
     <div class="container">
         <div>
@@ -99,5 +100,6 @@
         }
         document.addEventListener('DOMContentLoaded', calc);
     </script>
+    <script src="/js/tool-events.js" defer></script>
 </body>
 </html>

@@ -102,8 +102,9 @@
         .btn-calc { background: var(--text); color: #fff; margin-top: 10px; }
         .btn-submit { background: #2563eb; color: #fff; margin-top: 10px; }
     </style>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
-<body>
+<body data-tool-slug="mutfak-maliyet-hesaplayici">
 
 <header class="header">
     <a href="/araclar" class="back-btn">← Araçlara Dön</a>
@@ -394,5 +395,6 @@ document.getElementById('btnYes').addEventListener('click', () => { document.get
 document.getElementById('btnNo').addEventListener('click', () => { document.getElementById('budgetConfirmBox').innerHTML=`<div style="color:#6b7280; font-size:14px;">Teşekkürler.</div>`; });
 </script>
 
+    <script src="/js/tool-events.js" defer></script>
 </body>
 </html>

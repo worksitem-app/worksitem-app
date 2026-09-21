@@ -28,8 +28,9 @@
         .sign-box { text-align: center; width: 40%; }
         .sign-line { border-top: 1px solid #111; margin-top: 50px; padding-top: 10px; font-weight: 700; }
     </style>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
-<body>
+<body data-tool-slug="pdf-contract">
 <header class="header">
     <a href="/araclar" style="text-decoration:none; color:#6b7280; font-weight:700;">← Araçlara Dön</a>
     <img src="/200.png" height="30" alt="WORKSİTEM">
@@ -107,8 +108,10 @@
 
     // Word İndirme (Basit HTML to Doc)
     function exportWord() {
-        var header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Export HTML to Word</title></head><body>";
-        var footer = "</body></html>";
+        var header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Export HTML to Word</title>    <meta name="csrf-token" content="{{ csrf_token() }}">
+</head><body data-tool-slug="pdf-contract">";
+        var footer = "    <script src="/js/tool-events.js" defer></script>
+</body></html>";
         var sourceHTML = header + document.getElementById("contractDoc").innerHTML + footer;
         
         var source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
@@ -120,5 +123,6 @@
         document.body.removeChild(fileDownload);
     }
 </script>
+    <script src="/js/tool-events.js" defer></script>
 </body>
 </html>

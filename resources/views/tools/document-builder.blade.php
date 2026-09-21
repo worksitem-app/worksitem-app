@@ -35,8 +35,9 @@
         .sign-box { text-align: center; width: 40%; font-size:14px; }
         .sign-line { border-top: 1px solid #111; margin-top: 50px; padding-top: 10px; font-weight: bold; }
     </style>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
-<body>
+<body data-tool-slug="document-builder">
 
 <header class="header">
     <a href="/araclar" style="text-decoration:none; color:#6b7280; font-weight:700; display:flex; align-items:center;">← Araçlara Dön</a>
@@ -255,8 +256,10 @@
     }
 
     function exportWord() {
-        var header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Sozlesme Taslagi</title></head><body>";
-        var footer = "</body></html>";
+        var header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Sozlesme Taslagi</title>    <meta name="csrf-token" content="{{ csrf_token() }}">
+</head><body data-tool-slug="document-builder">";
+        var footer = "    <script src="/js/tool-events.js" defer></script>
+</body></html>";
         var sourceHTML = header + document.getElementById("contractDoc").innerHTML + footer;
         var source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
         var fileDownload = document.createElement("a");
@@ -267,5 +270,6 @@
         document.body.removeChild(fileDownload);
     }
 </script>
+    <script src="/js/tool-events.js" defer></script>
 </body>
 </html>

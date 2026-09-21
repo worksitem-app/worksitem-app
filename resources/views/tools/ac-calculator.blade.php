@@ -33,8 +33,9 @@
         .cta-btn { display:block; background:var(--green); color:#fff; font-weight:800; font-size:1.1rem; padding:16px; border-radius:8px; text-decoration:none; transition:var(--transition); }
         .cta-btn:hover { background:#047857; transform:translateY(-2px); }
     </style>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
-<body>
+<body data-tool-slug="ac-calculator">
     <nav class="navbar"><a href="/" class="logo-wrapper"><img src="/brand/worksitem-logo.png" alt="Worksitem Logo" style="height: 35px; width: auto;"></a><a href="/araclar" style="font-weight: 800; color: var(--text-muted); text-decoration: none; font-size: 0.95rem; transition: color 0.2s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--text-muted)'">◀ Tüm Araçlar</a></nav>
     <div class="container">
         <div>
@@ -129,5 +130,6 @@
             notes.forEach(n => { let li = document.createElement('li'); li.innerText = n; li.style.marginBottom="5px"; notesBox.appendChild(li); });
         } document.addEventListener('DOMContentLoaded', calc);
     </script>
+    <script src="/js/tool-events.js" defer></script>
 </body>
 </html>
