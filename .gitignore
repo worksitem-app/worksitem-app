@@ -40,3 +40,21 @@ Thumbs.db
 price_stage_*
 *.orig
 
+
+# .env yedekleri (asla commit edilmemeli)
+.env.bozuk*
+.env.kurtar*
+.env.once*
+.env.backup*
+
+# .env yedekleri (asla commit edilmemeli)
+.env.bozuk*
+.env.kurtar*
+.env.once*
+.env.backup*
+
+# .env yedekleri (asla commit edilmemeli)
+.env.bozuk*
+.env.kurtar*
+.env.once*
+.env.backup*
