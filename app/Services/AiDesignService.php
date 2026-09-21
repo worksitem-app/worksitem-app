@@ -6,9 +6,8 @@ use Illuminate\Support\Facades\Log;
 
 class AiDesignService
 {
-    // Stil tanımları (İngilizce — model İngilizce anlıyor)
     private array $styles = [
-        'Modern' => 'modern interior design, clean lines, contemporary furniture, bright',
+        'Modern' => 'modern interior design, clean lines, contemporary furniture, bright, photorealistic',
         'Minimalist' => 'minimalist interior design, uncluttered, simple furniture, neutral colors',
         'Endüstriyel' => 'industrial interior design, exposed brick walls, metal accents, vintage furniture',
         'Lüks' => 'luxury interior design, marble, gold accents, elegant velvet furniture',
@@ -16,8 +15,8 @@ class AiDesignService
         'Klasik' => 'classic interior design, ornate details, elegant curtains, antique furniture',
     ];
 
-    // Hızlı model (LCM — 6-8 adım)
-    private string $modelVersion = 'fbbd475b1084de80c47c35bfe4ae64b964294aa7e237e6537eed938cfd24903d';
+    // Nano Banana 2 (Google Gemini 3.1 Flash Image)
+    private string $modelVersion = 'd1be8b5fc0931a253d417e12a484ac01ee9ccbc6daffd4792151377d5e5ff55f';
 
     private int $maxImageSize = 1024;
 
@@ -65,7 +64,7 @@ class AiDesignService
     }
 
     /**
-     * Kullanıcı metnini temizle (güvenlik)
+     * Kullanıcı metnini temizle
      */
     private function sanitizeUserPrompt(?string $prompt): string
     {
@@ -73,22 +72,15 @@ class AiDesignService
             return '';
         }
 
-        // HTML etiketlerini temizle
         $prompt = strip_tags($prompt);
-
-        // URL'leri temizle
         $prompt = preg_replace('/https?:\/\/\S+/', '', $prompt);
-
-        // Fazla boşlukları temizle
         $prompt = preg_replace('/\s+/', ' ', $prompt);
 
-        // İngilizce'ye çevirmeden olduğu gibi bırak
-        // (LCM modeli Türkçe de anlıyor — düşük ihtimalle)
         return trim($prompt);
     }
 
     /**
-     * Tasarımı başlat
+     * Tasarımı başlat (Nano Banana 2)
      */
     public function startAsync(
         string $imagePath,
@@ -114,33 +106,32 @@ class AiDesignService
             $styleText = $this->styles[$style] ?? $this->styles['Modern'];
             $userText = $this->sanitizeUserPrompt($userPrompt);
 
-            // Format: [kullanıcı metni] + [stil] + [kalite]
-            $promptParts = ['interior design of a room'];
+            // Nano Banana 2 için özel prompt formatı
+            $promptParts = [
+                'Transform this room into a beautiful new design.',
+                'Keep the architectural structure (walls, windows, doors, ceiling) EXACTLY the same.',
+                'Only change furniture, decor, colors, materials, and lighting.',
+            ];
 
             if (!empty($userText)) {
-                $promptParts[] = $userText;
+                $promptParts[] = "User request: {$userText}.";
             }
 
-            $promptParts[] = $styleText;
-            $promptParts[] = 'photorealistic, 4K, ultra detailed, architectural photography';
+            $promptParts[] = "Style: {$styleText}.";
+            $promptParts[] = 'Photorealistic, professional interior photography, 4K quality.';
 
-            $fullPrompt = implode(', ', $promptParts);
+            $fullPrompt = implode(' ', $promptParts);
 
             $response = Http::withToken($token)
-                ->timeout(30)
+                ->timeout(60)
                 ->post('https://api.replicate.com/v1/predictions', [
                     'version' => $this->modelVersion,
                     'input' => [
-                        'image' => $base64Image,
                         'prompt' => $fullPrompt,
-                        'negative_prompt' => 'blurry, low quality, deformed, ugly, distorted, watermark',
-                        'prompt_strength' => 0.65,
-                        'num_inference_steps' => 6,
-                        'guidance_scale' => 2,
-                        'scheduler' => 'LCM',
-                        'width' => 1024,
-                        'height' => 1024,
-                        'apply_watermark' => false,
+                        'image_input' => [$base64Image],
+                        'resolution' => '1K',
+                        'aspect_ratio' => 'match_input_image',
+                        'output_format' => 'jpg',
                     ],
                 ]);
 
@@ -157,7 +148,7 @@ class AiDesignService
             return [
                 'status' => 'success',
                 'prediction_id' => $data['id'],
-                'prompt_used' => $fullPrompt, // Debug için
+                'prompt_used' => $fullPrompt,
             ];
         } catch (\Exception $e) {
             if ($tempPath && $tempPath !== $imagePath && file_exists($tempPath)) {
