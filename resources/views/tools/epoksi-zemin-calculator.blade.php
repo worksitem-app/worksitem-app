@@ -516,9 +516,10 @@ input:focus,select:focus{
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
     <link rel="manifest" href="/site.webmanifest">
     <meta name="theme-color" content="#ffffff">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
 
-<body>
+<body data-tool-slug="epoksi-zemin-calculator">
 
 <x-site.contech-header />
 
@@ -1292,5 +1293,6 @@ document.getElementById('budgetNo')
 </script>
 
     <x-site.contech-footer />
+    <script src="/js/tool-events.js" defer></script>
 </body>
 </html>

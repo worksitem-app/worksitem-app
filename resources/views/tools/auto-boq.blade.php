@@ -54,8 +54,9 @@
         @keyframes dig { 0% { transform: rotate(0deg); } 50% { transform: rotate(15deg); } 100% { transform: rotate(0deg); } }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
-<body>
+<body data-tool-slug="auto-boq">
 <?php $dbPrices = \Illuminate\Support\Facades\DB::table('unit_prices')->get(); ?>
 <header class="header">
     <a href="/araclar" style="text-decoration:none; color:#6b7280; font-weight:700;">← Araçlara Dön</a>
@@ -278,5 +279,6 @@ document.getElementById('exportBtn').addEventListener('click', () => {
     XLSX.writeFile(wb, "Worksitem_Keşif_Raporu.xlsx");
 });
 </script>
+    <script src="/js/tool-events.js" defer></script>
 </body>
 </html>

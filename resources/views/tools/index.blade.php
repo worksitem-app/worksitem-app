@@ -1074,9 +1074,10 @@ echo json_encode(
         ]
     }
     </script>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
 
-<body>
+<body data-tool-slug="index">
 
 {{-- =========================================================
      DYNAMIC TOOL DATA
@@ -2410,5 +2411,6 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 
+    <script src="/js/tool-events.js" defer></script>
 </body>
 </html>

@@ -40,8 +40,9 @@
         th, td { border:1px solid #e5e7eb; padding:10px; text-align:left; }
         th { background:#f3f4f6; color:#4b5563; font-weight:700;}
     </style>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
-<body>
+<body data-tool-slug="sgk-labor">
     <nav class="navbar"><a href="/araclar" class="logo"><span class="logo-box">◀</span> WORKSİTEM Hukuk & Mevzuat</a></nav>
 
     <div class="container">
@@ -212,5 +213,6 @@
         }
         document.addEventListener('DOMContentLoaded', calc);
     </script>
+    <script src="/js/tool-events.js" defer></script>
 </body>
 </html>

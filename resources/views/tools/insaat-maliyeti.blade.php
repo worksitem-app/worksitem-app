@@ -57,8 +57,9 @@
         
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
     </style>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
-<body>
+<body data-tool-slug="insaat-maliyeti">
 
 <header class="header">
     <a href="/araclar" style="text-decoration:none; color:var(--muted); font-weight:700;">← Araçlara Dön</a>
@@ -319,5 +320,6 @@ function calculateAll() {
 
 document.addEventListener('DOMContentLoaded', calculateAll);
 </script>
+    <script src="/js/tool-events.js" defer></script>
 </body>
 </html>

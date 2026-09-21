@@ -84,8 +84,9 @@
             .result-price { font-size: 32px; }
         }
     </style>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
-<body>
+<body data-tool-slug="mantolama-calculator">
 
 <header class="header">
     <a href="/araclar" class="back-btn">← Araçlara Dön</a>
@@ -284,5 +285,6 @@ document.getElementById('btnNo').addEventListener('click', function() {
 });
 </script>
 
+    <script src="/js/tool-events.js" defer></script>
 </body>
 </html>

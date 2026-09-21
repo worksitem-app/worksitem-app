@@ -18,8 +18,9 @@
         .result-val { font-size:24px; font-weight:800; color:#854d0e; }
         .cta { display:block; width:100%; padding:16px; background:#0f172a; color:#fff; text-align:center; font-weight:800; text-decoration:none; border-radius:8px; margin-top:20px; }
     </style>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
-<body>
+<body data-tool-slug="installment-vs-cash">
     <div class="container">
         <h1>💳 İnşaat Malzemesi: Taksit mi Peşin mi?</h1>
         <p style="color:#6b7280; margin-bottom:30px;">Mevduat faizi (veya enflasyon) beklentinize göre, bir malzemeyi vadeli (taksitli) almak mı yoksa peşin indirimle almak mı daha kârlı hesaplayın.</p>
@@ -106,5 +107,6 @@
         }
         document.addEventListener('DOMContentLoaded', calc);
     </script>
+    <script src="/js/tool-events.js" defer></script>
 </body>
 </html>

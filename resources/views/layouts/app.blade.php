@@ -72,8 +72,9 @@
         
         @yield('styles')
     </style>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
-<body>
+<body data-tool-slug="{{ str_replace("araclar/", "", request()->path()) }}">
 
     <nav class="navbar">
         <a href="{{ url('/maliyet-hesapla') }}" class="navbar-brand">
@@ -98,5 +99,6 @@
 
     @yield('scripts')
 <x-site.kainta-linker />
+    <script src="/js/tool-events.js" defer></script>
 </body>
 </html>

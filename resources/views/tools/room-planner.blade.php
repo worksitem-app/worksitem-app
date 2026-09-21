@@ -63,7 +63,7 @@
     <link rel="manifest" href="/site.webmanifest">
     <meta name="theme-color" content="#ffffff">
 </head>
-<body>
+<body data-tool-slug="room-planner">
     <x-site.contech-header />
     
     <div class="container">
@@ -229,5 +229,6 @@
         }
     </script>
     <x-site.contech-footer />
+    <script src="/js/tool-events.js" defer></script>
 </body>
 </html>
