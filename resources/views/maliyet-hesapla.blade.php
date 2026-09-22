@@ -284,7 +284,7 @@ a{color:inherit;text-decoration:none;}
 </style>
 </head>
 
-<body>
+<body data-tool-slug="maliyet-hesapla">
 
 <header class="header">
     <div class="header-inner">
