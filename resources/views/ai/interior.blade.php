@@ -478,11 +478,8 @@
         let progressTimer = null;
         let timeEstimateTimer = null;
         let notificationEnabled = false;
+        window.currentGenerationId = null;
         let remainingQuota = 3;
-        let currentGenerationId = null;
-        let currentGenerationId = null;
-        let currentGenerationId = null;
-        let currentGenerationId = null;
 
         function setScene(sceneName) {
             const container = document.getElementById('sceneContainer');
@@ -674,10 +671,7 @@
                 }
 
                 const generationId = startData.generation_id;
-                currentGenerationId = generationId;
-                currentGenerationId = generationId;
-                currentGenerationId = generationId;
-                currentGenerationId = generationId;
+                window.window.currentGenerationId = generationId;
                 let attempts = 0;
                 const maxAttempts = 60;
 
@@ -730,7 +724,7 @@
                     <h2 style="font-family:'Bebas Neue'; color:var(--yellow); font-size:32px; margin-bottom:15px;">🎉 Tasarımınız Hazır!</h2>
                     <img src="${imageUrl}" class="result-img" alt="AI Interior Design">
                     <p style="color:var(--muted); font-size:14px; margin-bottom:20px;">Bu tasarım yapay zeka tarafından referans amaçlı üretilmiştir.</p>
-                    <button class="cta-btn" onclick="openCostModal(generationId)">💰 Bu Tasarımın Maliyetini Hesapla →</button>
+                    <button class="cta-btn" onclick="openCostModal()">💰 Bu Tasarımın Maliyetini Hesapla →</button>
                 </div>
             `;
             resultContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -741,6 +735,7 @@
             errorContainer.innerHTML = `<div class="error-box"><strong>Hata:</strong> ${message}</div>`;
         }
     </script>
+    <script src="/js/tool-events.js" defer></script>
     <script src="/js/ai-cost-modal.js"></script>
 </body>
 </html>
