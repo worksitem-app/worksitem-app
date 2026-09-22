@@ -143,6 +143,7 @@ html[data-theme=dark] body .wks-brand img,html[data-theme=dark] body .wks-foot-l
 <script type="application/ld+json">
 {"@@context":"https://schema.org","@@type":"WebPage","@@id":"https://worksitem.com/#webpage","url":"https://worksitem.com/","name":"İnşaat ve Tadilat Maliyeti Hesaplama | WORKSİTEM","inLanguage":"tr-TR","isPartOf":{"@@id":"https://worksitem.com/#website"},"description":"m² ile yaklaşık inşaat ve tadilat bütçesi, dosya ile AI ön keşif ve kentsel dönüşümde yeni yapı maliyeti ön değerlendirmesi."}
 </script>
+<link rel="stylesheet" href="/css/worksitem-design.css">
 </head>
 <body data-tool-slug="homepage">
 <a class="skip-link" href="#ana-icerik">Ana içeriğe geç</a>
