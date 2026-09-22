@@ -74,7 +74,7 @@
     </style>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
-<body data-tool-slug="{{ str_replace("araclar/", "", request()->path()) }}">
+<<body data-tool-slug="{{ request()->path() === '/' ? 'homepage' : str_replace('araclar/', '', request()->path()) }}">>
 
     <nav class="navbar">
         <a href="{{ url('/maliyet-hesapla') }}" class="navbar-brand">
