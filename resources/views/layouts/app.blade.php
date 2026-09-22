@@ -74,7 +74,7 @@
     </style>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
-<<body data-tool-slug="homepage">
+<body data-tool-slug="homepage">
 
     <nav class="navbar">
         <a href="{{ url('/maliyet-hesapla') }}" class="navbar-brand">
