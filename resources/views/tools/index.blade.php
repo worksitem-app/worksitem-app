@@ -1077,7 +1077,7 @@ echo json_encode(
     <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
 
-<body data-tool-slug="index">
+<body data-tool-slug="araclar">
 
 {{-- =========================================================
      DYNAMIC TOOL DATA
