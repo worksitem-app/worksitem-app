@@ -105,6 +105,8 @@ Route::post('/leads/store', [LeadController::class, 'store'])->name('leads.store
 Route::prefix('ai-tasarim')->group(function () {
     Route::get('/ic-mekan', [\App\Http\Controllers\AiDesignController::class, 'interiorIndex'])->name('ai.interior');
     Route::post('/ic-mekan/start', [\App\Http\Controllers\AiDesignController::class, 'startGeneration'])->name('ai.interior.start');
+    Route::post('/ic-mekan/estimate/{id}', [\App\Http\Controllers\AiDesignController::class, 'estimate'])->name('ai.interior.estimate');
+    Route::get('/ic-mekan/quota', [\App\Http\Controllers\AiDesignController::class, 'getQuota'])->name('ai.interior.quota');
     Route::get('/ic-mekan/status/{id}', [\App\Http\Controllers\AiDesignController::class, 'checkStatus'])->name('ai.interior.status');    Route::get('/merdiven-hesaplayici', [\App\Http\Controllers\ToolController::class, 'stairCalculator'])->name('tools.stair');
 
 });

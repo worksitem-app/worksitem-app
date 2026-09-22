@@ -478,6 +478,11 @@
         let progressTimer = null;
         let timeEstimateTimer = null;
         let notificationEnabled = false;
+        let remainingQuota = 3;
+        let currentGenerationId = null;
+        let currentGenerationId = null;
+        let currentGenerationId = null;
+        let currentGenerationId = null;
 
         function setScene(sceneName) {
             const container = document.getElementById('sceneContainer');
@@ -669,6 +674,10 @@
                 }
 
                 const generationId = startData.generation_id;
+                currentGenerationId = generationId;
+                currentGenerationId = generationId;
+                currentGenerationId = generationId;
+                currentGenerationId = generationId;
                 let attempts = 0;
                 const maxAttempts = 60;
 
@@ -686,18 +695,21 @@
                             sendNotification('🎨 Tasarımınız Hazır!', 'Worksitem AI iç mekan tasarımınız hazır.');
                             setTimeout(() => showResult(statusData.output_url), 500);
                             btnSubmit.disabled = false;
-                            btnSubmit.innerText = '✨ YENİDEN TASARLA';
+                            remainingQuota = Math.max(0, remainingQuota - 1);
+                            btnSubmit.innerText = '✨ YENİ TASARIM (' + remainingQuota + ' hak kaldı)';
                         } else if (statusData.status === 'failed') {
                             clearInterval(pollInterval);
                             stopLoadingAnimation(false);
                             showError(statusData.message || 'Tasarım başarısız oldu.');
                             btnSubmit.disabled = false;
+                            remainingQuota = Math.max(0, remainingQuota - 1);
                             btnSubmit.innerText = '✨ TEKRAR DENE';
                         } else if (attempts >= maxAttempts) {
                             clearInterval(pollInterval);
                             stopLoadingAnimation(false);
                             showError('Zaman aşımı. Lütfen tekrar deneyin.');
                             btnSubmit.disabled = false;
+                            remainingQuota = Math.max(0, remainingQuota - 1);
                             btnSubmit.innerText = '✨ TEKRAR DENE';
                         }
                     } catch (err) { console.error('Polling hatası:', err); }
@@ -706,6 +718,7 @@
                 stopLoadingAnimation(false);
                 showError(err.message);
                 btnSubmit.disabled = false;
+                            remainingQuota = Math.max(0, remainingQuota - 1);
                 btnSubmit.innerText = '✨ YAPAY ZEKA İLE TASARLA';
             }
         });
@@ -717,7 +730,7 @@
                     <h2 style="font-family:'Bebas Neue'; color:var(--yellow); font-size:32px; margin-bottom:15px;">🎉 Tasarımınız Hazır!</h2>
                     <img src="${imageUrl}" class="result-img" alt="AI Interior Design">
                     <p style="color:var(--muted); font-size:14px; margin-bottom:20px;">Bu tasarım yapay zeka tarafından referans amaçlı üretilmiştir.</p>
-                    <a href="/maliyet-hesapla" class="cta-btn">Kainta İnşaat AI ile Bu Tasarımın Maliyetini Hesapla →</a>
+                    <button class="cta-btn" onclick="openCostModal(generationId)">💰 Bu Tasarımın Maliyetini Hesapla →</button>
                 </div>
             `;
             resultContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -728,5 +741,6 @@
             errorContainer.innerHTML = `<div class="error-box"><strong>Hata:</strong> ${message}</div>`;
         }
     </script>
+    <script src="/js/ai-cost-modal.js"></script>
 </body>
 </html>

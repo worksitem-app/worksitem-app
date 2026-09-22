@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\AiGeneration;
 use App\Services\AiDesignService;
+use App\Services\AiCostEstimationService;
 use Illuminate\Support\Facades\Log;
 
 class AiDesignController extends Controller
 {
     protected AiDesignService $aiService;
+
+    private const FREE_DAILY_LIMIT = 3;
 
     public function __construct(AiDesignService $aiService)
     {
@@ -29,6 +32,23 @@ class AiDesignController extends Controller
             'room_area' => 'nullable|numeric|min:1|max:10000',
         ]);
 
+        $ipHash = hash('sha256', $request->ip() . '|worksitem_salt');
+        $sessionKey = $request->input('session_key') ?? session()->getId();
+
+        $todayCount = AiGeneration::where('ip_hash', $ipHash)
+            ->whereDate('created_at', today())
+            ->where('is_free_quota', true)
+            ->count();
+
+        if ($todayCount >= self::FREE_DAILY_LIMIT) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Günlük ücretsiz tasarım hakkınız doldu. Profesyonel tasarım için Kainta İnşaat ile iletişime geçin.',
+                'kainta_url' => 'https://kainta.com',
+                'quota_exceeded' => true,
+            ], 429);
+        }
+
         $path = $request->file('room_image')->store('ai_inputs', 'public');
 
         $generation = AiGeneration::create([
@@ -38,6 +58,9 @@ class AiDesignController extends Controller
             'status' => 'processing',
             'user_prompt' => $request->input('user_prompt'),
             'room_area' => $request->input('room_area'),
+            'ip_hash' => $ipHash,
+            'session_key' => $sessionKey,
+            'is_free_quota' => true,
         ]);
 
         $result = $this->aiService->startAsync(
@@ -54,16 +77,18 @@ class AiDesignController extends Controller
             ], 500);
         }
 
-        // AI prompt'unu kaydet
         $generation->update([
             'prediction_id' => $result['prediction_id'],
             'ai_prompt' => $result['prompt_used'] ?? null,
         ]);
 
+        $remaining = max(0, self::FREE_DAILY_LIMIT - ($todayCount + 1));
+
         return response()->json([
             'success' => true,
             'generation_id' => $generation->id,
             'prediction_id' => $result['prediction_id'],
+            'remaining_quota' => $remaining,
             'message' => 'Tasarım başlatıldı.',
         ]);
     }
@@ -102,6 +127,43 @@ class AiDesignController extends Controller
         } elseif ($result['status'] === 'failed') {
             $generation->update(['status' => 'failed']);
         }
+
+        return response()->json($result);
+    }
+
+    public function getQuota(Request $request)
+    {
+        $ipHash = hash('sha256', $request->ip() . '|worksitem_salt');
+
+        $todayCount = AiGeneration::where('ip_hash', $ipHash)
+            ->whereDate('created_at', today())
+            ->where('is_free_quota', true)
+            ->count();
+
+        return response()->json([
+            'daily_limit' => self::FREE_DAILY_LIMIT,
+            'used' => $todayCount,
+            'remaining' => max(0, self::FREE_DAILY_LIMIT - $todayCount),
+        ]);
+    }
+
+    public function estimate(Request $request, $id)
+    {
+        $request->validate([
+            'room_area' => 'required|numeric|min:1|max:10000',
+        ]);
+
+        $generation = AiGeneration::findOrFail($id);
+
+        $service = new AiCostEstimationService();
+        $result = $service->estimate($id, (float) $request->room_area);
+
+        $generation->update([
+            'room_area' => $request->room_area,
+            'estimated_cost' => $result['total'],
+            'cost_breakdown' => $result,
+            'cost_calculated_at' => now(),
+        ]);
 
         return response()->json($result);
     }
