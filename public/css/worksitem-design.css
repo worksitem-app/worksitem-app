@@ -1,0 +1,344 @@
+/* ============================================================
+   WORKSİTEM DESIGN SYSTEM v1.0
+   Türkiye'nin ConTech Tasarım Sistemi
+   ============================================================ */
+
+/* ==== 1) RENKLER ==== */
+:root {
+    /* Ana Renkler */
+    --ws-yellow: #FFB800;
+    --ws-yellow-dark: #E5A500;
+    --ws-yellow-light: #FFF8E1;
+    
+    /* Nötr Renkler */
+    --ws-black: #1A1A1A;
+    --ws-text: #111827;
+    --ws-text-muted: #6B7280;
+    --ws-text-light: #9CA3AF;
+    
+    /* Yüzeyler */
+    --ws-bg: #F8FAFC;
+    --ws-surface: #FFFFFF;
+    --ws-surface-2: #F1F5F9;
+    
+    /* Kenarlıklar */
+    --ws-border: #E5E7EB;
+    --ws-border-dark: #D1D5DB;
+    
+    /* Durum Renkleri */
+    --ws-success: #10B981;
+    --ws-info: #38BDF8;
+    --ws-warning: #F59E0B;
+    --ws-error: #EF4444;
+    
+    /* Gölgeler */
+    --ws-shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+    --ws-shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+    --ws-shadow-lg: 0 12px 32px rgba(0,0,0,0.12);
+    --ws-shadow-xl: 0 24px 64px rgba(0,0,0,0.16);
+    
+    /* Köşe Yuvarlaklığı */
+    --ws-radius-sm: 8px;
+    --ws-radius-md: 12px;
+    --ws-radius-lg: 16px;
+    --ws-radius-xl: 24px;
+    
+    /* Aralıklar (8px grid) */
+    --ws-space-1: 4px;
+    --ws-space-2: 8px;
+    --ws-space-3: 16px;
+    --ws-space-4: 24px;
+    --ws-space-5: 32px;
+    --ws-space-6: 48px;
+    --ws-space-7: 64px;
+    
+    /* Font */
+    --ws-font-heading: 'Bebas Neue', sans-serif;
+    --ws-font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --ws-font-mono: 'JetBrains Mono', monospace;
+    
+    /* Container */
+    --ws-container: 1180px;
+}
+
+/* Dark tema */
+[data-theme="dark"] {
+    --ws-bg: #0B0F17;
+    --ws-surface: #151C28;
+    --ws-surface-2: #1E293B;
+    --ws-text: #F1F5F9;
+    --ws-text-muted: #94A3B8;
+    --ws-text-light: #64748B;
+    --ws-border: #1E293B;
+    --ws-border-dark: #334155;
+}
+
+/* ==== 2) TIPOGRAFİ ==== */
+.ws-h1, h1.ws {
+    font-family: var(--ws-font-heading);
+    font-size: clamp(36px, 5vw, 72px);
+    line-height: 1;
+    letter-spacing: -1px;
+    color: var(--ws-text);
+    margin: 0;
+}
+
+.ws-h2, h2.ws {
+    font-family: var(--ws-font-heading);
+    font-size: clamp(28px, 4vw, 48px);
+    line-height: 1.1;
+    color: var(--ws-text);
+    margin: 0;
+}
+
+.ws-h3, h3.ws {
+    font-family: var(--ws-font-body);
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--ws-text);
+    margin: 0;
+}
+
+.ws-body {
+    font-family: var(--ws-font-body);
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--ws-text);
+}
+
+.ws-muted {
+    color: var(--ws-text-muted);
+}
+
+.ws-number {
+    font-family: var(--ws-font-body);
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+}
+
+/* ==== 3) BUTONLAR ==== */
+.ws-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 52px;
+    padding: 0 24px;
+    border-radius: var(--ws-radius-md);
+    font-family: var(--ws-font-body);
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.ws-btn-primary {
+    background: var(--ws-yellow);
+    color: var(--ws-black);
+}
+
+.ws-btn-primary:hover {
+    background: var(--ws-yellow-dark);
+    transform: translateY(-1px);
+}
+
+.ws-btn-secondary {
+    background: var(--ws-surface);
+    color: var(--ws-text);
+    border: 1px solid var(--ws-border);
+}
+
+.ws-btn-secondary:hover {
+    border-color: var(--ws-border-dark);
+    background: var(--ws-surface-2);
+}
+
+.ws-btn-success {
+    background: var(--ws-success);
+    color: white;
+}
+
+.ws-btn-success:hover {
+    background: #059669;
+}
+
+.ws-btn-lg {
+    min-height: 64px;
+    padding: 0 32px;
+    font-size: 17px;
+}
+
+.ws-btn-sm {
+    min-height: 40px;
+    padding: 0 16px;
+    font-size: 13px;
+}
+
+/* ==== 4) KARTLAR ==== */
+.ws-card {
+    background: var(--ws-surface);
+    border: 1px solid var(--ws-border);
+    border-radius: var(--ws-radius-lg);
+    padding: var(--ws-space-4);
+    transition: all 0.2s;
+}
+
+.ws-card:hover {
+    box-shadow: var(--ws-shadow-md);
+    border-color: var(--ws-yellow);
+}
+
+.ws-card-lg {
+    padding: var(--ws-space-5);
+}
+
+/* ==== 5) BADGE ==== */
+.ws-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.ws-badge-yellow {
+    background: var(--ws-yellow-light);
+    color: #A97400;
+}
+
+.ws-badge-success {
+    background: #ECFDF5;
+    color: #047857;
+}
+
+.ws-badge-info {
+    background: #EFF6FF;
+    color: #1D4ED8;
+}
+
+/* ==== 6) KONTEYNER ==== */
+.ws-container {
+    max-width: var(--ws-container);
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* ==== 7) ARALIK ==== */
+.ws-section {
+    padding: 64px 0;
+}
+
+.ws-section-sm {
+    padding: 32px 0;
+}
+
+/* ==== 8) GRID ==== */
+.ws-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+.ws-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+.ws-grid-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+}
+
+@media (max-width: 768px) {
+    .ws-grid-2,
+    .ws-grid-3,
+    .ws-grid-4 {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ==== 9) HEADER ==== */
+.ws-header {
+    background: var(--ws-surface);
+    border-bottom: 1px solid var(--ws-border);
+    padding: 16px 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.ws-header-inner {
+    max-width: var(--ws-container);
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.ws-logo {
+    height: 36px;
+    width: auto;
+}
+
+.ws-nav {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+}
+
+.ws-nav a {
+    padding: 10px 14px;
+    border-radius: var(--ws-radius-sm);
+    color: var(--ws-text-muted);
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.ws-nav a:hover {
+    background: var(--ws-surface-2);
+    color: var(--ws-text);
+}
+
+/* ==== 10) FOOTER ==== */
+.ws-footer {
+    background: var(--ws-surface);
+    border-top: 1px solid var(--ws-border);
+    padding: 48px 0 24px;
+    margin-top: 64px;
+}
+
+.ws-footer-inner {
+    max-width: var(--ws-container);
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+.ws-footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 48px;
+    margin-bottom: 32px;
+}
+
+@media (max-width: 768px) {
+    .ws-footer-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
+}
+
+.ws-footer-bottom {
+    padding-top: 24px;
+    border-top: 1px solid var(--ws-border);
+    font-size: 13px;
+    color: var(--ws-text-muted);
+}

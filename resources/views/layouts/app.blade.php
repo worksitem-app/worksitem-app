@@ -73,6 +73,7 @@
         @yield('styles')
     </style>
     <meta name="csrf-token" content="{{ csrf_token() }}">
+<link rel="stylesheet" href="/css/worksitem-design.css">
 </head>
 <body data-tool-slug="homepage">
 
