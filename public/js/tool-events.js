@@ -182,3 +182,34 @@ document.addEventListener('click', function(e) {
         }
     }
 });
+
+// ============================================================
+// CALCULATOR COMPLETE TAKİBİ
+// ============================================================
+// "Hesapla" butonuna basıldıktan 1 saniye sonra complete gönder
+document.addEventListener('click', function(e) {
+    const target = e.target.closest('button');
+    if (!target) return;
+
+    const text = (target.innerText || target.textContent || '').toLowerCase();
+    const calcKeywords = ['hesapla', 'calculate', 'göster', 'sonuç', 'result', 'bütçe'];
+    const isCalc = calcKeywords.some(kw => text.includes(kw));
+
+    if (isCalc) {
+        const toolSlug = document.body.dataset.toolSlug || 'unknown';
+
+        // Start event (mevcut)
+        if (window.WorksitemEvents) {
+            window.WorksitemEvents.trackCalculatorStart(toolSlug, {
+                button_text: text.substring(0, 50),
+            });
+
+            // Complete event (1 saniye sonra — sonuç gösterilmiş olmalı)
+            setTimeout(() => {
+                window.WorksitemEvents.trackCalculatorComplete(toolSlug, {
+                    completed_after_ms: 1000,
+                });
+            }, 1000);
+        }
+    }
+});
