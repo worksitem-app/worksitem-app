@@ -42,7 +42,7 @@ class ToolController extends Controller
             return response()->json(['success' => false, 'error' => 'Sistem hatası: GEMINI_API_KEY .env dosyasında bulunamadı. Lütfen yöneticiye bildirin.']);
         }
 
-        $url = 'https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-001:predict';
+        $url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-image:generateContent';
 
         try {
             $response = Http::withHeaders(['x-goog-api-key' => $apiKey])->timeout(60)->post($url, [

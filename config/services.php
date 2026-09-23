@@ -36,7 +36,7 @@ return [
     ],
     'gemini' => [
         'api_key' => env('GEMINI_API_KEY'),
-        'rayic_model' => env('GEMINI_RAYIC_MODEL', 'gemini-3.7-flash'),
+        'rayic_model' => env('GEMINI_RAYIC_MODEL', 'gemini-3.6-flash'),
         'boq_model' => env('GEMINI_BOQ_MODEL', 'gemini-2.5-flash'),
     ],
 
