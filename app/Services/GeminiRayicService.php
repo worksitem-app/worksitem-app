@@ -15,7 +15,7 @@ class GeminiRayicService
         $this->apiKey = (string) config('services.gemini.api_key');
         $this->model = (string) config(
             'services.gemini.rayic_model',
-            env('GEMINI_RAYIC_MODEL', 'gemini-3.7-flash')
+            'gemini-3.7-flash'
         );
 
         if (!$this->apiKey) {
@@ -241,7 +241,7 @@ PROMPT;
 
         if (!$upload->successful()) {
             throw new RuntimeException(
-                'PDF Gemini Files API'ye yüklenemedi: ' .
+                'PDF Gemini Files API\'ye yüklenemedi: ' .
                 $upload->body()
             );
         }

@@ -10,8 +10,8 @@ class PriceImportService
 {
     public function importFromPdf(UploadedFile $file)
     {
-        $apiKey = env('GEMINI_API_KEY');
-        $model = env('GEMINI_BOQ_MODEL', 'gemini-2.5-flash');
+        $apiKey = config('services.gemini.api_key');
+        $model = config('services.gemini.boq_model', 'gemini-2.5-flash');
 
         if (empty($apiKey)) {
             throw new \Exception("GEMINI_API_KEY bulunamadı.");

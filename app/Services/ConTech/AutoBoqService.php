@@ -32,7 +32,7 @@ class AutoBoqService
         string $quality = 'standard'
     ): array {
 
-        $apiKey = env('GEMINI_API_KEY');
+        $apiKey = config('services.gemini.api_key');
 
         if (empty($apiKey)) {
             throw new \Exception(
@@ -153,12 +153,13 @@ PROMPT;
         */
 
         $response = Http::withHeaders([
-            'Content-Type' => 'application/json'
+            'Content-Type' => 'application/json',
+            'x-goog-api-key' => $apiKey
         ])
         ->timeout(60)
         ->retry(3, 1500, throw: false)
         ->post(
-            'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' . $apiKey,
+            'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent',
             [
                 'contents' => [
                     [

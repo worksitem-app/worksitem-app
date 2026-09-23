@@ -36,16 +36,16 @@ class ToolController extends Controller
         ]);
 
         $prompt = "A highly detailed, photorealistic interior design of a {$request->room_type}, sized {$request->w} meters by {$request->l} meters. The interior design style is {$request->style}. Cinematic lighting, architectural digest quality, 8k resolution, ray tracing, ultra realistic materials.";
-        $apiKey = env('GEMINI_API_KEY');
+        $apiKey = config('services.gemini.api_key');
 
         if(empty($apiKey)) {
             return response()->json(['success' => false, 'error' => 'Sistem hatası: GEMINI_API_KEY .env dosyasında bulunamadı. Lütfen yöneticiye bildirin.']);
         }
 
-        $url = 'https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-001:predict?key=' . $apiKey;
+        $url = 'https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-001:predict';
 
         try {
-            $response = Http::post($url, [
+            $response = Http::withHeaders(['x-goog-api-key' => $apiKey])->timeout(60)->post($url, [
                 'instances' => [['prompt' => $prompt]],
                 'parameters' => ['sampleCount' => 1]
             ]);
