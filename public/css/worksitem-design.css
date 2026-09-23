@@ -385,3 +385,40 @@
         padding: 14px;
     }
 }
+
+/* ==== 12) TEMA TOGGLE ==== */
+.ws-theme-toggle {
+    width: 42px;
+    height: 42px;
+    border: 1px solid var(--ws-border);
+    background: var(--ws-surface);
+    color: var(--ws-text);
+    border-radius: var(--ws-radius-md);
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    margin-left: 8px;
+}
+
+.ws-theme-toggle:hover {
+    border-color: var(--ws-yellow);
+}
+.ws-theme-toggle {
+    width: 42px; height: 42px; border: 1px solid var(--ws-border);
+    background: var(--ws-surface); color: var(--ws-text);
+    border-radius: var(--ws-radius-md); font-size: 18px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s; margin-left: 8px;
+}
+.ws-theme-toggle:hover { border-color: var(--ws-yellow); }
+.ws-theme-toggle {
+    width: 42px; height: 42px; border: 1px solid var(--ws-border);
+    background: var(--ws-surface); color: var(--ws-text);
+    border-radius: var(--ws-radius-md); font-size: 18px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s; margin-left: 8px;
+}
+.ws-theme-toggle:hover { border-color: var(--ws-yellow); }

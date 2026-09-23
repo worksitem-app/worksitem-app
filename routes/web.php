@@ -911,3 +911,8 @@ Route::get('/araclar/insaat-maliyeti-hesaplama', function () {
 Route::fallback(function () {
     return redirect('/', 301);
 });
+Route::get('/test-layout', function() { return view('test-layout'); });
+Route::get('/hakkimizda', function() { return view('hakkimizda'); });
+Route::get('/hakkimizda', function() { return view('hakkimizda'); });
+Route::get('/vizyon', function() { return view('vizyon'); });
+Route::get('/ekip', function() { return view('ekip'); });
