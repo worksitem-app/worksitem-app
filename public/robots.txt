@@ -1,2 +1,8 @@
+# ConTech STAGING — robots.txt
+# DİKKAT: Bu staging ortamı, Google indexlememeli!
+
 User-agent: *
 Disallow: /
+
+# Sitemap (staging'de gerekmez ama bilgi amaçlı)
+# Sitemap: https://staging.worksitem.com/sitemap.xml

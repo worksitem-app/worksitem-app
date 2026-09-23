@@ -5,8 +5,8 @@ Route::get('/araclar/seramik-maliyet-hesaplayici', [\App\Http\Controllers\ToolCo
 
 
 // ADMIN: AI PDF FİYAT GÜNCELLEME
-Route::get('/admin/ai-fiyat-guncelle', [\App\Http\Controllers\ConTech\AdminPriceController::class, 'index'])->name('admin.ai_prices.index')->middleware('auth');
-Route::post('/admin/ai-fiyat-guncelle', [\App\Http\Controllers\ConTech\AdminPriceController::class, 'upload'])->name('admin.prices.upload')->middleware('auth');
+Route::get('/admin/ai-fiyat-guncelle', [\App\Http\Controllers\ConTech\AdminPriceController::class, 'index'])->name('admin.ai_prices.index')->middleware(['auth', 'admin']);
+Route::post('/admin/ai-fiyat-guncelle', [\App\Http\Controllers\ConTech\AdminPriceController::class, 'upload'])->name('admin.prices.upload')->middleware(['auth', 'admin']);
 
 
 use App\Http\Controllers\ProjectController;
@@ -228,7 +228,7 @@ Route::get('/maliyet-hesapla', function() { return view('maliyet-hesapla');
 Route::post('/maliyet-hesapla', [\App\Http\Controllers\ProjectController::class, 'store'])->name('maliyet_hesapla.store');
 
 // ADMIN PANELİ ROTALARI
-Route::middleware('auth')->prefix('admin')->group(function () {
+Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/fiyatlar', [\App\Http\Controllers\AdminController::class, 'index'])->name('admin.prices.index');
     
 
@@ -286,7 +286,7 @@ Route::get('/api/pozlar/search', function(\Illuminate\Http\Request $request) {
 });
 
 // ADMIN EXCEL POZ IMPORT ROTALARI
-Route::middleware('auth')->prefix('admin')->group(function () {
+Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/poz-import', [\App\Http\Controllers\AdminController::class, 'pozImportForm'])->name('admin.poz.import.form');
     
 
