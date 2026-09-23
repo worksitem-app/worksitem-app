@@ -23,6 +23,9 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
             'api.ratelimit' => \App\Http\Middleware\ApiRateLimit::class,
         ]);
+
+        // ⭐ YENİ: Giriş yapmamış kullanıcıları Filament login sayfasına yönlendir
+        $middleware->redirectGuestsTo(fn () => route('filament.admin.auth.login'));
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(
