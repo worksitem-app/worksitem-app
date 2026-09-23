@@ -23,7 +23,7 @@ class PdfToRayicCsv extends Command
 
     public function handle(): int
     {
-        $apiKey = env('GEMINI_API_KEY');
+        $apiKey = config('services.gemini.api_key');
 
         if (!$apiKey) {
             $this->error('GEMINI_API_KEY .env içinde bulunamadı.');
@@ -397,11 +397,11 @@ class PdfToRayicCsv extends Command
         }
 
         $uploadUrl =
-            'https://generativelanguage.googleapis.com/upload/v1beta/files?key='
-            . urlencode($apiKey);
+            'https://generativelanguage.googleapis.com/upload/v1beta/files';
 
         $response = Http::timeout(300)
             ->withHeaders([
+                'x-goog-api-key' => $apiKey,
                 'X-Goog-Upload-Protocol' => 'resumable',
                 'X-Goog-Upload-Command' => 'start',
                 'X-Goog-Upload-Header-Content-Length' => $fileSize,
@@ -671,8 +671,7 @@ PROMPT;
         $url =
             'https://generativelanguage.googleapis.com/v1beta/models/'
             . $model
-            . ':generateContent?key='
-            . urlencode($apiKey);
+            . ':generateContent';
 
         $body = [
             'contents' => [
@@ -704,6 +703,7 @@ PROMPT;
             ->withHeaders([
                 'Content-Type' =>
                     'application/json',
+                'x-goog-api-key' => $apiKey,
             ])
             ->post($url, $body);
 

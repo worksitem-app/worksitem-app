@@ -55,16 +55,16 @@ class KaintaCostEngine
 
     private function getAiExpertAdvice($projectType, $area, $totalCost)
     {
-        $apiKey = env('GEMINI_API_KEY') ?? env('GOOGLE_AI_API_KEY');
+        $apiKey = config('services.gemini.api_key');
         if (empty($apiKey)) return "🤖 Sistem Uyarısı: AI modülü API anahtarı bekleniyor.";
 
-        $url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' . $apiKey;
+        $url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
         $formattedCost = number_format($totalCost, 0, ',', '.');
 
         $prompt = "Sen Kainta İnşaat'ın Baş Mühendisisin. Müşteri '{$projectType}' projesi (Alan: {$area} m²) için maliyet hesapladı. Bütçe: {$formattedCost} TL. Amacın müşteriye güven vermek ve Kainta ile çalışmaya ikna etmek. Müşteriye hitaben, projeye özel 3 maddelik çok kısa teknik tavsiye ver. Fiyat hesabı YAZMA, kaliteyi vurgula.";
 
         try {
-            $response = Http::post($url, [
+            $response = Http::withHeaders(['x-goog-api-key' => $apiKey])->timeout(60)->post($url, [
                 'contents' => [['parts' => [['text' => $prompt]]]],
                 'generationConfig' => ['temperature' => 0.7, 'maxOutputTokens' => 250]
             ]);
