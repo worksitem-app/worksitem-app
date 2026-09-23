@@ -18,7 +18,17 @@ class User extends Authenticatable implements FilamentUser
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
-
+    /**
+     * Admin mi? (AdminMiddleware tarafından kullanılır)
+     */
+    public function isAdmin(): bool
+    {
+        // 1) Filament panel erişimi varsa
+        // 2) veya email admin@kainta.com ise
+        // 3) veya is_admin alanı true ise
+        return strtolower((string) $this->email) === 'admin@kainta.com'
+            || ($this->is_admin ?? false) === true;
+    }
     public function canAccessPanel(Panel $panel): bool
     {
         return strtolower((string) $this->email) === 'admin@kainta.com';
