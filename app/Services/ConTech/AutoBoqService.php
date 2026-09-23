@@ -32,6 +32,22 @@ class AutoBoqService
         string $quality = 'standard'
     ): array {
 
+        // Excel dosyaları için özel handling — Gemini binary Excel'i desteklemiyor
+        $mimeType = $file->getMimeType();
+        $extension = strtolower($file->getClientOriginalExtension());
+
+        if (in_array($extension, ['xlsx', 'xls']) ||
+            in_array($mimeType, [
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                'application/vnd.ms-excel',
+                'application/octet-stream'
+            ])) {
+            $text = $this->excelToText($file);
+            if (!empty($text)) {
+                return $this->analyseText($text, $projectType, $quality);
+            }
+        }
+
         $apiKey = config('services.gemini.api_key');
 
         if (empty($apiKey)) {
@@ -540,6 +556,218 @@ PROMPT;
      *
      * Fallback fiyat YOK.
      */
+    /**
+     * Excel dosyasını CSV benzeri text'e çevirir.
+     */
+    private function excelToText(UploadedFile $file): string
+    {
+        try {
+            if (!class_exists(\PhpOffice\PhpSpreadsheet\IOFactory::class)) {
+                Log::warning('PhpSpreadsheet yüklü değil, Excel okunamıyor');
+                return '';
+            }
+
+            $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($file->getRealPath());
+            $lines = [];
+
+            foreach ($spreadsheet->getAllSheets() as $sheet) {
+                $lines[] = '# Sheet: ' . $sheet->getTitle();
+
+                foreach ($sheet->getRowIterator() as $row) {
+                    $cellIterator = $row->getCellIterator();
+                    $cellIterator->setIterateOnlyExistingCells(false);
+
+                    $cells = [];
+                    foreach ($cellIterator as $cell) {
+                        $value = $cell->getValue();
+                        if ($value !== null && $value !== '') {
+                            $cells[] = trim((string) $value);
+                        }
+                    }
+
+                    if (!empty($cells)) {
+                        $lines[] = implode(' | ', $cells);
+                    }
+                }
+            }
+
+            return implode("\n", $lines);
+        } catch (\Throwable $e) {
+            Log::error('Excel okuma hatası: ' . $e->getMessage());
+            return '';
+        }
+    }
+    /**
+     * Metin girdisini analiz eder (dosya yerine).
+     * Aynı AI + PriceService zincirini kullanır.
+     */
+    public function analyseText(
+        string $text,
+        string $projectType = 'genel',
+        string $quality = 'standard'
+    ): array {
+        $apiKey = config('services.gemini.api_key');
+
+        if (empty($apiKey)) {
+            throw new \Exception('Sistem Hatası: GEMINI_API_KEY tanımlı değil.');
+        }
+
+        $text = trim($text);
+        if ($text === '') {
+            throw new \Exception('Metin boş olamaz.');
+        }
+
+        $prompt = <<<PROMPT
+Sen uzman bir inşaat keşif ve metraj mühendisisin.
+
+Aşağıdaki metraj listesini analiz et.
+
+Proje Tipi:
+{$projectType}
+
+METRAJ LİSTESİ:
+{$text}
+
+AMAÇ:
+Metraj listesindeki iş kalemlerini ve miktarlarını çıkar.
+
+KRİTİK KURALLAR:
+
+1. ASLA fiyat üretme.
+2. ASLA birim fiyat tahmin etme.
+3. Listede olmayan ölçüyü uydurma.
+4. Emin olmadığın iş kaleminde confidence değerini low veya medium yap.
+5. Bir iş kaleminin tipi fiyatlandırma için önemliyse adı mümkün olduğunca teknik ve açık yaz.
+6. Her satır için iş kalemi adı ve miktar (varsa) çıkar.
+
+Birimleri şu formatta kullan: m2, m3, m, adet, kg, ton
+
+JSON FORMAT:
+
+{
+  "items": [
+    {
+      "name": "Ahşap Kalıp Yapılması",
+      "quantity": 150,
+      "unit": "m2",
+      "confidence": "high",
+      "source_page": null,
+      "measurement_basis": "stated",
+      "notes": null
+    }
+  ]
+}
+
+JSON dışında hiçbir açıklama yazma.
+PROMPT;
+
+        $response = Http::withHeaders([
+            'Content-Type' => 'application/json',
+            'x-goog-api-key' => $apiKey
+        ])
+        ->timeout(60)
+        ->retry(3, 1500, throw: false)
+        ->post(
+            'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent',
+            [
+                'contents' => [
+                    ['parts' => [['text' => $prompt]]]
+                ],
+                'generationConfig' => [
+                    'responseMimeType' => 'application/json'
+                ]
+            ]
+        );
+
+        if (!$response->successful()) {
+            Log::error('Gemini API Hatası (Text): ' . $response->body());
+            throw new \Exception('Yapay Zeka metni okurken bir hata oluştu.');
+        }
+
+        $result = $response->json('candidates.0.content.parts.0.text');
+        $parsedData = json_decode($result, true);
+
+        if (json_last_error() !== JSON_ERROR_NONE || !isset($parsedData['items']) || !is_array($parsedData['items'])) {
+            throw new \Exception('AI metinden anlamlı bir metraj verisi çıkaramadı.');
+        }
+
+        return $this->buildBoqResponse($parsedData['items'], $quality);
+    }
+
+    /**
+     * Dosya ve text için ortak fiyatlandırma + response builder.
+     */
+    private function buildBoqResponse(array $rawItems, string $quality): array
+    {
+        $boqItems = [];
+        $verifiedTotal = 0.0;
+        $pricedItemCount = 0;
+        $missingPriceCount = 0;
+
+        $labels = [
+            'high' => 'Yüksek',
+            'medium' => 'Orta',
+            'low' => 'Düşük (Kontrol Gerekir)'
+        ];
+
+        foreach ($rawItems as $item) {
+            $name = trim((string) ($item['name'] ?? 'Bilinmeyen Kalem'));
+            $qty = isset($item['quantity']) && is_numeric($item['quantity']) ? (float) $item['quantity'] : 0.0;
+            $unit = trim((string) ($item['unit'] ?? ''));
+            $confidence = strtolower(trim((string) ($item['confidence'] ?? 'low')));
+            if (!array_key_exists($confidence, $labels)) $confidence = 'low';
+
+            $price = $this->resolvePriceForItem($name, $unit, $quality);
+
+            $lineTotal = null;
+            $pricedQuantity = null;
+
+            if ($qty > 0 && ($price['found'] ?? false) === true && isset($price['unit_price']) && is_numeric($price['unit_price'])) {
+                $factor = (float) ($price['quantity_factor'] ?? 1);
+                $pricedQuantity = $qty * $factor;
+                $lineTotal = $pricedQuantity * (float) $price['unit_price'];
+                $verifiedTotal += $lineTotal;
+                $pricedItemCount++;
+            } else {
+                $missingPriceCount++;
+            }
+
+            $priceMessage = $qty <= 0 ? 'Dosyadan güvenilir miktar çıkarılamadı.' : ($price['message'] ?? null);
+
+            $boqItems[] = [
+                'name' => $name,
+                'quantity' => $qty > 0 ? $qty : null,
+                'unit' => $unit,
+                'unit_normalized' => $this->normalizeUnit($unit),
+                'unit_price' => $lineTotal !== null
+                    ? number_format((float) $price['unit_price'], 2, ',', '.') . ' TL/' . ($price['price_unit'] ?? '')
+                    : 'Doğrulanmış fiyat yok',
+                'total' => $lineTotal !== null ? number_format($lineTotal, 2, ',', '.') . ' TL' : 'Hesaplanmadı',
+                'raw_unit_price' => $lineTotal !== null ? (float) $price['unit_price'] : null,
+                'raw_total' => $lineTotal,
+                'priced_quantity' => $pricedQuantity,
+                'price_found' => $lineTotal !== null,
+                'price_source' => $price['source'] ?? null,
+                'price_reference' => $price['reference'] ?? null,
+                'price_message' => $priceMessage,
+                'confidence' => $confidence,
+                'confidence_label' => $labels[$confidence],
+                'source_page' => $item['source_page'] ?? null,
+                'measurement_basis' => $item['measurement_basis'] ?? 'unknown',
+                'notes' => $item['notes'] ?? null,
+            ];
+        }
+
+        return [
+            'items' => $boqItems,
+            'verified_total' => round($verifiedTotal, 2),
+            'raw_total' => round($verifiedTotal, 2),
+            'priced_item_count' => $pricedItemCount,
+            'missing_price_count' => $missingPriceCount,
+            'total_item_count' => count($boqItems),
+            'success' => true,
+        ];
+    }
     public function resolvePriceForItem(
         string $name,
         string $unit = '',
