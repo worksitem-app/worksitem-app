@@ -3,282 +3,377 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Auto-BOQ (Akıllı Keşif Fiyatlandırma) | WORKSİTEM</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Auto-BOQ | Keşif Fiyatlandırıcı | Worksitem</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        :root { --bg: #f5f6f8; --surface: #ffffff; --text: #101318; --muted: #6b7280; --line: #e4e7eb; --accent: #2563eb; --radius: 16px; }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 60px; }
-        .header { background: #fff; padding: 15px 20px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; position: sticky; top:0; z-index:10;}
-        .container { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
-        .ai-badge { background: rgba(37, 99, 235, 0.1); color: var(--accent); padding: 6px 14px; border-radius: 100px; font-size: 12px; font-weight: 900; }
-        .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 30px; margin-bottom: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); }
-        textarea { width: 100%; height: 150px; padding: 15px; border: 2px dashed #cbd5e1; border-radius: 12px; font-family: monospace; font-size:13px; resize: vertical; margin-top:10px; outline:none; }
-        textarea:focus { border-color: var(--accent); }
-        .btn { background: var(--text); color: #fff; padding: 15px; border-radius: 12px; border: none; font-weight: 800; cursor: pointer; width: 100%; margin-top: 15px; transition: .2s;}
-        .btn:hover { background: #000; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 13px; text-align: left; }
-        th, td { padding: 12px; border-bottom: 1px solid var(--line); }
-        th { background: #f8fafc; font-weight: 800; color: #475569; }
-        .matched { color: #10b981; font-weight: 700; }
-        .unmatched { color: #ef4444; font-weight: 700; }
-        .export-btn { background: #10b981; color: #fff; padding: 15px; border-radius: 12px; border: none; font-weight: 800; cursor: pointer; width: 100%; margin-top: 15px; display: none; }
-        
-        .loader-wrapper { display: none; text-align: center; padding: 40px 20px; background: #fff; border-radius: 16px; border: 1px solid var(--line); margin-bottom: 20px; }
-        .loader-wrapper.active { display: block; animation: fadeIn 0.3s ease; }
-        .crane-icon { font-size: 48px; display: inline-block; animation: dig 1.5s infinite; transform-origin: bottom center; }
-        .loading-text { margin-top: 20px; font-size: 16px; font-weight: 800; color: var(--text); }
-        .loading-subtext { font-size: 13px; color: var(--muted); margin-top: 5px; }
-        .progress-bar { width: 60%; height: 6px; background: #e2e8f0; border-radius: 10px; margin: 15px auto 0; overflow: hidden; position: relative; }
-        .progress-fill { height: 100%; background: #ffb800; width: 0%; transition: width 0.1s linear; }
-
-        .budget-confirm-box { margin-top: 25px; padding: 25px; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; display: none; text-align: center; }
-        .budget-confirm-title { font-size: 18px; font-weight: 900; margin-bottom: 8px;}
-        .budget-confirm-text { color: var(--muted); font-size: 13px; line-height: 1.55; margin-bottom: 20px; }
-        .budget-confirm-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        @media(max-width: 600px) { .budget-confirm-actions { grid-template-columns: 1fr; } }
-        .budget-btn { min-height: 52px; border-radius: 13px; padding: 10px 14px; font-size: 13px; font-weight: 800; border: 1.5px solid var(--line); cursor: pointer; transition: .2s; }
-        .budget-no { background: #fff; color: #555; }
-        .budget-no:hover { background: #f8f9fb; border-color: #d1d5db; }
-        .budget-yes { background: #fff; color: #111; }
-        .budget-yes:hover { border-color: #38bdf8; background: #f0f9ff; box-shadow: 0 0 0 3px rgba(56,189,248,.10); }
-
-        .lead-box { background: #f8f9fb; border: 1px solid var(--line); border-radius: var(--radius); padding: 30px; margin-top: 15px; display: none; }
-        .lead-box.active { display: block; animation: fadeIn 0.5s ease; }
-        .form-group { margin-bottom: 15px; text-align: left; }
-        .form-group label { display: block; font-size: 13px; font-weight: 800; margin-bottom: 8px; }
-        .form-control { width: 100%; height: 50px; border: 1px solid var(--line); border-radius: 12px; padding: 0 15px; font-size: 14px; background: #fff; outline: none; }
-        .btn-submit { background: #2563eb; color: #fff; margin-top: 10px; width: 100%; height: 50px; border: none; border-radius: 12px; font-weight: 800; font-size: 15px; cursor: pointer; }
-
-        @keyframes dig { 0% { transform: rotate(0deg); } 50% { transform: rotate(15deg); } 100% { transform: rotate(0deg); } }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #0f172a;
+            --muted: #6b7280;
+            --accent: #2563eb;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --border: #e5e7eb;
+        }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+        .header { background: #fff; padding: 16px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .header a { color: var(--muted); text-decoration: none; font-weight: 700; }
+        .header a:hover { color: var(--text); }
+        .header img { height: 30px; }
+        .container { max-width: 1100px; margin: 40px auto; padding: 0 20px; }
+        .ai-badge { background: rgba(37, 99, 235, 0.1); color: var(--accent); padding: 6px 14px; border-radius: 100px; font-size: 12px; font-weight: 900; display: inline-block; }
+        h1 { font-weight: 900; margin-top: 10px; font-size: 32px; }
+        .subtitle { color: var(--muted); margin-top: 8px; font-size: 15px; }
+        .card { background: var(--card); border-radius: 16px; padding: 32px; margin-top: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .tabs { display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 1px solid var(--border); }
+        .tab { padding: 12px 24px; cursor: pointer; font-weight: 700; color: var(--muted); border-bottom: 3px solid transparent; background: none; border-top: none; border-left: none; border-right: none; font-size: 14px; font-family: inherit; }
+        .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        label { font-weight: 800; font-size: 14px; display: block; margin-bottom: 8px; }
+        textarea, input[type="file"] { width: 100%; padding: 16px; border: 2px dashed var(--border); border-radius: 12px; font-family: inherit; font-size: 14px; transition: border 0.2s; }
+        textarea { min-height: 200px; resize: vertical; border-style: solid; }
+        textarea:focus, input[type="file"]:focus { outline: none; border-color: var(--accent); }
+        input[type="file"] { cursor: pointer; background: #fafbfc; }
+        input[type="file"]::file-selector-button { background: var(--accent); color: #fff; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 700; margin-right: 12px; font-family: inherit; }
+        .file-info { margin-top: 10px; padding: 12px 16px; background: #f0f9ff; border-radius: 8px; font-size: 13px; color: var(--accent); font-weight: 600; }
+        .options { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 20px; }
+        .options label { font-weight: 700; font-size: 13px; color: var(--muted); }
+        .options select { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px; font-family: inherit; font-size: 14px; font-weight: 600; }
+        .btn { width: 100%; padding: 18px; margin-top: 24px; background: var(--text); color: #fff; border: none; border-radius: 12px; font-weight: 900; font-size: 15px; cursor: pointer; transition: transform 0.15s; font-family: inherit; }
+        .btn:hover:not(:disabled) { transform: translateY(-1px); }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        .loader-box { display: none; padding: 60px 20px; text-align: center; }
+        .loader-box.active { display: block; }
+        .loader-icon { font-size: 48px; margin-bottom: 16px; animation: bounce 1.2s infinite; }
+        @keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        .loader-title { font-weight: 900; font-size: 18px; margin-bottom: 8px; }
+        .loader-sub { color: var(--muted); font-size: 14px; margin-bottom: 24px; }
+        .progress-bar { width: 100%; max-width: 400px; height: 6px; background: var(--border); border-radius: 100px; margin: 0 auto; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--accent); width: 0%; transition: width 0.3s; }
+        .result-card { display: none; }
+        .result-card.active { display: block; }
+        .result-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 2px solid var(--border); }
+        .result-header h2 { font-weight: 900; font-size: 22px; }
+        .summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin: 20px 0; }
+        .summary-item { padding: 16px; background: #f8fafc; border-radius: 10px; }
+        .summary-item .label { font-size: 12px; color: var(--muted); font-weight: 700; margin-bottom: 4px; }
+        .summary-item .value { font-size: 20px; font-weight: 900; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 13px; }
+        th { background: #f8fafc; padding: 12px; text-align: left; font-weight: 800; font-size: 12px; color: var(--muted); text-transform: uppercase; border-bottom: 2px solid var(--border); }
+        td { padding: 14px 12px; border-bottom: 1px solid var(--border); }
+        .badge { display: inline-block; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 800; }
+        .badge-success { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+        .badge-warning { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
+        .badge-danger { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
+        .actions { display: flex; gap: 12px; margin-top: 24px; }
+        .actions button { flex: 1; padding: 14px; border-radius: 10px; font-weight: 800; cursor: pointer; font-family: inherit; font-size: 14px; }
+        .btn-secondary { background: #fff; border: 2px solid var(--border); color: var(--text); }
+        .btn-primary { background: var(--success); color: #fff; border: none; }
+        .error-box { display: none; padding: 20px; background: rgba(239, 68, 68, 0.1); border-radius: 12px; margin-top: 20px; color: var(--danger); font-weight: 700; }
+        .error-box.active { display: block; }
+        @media (max-width: 768px) { .options { grid-template-columns: 1fr; } h1 { font-size: 24px; } .container { margin: 20px auto; } }
     </style>
-    <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
-<body data-tool-slug="auto-boq">
-<?php $dbPrices = \Illuminate\Support\Facades\DB::table('unit_prices')->get(); ?>
+<body>
 <header class="header">
-    <a href="/araclar" style="text-decoration:none; color:#6b7280; font-weight:700;">← Araçlara Dön</a>
-    <img src="/200.png" height="30" alt="WORKSİTEM">
+    <a href="/araclar">← Araçlara Dön</a>
+    <img src="/200.png" alt="WORKSİTEM">
 </header>
+
 <div class="container">
     <div style="text-align:center; margin-bottom:30px;">
-        <span class="ai-badge">✦ NLP Akıllı Eşleştirme Motoru v2.3</span>
-        <h1 style="font-weight:900; margin-top:10px;">Auto-BOQ (Keşif Fiyatlandırıcı)</h1>
-        <p style="color:#6b7280;">Sistem, girdiğiniz metraj listesini Merkezi Fiyat Motorundaki güncel anahtar teslim rayiçlerle saniyeler içinde fiyatlandırır.</p>
+        <span class="ai-badge">✦ AI Destekli Keşif Analizi v3.0</span>
+        <h1>Auto-BOQ (Keşif Fiyatlandırıcı)</h1>
+        <p class="subtitle">PDF, Excel, JPG dosyanızı veya yazılı metraj listenizi yükleyin. Yapay zeka iş kalemlerini çıkarır, doğrulanmış rayiçlerle fiyatlandırır.</p>
     </div>
-    
-    <div class="card" id="inputCard">
-        <label style="font-weight:800; font-size:14px;">Excel'den Kopyala / Yapıştır (İş Kalemi - Miktar)</label>
-        <textarea id="boqInput" placeholder="Örnek kullanım:&#10;C30 Hazır Beton 150&#10;0,7 MM TRAPEZ SAC İLE ÇATI KAPLAMA YAPILMASI 120"></textarea>
-        <button class="btn" id="analyzeBtn">✦ Yapay Zeka ile Fiyatlandır</button>
+
+    <!-- YÜKLEME FORMU -->
+    <div class="card" id="uploadCard">
+        <div class="tabs">
+            <button type="button" class="tab active" data-tab="file">📄 Dosya Yükle</button>
+            <button type="button" class="tab" data-tab="text">⌨️ Metin Yapıştır</button>
+        </div>
+
+        <form id="autoBoqForm" enctype="multipart/form-data">
+            @csrf
+
+            <div class="tab-content active" id="tab-file">
+                <label>Keşif Dosyası (PDF / Excel / JPG / PNG)</label>
+                <input type="file" name="project_file" id="projectFile"
+                       accept=".pdf,.csv,.xlsx,.xls,.jpg,.jpeg,.png">
+                <div class="file-info" id="fileInfo" style="display:none;"></div>
+            </div>
+
+            <div class="tab-content" id="tab-text">
+                <label>Metraj Listesi (Her satıra bir kalem)</label>
+                <textarea name="text_input" id="textInput" placeholder="Örnek:&#10;Ahşap Kalıp 150 m2&#10;C30 Hazır Beton 100 m3&#10;13.5 cm Tuğla Duvar 200 m2"></textarea>
+            </div>
+
+            <div class="options">
+                <div>
+                    <label>Proje Tipi</label>
+                    <select name="project_type">
+                        <option value="genel">Genel İnşaat</option>
+                        <option value="konut">Konut Projesi</option>
+                        <option value="ticari">Ticari Yapı</option>
+                        <option value="altyapi">Altyapı</option>
+                        <option value="renovasyon">Renovasyon</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Kalite Sınıfı</label>
+                    <select name="quality">
+                        <option value="standart">Standart</option>
+                        <option value="ekonomik">Ekonomik</option>
+                        <option value="lüks">Lüks</option>
+                    </select>
+                </div>
+            </div>
+
+            <button type="submit" class="btn" id="submitBtn">✦ Yapay Zeka ile Fiyatlandır</button>
+        </form>
     </div>
 
     <!-- YÜKLEME EKRANI -->
-    <div class="loader-wrapper" id="loaderBox">
-        <div class="crane-icon">🚜</div>
-        <div class="loading-text" id="loaderTitle">Yapay Zeka Veritabanını Tarıyor...</div>
-        <div class="loading-subtext" id="loaderSub">Merkezi Fiyat Motorundan (2026) güncel rayiçler çekiliyor.</div>
+    <div class="card loader-box" id="loaderBox">
+        <div class="loader-icon">🚜</div>
+        <div class="loader-title" id="loaderTitle">Yapay Zeka Dosyayı Okuyor...</div>
+        <div class="loader-sub" id="loaderSub">Gemini Vision ile iş kalemleri çıkarılıyor.</div>
         <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
     </div>
 
-    <div class="card" id="resultCard" style="display:none;">
-        <h3 style="font-weight:900; border-bottom:1px solid #e4e7eb; padding-bottom:10px;">📊 Fiyatlandırılmış Keşif Özeti</h3>
+    <!-- HATA KUTUSU -->
+    <div class="card error-box" id="errorBox"></div>
+
+    <!-- SONUÇ KARTI -->
+    <div class="card result-card" id="resultCard">
+        <div class="result-header">
+            <h2>📊 Fiyatlandırılmış Keşif Özeti</h2>
+            <span class="badge badge-success" id="resultBadge">Tamamlandı</span>
+        </div>
+
+        <div class="summary">
+            <div class="summary-item">
+                <div class="label">Toplam Kalem</div>
+                <div class="value" id="summaryItems">0</div>
+            </div>
+            <div class="summary-item">
+                <div class="label">Fiyatlı</div>
+                <div class="value" style="color: var(--success);" id="summaryPriced">0</div>
+            </div>
+            <div class="summary-item">
+                <div class="label">Fiyatsız</div>
+                <div class="value" style="color: var(--danger);" id="summaryMissing">0</div>
+            </div>
+            <div class="summary-item">
+                <div class="label">Toplam</div>
+                <div class="value" id="summaryTotal">0 TL</div>
+            </div>
+        </div>
+
         <div style="overflow-x:auto;">
-            <table id="resultTable">
-                <thead><tr><th>İş Kalemi (Sizin Metniniz)</th><th>Eşleşen DB Kalemi</th><th>Miktar</th><th>Birim Fiyat</th><th>Toplam</th></tr></thead>
-                <tbody></tbody>
+            <table>
+                <thead>
+                    <tr>
+                        <th>İş Kalemi</th>
+                        <th>Miktar</th>
+                        <th>Birim</th>
+                        <th>Güven</th>
+                        <th>Birim Fiyat</th>
+                        <th style="text-align:right;">Toplam</th>
+                    </tr>
+                </thead>
+                <tbody id="resultTbody"></tbody>
             </table>
         </div>
-        <h2 style="text-align:right; margin-top:20px; color:#2563eb;" id="grandTotal">0 TL</h2>
-        <button class="export-btn" id="exportBtn">Excel (XLSX) Olarak İndir</button>
-    </div>
 
-    <!-- LEAD SATIŞ HUNİSİ (KAİNTA TEKLİF) -->
-    <div class="budget-confirm-box" id="budgetConfirmBox">
-        <div class="budget-confirm-title">Keşif Tutarınız Hazır! Teklif almak ister misiniz?</div>
-        <div class="budget-confirm-text">Bu fiyatlandırılmış tablo üzerinden, Kainta İnşaat'ın uzman mühendislerinden resmi anahtar teslim teklifi isteyebilirsiniz.</div>
-        <div class="budget-confirm-actions">
-            <button type="button" class="budget-btn budget-yes" id="btnYes">✓ Evet, Kainta'dan teklif istiyorum.</button>
-            <button type="button" class="budget-btn budget-no" id="btnNo">Sadece maliyete baktım.</button>
+        <div class="actions">
+            <button type="button" class="btn-secondary" onclick="window.location.reload()">Yeni Analiz</button>
+            <button type="button" class="btn-primary" id="exportBtn">📥 Excel'e Aktar</button>
         </div>
-    </div>
-
-    <div class="lead-box" id="leadBox">
-        <h3 style="font-size: 18px; font-weight: 900; margin-bottom: 8px;">Kainta İnşaat Teklif Formu</h3>
-        <p style="font-size: 13px; color: var(--muted); margin-bottom: 20px;">Keşif özetiniz sistemimize kaydedildi. Uzmanlarımız sizinle iletişime geçsin.</p>
-        <form action="{{ route('lead.store') }}" method="POST">
-            @csrf
-            <input type="hidden" name="calculated_service" value="Auto-BOQ Yapay Zeka Keşfi">
-            <input type="hidden" name="calculated_area" id="leadCalculatedData" value="">
-            
-            <div class="form-group"><label>Adınız Soyadınız / Firma Ünvanı</label><input type="text" name="name" class="form-control" required placeholder="Firma Adı"></div>
-            <div class="form-group"><label>Telefon Numaranız</label><input type="tel" name="phone" class="form-control" required placeholder="05XX XXX XX XX"></div>
-            <button type="submit" class="btn-submit">Teklif Talebini Gönder →</button>
-        </form>
     </div>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
-const dbPrices = <?php echo json_encode($dbPrices); ?>;
-let finalData = [];
-const moneyFmt = new Intl.NumberFormat('tr-TR', { maximumFractionDigits: 0 });
-
-// GİZLİ KÂR MARJI (MÜŞTERİ GÖRMEZ)
-const HIDDEN_PROFIT_MARGIN = 40; // %40 Kâr eklentisi. İhtiyaca göre değiştirebilirsiniz.
-const markupMultiplier = 1 + (HIDDEN_PROFIT_MARGIN / 100);
-
-function normalizeText(str) {
-    if(!str) return "";
-    let lowerStr = str.toLocaleLowerCase('tr-TR');
-    lowerStr = lowerStr.replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ş/g, 's')
-                       .replace(/ı/g, 'i').replace(/ö/g, 'o').replace(/ç/g, 'c');
-    lowerStr = lowerStr.replace(/[^a-z0-9\s]/g, ' ');
-    return lowerStr.replace(/\s+/g, ' ').trim();
-}
-
-function findMatch(userText) {
-    let bestMatch = null;
-    let normUserText = normalizeText(userText);
-    const stopwords = ['ve', 'ile', 'veya', 'her', 'turlu', 'icin', 'mm', 'cm', 'm2', 'm3', 'kg', 'yapilmasi', 'edilmesi', 'temini', 'montaji', 'sokulmesi', 'olan', 'tip'];
-
-    let userWords = normUserText.split(' ').filter(w => w.length > 2 && !stopwords.includes(w));
-    if (userWords.length === 0) return null;
-
-    for(let item of dbPrices) {
-        let normDbName = normalizeText(item.name);
-        let dbWords = normDbName.split(' ').filter(w => w.length > 2 && !stopwords.includes(w));
-        
-        let matchCount = 0;
-        for(let dbW of dbWords) {
-            if(userWords.includes(dbW) || (dbW.length > 4 && normUserText.includes(dbW))) {
-                matchCount++;
-            }
-        }
-
-        let score = dbWords.length > 0 ? (matchCount / dbWords.length) : 0;
-        if(score >= 0.55) {
-            if(!bestMatch || score > bestMatch.score) {
-                bestMatch = { item: item, score: score };
-            }
-        }
-    }
-    return bestMatch;
-}
-
-document.getElementById('analyzeBtn').addEventListener('click', () => {
-    const lines = document.getElementById('boqInput').value.split('\n');
-    if(lines.length === 0 || lines[0] === '') return;
-
-    document.getElementById('resultCard').style.display = 'none';
-    document.getElementById('exportBtn').style.display = 'none';
-    document.getElementById('budgetConfirmBox').style.display = 'none';
-    document.getElementById('leadBox').style.display = 'none';
-    document.getElementById('inputCard').style.display = 'none';
-    document.getElementById('loaderBox').classList.add('active');
-    
-    let progress = 0;
-    const progressFill = document.getElementById('progressFill');
-    const title = document.getElementById('loaderTitle');
-    const sub = document.getElementById('loaderSub');
-
-    const interval = setInterval(() => {
-        progress += 2;
-        progressFill.style.width = progress + '%';
-
-        if(progress === 30) {
-            title.innerText = "Kelimeler Ayrıştırılıyor...";
-            sub.innerText = "NLP algoritması çalışıyor.";
-            document.querySelector('.crane-icon').innerText = "🧠";
-        } else if(progress === 60) {
-            title.innerText = "Fiyatlar Eşleştiriliyor...";
-            sub.innerText = "10.000'den fazla veri noktası karşılaştırılıyor.";
-            document.querySelector('.crane-icon').innerText = "📊";
-        } else if(progress === 90) {
-            title.innerText = "Hesaplamalar Tamamlanıyor...";
-            sub.innerText = "Anahtar teslim maliyet dökümü hazırlanıyor.";
-            document.querySelector('.crane-icon').innerText = "✅";
-        }
-
-        if(progress >= 100) {
-            clearInterval(interval);
-            finishAnalysis(lines);
-        }
-    }, 40);
-});
-
-function finishAnalysis(lines) {
-    const tbody = document.querySelector('#resultTable tbody');
-    tbody.innerHTML = '';
-    finalData = [];
-    let grandTotal = 0;
-
-    lines.forEach(line => {
-        if(line.trim() === '') return;
-        
-        let name = line.trim(); 
-        let qty = 1;
-        let match = line.match(/^(.*?)\s+((?:\d{1,3}(?:\.\d{3})*|\d+)(?:,\d+)?)\s*$/);
-        
-        if(match && match[1].trim() !== '') {
-            name = match[1].trim();
-            let qtyStr = match[2].replace(/\./g, '').replace(',', '.');
-            qty = parseFloat(qtyStr);
-            if(isNaN(qty)) qty = 1;
-        }
-
-        let matchResult = findMatch(name);
-        let tr = document.createElement('tr');
-        
-        if(matchResult) {
-            let dbItem = matchResult.item;
-            
-            // VERİTABANI FİYATINA GİZLİ KÂR MARJINI UYGULA
-            let unitPriceWithProfit = dbItem.price * markupMultiplier;
-            let total = unitPriceWithProfit * qty;
-            
-            grandTotal += total;
-            
-            tr.innerHTML = `<td>${name}</td><td class="matched">✓ ${dbItem.name}</td><td>${qty}</td><td>${moneyFmt.format(unitPriceWithProfit)} TL</td><td><strong>${moneyFmt.format(total)} TL</strong></td>`;
-            finalData.push({"İş Kalemi (Orijinal)": name, "Eşleşen Sistem Kalemi": dbItem.name, "Miktar": qty, "Birim Fiyat (TL)": Math.round(unitPriceWithProfit), "Toplam Maliyet (TL)": Math.round(total)});
-        } else {
-            tr.innerHTML = `<td>${name}</td><td class="unmatched">✗ Eşleşme Bulunamadı</td><td>${qty}</td><td>-</td><td>-</td>`;
-            finalData.push({"İş Kalemi (Orijinal)": name, "Eşleşen Sistem Kalemi": "Bulunamadı", "Miktar": qty, "Birim Fiyat (TL)": 0, "Toplam Maliyet (TL)": 0});
-        }
-        tbody.appendChild(tr);
+document.addEventListener('DOMContentLoaded', () => {
+    // Tab switching
+    document.querySelectorAll('.tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            tab.classList.add('active');
+            document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+        });
     });
 
-    document.getElementById('grandTotal').innerText = "TOPLAM BULUNAN: " + moneyFmt.format(grandTotal) + " TL";
-    document.getElementById('leadCalculatedData').value = `Toplam Tutar: ${moneyFmt.format(grandTotal)} TL`;
-    
-    document.getElementById('loaderBox').classList.remove('active');
-    document.getElementById('inputCard').style.display = 'block';
-    document.getElementById('resultCard').style.display = 'block';
-    document.getElementById('exportBtn').style.display = 'block';
-    
-    document.getElementById('budgetConfirmBox').style.display = 'block';
-    
-    document.querySelector('.crane-icon').innerText = "🚜"; 
-    document.getElementById('progressFill').style.width = '0%'; 
-}
+    // File info
+    const fileInput = document.getElementById('projectFile');
+    fileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        const info = document.getElementById('fileInfo');
+        if (file) {
+            info.textContent = `✓ ${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+            info.style.display = 'block';
+        } else {
+            info.style.display = 'none';
+        }
+    });
 
-document.getElementById('btnYes').addEventListener('click', () => { 
-    document.getElementById('budgetConfirmBox').style.display='none'; 
-    document.getElementById('leadBox').style.display='block'; 
-});
-document.getElementById('btnNo').addEventListener('click', () => { 
-    document.getElementById('budgetConfirmBox').innerHTML=`<div style="color:#6b7280; font-size:14px; padding:20px;">Keşif hesaplayıcımızı kullandığınız için teşekkür ederiz.</div>`; 
-});
+    // Form submit
+    const form = document.getElementById('autoBoqForm');
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
 
-document.getElementById('exportBtn').addEventListener('click', () => {
-    const ws = XLSX.utils.json_to_sheet(finalData);
-    ws['!cols'] = [ {wch: 60}, {wch: 35}, {wch: 15}, {wch: 18}, {wch: 20} ];
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Fiyatlandirilmis_BOQ");
-    XLSX.writeFile(wb, "Worksitem_Keşif_Raporu.xlsx");
+        const file = fileInput.files[0];
+        const text = document.getElementById('textInput').value.trim();
+
+        if (!file && !text) {
+            showError('Lütfen bir dosya yükleyin veya metin girin.');
+            return;
+        }
+
+        if (file && text) {
+            showError('Lütfen sadece bir yöntem seçin: dosya veya metin.');
+            return;
+        }
+
+        // Hazırlık
+        document.getElementById('uploadCard').style.display = 'none';
+        document.getElementById('errorBox').classList.remove('active');
+        document.getElementById('loaderBox').classList.add('active');
+        document.getElementById('submitBtn').disabled = true;
+
+        // Progress animasyonu
+        let progress = 0;
+        const progressFill = document.getElementById('progressFill');
+        const title = document.getElementById('loaderTitle');
+        const sub = document.getElementById('loaderSub');
+
+        const interval = setInterval(() => {
+            progress = Math.min(progress + 2, 95);
+            progressFill.style.width = progress + '%';
+
+            if (progress === 30) { title.textContent = "İş Kalemleri Ayrıştırılıyor..."; sub.textContent = "Yapay zeka metraj verilerini çıkarıyor."; }
+            if (progress === 60) { title.textContent = "Rayiçler Sorgulanıyor..."; sub.textContent = "Doğrulanmış fiyat motorundan birim fiyatlar çekiliyor."; }
+            if (progress === 85) { title.textContent = "Hesaplamalar Tamamlanıyor..."; sub.textContent = "Keşif raporu hazırlanıyor."; }
+        }, 60);
+
+        // API Çağrısı
+        try {
+            const formData = new FormData(form);
+
+            // Metin varsa dosya alanını çıkar
+            if (text && !file) {
+                formData.delete('project_file');
+                formData.append('text_input', text);
+            } else if (file && !text) {
+                formData.delete('text_input');
+            }
+
+            const response = await fetch('{{ route("tools.auto_boq.calc") }}', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json',
+                }
+            });
+
+            clearInterval(interval);
+            progressFill.style.width = '100%';
+
+            const result = await response.json();
+
+            if (!response.ok || !result.success) {
+                throw new Error(result.message || 'Analiz başarısız oldu.');
+            }
+
+            setTimeout(() => renderResult(result), 400);
+
+        } catch (error) {
+            clearInterval(interval);
+            document.getElementById('loaderBox').classList.remove('active');
+            document.getElementById('uploadCard').style.display = 'block';
+            document.getElementById('submitBtn').disabled = false;
+            showError(error.message || 'Beklenmeyen bir hata oluştu.');
+        }
+    });
+
+    function showError(msg) {
+        const box = document.getElementById('errorBox');
+        box.textContent = '✗ ' + msg;
+        box.classList.add('active');
+        box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    let lastResult = null;
+
+    function renderResult(result) {
+        lastResult = result;
+
+        document.getElementById('loaderBox').classList.remove('active');
+        document.getElementById('resultCard').classList.add('active');
+        document.getElementById('uploadCard').style.display = 'none';
+
+        const items = result.items || [];
+        const total = result.raw_total || 0;
+        const pricedCount = items.filter(i => i.price_found).length;
+        const missingCount = items.length - pricedCount;
+
+        document.getElementById('summaryItems').textContent = items.length;
+        document.getElementById('summaryPriced').textContent = pricedCount;
+        document.getElementById('summaryMissing').textContent = missingCount;
+        document.getElementById('summaryTotal').textContent = new Intl.NumberFormat('tr-TR', { maximumFractionDigits: 0 }).format(total) + ' TL';
+
+        const tbody = document.getElementById('resultTbody');
+        tbody.innerHTML = '';
+
+        items.forEach(item => {
+            const tr = document.createElement('tr');
+            const confBadge = item.confidence === 'high' ? 'success' : (item.confidence === 'medium' ? 'warning' : 'danger');
+            tr.innerHTML = `
+                <td><strong>${escapeHtml(item.name || '-')}</strong></td>
+                <td>${item.quantity ?? '-'}</td>
+                <td>${escapeHtml(item.unit || '-')}</td>
+                <td><span class="badge badge-${confBadge}">${escapeHtml(item.confidence_label || '-')}</span></td>
+                <td>${escapeHtml(item.unit_price || '-')}</td>
+                <td style="text-align:right; font-weight:800;">${escapeHtml(item.total || '-')}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        document.getElementById('resultCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function escapeHtml(str) {
+        return String(str ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+    }
+
+    // Excel export
+    document.getElementById('exportBtn').addEventListener('click', () => {
+        if (!lastResult || !lastResult.items) return;
+        const rows = lastResult.items.map(i => ({
+            'İş Kalemi': i.name,
+            'Miktar': i.quantity,
+            'Birim': i.unit,
+            'Güven': i.confidence_label,
+            'Birim Fiyat': i.unit_price,
+            'Toplam': i.total,
+            'Fiyat Kaynağı': i.price_source || '-',
+        }));
+        const ws = XLSX.utils.json_to_sheet(rows);
+        ws['!cols'] = [{wch:40},{wch:10},{wch:10},{wch:14},{wch:20},{wch:20},{wch:14}];
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Kesif');
+        XLSX.writeFile(wb, 'Worksitem_Kesif_' + new Date().toISOString().slice(0,10) + '.xlsx');
+    });
 });
 </script>
-    <script src="/js/tool-events.js" defer></script>
 </body>
 </html>
