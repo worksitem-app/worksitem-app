@@ -20,6 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         // Route middleware alias'ları
         $middleware->alias([
+            'auth' => \App\Http\Middleware\Authenticate::class,
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
             'api.ratelimit' => \App\Http\Middleware\ApiRateLimit::class,
         ]);
