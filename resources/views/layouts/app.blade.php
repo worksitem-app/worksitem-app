@@ -103,3 +103,61 @@
     <script src="/js/tool-events.js" defer></script>
 </body>
 </html>
+
+<script>
+function wsToggleTheme() {
+    var html = document.documentElement;
+    var current = html.getAttribute('data-theme') || 'light';
+    var next = current === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', next);
+    try { localStorage.setItem('worksitem-theme', next); } catch(e) {}
+    var icon = document.getElementById('ws-theme-icon');
+    if (icon) icon.textContent = next === 'dark' ? '☀️' : '🌙';
+}
+(function() {
+    var saved;
+    try { saved = localStorage.getItem('worksitem-theme'); } catch(e) {}
+    if (saved === 'light' || saved === 'dark') {
+        document.documentElement.setAttribute('data-theme', saved);
+    }
+    var current = document.documentElement.getAttribute('data-theme') || 'light';
+    var icon = document.getElementById('ws-theme-icon');
+    if (icon) icon.textContent = current === 'dark' ? '☀️' : '🌙';
+})();
+</script>
+<script>
+function wsToggleTheme() {
+    var html = document.documentElement;
+    var current = html.getAttribute('data-theme') || 'light';
+    var next = current === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', next);
+    try { localStorage.setItem('worksitem-theme', next); } catch(e) {}
+    var icon = document.getElementById('ws-theme-icon');
+    if (icon) icon.textContent = next === 'dark' ? '☀️' : '🌙';
+}
+(function() {
+    var saved; try { saved = localStorage.getItem('worksitem-theme'); } catch(e) {}
+    if (saved === 'light' || saved === 'dark') document.documentElement.setAttribute('data-theme', saved);
+    var current = document.documentElement.getAttribute('data-theme') || 'light';
+    var icon = document.getElementById('ws-theme-icon');
+    if (icon) icon.textContent = current === 'dark' ? '☀️' : '🌙';
+})();
+</script>
+<script>
+function wsToggleTheme() {
+    var html = document.documentElement;
+    var current = html.getAttribute('data-theme') || 'light';
+    var next = current === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', next);
+    try { localStorage.setItem('worksitem-theme', next); } catch(e) {}
+    var icon = document.getElementById('ws-theme-icon');
+    if (icon) icon.textContent = next === 'dark' ? '☀️' : '🌙';
+}
+(function() {
+    var saved; try { saved = localStorage.getItem('worksitem-theme'); } catch(e) {}
+    if (saved === 'light' || saved === 'dark') document.documentElement.setAttribute('data-theme', saved);
+    var current = document.documentElement.getAttribute('data-theme') || 'light';
+    var icon = document.getElementById('ws-theme-icon');
+    if (icon) icon.textContent = current === 'dark' ? '☀️' : '🌙';
+})();
+</script>
