@@ -11,7 +11,7 @@ class AISalesEngineer
         $apiKey = config('services.gemini.api_key');
         if (empty($apiKey)) return "API Anahtarı eksik.";
 
-        $url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent';
+        $url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
 
         $prompt = "Sen Kainta İnşaat'ın Kıdemli Satış ve Teklif Mühendisisin. Müşterimiz {$customerName}, {$area} m² alan için '{$service}' talebinde bulundu. Müşteri notu: '{$notes}'. 
         Amacın: Müşteriye çok şık, güven veren, teknik ama anlaşılır bir ön teklif / niyet mektubu yazmak.

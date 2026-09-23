@@ -15,7 +15,7 @@ class GeminiRayicService
         $this->apiKey = (string) config('services.gemini.api_key');
         $this->model = (string) config(
             'services.gemini.rayic_model',
-            'gemini-3.7-flash'
+            'gemini-3.6-flash'
         );
 
         if (!$this->apiKey) {
