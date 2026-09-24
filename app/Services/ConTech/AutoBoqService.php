@@ -172,7 +172,7 @@ PROMPT;
             'Content-Type' => 'application/json',
             'x-goog-api-key' => $apiKey
         ])
-        ->timeout(60)
+        ->timeout(30)
         ->retry(3, 1500, throw: false)
         ->post(
             'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent',
@@ -570,10 +570,18 @@ PROMPT;
             $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($file->getRealPath());
             $lines = [];
 
+            $maxRows = 500; // MAX 500 satır (büyük Excel'lerde timeout önlenir)
+            $rowCount = 0;
+
             foreach ($spreadsheet->getAllSheets() as $sheet) {
                 $lines[] = '# Sheet: ' . $sheet->getTitle();
 
                 foreach ($sheet->getRowIterator() as $row) {
+                    $rowCount++;
+                    if ($rowCount > $maxRows) {
+                        $lines[] = '# ... (ilk ' . $maxRows . ' satır gösteriliyor, toplam daha fazla)';
+                        break 2;
+                    }
                     $cellIterator = $row->getCellIterator();
                     $cellIterator->setIterateOnlyExistingCells(false);
 
@@ -665,7 +673,7 @@ PROMPT;
             'Content-Type' => 'application/json',
             'x-goog-api-key' => $apiKey
         ])
-        ->timeout(60)
+        ->timeout(30)
         ->retry(3, 1500, throw: false)
         ->post(
             'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent',
@@ -691,7 +699,10 @@ PROMPT;
             throw new \Exception('AI metinden anlamlı bir metraj verisi çıkaramadı.');
         }
 
-        return $this->buildBoqResponse($parsedData['items'], $quality);
+        // MAX 100 kalem (response boyutu kontrolü)
+        $items = array_slice($parsedData['items'], 0, 100);
+
+        return $this->buildBoqResponse($items, $quality);
     }
 
     /**
@@ -733,16 +744,19 @@ PROMPT;
             }
 
             $priceMessage = $qty <= 0 ? 'Dosyadan güvenilir miktar çıkarılamadı.' : ($price['message'] ?? null);
+            $priceFound = ($price['found'] ?? false) === true && isset($price['unit_price']) && is_numeric($price['unit_price']);
 
             $boqItems[] = [
                 'name' => $name,
                 'quantity' => $qty > 0 ? $qty : null,
                 'unit' => $unit,
                 'unit_normalized' => $this->normalizeUnit($unit),
-                'unit_price' => $lineTotal !== null
+                'unit_price' => $priceFound
                     ? number_format((float) $price['unit_price'], 2, ',', '.') . ' TL/' . ($price['price_unit'] ?? '')
                     : 'Doğrulanmış fiyat yok',
-                'total' => $lineTotal !== null ? number_format($lineTotal, 2, ',', '.') . ' TL' : 'Hesaplanmadı',
+                'total' => $lineTotal !== null
+                    ? number_format($lineTotal, 2, ',', '.') . ' TL'
+                    : ($priceFound ? 'Miktar girin' : 'Hesaplanmadı'),
                 'raw_unit_price' => $lineTotal !== null ? (float) $price['unit_price'] : null,
                 'raw_total' => $lineTotal,
                 'priced_quantity' => $pricedQuantity,
@@ -784,11 +798,17 @@ PROMPT;
             return null;
         }
 
-        // Kullanıcı kelimeleri
+        $cacheKey = 'tender_v4_' . md5($name . '|' . $unit);
+        $cached = \Cache::get($cacheKey);
+        if ($cached !== null) {
+            return $cached === '__NOT_FOUND__' ? null : $cached;
+        }
+
         $stopwords = [
-            've', 'ile', 'veya', 'her', 'turlu', 'icin', 'yapilmasi', 'yapılması',
+            've', 'ile', 'veya', 'her', 'turlu', 'herturlu', 'icin', 'yapilmasi', 'yapılması',
             'edilmesi', 'temini', 'montaji', 'montajı', 'sokulmesi', 'sökülmesi',
-            'olan', 'tip', 'imalat', 'imalatı', 'ise', 'gore', 'göre', 'uzere', 'üzere',
+            'olan', 'tip', 'imalat', 'imalati', 'imalatı', 'ise', 'gore', 'göre', 'uzere', 'üzere',
+            'cesit', 'çeşit', 'uygulama', 'uygulamasi', 'uygulaması', 'dahil', 'hariç', 'haric',
         ];
 
         $userWords = array_values(array_filter(
@@ -797,35 +817,67 @@ PROMPT;
         ));
 
         if (empty($userWords)) {
+            \Cache::put($cacheKey, '__NOT_FOUND__', now()->addMinutes(10));
             return null;
         }
 
-        $userStems = array_map([$this, 'turkishStem'], $userWords);
+        $userStems = array_values(array_unique(array_map([$this, 'turkishStem'], $userWords)));
 
-        // tender_pozs'tan ilk 500 kaydı al (performans için LIMIT)
-        // Not: LIKE filtresi ile ön eleme yapalım
-        $firstWord = $userWords[0];
         $candidates = \DB::table('tender_pozs')
             ->where('is_active', true)
             ->where(function ($q) use ($userWords) {
-                foreach (array_slice($userWords, 0, 4) as $w) {
+                foreach (array_slice($userWords, 0, 3) as $w) {
                     $q->orWhere('description', 'like', '%' . $w . '%');
                 }
             })
-            ->limit(500)
+            ->limit(200)
             ->get(['id', 'poz_no', 'description', 'unit', 'unit_price', 'institution']);
 
         if ($candidates->isEmpty()) {
+            \Cache::put($cacheKey, '__NOT_FOUND__', now()->addMinutes(10));
             return null;
+        }
+
+        $negativeRaw = ['sök', 'yik', 'yık', 'atil', 'atıl', 'kesil', 'kaldir', 'kaldır', 'tahliye'];
+        $negative = array_map(fn ($w) => $this->normalizeText($w), $negativeRaw);
+        $userDesc = $this->normalizeText($name);
+        $userHasNegative = false;
+        foreach ($negative as $neg) {
+            if (str_contains($userDesc, $neg)) {
+                $userHasNegative = true;
+                break;
+            }
         }
 
         $best = null;
         $bestScore = 0.0;
 
         foreach ($candidates as $poz) {
-            $dbNorm = $this->normalizeText(mb_strtolower($poz->description ?? ''));
+            $pozUnit = $this->normalizeUnit($poz->unit ?? '');
+
+            // Birim uyumu
+            if ($unit !== '' && !$this->unitsCompatible($unit, $pozUnit)) {
+                continue;
+            }
+
+            $dbDesc = $this->normalizeText($poz->description ?? '');
+
+            // Negatif
+            if (!$userHasNegative) {
+                $isNegative = false;
+                foreach ($negative as $neg) {
+                    if (str_contains($dbDesc, $neg)) {
+                        $isNegative = true;
+                        break;
+                    }
+                }
+                if ($isNegative) {
+                    continue;
+                }
+            }
+
             $dbWords = array_values(array_filter(
-                preg_split('/\s+/', $dbNorm),
+                preg_split('/\s+/', $dbDesc),
                 fn ($w) => mb_strlen($w) >= 3 && !in_array($w, $stopwords, true)
             ));
 
@@ -833,55 +885,22 @@ PROMPT;
                 continue;
             }
 
-            $dbStems = array_map([$this, 'turkishStem'], $dbWords);
+            $dbStems = array_values(array_unique(array_map([$this, 'turkishStem'], $dbWords)));
 
-            $matchCount = 0;
-            foreach ($dbStems as $i => $stem) {
-                if (in_array($stem, $userStems, true)) {
-                    $matchCount += 1.0;
-                } elseif (in_array($dbWords[$i], $userWords, true)) {
-                    $matchCount += 1.0;
-                }
+            // JACCARD
+            $intersection = array_intersect($userStems, $dbStems);
+            $union = array_unique(array_merge($userStems, $dbStems));
+            $score = count($union) > 0 ? count($intersection) / count($union) : 0;
+
+            if ($unit !== '' && $pozUnit === $unit) {
+                $score += 0.05;
             }
 
-            $score = $matchCount / count($dbStems);
-
-            // Negatif kelime filtresi — NORMALIZE EDİLMİŞ halleriyle
-            $negativeRaw = ['sök', 'yik', 'yık', 'atil', 'atıl', 'kesil', 'kaldir', 'kaldır', 'tahliye', 'sokul', 'yikil', 'atilm', 'kesilm'];
-            $negative = array_map(fn ($w) => $this->normalizeText($w), $negativeRaw);
-
-            $dbDesc = $this->normalizeText($poz->description ?? '');
-            $userDesc = $this->normalizeText($name);
-
-            $isNegative = false;
-            foreach ($negative as $neg) {
-                if (str_contains($dbDesc, $neg)) {
-                    $isNegative = true;
-                    break;
-                }
+            if (mb_strlen($poz->description ?? '') < 60) {
+                $score += 0.05;
             }
 
-            $userHasNegative = false;
-            foreach ($negative as $neg) {
-                if (str_contains($userDesc, $neg)) {
-                    $userHasNegative = true;
-                    break;
-                }
-            }
-
-            if ($isNegative && !$userHasNegative) {
-                continue;
-            }
-
-            // BİRİM UYUMU ZORUNLU — uyumsuz birim = skor 0 (kabul etme)
-            if ($unit !== '' && $this->normalizeUnit($poz->unit ?? '') !== $unit) {
-                continue;
-            }
-
-            // Birim eşleşirse +0.1 bonus
-            if ($unit !== '' && $this->normalizeUnit($poz->unit ?? '') === $unit) {
-                $score += 0.10;
-            }
+            $score = min(1.0, $score);
 
             if ($score > $bestScore) {
                 $bestScore = $score;
@@ -889,15 +908,27 @@ PROMPT;
             }
         }
 
-        // Eşik: en az 0.35 skor olmalı
-        if ($best === null || $bestScore < 0.35) {
+        if ($best === null || $bestScore < 0.25) {
+            \Cache::put($cacheKey, '__NOT_FOUND__', now()->addMinutes(10));
             return null;
         }
 
-        return [
+        $pozUnit = $this->normalizeUnit($best->unit ?? '');
+        $unitPrice = (float) $best->unit_price;
+        $priceUnit = $best->unit ?? '';
+
+        if ($unit === 'kg' && $pozUnit === 'ton') {
+            $unitPrice = $unitPrice / 1000;
+            $priceUnit = 'kg';
+        } elseif ($unit === 'ton' && $pozUnit === 'kg') {
+            $unitPrice = $unitPrice * 1000;
+            $priceUnit = 'ton';
+        }
+
+        $result = [
             'found' => true,
-            'unit_price' => (float) $best->unit_price,
-            'price_unit' => $best->unit ?? '',
+            'unit_price' => $unitPrice,
+            'price_unit' => $priceUnit,
             'quantity_factor' => 1.0,
             'source' => 'tender_pozs',
             'reference' => $best->poz_no . ' | ' . mb_substr($best->description, 0, 80),
@@ -907,6 +938,17 @@ PROMPT;
             'description' => $best->description,
             'institution' => $best->institution,
         ];
+
+        \Cache::put($cacheKey, $result, now()->addMinutes(10));
+
+        return $result;
+    }
+
+    private function unitsCompatible(string $a, string $b): bool
+    {
+        if ($a === $b) return true;
+        $compat = ['kg' => ['ton'], 'ton' => ['kg']];
+        return isset($compat[$a]) && in_array($b, $compat[$a], true);
     }
 
     /**
