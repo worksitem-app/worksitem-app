@@ -889,3 +889,9 @@ Route::get('/vizyon', function() { return view('vizyon'); });
 Route::get('/ekip', function() { return view('ekip'); });
 
 // SEO: Dinamik Sitemap
+
+// ═══════════════════════════════════════════════════════════════
+// SEO: Dinamik Sitemap (Controller)
+// ═══════════════════════════════════════════════════════════════
+Route::get('/sitemap.xml', [\App\Http\Controllers\SitemapController::class, 'index'])->name('sitemap');
+
