@@ -172,10 +172,10 @@ PROMPT;
             'Content-Type' => 'application/json',
             'x-goog-api-key' => $apiKey
         ])
-        ->timeout(30)
+        ->timeout(20)
         ->retry(3, 1500, throw: false)
         ->post(
-            'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent',
+            'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent',
             [
                 'contents' => [
                     [
@@ -570,7 +570,7 @@ PROMPT;
             $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($file->getRealPath());
             $lines = [];
 
-            $maxRows = 500; // MAX 500 satır (büyük Excel'lerde timeout önlenir)
+            $maxRows = 200; // MAX 500 satır (büyük Excel'lerde timeout önlenir)
             $rowCount = 0;
 
             foreach ($spreadsheet->getAllSheets() as $sheet) {
@@ -673,10 +673,10 @@ PROMPT;
             'Content-Type' => 'application/json',
             'x-goog-api-key' => $apiKey
         ])
-        ->timeout(30)
+        ->timeout(20)
         ->retry(3, 1500, throw: false)
         ->post(
-            'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent',
+            'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent',
             [
                 'contents' => [
                     ['parts' => [['text' => $prompt]]]
@@ -700,7 +700,7 @@ PROMPT;
         }
 
         // MAX 100 kalem (response boyutu kontrolü)
-        $items = array_slice($parsedData['items'], 0, 100);
+        $items = array_slice($parsedData["items"], 0, 50);
 
         return $this->buildBoqResponse($items, $quality);
     }
