@@ -175,7 +175,7 @@ PROMPT;
         ->timeout(15)
         ->retry(3, 1500, throw: false)
         ->post(
-            'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent',
+            'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent',
             [
                 'contents' => [
                     [
@@ -676,7 +676,7 @@ PROMPT;
         ->timeout(15)
         ->retry(3, 1500, throw: false)
         ->post(
-            'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent',
+            'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent',
             [
                 'contents' => [
                     ['parts' => [['text' => $prompt]]]
@@ -809,6 +809,9 @@ PROMPT;
             'edilmesi', 'temini', 'montaji', 'montajı', 'sokulmesi', 'sökülmesi',
             'olan', 'tip', 'imalat', 'imalati', 'imalatı', 'ise', 'gore', 'göre', 'uzere', 'üzere',
             'cesit', 'çeşit', 'uygulama', 'uygulamasi', 'uygulaması', 'dahil', 'hariç', 'haric',
+            'montaj', 'montajı', 'montaji', 'temini', 'basamak', 'basamaklı',
+            'imalatlari', 'imalatları', 'konstrüksiyon', 'konstrüksiyonlar',
+            'sıcak', 'sicak', 'daldırma', 'daldirma',
         ];
 
         $userWords = array_values(array_filter(
@@ -937,7 +940,7 @@ PROMPT;
             }
         }
 
-        if ($best === null || $bestScore < 0.25) {
+        if ($best === null || $bestScore < 0.20) {
             \Cache::put($cacheKey, '__NOT_FOUND__', now()->addMinutes(10));
             return null;
         }
