@@ -172,7 +172,7 @@ PROMPT;
             'Content-Type' => 'application/json',
             'x-goog-api-key' => $apiKey
         ])
-        ->timeout(30)
+        ->timeout(15)
         ->retry(3, 1500, throw: false)
         ->post(
             'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent',
@@ -570,7 +570,7 @@ PROMPT;
             $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($file->getRealPath());
             $lines = [];
 
-            $maxRows = 500; // MAX 500 satır (büyük Excel'lerde timeout önlenir)
+            $maxRows = 100; // MAX 500 satır (büyük Excel'lerde timeout önlenir)
             $rowCount = 0;
 
             foreach ($spreadsheet->getAllSheets() as $sheet) {
@@ -673,7 +673,7 @@ PROMPT;
             'Content-Type' => 'application/json',
             'x-goog-api-key' => $apiKey
         ])
-        ->timeout(30)
+        ->timeout(15)
         ->retry(3, 1500, throw: false)
         ->post(
             'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent',
@@ -700,7 +700,7 @@ PROMPT;
         }
 
         // MAX 100 kalem (response boyutu kontrolü)
-        $items = array_slice($parsedData['items'], 0, 100);
+        $items = array_slice($parsedData["items"], 0, 50);
 
         return $this->buildBoqResponse($items, $quality);
     }
@@ -822,6 +822,35 @@ PROMPT;
         }
 
         $userStems = array_values(array_unique(array_map([$this, 'turkishStem'], $userWords)));
+
+        // SYNONYM GENİŞLETME — kullanıcı terimlerini eşdeğerleriyle genişlet
+        $synonyms = [
+            'celik' => ['demir', 'profil', 'konstrüksiyon'],
+            'demir' => ['celik', 'profil'],
+            'galvaniz' => ['galvanizli', 'kaplama', 'paslanmaz'],
+            'alci' => ['alcı', 'alcipan'],
+            'alcipan' => ['alci', 'kartonpiyer'],
+            'siva' => ['sıva', 'harç', 'harc'],
+            'boya' => ['boyama', 'kaplama'],
+            'kalip' => ['kalıp', 'kalipci'],
+            'izolasyon' => ['yalitim', 'yalıtım'],
+            'seramik' => ['fayans', 'porselen'],
+            'tugla' => ['tuğla', 'briket'],
+            'beton' => ['betonarme', 'hazırbeton'],
+        ];
+
+        foreach ($userStems as $stem) {
+            if (isset($synonyms[$stem])) {
+                foreach ($synonyms[$stem] as $syn) {
+                    $expandedStem = $this->turkishStem($syn);
+                    if (!in_array($expandedStem, $userStems, true)) {
+                        $userStems[] = $expandedStem;
+                    }
+                }
+            }
+        }
+
+        $userStems = array_values(array_unique($userStems));
 
         $candidates = \DB::table('tender_pozs')
             ->where('is_active', true)
