@@ -1054,6 +1054,112 @@ PROMPT;
         |--------------------------------------------------------------------------
         */
 
+        // ÖZEL DOLGU EŞLEŞTİRME (spesifik tür zorunlu)
+        $n_lower = mb_strtolower($n);
+        $isDolgu = str_contains($n_lower, 'dolgu') || str_contains($n_lower, 'dolgusu');
+
+        if ($isDolgu) {
+            // Stabilize dolgu
+            if (str_contains($n_lower, 'stabilize')) {
+                $r = \DB::table('tender_pozs')
+                    ->where('is_active', true)
+                    ->where('description', 'like', '%stabilize%')
+                    ->where('description', 'like', '%dolgu%')
+                    ->where('unit', 'm3')
+                    ->orderByRaw('LENGTH(description) ASC')
+                    ->first(['poz_no', 'description', 'unit', 'unit_price']);
+                if ($r) {
+                    return [
+                        'found' => true,
+                        'unit_price' => (float) $r->unit_price,
+                        'price_unit' => $r->unit,
+                        'quantity_factor' => 1.0,
+                        'source' => 'tender_pozs',
+                        'reference' => $r->poz_no . ' | ' . mb_substr($r->description, 0, 80),
+                        'message' => null,
+                        'score' => 0.95,
+                        'poz_no' => $r->poz_no,
+                        'description' => $r->description,
+                    ];
+                }
+            }
+
+            // Kırmataş dolgu
+            if (str_contains($n_lower, 'kırmataş') || str_contains($n_lower, 'kirmatas')) {
+                $r = \DB::table('tender_pozs')
+                    ->where('is_active', true)
+                    ->where('description', 'like', '%kırmataş%')
+                    ->where('unit', 'm³')
+                    ->orderByRaw('LENGTH(description) ASC')
+                    ->first(['poz_no', 'description', 'unit', 'unit_price']);
+                if ($r) {
+                    return [
+                        'found' => true,
+                        'unit_price' => (float) $r->unit_price,
+                        'price_unit' => $r->unit,
+                        'quantity_factor' => 1.0,
+                        'source' => 'tender_pozs',
+                        'reference' => $r->poz_no . ' | ' . mb_substr($r->description, 0, 80),
+                        'message' => null,
+                        'score' => 0.95,
+                        'poz_no' => $r->poz_no,
+                        'description' => $r->description,
+                    ];
+                }
+            }
+
+            // Taştozu dolgu (kum ile benzer — yaklaşık)
+            if (str_contains($n_lower, 'taştozu') || str_contains($n_lower, 'tastozu')) {
+                // Taştozu için özel poz yok → kum dolgu pozu kullan
+                $r = \DB::table('tender_pozs')
+                    ->where('is_active', true)
+                    ->where('description', 'like', '%kum%')
+                    ->where('description', 'like', '%dolgu%')
+                    ->where('unit', 'm³')
+                    ->orderByRaw('LENGTH(description) ASC')
+                    ->first(['poz_no', 'description', 'unit', 'unit_price']);
+                if ($r) {
+                    return [
+                        'found' => true,
+                        'unit_price' => (float) $r->unit_price,
+                        'price_unit' => $r->unit,
+                        'quantity_factor' => 1.0,
+                        'source' => 'tender_pozs',
+                        'reference' => $r->poz_no . ' | (Taştozu → Kum yaklaşık) ' . mb_substr($r->description, 0, 60),
+                        'message' => 'Taştozu için özel poz yok, kum dolgu fiyatı kullanıldı.',
+                        'score' => 0.85,
+                        'poz_no' => $r->poz_no,
+                        'description' => $r->description,
+                    ];
+                }
+            }
+
+            // Kum dolgu
+            if (str_contains($n_lower, 'kum')) {
+                $r = \DB::table('tender_pozs')
+                    ->where('is_active', true)
+                    ->where('description', 'like', '%kum%')
+                    ->where('description', 'like', '%dolgu%')
+                    ->where('unit', 'm³')
+                    ->orderByRaw('LENGTH(description) ASC')
+                    ->first(['poz_no', 'description', 'unit', 'unit_price']);
+                if ($r) {
+                    return [
+                        'found' => true,
+                        'unit_price' => (float) $r->unit_price,
+                        'price_unit' => $r->unit,
+                        'quantity_factor' => 1.0,
+                        'source' => 'tender_pozs',
+                        'reference' => $r->poz_no . ' | ' . mb_substr($r->description, 0, 80),
+                        'message' => null,
+                        'score' => 0.95,
+                        'poz_no' => $r->poz_no,
+                        'description' => $r->description,
+                    ];
+                }
+            }
+        }
+
         $tenderMatch = $this->searchTenderPoz($name, $u);
 
         if ($tenderMatch !== null) {
