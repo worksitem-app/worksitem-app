@@ -172,7 +172,7 @@ PROMPT;
             'Content-Type' => 'application/json',
             'x-goog-api-key' => $apiKey
         ])
-        ->timeout(45)
+        ->timeout(60)
         ->retry(2, 3000, throw: false)
         ->post(
             'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent',
@@ -570,7 +570,7 @@ PROMPT;
             $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($file->getRealPath());
             $lines = [];
 
-            $maxRows = 100; // MAX 500 satır (büyük Excel'lerde timeout önlenir)
+            $maxRows = 50; // MAX 500 satır (büyük Excel'lerde timeout önlenir)
             $rowCount = 0;
 
             foreach ($spreadsheet->getAllSheets() as $sheet) {
@@ -673,7 +673,7 @@ PROMPT;
             'Content-Type' => 'application/json',
             'x-goog-api-key' => $apiKey
         ])
-        ->timeout(45)
+        ->timeout(60)
         ->retry(2, 3000, throw: false)
         ->post(
             'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent',
