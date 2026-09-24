@@ -58,7 +58,7 @@ class KaintaCostEngine
         $apiKey = config('services.gemini.api_key');
         if (empty($apiKey)) return "🤖 Sistem Uyarısı: AI modülü API anahtarı bekleniyor.";
 
-        $url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
+        $url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent';
         $formattedCost = number_format($totalCost, 0, ',', '.');
 
         $prompt = "Sen Kainta İnşaat'ın Baş Mühendisisin. Müşteri '{$projectType}' projesi (Alan: {$area} m²) için maliyet hesapladı. Bütçe: {$formattedCost} TL. Amacın müşteriye güven vermek ve Kainta ile çalışmaya ikna etmek. Müşteriye hitaben, projeye özel 3 maddelik çok kısa teknik tavsiye ver. Fiyat hesabı YAZMA, kaliteyi vurgula.";
