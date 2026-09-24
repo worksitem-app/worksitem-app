@@ -768,6 +768,191 @@ PROMPT;
             'success' => true,
         ];
     }
+    /**
+     * tender_pozs (43.290 resmi poz) tablosunda fuzzy arama yapar.
+     *
+     * Algoritma:
+     * - Kelime kesişimi + Türkçe kök eşleştirme
+     * - Skor = (eşleşen kelime ağırlığı) / (DB kelime sayısı)
+     * - Birim uyumu bonus
+     * - En yüksek skoru döner (>= 0.35)
+     */
+    private function searchTenderPoz(string $name, string $unit = ''): ?array
+    {
+        $query = mb_strtolower(trim($name));
+        if (mb_strlen($query) < 4) {
+            return null;
+        }
+
+        // Kullanıcı kelimeleri
+        $stopwords = [
+            've', 'ile', 'veya', 'her', 'turlu', 'icin', 'yapilmasi', 'yapılması',
+            'edilmesi', 'temini', 'montaji', 'montajı', 'sokulmesi', 'sökülmesi',
+            'olan', 'tip', 'imalat', 'imalatı', 'ise', 'gore', 'göre', 'uzere', 'üzere',
+        ];
+
+        $userWords = array_values(array_filter(
+            preg_split('/\s+/', $this->normalizeText($query)),
+            fn ($w) => mb_strlen($w) >= 3 && !in_array($w, $stopwords, true)
+        ));
+
+        if (empty($userWords)) {
+            return null;
+        }
+
+        $userStems = array_map([$this, 'turkishStem'], $userWords);
+
+        // tender_pozs'tan ilk 500 kaydı al (performans için LIMIT)
+        // Not: LIKE filtresi ile ön eleme yapalım
+        $firstWord = $userWords[0];
+        $candidates = \DB::table('tender_pozs')
+            ->where('is_active', true)
+            ->where(function ($q) use ($userWords) {
+                foreach (array_slice($userWords, 0, 4) as $w) {
+                    $q->orWhere('description', 'like', '%' . $w . '%');
+                }
+            })
+            ->limit(500)
+            ->get(['id', 'poz_no', 'description', 'unit', 'unit_price', 'institution']);
+
+        if ($candidates->isEmpty()) {
+            return null;
+        }
+
+        $best = null;
+        $bestScore = 0.0;
+
+        foreach ($candidates as $poz) {
+            $dbNorm = $this->normalizeText(mb_strtolower($poz->description ?? ''));
+            $dbWords = array_values(array_filter(
+                preg_split('/\s+/', $dbNorm),
+                fn ($w) => mb_strlen($w) >= 3 && !in_array($w, $stopwords, true)
+            ));
+
+            if (empty($dbWords)) {
+                continue;
+            }
+
+            $dbStems = array_map([$this, 'turkishStem'], $dbWords);
+
+            $matchCount = 0;
+            foreach ($dbStems as $i => $stem) {
+                if (in_array($stem, $userStems, true)) {
+                    $matchCount += 1.0;
+                } elseif (in_array($dbWords[$i], $userWords, true)) {
+                    $matchCount += 1.0;
+                }
+            }
+
+            $score = $matchCount / count($dbStems);
+
+            // Negatif kelime filtresi — NORMALIZE EDİLMİŞ halleriyle
+            $negativeRaw = ['sök', 'yik', 'yık', 'atil', 'atıl', 'kesil', 'kaldir', 'kaldır', 'tahliye', 'sokul', 'yikil', 'atilm', 'kesilm'];
+            $negative = array_map(fn ($w) => $this->normalizeText($w), $negativeRaw);
+
+            $dbDesc = $this->normalizeText($poz->description ?? '');
+            $userDesc = $this->normalizeText($name);
+
+            $isNegative = false;
+            foreach ($negative as $neg) {
+                if (str_contains($dbDesc, $neg)) {
+                    $isNegative = true;
+                    break;
+                }
+            }
+
+            $userHasNegative = false;
+            foreach ($negative as $neg) {
+                if (str_contains($userDesc, $neg)) {
+                    $userHasNegative = true;
+                    break;
+                }
+            }
+
+            if ($isNegative && !$userHasNegative) {
+                continue;
+            }
+
+            // BİRİM UYUMU ZORUNLU — uyumsuz birim = skor 0 (kabul etme)
+            if ($unit !== '' && $this->normalizeUnit($poz->unit ?? '') !== $unit) {
+                continue;
+            }
+
+            // Birim eşleşirse +0.1 bonus
+            if ($unit !== '' && $this->normalizeUnit($poz->unit ?? '') === $unit) {
+                $score += 0.10;
+            }
+
+            if ($score > $bestScore) {
+                $bestScore = $score;
+                $best = $poz;
+            }
+        }
+
+        // Eşik: en az 0.35 skor olmalı
+        if ($best === null || $bestScore < 0.35) {
+            return null;
+        }
+
+        return [
+            'found' => true,
+            'unit_price' => (float) $best->unit_price,
+            'price_unit' => $best->unit ?? '',
+            'quantity_factor' => 1.0,
+            'source' => 'tender_pozs',
+            'reference' => $best->poz_no . ' | ' . mb_substr($best->description, 0, 80),
+            'message' => null,
+            'score' => round($bestScore, 3),
+            'poz_no' => $best->poz_no,
+            'description' => $best->description,
+            'institution' => $best->institution,
+        ];
+    }
+
+    /**
+     * Basit Türkçe kök temizleme.
+     */
+    private function turkishStem(string $word): string
+    {
+        $word = $this->normalizeText($word);
+        if (mb_strlen($word) < 4) {
+            return $word;
+        }
+
+        $suffixes = [
+            'leri', 'lari', 'ligi', 'lığı', 'lugu', 'lüğü', 'liği',
+            'ler', 'lar', 'lik', 'lık', 'luk', 'lük',
+            'nin', 'nın', 'nun', 'nün',
+            'den', 'dan', 'ten', 'tan',
+            'ye', 'ya', 'de', 'da', 'te', 'ta',
+            'si', 'sı', 'su', 'sü',
+            'in', 'ın', 'un', 'ün',
+        ];
+
+        foreach ($suffixes as $suf) {
+            if (mb_substr($word, -mb_strlen($suf)) === $suf && mb_strlen($word) - mb_strlen($suf) >= 3) {
+                return mb_substr($word, 0, -mb_strlen($suf));
+            }
+        }
+
+        return $word;
+    }
+
+    /**
+     * Türkçe karakter normalizasyonu + lowercase.
+     */
+    private function normalizeText(string $text): string
+    {
+        $text = mb_strtolower($text, 'UTF-8');
+        $text = str_replace(
+            ['ğ', 'ü', 'ş', 'ı', 'ö', 'ç', 'â', 'î', 'û'],
+            ['g', 'u', 's', 'i', 'o', 'c', 'a', 'i', 'u'],
+            $text
+        );
+        $text = preg_replace('/[^a-z0-9\s]/', ' ', $text);
+        $text = preg_replace('/\s+/', ' ', $text);
+        return trim($text);
+    }
     public function resolvePriceForItem(
         string $name,
         string $unit = '',
@@ -787,6 +972,19 @@ PROMPT;
         $quality = strtolower(
             trim($quality)
         );
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | TENDER_POZS (43.290 resmi poz) - ÖNCELİKLİ ARAMA
+        |--------------------------------------------------------------------------
+        */
+
+        $tenderMatch = $this->searchTenderPoz($name, $u);
+
+        if ($tenderMatch !== null) {
+            return $tenderMatch;
+        }
 
 
         /*
