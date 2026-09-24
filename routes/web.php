@@ -182,35 +182,6 @@ Route::prefix('araclar')->group(function () {
     Route::post('/oda-planlayici/generate', [\App\Http\Controllers\ToolController::class, 'generateRoomDesign'])->name('tools.room.generate');
 });
 // SEO Dinamik Sitemap
-Route::get('/sitemap.xml', function() {
-    
-    $xml = '<?xml version="1.0" encoding="UTF-8"?>';
-    $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
-    
-    // Ana Sayfa ve Araçlar Merkezi
-    $xml .= '<url><loc>' . url('/') . '</loc><priority>1.0</priority><changefreq>daily</changefreq></url>';
-    $xml .= '<url><loc>' . url('/araclar') . '</loc><priority>0.9</priority><changefreq>daily</changefreq></url>';
-    $xml .= '<url><loc>' . url('/maliyet-hesapla') . '</loc><priority>0.9</priority><changefreq>daily</changefreq></url>';
-    
-    // Tüm Araçlar
-    $toolUrls = [];
-    foreach (Route::getRoutes() as $route) {
-        $uri = $route->uri();
-        if (!in_array("GET", $route->methods(), true)) continue;
-        if (!str_starts_with($uri, "araclar/") || str_contains($uri, "{")) continue;
-        if (str_contains($route->getActionName(), "RedirectController")) continue;
-        $toolUrls[$uri] = true;
-    }
-    ksort($toolUrls);
-    foreach (array_keys($toolUrls) as $uri) {
-        $xml .= "<url><loc>" . url("/".$uri) . "</loc><priority>0.8</priority><changefreq>weekly</changefreq></url>";
-    }
-    
-    $xml .= '</urlset>';
-    
-    return response($xml, 200)->header('Content-Type', 'text/xml');
-    
-});
 
 // AI Duvar Rengi Görselleştirici
 Route::get('/araclar/duvar-rengi-gorsellestirici', [\App\Http\Controllers\ToolController::class, 'paintVisualizer'])->name('tools.paint_visualizer');
@@ -916,3 +887,5 @@ Route::get('/hakkimizda', function() { return view('hakkimizda'); });
 Route::get('/hakkimizda', function() { return view('hakkimizda'); });
 Route::get('/vizyon', function() { return view('vizyon'); });
 Route::get('/ekip', function() { return view('ekip'); });
+
+// SEO: Dinamik Sitemap
