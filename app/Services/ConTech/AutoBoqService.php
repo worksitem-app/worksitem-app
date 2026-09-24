@@ -172,8 +172,8 @@ PROMPT;
             'Content-Type' => 'application/json',
             'x-goog-api-key' => $apiKey
         ])
-        ->timeout(15)
-        ->retry(3, 1500, throw: false)
+        ->timeout(45)
+        ->retry(2, 3000, throw: false)
         ->post(
             'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent',
             [
@@ -673,8 +673,8 @@ PROMPT;
             'Content-Type' => 'application/json',
             'x-goog-api-key' => $apiKey
         ])
-        ->timeout(15)
-        ->retry(3, 1500, throw: false)
+        ->timeout(45)
+        ->retry(2, 3000, throw: false)
         ->post(
             'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent',
             [
