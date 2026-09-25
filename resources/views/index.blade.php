@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>İnşaat ve Tadilat Maliyeti Hesaplama | WORKSİTEM</title>
 <meta name="description" content="İnşaat ve tadilat maliyetinizi m² üzerinden hesaplayın. Kentsel dönüşüm için yeni yapı ön bütçesini görün; PDF, görsel veya CSV ile AI ön keşif yapın.">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
@@ -27,6 +27,7 @@
 <meta name="theme-color" content="#ffffff">
 <meta name="color-scheme" content="light dark">
 <script>
+// Apply the preference before paint; storage may be unavailable in private contexts.
 (()=>{
  let theme;
  try{theme=localStorage.getItem('worksitem-theme');}catch(error){}
@@ -36,144 +37,102 @@
 })();
 </script>
 <style>
-:root{--bg:#f6f7f9;--surface:#fff;--s2:#eef1f4;--s3:#e2e8f0;--text:#0f172a;--muted:#64748b;--line:rgba(15, 23, 42, 0.08);--yellow:#ffb800;--yellow2:#d97706;--yellow-light:rgba(255, 184, 0, 0.1);--black:#020617;--green:#10b981;--shadow-sm:0 4px 6px -1px rgba(0,0,0,.05), 0 2px 4px -1px rgba(0,0,0,.03);--shadow:0 20px 40px -10px rgba(0,0,0,.08);--max:1180px;--radius-md:12px;--radius-lg:24px;}
-html[data-theme=dark]{--bg:#020617;--surface:#0f172a;--s2:#1e293b;--s3:#334155;--text:#f8fafc;--muted:#94a3b8;--line:rgba(255,255,255,.1);--shadow:0 24px 70px rgba(0,0,0,.4);--yellow-light:rgba(255, 184, 0, 0.05);}
-*{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}body{font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}a{color:inherit;text-decoration:none}button{font:inherit}img{max-width:100%;display:block}.container{width:min(calc(100% - 32px),var(--max));margin:auto}
-.navbar{position:sticky;top:0;z-index:1000;background:rgba(246,247,249,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}html[data-theme=dark] .navbar{background:rgba(2,6,23,.9)}.nav-inner{min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:18px}.brand img{height:38px;width:auto}.nav-links{display:flex;gap:4px;align-items:center}.nav-link{padding:10px 12px;border-radius:10px;color:var(--muted);font-size:14px;font-weight:600}.nav-link:hover{background:var(--s2);color:var(--text)}.nav-actions{display:flex;gap:8px}.icon-btn{width:42px;height:42px;border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:12px;cursor:pointer}.menu-btn{display:none}
+:root{--bg:#f6f7f9;--surface:#fff;--s2:#eef1f4;--text:#111318;--muted:#656b75;--line:rgba(17,19,24,.1);--yellow:#ffb800;--yellow2:#e9a800;--black:#08090a;--green:#137a47;--shadow:0 20px 60px rgba(0,0,0,.08);--max:1180px}
+html[data-theme=dark]{--bg:#08090a;--surface:#111214;--s2:#17191c;--text:#f7f7f8;--muted:#a7abb3;--line:rgba(255,255,255,.1);--shadow:0 24px 70px rgba(0,0,0,.38)}
+*{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}body{font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}a{color:inherit;text-decoration:none}button{font:inherit}img{max-width:100%;display:block}.container{width:min(calc(100% - 32px),var(--max));margin:auto}
+.navbar{position:sticky;top:0;z-index:1000;background:rgba(246,247,249,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}html[data-theme=dark] .navbar{background:rgba(8,9,10,.9)}.nav-inner{min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:18px}.brand img{height:38px;width:auto}.nav-links{display:flex;gap:4px;align-items:center}.nav-link{padding:10px 12px;border-radius:10px;color:var(--muted);font-size:13px;font-weight:750}.nav-link:hover{background:var(--s2);color:var(--text)}.nav-actions{display:flex;gap:8px}.icon-btn{width:42px;height:42px;border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:12px;cursor:pointer}.menu-btn{display:none}
+.hero{position:relative;padding:74px 0 44px;overflow:hidden}.hero:before{content:"";position:absolute;width:560px;height:560px;right:-260px;top:-280px;border-radius:50%;background:rgba(255,184,0,.15);filter:blur(75px);pointer-events:none}.hero-grid{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(340px,.88fr);gap:52px;align-items:center}.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid rgba(255,184,0,.32);background:rgba(255,184,0,.1);color:#a97400;border-radius:999px;font-size:11px;font-weight:900;letter-spacing:.9px;text-transform:uppercase}.dot{width:7px;height:7px;background:var(--yellow);border-radius:50%}html[data-theme=dark] .eyebrow{color:var(--yellow)}
+h1{margin-top:20px;font-size:clamp(42px,6.1vw,72px);line-height:.99;letter-spacing:-3.5px;font-weight:950;max-width:820px}h1 span{color:var(--yellow2)}.hero-copy{margin-top:22px;max-width:690px;color:var(--muted);font-size:clamp(16px,2vw,19px);line-height:1.72}.hero-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}.btn{min-height:54px;padding:0 22px;border-radius:13px;display:inline-flex;align-items:center;justify-content:center;border:1px solid transparent;font-size:14px;font-weight:900;transition:.2s}.btn:hover{transform:translateY(-2px)}.btn-primary{background:var(--yellow);color:#080808}.btn-secondary{background:var(--surface);border-color:var(--line)}.trust{display:flex;flex-wrap:wrap;gap:14px 18px;margin-top:24px;color:var(--muted);font-size:12px;font-weight:650}.trust b{color:var(--green)}
+.start-card{background:var(--surface);border:1px solid var(--line);border-radius:24px;padding:24px;box-shadow:var(--shadow)}.start-top{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;margin-bottom:18px}.start-kicker,.kicker{color:var(--yellow2);font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:1.1px}.start-title{font-size:20px;font-weight:950;margin-top:3px}.start-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.start-item{min-height:112px;padding:16px;border:1px solid var(--line);background:var(--s2);border-radius:15px;display:flex;flex-direction:column;justify-content:space-between;transition:.2s}.start-item:hover{transform:translateY(-2px);border-color:rgba(255,184,0,.55)}.start-icon{font-size:22px}.start-item strong{font-size:14px;font-weight:900}.start-item span{display:block;margin-top:4px;color:var(--muted);font-size:11px}.start-footer{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-top:12px;padding-top:14px;border-top:1px solid var(--line)}.start-footer small{font-size:11px;color:var(--muted)}.text-link{font-size:12px;font-weight:900;color:var(--yellow2)}
+.method-strip{padding:12px 0 52px}.method-grid{display:grid;grid-template-columns:repeat(3,1fr);background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden}.method-item{padding:22px;border-right:1px solid var(--line)}.method-item:last-child{border-right:0}.method-item small{display:block;color:var(--yellow2);font-size:10px;font-weight:900;letter-spacing:1px;text-transform:uppercase}.method-item strong{display:block;margin-top:5px;font-size:15px}.method-item p{margin-top:6px;color:var(--muted);font-size:12px;line-height:1.65}
+section.block{padding:72px 0}.section-head{max-width:770px;margin-bottom:30px}h2{margin-top:8px;font-size:clamp(30px,4.5vw,47px);line-height:1.06;letter-spacing:-2px;font-weight:950}.section-head p{margin-top:12px;color:var(--muted);line-height:1.72}
+.tool-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}.tool{min-height:178px;padding:21px;border:1px solid var(--line);background:var(--surface);border-radius:18px;display:flex;flex-direction:column;transition:.2s}.tool:hover{transform:translateY(-4px);border-color:rgba(255,184,0,.46);box-shadow:var(--shadow)}.tool-icon{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:rgba(255,184,0,.12);font-size:19px;margin-bottom:16px}.tool h3{font-size:15px;font-weight:900}.tool p{margin-top:7px;color:var(--muted);font-size:12px;line-height:1.65}.tool .go{margin-top:auto;padding-top:16px;color:var(--yellow2);font-size:12px;font-weight:900}
+.pricing{display:grid;grid-template-columns:1fr 1fr;gap:16px}.pricing-card{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:26px}.pricing-card .num{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;background:var(--yellow);color:#000;font-weight:950;margin-bottom:16px}.pricing-card h3{font-size:19px;font-weight:950}.pricing-card p{margin-top:9px;color:var(--muted);font-size:13px;line-height:1.75}.source-note{margin-top:15px;padding:13px 14px;border-radius:12px;background:var(--s2);color:var(--muted);font-size:11px;line-height:1.6}
+.definition{background:var(--black);color:#fff;border-radius:24px;padding:38px;border:1px solid rgba(255,255,255,.08)}.definition-grid{display:grid;grid-template-columns:1fr 1fr;gap:38px}.definition p{color:#adb0b7;margin-top:13px;line-height:1.75}.definition-points{display:grid;gap:10px}.definition-point{padding:15px 16px;border:1px solid rgba(255,255,255,.1);background:#111214;border-radius:13px}.definition-point strong{font-size:13px}.definition-point span{display:block;margin-top:4px;color:#a9adb5;font-size:11px;line-height:1.55}
+.faq{max-width:860px}.faq-item{border-bottom:1px solid var(--line)}.faq-q{width:100%;padding:20px 0;display:flex;justify-content:space-between;gap:18px;border:0;background:none;color:var(--text);text-align:left;font-weight:850;cursor:pointer}.faq-q b{color:var(--yellow2);font-size:20px}.faq-a{display:none;padding:0 0 20px;color:var(--muted);font-size:13px;line-height:1.75}.faq-item.open .faq-a{display:block}
+.cta{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:34px;display:flex;align-items:center;justify-content:space-between;gap:28px}.cta h2{font-size:clamp(28px,4vw,40px)}.cta p{margin-top:9px;color:var(--muted)}footer{padding:32px 0;border-top:1px solid var(--line)}.footer-inner{display:flex;justify-content:space-between;gap:20px;align-items:center}.footer-inner small{color:var(--muted)}.footer-brand{font-weight:950}.footer-brand span{color:var(--yellow2)}.mobile-cta{display:none}
+@media(max-width:980px){.hero-grid{grid-template-columns:1fr}.start-card{max-width:700px}.tool-grid{grid-template-columns:repeat(2,1fr)}.definition-grid{grid-template-columns:1fr}}
+@media(max-width:760px){.container{width:min(calc(100% - 24px),var(--max))}.nav-inner{min-height:64px}.nav-links{display:none;position:absolute;left:12px;right:12px;top:70px;padding:10px;background:var(--surface);border:1px solid var(--line);border-radius:15px;box-shadow:var(--shadow);flex-direction:column;align-items:stretch}.nav-links.open{display:flex}.nav-link{padding:12px}.menu-btn{display:inline-grid;place-items:center}.hero{padding:44px 0 32px}h1{font-size:clamp(39px,11vw,53px);letter-spacing:-2.5px}.hero-actions{display:grid;grid-template-columns:1fr}.btn{width:100%}.trust{display:grid;grid-template-columns:1fr 1fr;gap:9px}.start-card{padding:18px;border-radius:19px}.method-grid{grid-template-columns:1fr}.method-item{border-right:0;border-bottom:1px solid var(--line)}.method-item:last-child{border-bottom:0}section.block{padding:54px 0}.tool-grid,.pricing{grid-template-columns:1fr}.definition{padding:26px 20px}.cta{display:block;padding:26px 20px}.cta .btn{margin-top:18px}.footer-inner{flex-direction:column;align-items:flex-start}.mobile-cta{display:block;position:fixed;left:12px;right:12px;bottom:12px;z-index:999}.mobile-cta a{min-height:56px;border-radius:14px;background:var(--yellow);color:#000;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:950;box-shadow:0 15px 35px rgba(0,0,0,.25)}body{padding-bottom:78px}}
+@media(max-width:440px){.trust,.start-grid{grid-template-columns:1fr}}
+.home-estimator{background:var(--surface);border:1px solid var(--line);border-radius:24px;padding:25px;box-shadow:var(--shadow)}
+.est-kicker{color:var(--yellow2);font-size:10px;font-weight:950;letter-spacing:1.1px}.home-estimator h2{font-size:25px;letter-spacing:-1px;margin-top:4px}.est-sub{color:var(--muted);font-size:12px;margin:5px 0 18px}
+.est-label{font-size:11px;font-weight:900;margin:13px 0 7px}.est-choice,.est-two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.est-mode,.est-input{width:100%;min-height:46px;border:1px solid var(--line);background:var(--s2);color:var(--text);border-radius:11px;padding:0 12px;font:inherit;font-size:12px}.est-mode{cursor:pointer;font-weight:850}.est-mode.active{border-color:var(--yellow);background:rgba(255,184,0,.12)}
+.est-two{margin-top:8px}.est-input{margin-top:8px}.est-submit{width:100%;min-height:52px;margin-top:14px;border:0;border-radius:12px;background:var(--yellow);color:#080808;font-weight:950;cursor:pointer}
+.est-ai{display:block;margin-top:12px;text-align:center;font-size:11px;font-weight:800;color:var(--muted)}.est-ai:hover{color:var(--text)}
+@media(max-width:440px){.est-choice,.est-two{grid-template-columns:1fr}}
 
-/* HERO SECTION - REFINED FOR CTR */
-.hero{position:relative;padding:80px 0 60px;overflow:hidden}.hero:before{content:"";position:absolute;width:600px;height:600px;right:-200px;top:-200px;border-radius:50%;background:radial-gradient(circle, rgba(255,184,0,0.15) 0%, rgba(255,184,0,0) 70%);pointer-events:none}
-.hero-grid{display:grid;grid-template-columns:1.05fr 0.95fr;gap:60px;align-items:center}
-.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border:1px solid rgba(255,184,0,.4);background:var(--yellow-light);color:var(--yellow2);border-radius:999px;font-size:12px;font-weight:800;letter-spacing:.5px;text-transform:uppercase}
-.dot{width:8px;height:8px;background:var(--yellow);border-radius:50%;box-shadow:0 0 8px var(--yellow)}
-h1{margin-top:24px;font-size:clamp(36px,5vw,64px);line-height:1.05;letter-spacing:-2px;font-weight:900}
-h1 span{color:var(--yellow);position:relative;}
-.hero-copy{margin-top:20px;max-width:600px;color:var(--muted);font-size:clamp(16px,1.5vw,18px);line-height:1.7}
-.hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
-.btn{min-height:56px;padding:0 28px;border-radius:var(--radius-md);display:inline-flex;align-items:center;justify-content:center;border:1px solid transparent;font-size:15px;font-weight:800;transition:all .2s ease;cursor:pointer}
-.btn:hover{transform:translateY(-2px);box-shadow:0 10px 25px -5px rgba(0,0,0,0.1)}
-.btn-primary{background:linear-gradient(135deg, var(--yellow) 0%, #f59e0b 100%);color:#000;box-shadow:0 8px 20px -6px rgba(255,184,0,0.5)}
-.btn-secondary{background:var(--surface);border-color:var(--line);color:var(--text)}
+/* HOME_AI_ESTIMATOR_V1 */
+.est-ai-upload{margin-top:12px}.est-label small{font-weight:600;color:var(--muted)}
+.est-upload-box{display:block;padding:14px;border:1px dashed #cbd5e1;border-radius:11px;background:#f8fafc;text-align:center;font-size:12px;font-weight:850;cursor:pointer}
+.est-file-name{font-size:10px;color:var(--muted);margin-top:6px}.est-ai-status{margin-top:12px;padding:12px;border-radius:10px;background:#f8fafc;font-size:12px}
+.est-ai-result{margin-top:16px;border-top:1px solid var(--line);padding-top:16px}.est-result-label{font-size:10px;font-weight:950;color:var(--yellow2);letter-spacing:.7px}
+.est-result-total{font-size:27px;font-weight:950;margin:4px 0}.est-result-meta,.est-result-note{font-size:10px;color:var(--muted);line-height:1.5}
+.est-result-items{margin:13px 0}.est-result-row{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--line);font-size:11px}
+.est-result-row strong{text-align:right}.est-budget-gate{margin-top:15px;padding:14px;background:#f8fafc;border-radius:12px;font-size:12px}.est-budget-gate p{margin:6px 0 10px;color:var(--muted)}
+.est-budget-actions{display:flex;gap:7px}.est-budget-actions button{flex:1;border:1px solid var(--line);border-radius:9px;padding:10px;font-weight:800;cursor:pointer;background:#fff}
+.est-lead-form{margin-top:12px}.est-lead-form input,.est-lead-form textarea{width:100%;margin-top:7px;padding:11px;border:1px solid var(--line);border-radius:9px;font:inherit}.est-lead-form textarea{min-height:70px}
+.est-lead-form button{width:100%;margin-top:9px;padding:13px;border:0;border-radius:10px;background:var(--yellow);font-weight:950;cursor:pointer}
+.home-estimator [hidden]{display:none!important}
+.est-consent{display:flex;align-items:flex-start;gap:8px;margin-top:12px;color:var(--muted);font-size:11px;cursor:pointer}
+.est-consent input{width:auto;height:auto;margin:3px 0 0;flex-shrink:0}
+.est-errors{margin-bottom:12px;padding:10px;border:1px solid #f87171;border-radius:8px;background:#fef2f2;color:#b91c1c;font-size:11px}
+.est-errors ul{margin:0;padding-left:16px}
+.est-unpriced{margin-top:14px;padding:11px;border:1px solid #f4d06f;border-radius:10px;background:#fff8e6}
+.est-unpriced-title{display:block;margin-bottom:7px;color:#9a6700;font-size:11px}
+.est-unpriced-row{margin-top:5px;color:#6b5b2a;font-size:11px;line-height:1.45}
+.est-list-note{margin-top:8px;color:var(--muted);font-size:10px}
 
-/* TRUST BAR - SEO & CTR BOOST */
-.trust-bar{display:flex;flex-wrap:wrap;gap:20px;margin-top:32px;padding-top:24px;border-top:1px solid var(--line)}
-.trust-item{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--muted)}
-.trust-icon{display:flex;align-items:center;justify-content:center;width:24px;height:24px;background:var(--green);color:#fff;border-radius:50%;font-size:10px}
+/* Homepage-only presentation; the shared components and pricing engine stay intact. */
+:root{--yellow2:#865b00;--focus:#1764d8}
+html[data-theme=light]{color-scheme:light}
+html[data-theme=dark]{color-scheme:dark;--bg:#10151d;--surface:#18212c;--s2:#202c3a;--text:#f3f6fa;--muted:#b4c0ce;--line:rgba(230,238,250,.18);--yellow2:#ffc94b;--green:#72db9b;--focus:#80b5ff}
+html{scroll-padding-top:24px}
+:focus-visible{outline:3px solid var(--focus);outline-offset:4px}
+.skip-link{position:fixed;left:16px;top:-100px;z-index:2000;background:var(--surface);color:var(--text);padding:12px 18px;border:2px solid var(--focus);border-radius:10px}
+.skip-link:focus{top:12px}
+.home-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:18px;font-size:12px;color:var(--muted)}
+.home-toolbar nav{display:flex;flex-wrap:wrap;gap:16px}
+.home-toolbar a{padding:10px 0;text-decoration:underline;text-underline-offset:4px}
+.theme-toggle{display:flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:8px 13px;flex-shrink:0;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--text);font-weight:750;cursor:pointer}.theme-toggle[hidden]{display:none}
+.hero{padding-top:44px}.hero-grid{grid-template-columns:minmax(0,1fr) minmax(380px,1fr);gap:36px;align-items:start}
+h1{font-size:clamp(38px,4.7vw,60px);line-height:1.08;letter-spacing:-2px}
+.hero-copy{font-size:17px}.hero-scope{margin-top:16px;font-size:12px;color:var(--muted);max-width:600px}
+.hero-scope a,.est-scope a,.source-note a,.est-consent a{text-decoration:underline;text-underline-offset:3px}
+.home-estimator{scroll-margin-top:24px;min-width:0}.est-choice{grid-template-columns:repeat(3,minmax(0,1fr))}
+.est-mode{padding:12px 6px;line-height:1.5;min-height:68px;font-size:11px}.est-mode[aria-pressed=true]{box-shadow:inset 0 0 0 1px var(--yellow)}
+.est-scope{margin-top:12px;padding:12px;border-left:3px solid var(--yellow);background:var(--s2);border-radius:0 10px 10px 0;font-size:12px;color:var(--muted)}
+.est-scope strong{display:block;margin-bottom:4px;color:var(--text)}
+.est-field{display:block;min-width:0;font-size:11px;font-weight:750;color:var(--muted)}
+.est-field .est-input{margin-top:5px}.est-input{min-width:0}.est-result-row{overflow-wrap:anywhere}.est-result-row>*{min-width:0}
+.est-upload-box,.est-ai-status,.est-budget-gate{background:var(--s2);color:var(--text);border-color:var(--line)}
+.est-budget-actions button,.est-lead-form input,.est-lead-form textarea{background:var(--surface);color:var(--text)}
+.est-budget-actions{flex-wrap:wrap}.est-lead-form button{color:#080808}.est-lead-form input[type=checkbox]{accent-color:#a36d00}
+.est-submit:disabled,.est-lead-form button:disabled{opacity:.65;cursor:wait}
+.file-picker{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+.est-ai-upload:focus-within .est-upload-box{outline:3px solid var(--focus);outline-offset:3px}
+.est-ai-upload{position:relative}.est-remove-file{background:none;border:0;color:var(--text);text-decoration:underline;min-height:44px;font-size:12px;cursor:pointer}
+.mobile-cta{display:none!important}body{padding-bottom:0}
+.faq-item .faq-a{display:block}.faq-item .faq-a[hidden]{display:none}
+.faq-q{min-height:56px}
+html[data-theme=dark] .est-errors{background:#381d25;color:#ffd4d7;border-color:#b76e7c}
+html[data-theme=dark] .est-unpriced{background:#322b1a;border-color:#8f793d}
+html[data-theme=dark] .est-unpriced-title{color:#ffda80}
+html[data-theme=dark] .est-unpriced-row{color:#e7d5a7}
+/* Higher specificity is necessary for the existing component's inline CSS overrides. */
+html[data-theme=dark] body .wks-header,html[data-theme=dark] body .wks-nav,html[data-theme=dark] body .wks-footer{background:var(--surface)!important;color:var(--text)!important;border-color:var(--line)!important}
+html[data-theme=dark] body .wks-menu{background:var(--s2);color:var(--text);border-color:var(--line)}
+html[data-theme=dark] body .wks-nav a,html[data-theme=dark] body .wks-footer a{color:var(--text)!important}
+html[data-theme=dark] body .wks-nav a:hover,html[data-theme=dark] body .wks-partner{background:var(--s2)!important;border-color:var(--line)!important}
+html[data-theme=dark] body .wks-offer{color:#111827!important;background:var(--yellow)!important}
+html[data-theme=dark] body .wks-foot-text,html[data-theme=dark] body .wks-partner span,html[data-theme=dark] body .wks-foot-bottom{color:var(--muted)!important;border-color:var(--line)!important}
+html[data-theme=dark] body .wks-foot-title{color:var(--yellow2)!important}
+html[data-theme=dark] body .wks-brand img,html[data-theme=dark] body .wks-foot-logo{background:#fff!important;border-radius:6px}
+@media(max-width:980px){.hero-grid{grid-template-columns:1fr}.hero-copy{max-width:720px}.home-estimator{max-width:720px;width:100%}}
+@media(max-width:760px){html body .wks-foot-grid{grid-template-columns:1fr!important}.hero{padding-top:28px}.home-toolbar nav{gap:12px}.home-estimator{padding:18px}.trust{grid-template-columns:1fr 1fr}.theme-toggle{font-size:12px}}
+@media(max-width:440px){.est-choice{grid-template-columns:1fr}.est-mode{min-height:46px;text-align:left;padding:10px 14px}.home-toolbar{align-items:flex-start}.home-toolbar nav{gap:0 12px}.hero-actions .btn{padding:0 12px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition:none!important;animation:none!important}}
 
-/* ESTIMATOR WIDGET - PREMIUM SAAS LOOK */
-.home-estimator{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-lg);padding:32px;box-shadow:var(--shadow);position:relative;z-index:10}
-.est-kicker{display:inline-block;background:var(--black);color:var(--yellow);padding:4px 10px;border-radius:6px;font-size:11px;font-weight:800;letter-spacing:1px;margin-bottom:12px}
-html[data-theme=dark] .est-kicker{background:var(--s2);}
-.home-estimator h2{font-size:28px;letter-spacing:-1px;margin-top:0;font-weight:800}
-.est-sub{color:var(--muted);font-size:14px;margin:8px 0 24px}
-
-.est-label{display:block;font-size:13px;font-weight:700;margin:0 0 8px;color:var(--text)}
-.est-label small{font-weight:500;color:var(--muted);font-size:11px;margin-left:4px;background:var(--s2);padding:2px 6px;border-radius:4px}
-
-/* SEGMENTED CONTROL FOR PROJECT TYPE */
-.est-choice{display:flex;background:var(--s2);padding:6px;border-radius:14px;gap:4px;margin-bottom:20px}
-.est-mode{flex:1;background:transparent;border:none;border-radius:10px;padding:12px 8px;font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;transition:all .3s cubic-bezier(0.4, 0, 0.2, 1);text-align:center}
-.est-mode:hover{color:var(--text)}
-.est-mode.active{background:var(--surface);color:var(--text);box-shadow:var(--shadow-sm)}
-
-.est-two{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
-.est-input{width:100%;height:52px;border:1px solid var(--s3);background:var(--surface);color:var(--text);border-radius:var(--radius-md);padding:0 16px;font-family:inherit;font-size:14px;font-weight:500;transition:all .2s;appearance:none;-webkit-appearance:none;}
-select.est-input {background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 16px center;}
-.est-input:focus{outline:none;border-color:var(--yellow);box-shadow:0 0 0 4px var(--yellow-light)}
-.est-input::placeholder{color:#94a3b8}
-
-/* AI UPLOAD ZONE - MAGIC FEEL */
-.est-ai-upload{margin-top:24px;margin-bottom:24px}
-.est-upload-box{display:flex;align-items:center;justify-content:center;gap:10px;padding:20px;border:2px dashed var(--s3);border-radius:var(--radius-md);background:var(--bg);color:var(--text);font-size:14px;font-weight:600;cursor:pointer;transition:all .3s ease;text-align:center}
-.est-upload-box:hover{border-color:var(--yellow);background:var(--yellow-light);transform:translateY(-2px)}
-.est-upload-box::before{content:"✨";font-size:18px}
-.est-file-name{font-size:12px;color:var(--muted);margin-top:8px;text-align:center;font-weight:500}
-.est-remove-file{display:block;margin:8px auto 0;background:none;border:none;color:#ef4444;font-size:12px;font-weight:600;cursor:pointer;text-decoration:underline}
-
-/* CTA BUTTON */
-.est-submit{width:100%;height:60px;margin-top:8px;border:0;border-radius:var(--radius-md);background:linear-gradient(135deg, var(--yellow) 0%, #f59e0b 100%);color:#000;font-size:16px;font-weight:900;letter-spacing:.5px;cursor:pointer;transition:all .3s ease;box-shadow:0 8px 20px -6px rgba(255,184,0,0.5)}
-.est-submit:hover{transform:translateY(-2px);box-shadow:0 12px 25px -8px rgba(255,184,0,0.6)}
-.est-submit:active{transform:translateY(0)}
-
-/* RESULTS & STATUS */
-.est-ai-status{margin-top:16px;padding:16px;border-radius:var(--radius-md);background:var(--s2);color:var(--text);font-size:13px;font-weight:500;text-align:center;border:1px solid var(--s3)}
-.est-ai-result{margin-top:24px;border-top:1px solid var(--s2);padding-top:24px}
-.est-result-label{font-size:11px;font-weight:800;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px}
-.est-result-total{font-size:36px;font-weight:900;color:var(--text);letter-spacing:-1px;margin:0 0 4px}
-.est-result-meta{font-size:13px;color:var(--muted);font-weight:500}
-.est-result-items{margin:24px 0;background:var(--bg);border-radius:var(--radius-md);padding:16px;border:1px solid var(--s2)}
-.est-result-row{display:flex;justify-content:space-between;gap:16px;padding:12px 0;border-bottom:1px solid var(--s2);font-size:13px;font-weight:500}
-.est-result-row:last-child{border-bottom:none;padding-bottom:0}
-.est-result-row strong{font-weight:800;color:var(--text)}
-
-.est-budget-gate{margin-top:24px;padding:24px;background:var(--bg);border:1px solid var(--s2);border-radius:var(--radius-md);text-align:center}
-.est-budget-gate strong{font-size:16px;font-weight:800;color:var(--text);display:block;margin-bottom:8px}
-.est-budget-gate p{color:var(--muted);font-size:13px;margin-bottom:20px}
-.est-budget-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.est-budget-actions button{height:48px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s}
-#estBudgetYes{background:var(--green);color:#fff;border:none;box-shadow:0 4px 12px rgba(16, 185, 129, 0.2)}
-#estBudgetYes:hover{background:#059669;transform:translateY(-1px)}
-#estBudgetNo{background:var(--surface);color:var(--text);border:1px solid var(--s3)}
-
-.est-lead-form{margin-top:24px;padding-top:24px;border-top:1px solid var(--s2)}
-.est-lead-form input, .est-lead-form textarea{width:100%;background:var(--surface);margin-bottom:16px;border:1px solid var(--s3)}
-.est-lead-form textarea{height:100px;padding:12px 16px;resize:vertical}
-.est-consent{display:flex;align-items:flex-start;gap:12px;font-size:12px;color:var(--muted);margin-bottom:20px}
-.est-consent input{width:18px;height:18px;margin-top:2px;accent-color:var(--yellow)}
-
-/* ERRORS & UNPRICED */
-.est-errors{margin-bottom:20px;padding:16px;border-radius:var(--radius-md);background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);color:#ef4444;font-size:13px;font-weight:500}
-.est-errors ul{padding-left:20px;margin:0}
-.est-unpriced{margin-top:16px;padding:16px;border-radius:var(--radius-md);background:var(--yellow-light);border:1px solid rgba(255,184,0,0.2)}
-.est-unpriced-title{display:block;font-size:13px;font-weight:700;color:var(--yellow2);margin-bottom:8px}
-.est-unpriced-row{font-size:12px;color:var(--text);margin-top:6px;display:flex;align-items:flex-start;gap:6px}
-.est-unpriced-row::before{content:"•";color:var(--yellow2)}
-
-/* SECTIONS */
-.method-strip{padding:40px 0;background:var(--bg)}
-.method-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
-.method-item{background:var(--surface);padding:32px;border-radius:var(--radius-lg);box-shadow:var(--shadow-sm);border:1px solid var(--s2)}
-.method-item small{display:inline-block;padding:4px 10px;background:var(--s2);color:var(--text);border-radius:6px;font-size:11px;font-weight:700;margin-bottom:16px;text-transform:uppercase;letter-spacing:.5px}
-.method-item strong{display:block;font-size:18px;font-weight:800;color:var(--text);margin-bottom:8px}
-
-section.block{padding:80px 0}
-.kicker{display:inline-block;color:var(--yellow2);font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
-h2{font-size:clamp(32px,4vw,48px);line-height:1.1;letter-spacing:-1px;font-weight:900;color:var(--text)}
-.section-head{max-width:640px;margin-bottom:48px}
-
-/* TOOLS */
-.tool-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}
-.tool{padding:32px;border:1px solid var(--s2);background:var(--surface);border-radius:var(--radius-lg);display:flex;flex-direction:column;transition:all .3s;box-shadow:var(--shadow-sm)}
-.tool:hover{transform:translateY(-5px);border-color:var(--yellow);box-shadow:var(--shadow)}
-.tool-icon{width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;background:var(--yellow-light);font-size:24px;margin-bottom:24px}
-
-/* UTILS */
-.file-picker{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-[hidden]{display:none!important}
-
-/* MOBILE FIXES */
-@media(max-width:992px){
- .hero-grid{grid-template-columns:1fr;gap:40px}
- .hero-copy{max-width:100%}
- .home-estimator{max-width:100%}
- .method-grid{grid-template-columns:1fr;gap:16px}
-}
-@media(max-width:768px){
- .hero{padding:40px 0}
- h1{font-size:36px;letter-spacing:-1px}
- /* Prevent iOS Zoom */
- .est-input, select.est-input, .est-lead-form input, .est-lead-form textarea {font-size: 16px !important;}
- .home-estimator{padding:20px;border-radius:20px}
- .est-choice{flex-direction:column;background:transparent;padding:0;gap:8px}
- .est-mode{background:var(--s2);border:1px solid var(--line);min-height:48px}
- .est-mode.active{border-color:var(--yellow)}
- .est-two{grid-template-columns:1fr;gap:12px}
- .trust-bar{display:grid;grid-template-columns:1fr;gap:12px}
- .est-budget-actions{grid-template-columns:1fr}
- .mobile-cta{display:block;position:fixed;bottom:16px;left:16px;right:16px;z-index:99}
- .mobile-cta a{display:flex;align-items:center;justify-content:center;height:56px;background:var(--text);color:var(--surface);border-radius:14px;font-size:16px;font-weight:800;box-shadow:0 10px 25px rgba(0,0,0,0.2)}
- body{padding-bottom:80px}
-}
 </style>
 <script type="application/ld+json">
 {"@@context":"https://schema.org","@@type":"WebSite","@@id":"https://worksitem.com/#website","name":"WORKSİTEM","url":"https://worksitem.com/","inLanguage":"tr-TR","description":"İnşaat ve tadilat için maliyet, metraj ve ön keşif araçları; kentsel dönüşümde yeni yapı için yaklaşık bütçe.","publisher":{"@@type":"Organization","name":"Kainta İnşaat","url":"https://kainta.com"}}
@@ -197,84 +156,66 @@ h2{font-size:clamp(32px,4vw,48px);line-height:1.1;letter-spacing:-1px;font-weigh
 <section class="hero">
 <div class="container hero-grid">
 <div>
-<div class="eyebrow"><span class="dot" aria-hidden="true"></span> Yeni Nesil Keşif Teknolojisi</div>
-<h1>İnşaat ve Tadilat Maliyetinizi <span>Saniyeler İçinde</span> Hesaplayın.</h1>
-<p class="hero-copy">Resmi ÇŞİDB verileri ve <b>Yapay Zeka (AI)</b> teknolojisiyle projenizin ön keşfini anında çıkarın. İster m² girin, ister proje dosyanızı yükleyin; güncel bütçenizi anında görün.</p>
-
+<div class="eyebrow"><span class="dot" aria-hidden="true"></span> İnşaat · Tadilat · Kentsel dönüşüm</div>
+<h1>İnşaat ve tadilat <span>maliyetinizi</span> hesaplayın.</h1>
+<p class="hero-copy">Toplam alanınızı, şehrinizi ve kalite tercihinizi girin; yaklaşık proje bütçenizi görün. Dosyanız varsa AI ön keşifle iş kalemlerini inceleyin. Kentsel dönüşümde yeni yapının ön bütçesini değerlendirin.</p>
 <div class="hero-actions">
-<a class="btn btn-primary" href="#proje-hesaplayici">Hemen Hesapla →</a>
-<a class="btn btn-secondary" href="/araclar">Tüm Araçlar</a>
+<a class="btn btn-primary" href="#proje-hesaplayici">Ön Bütçemi Hesapla →</a>
+<a class="btn btn-secondary" href="/araclar">Tüm Hesaplama Araçları</a>
 </div>
-
-<div class="trust-bar">
-    <div class="trust-item"><span class="trust-icon">✓</span> Resmi ÇŞİDB Verileri</div>
-    <div class="trust-item"><span class="trust-icon">✓</span> AI Destekli Analiz</div>
-    <div class="trust-item"><span class="trust-icon">✓</span> +10.000 Hesaplama</div>
+<div class="trust">
+<span><b>✓</b> Dosyasız m² hesabı</span>
+<span><b>✓</b> Dosyayla AI ön keşif</span>
+<span><b>✓</b> Eksik kalem uyarısı</span>
+<span><b>✓</b> Proje değerlendirme talebi</span>
 </div>
+<p class="hero-scope">Sonuçlar kesin teklif değildir. Projenize özel keşif ve teklif için <a href="https://kainta.com/" target="_blank" rel="noopener noreferrer">Kainta İnşaat</a> ile ilerleyebilirsiniz. <a href="#fiyatlama">Hesap kapsamını inceleyin.</a></p>
 </div>
 
 <aside class="home-estimator" id="proje-hesaplayici" aria-labelledby="estHeading">
-<div class="est-kicker">AKILLI PROJE HESAPLAYICI</div>
+<div class="est-kicker">WORKSİTEM PROJE HESAPLAYICI</div>
 <h2 id="estHeading">Yaklaşık bütçenizi görün</h2>
-<p class="est-sub">Proje detaylarınızı girin, yapay zeka destekli motorumuz güncel bütçenizi hazırlasın.</p>
+<p class="est-sub">Birkaç bilgiyle yaklaşık proje bütçenizi oluşturun.</p>
 
-<div class="est-label" id="estModeLabel">Hangi projenin bütçesini merak ediyorsunuz?</div>
+<div class="est-label" id="estModeLabel">Ne yapmak istiyorsunuz?</div>
 <div class="est-choice" role="group" aria-labelledby="estModeLabel">
 <button type="button" class="est-mode active" data-tip="insaat" data-intent="insaat" aria-pressed="true">🏗️ Sıfırdan İnşaat</button>
 <button type="button" class="est-mode" data-tip="tadilat" data-intent="tadilat" aria-pressed="false">🛠️ Komple Tadilat</button>
-<button type="button" class="est-mode" data-tip="insaat" data-intent="kentsel_donusum" aria-pressed="false">🏙️ Dönüşüm</button>
+<button type="button" class="est-mode" data-tip="insaat" data-intent="kentsel_donusum" aria-pressed="false">🏙️ Kentsel Dönüşüm</button>
 </div>
-<p id="estRenewalScope" class="est-scope" hidden><strong>Kentsel dönüşüm: yeni yapı ön bütçesi</strong>Dosyasız hesap, sıfırdan inşaat yöntemiyle yeni yapının yaklaşık bütçesini verir. Yıkım, tahliye, kira, ruhsat ve diğer dönüşüm giderleri ayrıca değerlendirilir. <a href="#kentsel-donusum">Kapsamı okuyun.</a></p>
-
-<div style="margin-bottom:16px;">
-    <label class="est-label" for="estProject">Proje türü</label>
-    <select id="estProject" class="est-input">
-    <option value="villa" @selected(old('project_type') === 'villa')>Villa</option>
-    <option value="apartman" @selected(old('project_type') === 'apartman')>Apartman / Bina</option>
-    <option value="ofis" @selected(old('project_type') === 'ofis')>Ofis</option>
-    <option value="magaza" @selected(old('project_type') === 'magaza')>Mağaza / Ticari Alan</option>
-    <option value="fabrika" @selected(old('project_type') === 'fabrika')>Fabrika / Endüstriyel</option>
-    </select>
-</div>
+<p id="estRenewalScope" class="est-scope" hidden><strong>Kentsel dönüşüm: yeni yapı ön bütçesi</strong>Dosyasız hesap, sıfırdan inşaat yöntemiyle yeni yapının yaklaşık bütçesini verir. Yıkım, tahliye, kira, ruhsat ve diğer dönüşüm giderleri ayrıca değerlendirilir. Destek veya hak sahipliği hesabı yapılmaz. <a href="#kentsel-donusum">Kapsamı okuyun.</a></p>
+<label class="est-label" for="estProject">Proje türü</label>
+<select id="estProject" class="est-input">
+<option value="villa" @selected(old('project_type') === 'villa')>Villa</option>
+<option value="apartman" @selected(old('project_type') === 'apartman')>Apartman / Bina</option>
+<option value="ofis" @selected(old('project_type') === 'ofis')>Ofis</option>
+<option value="magaza" @selected(old('project_type') === 'magaza')>Mağaza / Ticari Alan</option>
+<option value="fabrika" @selected(old('project_type') === 'fabrika')>Fabrika / Endüstriyel</option>
+</select>
 
 <div class="est-two">
-<div style="width:100%">
-<label class="est-label" for="estCity">Şehir</label>
-<input id="estCity" class="est-input" value="{{ old('city', 'İstanbul') }}" placeholder="Örn. İstanbul" autocomplete="address-level1" maxlength="100" required>
+<label class="est-field" for="estCity">Şehir<input id="estCity" class="est-input" value="{{ old('city', 'İstanbul') }}" placeholder="Örn. İstanbul" autocomplete="address-level1" maxlength="100" required></label>
+<label class="est-field" for="estDistrict">İlçe<input id="estDistrict" class="est-input" value="{{ old('district') }}" placeholder="Örn. Ümraniye" autocomplete="address-level2" maxlength="150"></label>
 </div>
-<div style="width:100%">
-<label class="est-label" for="estDistrict">İlçe <small>Opsiyonel</small></label>
-<input id="estDistrict" class="est-input" value="{{ old('district') }}" placeholder="Örn. Kadıköy" autocomplete="address-level2" maxlength="150">
-</div>
-</div>
-
 <div class="est-two">
-<div style="width:100%">
-<label class="est-label" for="estArea">Uygulama alanı (m²)</label>
-<input id="estArea" class="est-input" type="number" min="20" step="0.01" required value="{{ old('calculated_area', 200) }}" placeholder="Toplam m²" inputmode="decimal">
-</div>
-<div style="width:100%">
-<label class="est-label" for="estFloors">Kat sayısı</label>
-<input id="estFloors" class="est-input" type="number" min="1" step="1" required value="1" placeholder="Kat sayısı" inputmode="numeric">
-</div>
+<label class="est-field" for="estArea">Toplam inşaat / uygulama alanı (m²)<input id="estArea" class="est-input" type="number" min="20" step="0.01" required value="{{ old('calculated_area', 200) }}" placeholder="Toplam m²" inputmode="decimal"></label>
+<label class="est-field" for="estFloors">Kat sayısı (proje bilgisi)<input id="estFloors" class="est-input" type="number" min="1" step="1" required value="1" placeholder="Kat sayısı" inputmode="numeric"></label>
 </div>
 
-<div style="margin-bottom:16px;">
-    <label class="est-label" for="estQuality">Malzeme ve uygulama kalitesi</label>
-    <select id="estQuality" class="est-input">
-    <option value="economic">Ekonomik Sınıf</option>
-    <option value="standard" selected>Standart Sınıf</option>
-    <option value="premium">Premium Sınıf</option>
-    <option value="luxury">Lüks Sınıf</option>
-    </select>
-</div>
+<label class="est-label" for="estQuality">Malzeme ve uygulama kalitesi</label>
+<select id="estQuality" class="est-input">
+<option value="economic">Ekonomik</option>
+<option value="standard" selected>Standart</option>
+<option value="premium">Premium</option>
+<option value="luxury">Lüks</option>
+</select>
 
 <div class="est-ai-upload" id="estAiUpload">
- <div class="est-label">Proje dosyanız var mı? <small>AI ile Otomatik Analiz</small></div>
- <label for="estFile" class="est-upload-box">PDF, JPG, PNG veya CSV Yükleyin</label>
+ <div class="est-label">Proje dosyanız var mı? <small>Opsiyonel</small></div>
+ <label for="estFile" class="est-upload-box">📄 PDF, JPG, PNG veya CSV yükleyin</label>
  <input id="estFile" class="file-picker" type="file" accept=".pdf,.jpg,.jpeg,.png,.csv" aria-describedby="estFileName">
- <div id="estFileName" class="est-file-name" aria-live="polite">Dosyanız yoksa m² üzerinden ön bütçe oluşturulur (Maks 10MB)</div>
- <button type="button" id="estRemoveFile" class="est-remove-file" hidden>Dosyayı kaldır</button>
+ <div id="estFileName" class="est-file-name" aria-live="polite">Dosyanız yoksa m² üzerinden ön bütçe oluşturulur. En fazla 10 MB.</div>
+ <button type="button" id="estRemoveFile" class="est-remove-file" hidden>Dosyayı kaldır · m² ile hesapla</button>
 </div>
 
 <div id="estAiStatus" class="est-ai-status" role="status" aria-live="polite" hidden></div>
@@ -290,7 +231,7 @@ h2{font-size:clamp(32px,4vw,48px);line-height:1.1;letter-spacing:-1px;font-weigh
   <strong id="estBudgetTitle">Bu bütçe projeniz için uygun mu?</strong>
   <p id="estBudgetText">Uygunsa projenizi <a href="https://kainta.com" target="_blank" rel="noopener">Kainta İnşaat</a> mühendisleri değerlendirsin.</p>
   <div class="est-budget-actions" id="estBudgetActions">
-   <button type="button" id="estBudgetYes">✓ Bütçe uygun, devam et</button>
+   <button type="button" id="estBudgetYes">✓ Bütçe uygun</button>
    <button type="button" id="estBudgetNo">Sadece sonucu görmek istedim</button>
   </div>
   <div id="estBudgetThanks" hidden>Sonucunuzu inceleyebilirsiniz. İletişim bilgileriniz alınmayacaktır.</div>
@@ -320,27 +261,23 @@ h2{font-size:clamp(32px,4vw,48px);line-height:1.1;letter-spacing:-1px;font-weigh
    </div>
   @endif
 
-  <label class="est-label" for="estLeadName" style="margin-top:16px;">Ad Soyad / Firma</label>
-  <input type="text" class="est-input" id="estLeadName" name="name" required maxlength="150" autocomplete="name" placeholder="Ad Soyad veya Firma Ünvanı" value="{{ old('name') }}">
-  
-  <label class="est-label" for="estLeadPhone">Telefon Numarası</label>
-  <input type="tel" class="est-input" id="estLeadPhone" name="phone" required minlength="10" maxlength="30" autocomplete="tel" placeholder="0 (5XX) XXX XX XX" value="{{ old('phone') }}">
-  
-  <label class="est-label" for="estLeadLocation">Proje Konumu (Otomatik)</label>
-  <input type="text" class="est-input" name="location" id="estLeadLocation" required readonly placeholder="Proje konumu" value="{{ old('location') }}" style="background:var(--s2);color:var(--muted)">
-  
-  <label class="est-label" for="estLeadNotes">Açık Adres ve Ek Notlar</label>
-  <textarea class="est-input" id="estLeadNotes" name="notes" maxlength="3000" placeholder="Proje ile ilgili belirtmek istediğiniz ek detaylar..." style="height:100px;padding:16px;">{{ old('notes') }}</textarea>
-  
+  <label class="est-field" for="estLeadName">Ad Soyad / Firma</label>
+  <input type="text" id="estLeadName" name="name" required maxlength="150" autocomplete="name" placeholder="Ad Soyad / Firma" value="{{ old('name') }}">
+  <label class="est-field" for="estLeadPhone">Telefon</label>
+  <input type="tel" id="estLeadPhone" name="phone" required minlength="10" maxlength="30" autocomplete="tel" placeholder="Telefon" value="{{ old('phone') }}">
+  <label class="est-field" for="estLeadLocation">Proje konumu (şehir / ilçeden oluşturulur)</label>
+  <input type="text" name="location" id="estLeadLocation" required readonly placeholder="Proje konumu" value="{{ old('location') }}">
+  <label class="est-field" for="estLeadNotes">Açık adres ve proje notu</label>
+  <textarea id="estLeadNotes" name="notes" maxlength="3000" placeholder="Açık adres ve proje hakkında ek bilgi">{{ old('notes') }}</textarea>
   <label class="est-consent">
    <input type="checkbox" name="contact_consent" value="1" required>
-   <span><a href="{{ route('kvkk.aydinlatma') }}" target="_blank" rel="noopener noreferrer">KVKK Aydınlatma Metni</a>'ni okudum; profesyonel teklif süreci için iletişime geçilmesini kabul ediyorum.</span>
+   <span><a href="{{ route('kvkk.aydinlatma') }}" target="_blank" rel="noopener noreferrer">KVKK Aydınlatma Metni</a>'ni okudum; proje talebim için iletişime geçilmesini ve bilgilerimin işlenmesini kabul ediyorum.</span>
   </label>
-  <button type="submit" class="est-submit" id="estSubmitBtn">Net Teklif Talebini Gönder →</button>
+  <button type="submit" id="estSubmitBtn">Net teklif talebini gönder →</button>
  </form>
 </div>
 
-<button type="button" id="estSubmit" class="est-submit">HESAPLA VE ÖN BÜTÇEYİ GÖR →</button>
+<button type="button" id="estSubmit" class="est-submit">ÖN BÜTÇEYİ OLUŞTUR →</button>
 </aside>
 
 </div>
@@ -348,59 +285,78 @@ h2{font-size:clamp(32px,4vw,48px);line-height:1.1;letter-spacing:-1px;font-weigh
 
 <section class="method-strip">
 <div class="container"><div class="method-grid">
-<div class="method-item"><small>Dosyasız Hızlı Hesap</small><strong>m² Üzerinden Yaklaşık Bütçe</strong><p>Toplam alan, şehir ve kalite seçimine göre ÇŞİDB veritabanından saniyeler içinde ön bütçe hesaplanır.</p></div>
-<div class="method-item"><small>Yapay Zeka Destekli</small><strong>Dosyadan İş Kalemi Analizi</strong><p>PDF, görsel veya Excel dosyalarınız yapay zeka ile taranarak iş kalemleri otomatik olarak fiyatlandırılır.</p></div>
-<div class="method-item"><small>Profesyonel Süreç</small><strong>Projeye Özel Net Teklif</strong><p>Ön bütçe sonrası uzman mühendislerimiz projenizi detaylı inceler ve saha koşullarına göre kesin teklif sunar.</p></div>
+<div class="method-item"><small>Dosyasız hesap</small><strong>m² üzerinden yaklaşık bütçe</strong><p>Toplam alan, şehir ve kalite seçimine göre ön bütçe hesaplanır. Proje türü ve kat sayısı talep bilgisi olarak kaydedilir.</p></div>
+<div class="method-item"><small>Dosyalı analiz</small><strong>İş kalemlerinin ara toplamı</strong><p>PDF, görsel veya CSV içindeki iş kalemleri analiz edilir. Fiyatı ya da miktarı belirlenemeyen işler ayrıca gösterilir.</p></div>
+<div class="method-item"><small>Profesyonel teklif</small><strong>Projeye özel değerlendirme</strong><p>Ön bütçe kesin teklif değildir. Kapsam, malzeme seçimi ve saha koşulları için Kainta İnşaat'tan değerlendirme talep edebilirsiniz.</p></div>
 </div></div>
 </section>
 
 <section class="block" id="araclar">
 <div class="container">
-<div class="section-head"><div class="kicker">Akıllı İnşaat Araçları</div><h2>Maliyet ve Metrajınızı Kolayca Yönetin</h2><p>Proje türünüze özel geliştirilmiş hesaplayıcılarımızla sürpriz maliyetleri ortadan kaldırın.</p></div>
+<div class="section-head"><div class="kicker">Öne çıkan araçlar</div><h2>İnşaat maliyeti ve metraj araçları</h2><p>Proje bütçesi, beton, seramik, alçıpan ve çatı için ihtiyacınıza uygun hesaplayıcıyı seçin.</p></div>
 <div class="tool-grid">
-<a class="tool" href="/maliyet-hesapla?tip=insaat"><div class="tool-icon">🏗️</div><h3>İnşaat Maliyeti Hesaplama</h3><p>Yapı türü, alan ve proje detaylarına göre yaklaşık yatırım bütçesi oluşturun.</p><strong class="go" style="color:var(--yellow2);font-size:13px;margin-top:auto">Hemen Hesapla →</strong></a>
-<a class="tool" href="/araclar/otomatik-kesif-fiyatlandirma"><div class="tool-icon">✨</div><h3>AI Ön Keşif & Fiyatlandırma</h3><p>PDF veya proje dosyasından iş kalemi ve metraj ön analizi oluşturun.</p><strong class="go" style="color:var(--yellow2);font-size:13px;margin-top:auto">Aracı Aç →</strong></a>
-<a class="tool" href="/araclar/dijital-metraj"><div class="tool-icon">📐</div><h3>Dijital Metraj (Yakında)</h3><p>PDF veya görsel proje üzerinden ölçekli alan ve metraj çalışması yapın.</p><strong class="go" style="color:var(--muted);font-size:13px;margin-top:auto">İncele →</strong></a>
-<a class="tool" href="/araclar/beton-hesaplayici"><div class="tool-icon">🧱</div><h3>Beton Hacim Hesaplama</h3><p>Beton hacmi, yaklaşık miktar ve güncel hazır beton maliyetini hesaplayın.</p><strong class="go" style="color:var(--yellow2);font-size:13px;margin-top:auto">Hesapla →</strong></a>
+<a class="tool" href="/maliyet-hesapla?tip=insaat"><div class="tool-icon">₺</div><h3>İnşaat Maliyeti Hesaplama</h3><p>Yapı türü, alan ve proje detaylarına göre yaklaşık yatırım bütçesi oluşturun.</p><span class="go">Hesapla →</span></a>
+<a class="tool" href="/araclar/otomatik-kesif-fiyatlandirma"><div class="tool-icon">✨</div><h3>AI Ön Keşif & Fiyatlandırma</h3><p>PDF, görsel veya proje dosyasından iş kalemi ve metraj ön analizi oluşturun.</p><span class="go">Aracı aç →</span></a>
+<a class="tool" href="/araclar/dijital-metraj"><div class="tool-icon">📐</div><h3>Dijital Metraj</h3><p>PDF veya görsel proje üzerinden ölçekli alan ve metraj çalışması yapın.</p><span class="go">Metraj yap →</span></a>
+<a class="tool" href="/araclar/beton-hesaplayici"><div class="tool-icon">🧱</div><h3>Beton Hesaplama</h3><p>Beton hacmi, yaklaşık miktar ve ilgili maliyet hesabını oluşturun.</p><span class="go">Hesapla →</span></a>
+<a class="tool" href="/araclar/seramik-maliyet-hesaplayici"><div class="tool-icon">◫</div><h3>Seramik Maliyeti</h3><p>Alan, fire ve uygulama kapsamına göre seramik metraj ve maliyetini hesaplayın.</p><span class="go">Hesapla →</span></a>
+<a class="tool" href="/araclar/alcipan-hesaplayici"><div class="tool-icon">▦</div><h3>Alçıpan Hesaplama</h3><p>Bölme duvar ve alçıpan sistemleri için yaklaşık metraj ve maliyet görün.</p><span class="go">Hesapla →</span></a>
+<a class="tool" href="/araclar/cati-maliyet-hesaplayici"><div class="tool-icon">⌂</div><h3>Çatı Maliyeti</h3><p>Çatı alanı, sistem ve uygulama tipine göre yaklaşık maliyeti inceleyin.</p><span class="go">Hesapla →</span></a>
+<a class="tool" href="/maliyet-hesapla?tip=tadilat"><div class="tool-icon">🛠️</div><h3>Tadilat Maliyeti Hesaplama</h3><p>Ev, ofis ve mağaza yenileme işleri için yaklaşık tadilat bütçenizi hesaplayın.</p><span class="go">Tadilat maliyetini hesapla →</span></a>
 </div>
 </div>
 </section>
 
 <section class="block" id="fiyatlama">
 <div class="container">
-<div class="section-head"><div class="kicker">Şeffaf Maliyet Politikası</div><h2>Fiyatlar Nasıl Hesaplanır?</h2><p>WORKSİTEM motoru arka planda iki farklı algoritma kullanır. Tüm verilerimiz Çevre ve Şehircilik Bakanlığı (ÇŞİDB) ve güncel piyasa ortalamalarına dayanır.</p></div>
-<div class="method-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
-<article class="method-item"><small>1. Yöntem</small><h3>Algoritmik m² Hesabı</h3><p style="margin-top:12px;color:var(--muted);">Sistemdeki güncel inşaat veya tadilat birim fiyatları; girdiğiniz toplam alan, şehir ve kalite katsayılarıyla anlık olarak çarpılır. Sonuç, projeye özel detaylı metraj değil, istatistiksel bir ön dağılımdır.</p></article>
-<article class="method-item"><small>2. Yöntem</small><h3>Yapay Zeka (AI) Keşfi</h3><p style="margin-top:12px;color:var(--muted);">Yüklediğiniz dosya (PDF/Excel) taranır, iş kalemleri tespit edilir ve veritabanımızdaki 10.000+ birim fiyatla eşleştirilir. Sadece net okunabilen kalemler ara toplama yansıtılır.</p></article>
+<div class="section-head"><div class="kicker">Hesaplama yöntemi ve sınırları</div><h2>Ön bütçe nasıl hesaplanır?</h2><p>WORKSİTEM anasayfası iki farklı yöntem kullanır: dosyasız m² hesabı ve dosyadan iş kalemi analizi. Sonuçları karşılaştırırken aynı kapsamı temsil edip etmediklerini kontrol edin.</p></div>
+<div class="pricing">
+<article class="pricing-card"><div class="num">1</div><h3>Dosyasız m² hesabı</h3><p>Sistemdeki inşaat veya tadilat birim fiyatı; toplam alan, şehir ve kalite katsayılarıyla hesaplanır. Sonuçtaki maliyet kırılımı yaklaşık dağılımdır; ayrıntılı metraj veya ayrı ayrı fiyatlandırılmış işçilik ve malzeme teklifi değildir.</p><div class="source-note">Alanı tüm proje için girin. Kat sayısı toplam alanla yeniden çarpılmaz. Proje türü ve kat bilgisi, teklif talebinin değerlendirilmesi için saklanır.</div></article>
+<article class="pricing-card"><div class="num">2</div><h3>Dosyadan AI ön keşif</h3><p>Dosyadaki iş kalemleri, miktarlar ve eşleşen birim fiyatlarla ara toplam oluşturulur. Fiyatlandırılamayan kalemler ara toplama dahil edilmez. Dosyada bulunmayan işler için otomatik olarak tam proje bütçesi üretilmez.</p><div class="source-note">Şehir ve beyan ettiğiniz toplam alan, bu dosya analizindeki kalem miktarlarını otomatik değiştirmez. Dosyanın okunabilirliği ve kapsamı sonucu etkiler.</div></article>
 </div>
 </div>
 </section>
 
-<section class="block" id="kentsel-donusum" aria-labelledby="renewalHeading" style="background:var(--surface); border-top:1px solid var(--line); border-bottom:1px solid var(--line)">
-<div class="container" style="max-width:800px;text-align:center">
-<div class="kicker">Kentsel Dönüşüm Rehberi</div>
-<h2 id="renewalHeading" style="font-size:32px;">Yeni yapı bütçesi, dönüşümün tamamı değildir.</h2>
-<p style="color:var(--muted);font-size:16px;margin:24px 0">Kentsel dönüşüm hesaplamamız, sadece yeni inşa edilecek yapının maliyetini verir. <b>Yıkım, moloz atımı, kira yardımı, hafriyat ve belediye ruhsat harçları</b> bu ön bütçeye dahil değildir.</p>
-<button type="button" class="btn btn-primary" onclick="document.querySelector('.est-mode[data-intent=\'kentsel_donusum\']').click(); document.getElementById('proje-hesaplayici').scrollIntoView({behavior:'smooth'});" style="margin-top:16px">Dönüşüm Bütçesini Hesapla</button>
-</div>
+<section class="block" id="kentsel-donusum" aria-labelledby="renewalHeading">
+<div class="container"><div class="pricing-card">
+<div class="kicker">Kentsel dönüşüm ön değerlendirmesi</div>
+<h2 id="renewalHeading">Yeni yapı bütçesi, dönüşümün tüm maliyeti değildir.</h2>
+<p>Kentsel dönüşüm seçeneği, dosyasız hesapta mevcut sıfırdan inşaat yöntemiyle yeni yapının yaklaşık bütçesini gösterir. Yıkım, tahliye, kira, ruhsat ve diğer dönüşüm giderleri bu tahmine ayrıca eklenmelidir; burada destek veya hak sahipliği hesaplanmaz.</p>
+<p>Dosya yüklerseniz sonuç yalnızca analiz edilen ve fiyatlandırılabilen iş kalemlerinin ara toplamıdır. Dönüşümün tamamı için proje, mevcut yapı ve uygulama kapsamı birlikte değerlendirilmelidir.</p>
+<a class="btn btn-secondary" href="#proje-hesaplayici" id="chooseRenewal" style="margin-top:18px">Kentsel dönüşüm ön bütçesini incele →</a>
+</div></div>
+</section>
+
+<section class="block" id="nasil-calisir">
+<div class="container"><div class="definition"><div class="definition-grid">
+<div><div class="kicker">WORKSİTEM nedir?</div><h2>Proje planlaması için maliyet ve metraj platformu.</h2><p>WORKSİTEM, inşaat ve tadilat projelerinde yaklaşık bütçe ve metraj çalışmasına yardımcı olur. Sonuçları inceleyip iletişim onayı verdiğinizde Kainta İnşaat'tan projeniz için profesyonel değerlendirme talep edebilirsiniz.</p></div>
+<div class="definition-points">
+<div class="definition-point"><strong>1. Ölç / tanımla</strong><span>Alan, proje tipi, kalite veya dosya üzerinden metraj girdisi oluşturulur.</span></div>
+<div class="definition-point"><strong>2. Yöntemi seç</strong><span>Dosyasız ön bütçe veya dosyadan iş kalemi analiziyle ilerleyin.</span></div>
+<div class="definition-point"><strong>3. Kapsamı kontrol et</strong><span>Yaklaşık sonucu ve dosya analizindeki fiyatlandırılamayan kalemleri inceleyin.</span></div>
+<div class="definition-point"><strong>4. Teklife dönüştür</strong><span>Bütçesi uygun kullanıcı Kainta İnşaat ile profesyonel keşif ve teklif sürecine geçer.</span></div>
+</div></div></div></div>
 </section>
 
 <section class="block" id="sss">
 <div class="container">
-<div class="section-head" style="margin:auto;text-align:center"><div class="kicker">Aklınıza Takılanlar</div><h2>Sık Sorulan Sorular</h2></div>
-<div class="faq" style="margin:40px auto 0">
-<div class="faq-item"><button class="faq-q" type="button"><span>WORKSİTEM sonucu kesin teklif midir?</span><b>+</b></button><div class="faq-a">Hayır. Sonuçlar yaklaşık maliyet ve karar desteği içindir. Kesin teklif için proje, mahal, metraj, malzeme seçimi, uygulama koşulları ve saha bilgileri mühendislerimizce ayrıca değerlendirilmelidir.</div></div>
-<div class="faq-item"><button class="faq-q" type="button"><span>Veri kaynaklarınız güncel mi?</span><b>+</b></button><div class="faq-a">Evet. Fiyatlama motorumuz periyodik olarak Çevre, Şehircilik ve İklim Değişikliği Bakanlığı (ÇŞİDB) resmi poz numaraları ve güncel piyasa malzeme tedarik fiyatlarıyla (demir, beton, çimento vb.) güncellenir.</div></div>
-<div class="faq-item"><button class="faq-q" type="button"><span>Hangi proje dosyalarını yükleyebilirim?</span><b>+</b></button><div class="faq-a">En fazla 10 MB boyutunda PDF, CSV, JPG, JPEG veya PNG dosyası yükleyebilirsiniz. Algoritmamız metinleri ve tabloları otomatik okuyarak iş kalemlerine böler.</div></div>
-<div class="faq-item"><button class="faq-q" type="button"><span>Net teklif almak için ne yapmalıyım?</span><b>+</b></button><div class="faq-a">Hesaplama sonucundan sonra açılan formdan "Proje değerlendirmesi talep et" diyerek bilgilerinizi bırakın. Uzman Kainta İnşaat mühendisleri sizi arayarak saha keşfi ve kesin teklif sürecini başlatacaktır.</div></div>
+<div class="section-head"><div class="kicker">Sık sorulan sorular</div><h2>WORKSİTEM maliyet sonuçları nasıl okunmalı?</h2></div>
+<div class="faq">
+<div class="faq-item"><button class="faq-q" type="button"><span>WORKSİTEM sonucu kesin teklif midir?</span><b>+</b></button><div class="faq-a">Hayır. Sonuçlar yaklaşık maliyet ve karar desteği içindir. Kesin teklif için proje, mahal, metraj, malzeme seçimi, uygulama koşulları ve saha bilgileri ayrıca değerlendirilmelidir.</div></div>
+<div class="faq-item"><button class="faq-q" type="button"><span>İnşaat maliyeti m² üzerinden nasıl hesaplanır?</span><b>+</b></button><div class="faq-a">Dosyasız hesapta sistemdeki inşaat veya tadilat birim fiyatı, toplam alan, şehir ve kalite katsayıları kullanılır. Alan büyüklüğü de birim maliyeti etkiler. Sonuç yaklaşık ön bütçedir; proje türü ve kat sayısı bu hızlı hesapta ayrı fiyat katsayısı olarak uygulanmaz.</div></div>
+<div class="faq-item"><button class="faq-q" type="button"><span>Kentsel dönüşüm hesabına hangi giderler dahil?</span><b>+</b></button><div class="faq-a">Dosyasız kentsel dönüşüm hesabı yalnızca yeni yapı için sıfırdan inşaat yöntemiyle ön bütçe üretir. Yıkım, tahliye, kira, ruhsat ve diğer dönüşüm giderleri ayrıca değerlendirilir. Destek ve hak sahipliği hesabı yapılmaz.</div></div>
+<div class="faq-item"><button class="faq-q" type="button"><span>Hangi proje dosyalarını yükleyebilirim?</span><b>+</b></button><div class="faq-a">En fazla 10 MB boyutunda PDF, CSV, JPG, JPEG veya PNG dosyası yükleyebilirsiniz. Dosyanız yoksa toplam m² üzerinden hesap yapabilirsiniz. Dosya analizi için okunabilir ölçü ve iş kalemi bilgileri gerekir.</div></div>
+<div class="faq-item"><button class="faq-q" type="button"><span>Fiyatlandırılamayan işler toplamda yer alır mı?</span><b>+</b></button><div class="faq-a">Hayır. Fiyatı veya güvenilir miktarı bulunamayan kalemler ayrı gösterilir ve hesaplanan ara toplama dahil edilmez. Bütün dosya kalemleri fiyatlandırılmış olsa bile dosyada yer almayan proje işleri bu tutara dahil değildir.</div></div>
+<div class="faq-item"><button class="faq-q" type="button"><span>Net teklif almak için ne yapmalıyım?</span><b>+</b></button><div class="faq-a">Hesaplama sonucundan sonra proje değerlendirmesi talep edebilirsiniz. İletişim bilgilerinizi ve proje notunuzu paylaşmanızın ardından kapsam ve saha koşulları değerlendirilir. Uygun projelerde profesyonel saha keşfi ücretli olabilir.</div></div>
 </div>
 </div>
 </section>
 
+<section class="block"><div class="container"><div class="cta"><div><div class="kicker">Projeniz için başlayın</div><h2>Önce bütçeyi görün, kapsamı birlikte netleştirelim.</h2><p>İnşaat, tadilat veya kentsel dönüşüm projenizi tanımlayın.</p></div><a class="btn btn-primary" href="#proje-hesaplayici">Ön Bütçemi Hesapla →</a></div></div></section>
 </main>
 
 <x-site.contech-footer />
-<div class="mobile-cta"><a href="#proje-hesaplayici">Hesapla ve Bütçeyi Gör →</a></div>
+<div class="mobile-cta"><a href="/maliyet-hesapla">₺ Maliyeti Hesapla →</a></div>
 
 <script>
 (function(){
@@ -505,7 +461,7 @@ const fileInput=$('estFile');
 if(!calcBtn||!fileInput)return;
 
 const HOME_PRICES=@json($homePrices ?? []);
-const CALCULATE_LABEL='HESAPLA VE ÖN BÜTÇEYİ GÖR →';
+const CALCULATE_LABEL='ÖN BÜTÇEYİ OLUŞTUR →';
 let activeAbortController=null;
 let currentRequestId=0;
 
@@ -596,7 +552,7 @@ function setBudgetGate(mode){
   : 'Uygunsa projenizi Kainta İnşaat mühendisleri değerlendirsin.';
  $('estBudgetYes').textContent=isPartial
   ? 'Proje değerlendirmesi iste'
-  : '✓ Bütçe uygun, devam et';
+  : '✓ Bütçe uygun';
  gate.hidden=false;
 }
 
@@ -736,7 +692,7 @@ function appendUnpricedItems(container,items){
   const row=document.createElement('div');
   row.className='est-unpriced-row';
   const reason=item.price_message?' — '+item.price_message:'';
-  row.textContent=(item.name||'Bilinmeyen kalem')+
+  row.textContent='• '+(item.name||'Bilinmeyen kalem')+
    ' ('+(item.unit||'-')+') — Fiyat bekleniyor; ara toplama dahil değil'+reason;
   block.append(row);
  });
@@ -859,9 +815,9 @@ async function executeFileAnalysis(file){
  activeAbortController=controller;
 
  calcBtn.disabled=true;
- calcBtn.textContent='AI DOSYAYI ANALİZ EDİYOR...';
+ calcBtn.textContent='DOSYA ANALİZ EDİLİYOR...';
  $('estAiStatus').hidden=false;
- $('estAiStatus').textContent='Yapay zeka iş kalemlerini ve metrajları tarıyor...';
+ $('estAiStatus').textContent='Dosyadan iş kalemleri ve metrajlar analiz ediliyor...';
 
  const formData=new FormData();
  formData.append('project_file',file);
@@ -948,7 +904,7 @@ document.querySelectorAll('.est-mode').forEach(button=>{
   if(!alreadyActive)resetCalculationState();
  });
 });
-$('chooseRenewal')?.addEventListener('click',()=>{
+$('chooseRenewal').addEventListener('click',()=>{
  document.querySelector('.est-mode[data-intent="kentsel_donusum"]').click();
  document.querySelector('.est-mode.active').focus({preventScroll:true});
 });
@@ -1030,9 +986,10 @@ leadForm.addEventListener('submit',()=>{
 window.addEventListener('pageshow',()=>{
  const submitButton=$('estSubmitBtn');
  submitButton.disabled=false;
- submitButton.textContent='Net Teklif Talebini Gönder →';
+ submitButton.textContent='Net teklif talebini gönder →';
 });
 
+// Restore only presentation after a native validation redirect; never recalculate prices here.
 function restoreFormState(){
  if(!document.querySelector('.est-errors'))return;
  let data={};

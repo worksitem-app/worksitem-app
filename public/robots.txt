@@ -1,8 +1,50 @@
-# ConTech STAGING — robots.txt
-# DİKKAT: Bu staging ortamı, Google indexlememeli!
+# WORKSİTEM — robots.txt
+# Türk inşaat sektörü için maliyet, metraj ve AI ön keşif platformu
 
 User-agent: *
-Disallow: /
+Allow: /
+Disallow: /admin/
+Disallow: /api/internal/
+Disallow: /filament/
+Disallow: /*?*utm_
+Disallow: /*?*fbclid
+Disallow: /*?*gclid
+Disallow: /*?*ref=
 
-# Sitemap (staging'de gerekmez ama bilgi amaçlı)
-# Sitemap: https://staging.worksitem.com/sitemap.xml
+# Crawl-delay (nazik ol)
+Crawl-delay: 1
+
+# Google
+User-agent: Googlebot
+Allow: /
+Disallow: /admin/
+Disallow: /api/internal/
+
+# Bing
+User-agent: Bingbot
+Allow: /
+Disallow: /admin/
+
+# Yandex
+User-agent: YandexBot
+Allow: /
+Disallow: /admin/
+
+# AI Crawlers (SEO için önemli)
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+# Sitemap
+Sitemap: https://worksitem.com/sitemap.xml
+
+# Yapay zeka bilgi dosyası
+# https://worksitem.com/llms.txt
