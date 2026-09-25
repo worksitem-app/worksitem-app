@@ -1,0 +1,28 @@
+{
+  "name": "Worksitem",
+  "description": "İnşaat ve tadilat maliyeti hesaplama platformu",
+  "url": "https://worksitem.com",
+  "languages": ["tr"],
+  "capabilities": [
+    "inşaat maliyeti hesaplama",
+    "tadilat maliyeti hesaplama",
+    "resmî rayiç bedeli sorgulama",
+    "yapay zekâ ile dosya analizi (Auto-BOQ)",
+    "dijital metraj"
+  ],
+  "dataSources": [
+    {
+      "name": "Tender Poz",
+      "description": "43.290 resmî poz/rayiç",
+      "url": "https://worksitem.com/pozlar"
+    }
+  ],
+  "apis": {
+    "pozSearch": "https://worksitem.com/api/pozlar/search",
+    "calculate": "https://worksitem.com/maliyet-hesapla"
+  },
+  "contact": {
+    "email": "info@worksitem.com",
+    "company": "Kainta İnşaat"
+  }
+}

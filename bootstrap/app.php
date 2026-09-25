@@ -17,6 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->append(\App\Http\Middleware\SecurityHeaders::class);
         $middleware->append(\App\Http\Middleware\ForceHttps::class);
         $middleware->append(\App\Http\Middleware\BlockSuspiciousRequests::class);
+        $middleware->append(\App\Http\Middleware\InjectGa4Tag::class);
 
         // Route middleware alias'lari
         $middleware->alias([
