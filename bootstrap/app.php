@@ -13,23 +13,32 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        // Global middleware — her istekte çalışır
+        // Global middleware - her istekte calisir
         $middleware->append(\App\Http\Middleware\SecurityHeaders::class);
         $middleware->append(\App\Http\Middleware\ForceHttps::class);
         $middleware->append(\App\Http\Middleware\BlockSuspiciousRequests::class);
 
-        // Route middleware alias'ları
+        // Route middleware alias'lari
         $middleware->alias([
             'auth' => \App\Http\Middleware\Authenticate::class,
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
             'api.ratelimit' => \App\Http\Middleware\ApiRateLimit::class,
         ]);
 
-        // ⭐ YENİ: Giriş yapmamış kullanıcıları Filament login sayfasına yönlendir
+        // Giris yapmamis kullanicilari Filament login sayfasina yonlendir
         $middleware->redirectGuestsTo(fn () => route('filament.admin.auth.login'));
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(
             fn (Request $request) => $request->is('api/*') || $request->expectsJson(),
         );
+
+        // QueryException'i 422 olarak render et (Integer overflow icin)
+        $exceptions->render(function (\Illuminate\Database\QueryException $e, Request $request) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'message' => 'Girilen değerler işlenemedi. Lütfen kontrol edin.',
+                ], 422);
+            }
+        });
     })->create();
