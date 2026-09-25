@@ -1,28 +1,33 @@
 {
-  "name": "Worksitem",
-  "description": "İnşaat ve tadilat maliyeti hesaplama platformu",
+  "@context": "https://schema.org",
+  "@type": "DataCatalog",
+  "name": "Worksitem — İnşaat ve Tadilat Maliyeti Platformu",
+  "description": "Türkiye'nin en kapsamlı inşaat ve tadilat maliyeti hesaplama platformu. 43.290 resmî poz/rayiç verisi ve güncel piyasa fiyatlarıyla çalışır.",
   "url": "https://worksitem.com",
-  "languages": ["tr"],
-  "capabilities": [
-    "inşaat maliyeti hesaplama",
-    "tadilat maliyeti hesaplama",
-    "resmî rayiç bedeli sorgulama",
-    "yapay zekâ ile dosya analizi (Auto-BOQ)",
-    "dijital metraj"
-  ],
-  "dataSources": [
+  "inLanguage": "tr-TR",
+  "creator": {
+    "@type": "Organization",
+    "name": "Kainta İnşaat",
+    "url": "https://worksitem.com"
+  },
+  "dataset": [
     {
-      "name": "Tender Poz",
-      "description": "43.290 resmî poz/rayiç",
-      "url": "https://worksitem.com/pozlar"
+      "@type": "Dataset",
+      "name": "Tender Poz Veritabanı",
+      "description": "43.290 resmî poz/rayiç verisi (ÇŞB, DSİ, Karayolları, diğer kurumlar)",
+      "url": "https://worksitem.com/pozlar",
+      "keywords": ["inşaat", "poz", "rayiç", "maliyet", "2026"],
+      "inLanguage": "tr-TR"
     }
   ],
-  "apis": {
-    "pozSearch": "https://worksitem.com/api/pozlar/search",
-    "calculate": "https://worksitem.com/maliyet-hesapla"
-  },
-  "contact": {
-    "email": "info@worksitem.com",
-    "company": "Kainta İnşaat"
+  "mainEntity": {
+    "@type": "WebSite",
+    "name": "Worksitem",
+    "url": "https://worksitem.com",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://worksitem.com/arama?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
   }
 }
