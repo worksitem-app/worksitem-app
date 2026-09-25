@@ -40,7 +40,16 @@ class ProjectController extends Controller
             \Illuminate\Support\Facades\RateLimiter::hit('ai-render:'.$request->ip(), 60);
 
             // Frontend'den gelen JSON komutlarını dizi olarak alıyoruz
-            $projectData = $request->all();
+                        // Frontend'den gelen veriyi validate et (XSS ve injection koruması)
+            $projectData = $request->validate([
+                'room_type' => ['nullable', 'string', 'max:50'],
+                'style' => ['nullable', 'string', 'max:50'],
+                'w' => ['nullable', 'numeric', 'min:1', 'max:100'],
+                'l' => ['nullable', 'numeric', 'min:1', 'max:100'],
+                'colors' => ['nullable', 'string', 'max:200'],
+                'materials' => ['nullable', 'string', 'max:200'],
+                'notes' => ['nullable', 'string', 'max:500'],
+            ]);
 
             $imageUrl = null;
             if (method_exists($renderer, 'generateGuestConceptRender')) {
