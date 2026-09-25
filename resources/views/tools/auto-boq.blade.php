@@ -99,7 +99,7 @@
             <button type="button" class="tab" data-tab="text">⌨️ Metin Yapıştır</button>
         </div>
 
-        <form id="autoBoqForm" enctype="multipart/form-data">
+        <form id="autoBoqForm" enctype="multipart/form-data" onsubmit="return false;">
             @csrf
 
             <div class="tab-content active" id="tab-file">
@@ -135,7 +135,7 @@
                 </div>
             </div>
 
-            <button type="submit" class="btn" id="submitBtn">✦ Yapay Zeka ile Fiyatlandır</button>
+            <button type="button" class="btn" id="submitBtn">✦ Yapay Zeka ile Fiyatlandır</button>
         </form>
     </div>
 
@@ -227,7 +227,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Form submit
     const form = document.getElementById('autoBoqForm');
-    form.addEventListener('submit', async (e) => {
+    const submitBtn = document.getElementById('submitBtn');
+    submitBtn.addEventListener('click', async (e) => {
         e.preventDefault();
 
         const file = fileInput.files[0];
