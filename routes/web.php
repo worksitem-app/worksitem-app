@@ -903,3 +903,29 @@ Route::get('/poz/{pozNo}', [\App\Http\Controllers\PozPublicController::class, 's
 
 Route::get('/pozlar', [\App\Http\Controllers\PozPublicController::class, 'index'])
     ->name('poz.index');
+
+// ═══════════════════════════════════════════════════════════════
+// LEGAL SAYFALAR (KVKK 2026/347 uyumlu)
+// ═══════════════════════════════════════════════════════════════
+
+Route::prefix('legal')->name('legal.')->group(function () {
+    Route::get('/kvkk-aydinlatma', function () {
+        return view('legal.kvkk-aydinlatma');
+    })->name('kvkk_aydinlatma');
+
+    Route::get('/acik-riza', function () {
+        return view('legal.acik-riza');
+    })->name('acik_riza');
+
+    Route::get('/cerez-politikasi', function () {
+        return view('legal.cerez-politikasi');
+    })->name('cerez_politikasi');
+
+    Route::get('/gizlilik-politikasi', function () {
+        return view('legal.gizlilik-politikasi');
+    })->name('gizlilik_politikasi');
+
+    Route::get('/kvkk-basvuru', function () {
+        return view('legal.kvkk-basvuru');
+    })->name('kvkk_basvuru');
+});
