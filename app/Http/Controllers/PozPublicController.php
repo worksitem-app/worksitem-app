@@ -51,10 +51,10 @@ class PozPublicController extends Controller
             ->limit(10)
             ->get();
 
-        // Blade'de hesaplanacak tüm veriler burada hazırlanır
+        // Tüm hesaplamalar controller'da
         $priceFormatted = number_format((float)$poz->unit_price, 2, ',', '.');
         $yearText = $poz->year ? ' — ' . $poz->year . ' yılı' : '';
-        
+
         $profitText = 'Kaynak veride bu bilgi belirtilmemiştir.';
         if ($poz->profit_status === 'included') {
             $profitText = 'Evet, yayımlanan bu resmi fiyata yüklenici kârı dahildir.';
@@ -62,12 +62,66 @@ class PozPublicController extends Controller
             $profitText = 'Hayır, yayımlanan bu fiyata yüklenici kârı hariçtir.';
         }
 
+        // FAQ items
+        $faqItems = is_array($poz->faq_data) ? $poz->faq_data : [];
+        $hasFaq = count($faqItems) > 0;
+
+        // Schema JSON üretimi (controller'da)
+        $faqSchema = null;
+        if ($hasFaq) {
+            $faqSchema = [
+                '@context' => 'https://schema.org',
+                '@type' => 'FAQPage',
+                'mainEntity' => array_map(function ($faq) {
+                    return [
+                        '@type' => 'Question',
+                        'name' => $faq['q'] ?? '',
+                        'acceptedAnswer' => [
+                            '@type' => 'Answer',
+                            'text' => $faq['a'] ?? '',
+                        ],
+                    ];
+                }, $faqItems),
+            ];
+        }
+
+        $productSchema = [
+            '@context' => 'https://schema.org',
+            '@type' => 'Product',
+            'name' => $poz->poz_no . ' — ' . $poz->description,
+            'sku' => $poz->poz_no,
+            'description' => $poz->meta_description ?? $poz->description,
+            'category' => $poz->institution,
+            'offers' => [
+                '@type' => 'Offer',
+                'price' => number_format((float)$poz->unit_price, 2, '.', ''),
+                'priceCurrency' => 'TRY',
+                'unitText' => $poz->unit,
+                'availability' => 'https://schema.org/InStock',
+            ],
+        ];
+
+        $breadcrumbSchema = [
+            '@context' => 'https://schema.org',
+            '@type' => 'BreadcrumbList',
+            'itemListElement' => [
+                ['@type' => 'ListItem', 'position' => 1, 'name' => 'Ana Sayfa', 'item' => url('/')],
+                ['@type' => 'ListItem', 'position' => 2, 'name' => 'Pozlar', 'item' => url('/pozlar')],
+                ['@type' => 'ListItem', 'position' => 3, 'name' => $poz->poz_no, 'item' => url('/poz/' . $poz->poz_no)],
+            ],
+        ];
+
         return view('poz.show', compact(
             'poz',
             'related',
             'priceFormatted',
             'yearText',
-            'profitText'
+            'profitText',
+            'faqItems',
+            'hasFaq',
+            'faqSchema',
+            'productSchema',
+            'breadcrumbSchema'
         ));
     }
 }
