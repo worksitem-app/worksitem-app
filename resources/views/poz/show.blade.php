@@ -64,6 +64,25 @@
   <div class="trust-item"><span class="trust-icon">✓</span><span>Ücretsiz keşif imkânı</span></div>
 </div>
 
+
+@if(!empty($popular) && $popular->isNotEmpty())
+<section style="margin-top:32px">
+  <h2>Popüler Pozlar</h2>
+  <ul class="related-list">
+    @foreach($popular as $p)
+    <li>
+      <a href="{{ route('poz.show', $p->poz_no) }}">
+        <span class="poz-code">{{ $p->poz_no }}</span>
+        {{ \Illuminate\Support\Str::limit($p->description, 60) }}
+        <strong style="color:var(--green);margin-left:auto;">
+          {{ number_format((float)$p->unit_price, 2, ',', '.') }} TL/{{ $p->unit }}
+        </strong>
+      </a>
+    </li>
+    @endforeach
+  </ul>
+</section>
+@endif
 <section style="margin-top:48px">
   <h2>Sıkça Sorulan Sorular</h2>
 

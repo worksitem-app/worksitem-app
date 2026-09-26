@@ -6,6 +6,9 @@
   <title>@yield('title', 'Worksitem')</title>
   <meta name="description" content="@yield('description', 'Worksitem - İnşaat ve tadilat maliyeti platformu')">
   <link rel="canonical" href="@yield('canonical', url('/'))">
+  @hasSection('keywords')
+  <meta name="keywords" content="@yield('keywords')">
+  @endif
   <link rel="icon" href="/favicon.ico">
 
   <style>
