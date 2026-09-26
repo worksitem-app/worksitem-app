@@ -1,8 +1,9 @@
 @extends('poz._layout')
 
 @section('title', 'İnşaat Pozları — 43.290+ Resmî Rayiç ve Birim Fiyat | WORKSİTEM')
-@section('description', 'ÇŞB, DSİ, Karayolları ve 12 kurumdan toplam 43.290+ inşaat pozu. 2026 güncel birim fiyatları, açıklamalar, detaylar.')
+@section('description', 'ÇŞB, DSİ, Karayolları ve 12 kurumdan toplam 43.290+ inşaat pozu. 2026 güncel birim fiyatları, detaylı açıklamalar, SSS.')
 @section('canonical', url('/pozlar'))
+@section('keywords', 'inşaat pozları, rayiç bedeli, birim fiyat, ÇŞB poz, YFK poz, 2026 inşaat maliyeti')
 
 @section('breadcrumb')
   <span>Pozlar</span>
@@ -10,7 +11,9 @@
 
 <div class="hero">
   <h1>İnşaat Pozları <span>43.290+</span></h1>
-  <p style="font-size:18px;color:var(--muted);max-width:700px">ÇŞB, DSİ, Karayolları ve diğer kurumların 2026 güncel rayiçleri ve birim fiyatları</p>
+  <p style="font-size:18px;color:var(--muted);max-width:700px">
+    ÇŞB, DSİ, Karayolları ve diğer kurumların 2026 güncel rayiçleri ve birim fiyatları
+  </p>
 </div>
 
 <div class="stats">
@@ -57,4 +60,23 @@
 
 <div style="margin-top:32px">
   {{ $pozs->links() }}
+
+@if(!empty($popular) && $popular->isNotEmpty())
+<section style="margin-top:48px">
+  <h2>Popüler Pozlar</h2>
+  <div class="poz-list">
+    @foreach($popular as $p)
+    <div class="poz-item">
+      <a href="{{ route('poz.show', $p->poz_no) }}">
+        <span class="poz-code">{{ $p->poz_no }}</span>
+        <span>{{ \Illuminate\Support\Str::limit($p->description, 80) }}</span>
+      </a>
+      <span class="poz-price">
+        {{ number_format((float)$p->unit_price, 2, ',', '.') }} TL/{{ $p->unit }}
+      </span>
+    </div>
+    @endforeach
+  </div>
+</section>
+@endif
 </div>

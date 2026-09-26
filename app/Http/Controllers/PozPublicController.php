@@ -35,7 +35,9 @@ class PozPublicController extends Controller
             ->sort()
             ->values();
 
-        return view('poz.index', compact('pozs', 'institutions', 'institution', 'search'));
+        $popular = TenderPoz::where('is_active', true)->where('seo_enriched', true)->orderByDesc('unit_price')->limit(5)->get();
+
+        return view('poz.index', compact('pozs', 'institutions', 'institution', 'search', 'popular'));
     }
 
     public function show(string $pozNo)
@@ -51,7 +53,7 @@ class PozPublicController extends Controller
             ->limit(10)
             ->get();
 
-        // Tüm hesaplamalar controller'da
+        $popular = TenderPoz::where('is_active', true)->where('seo_enriched', true)->orderByDesc('unit_price')->limit(5)->get();
         $priceFormatted = number_format((float)$poz->unit_price, 2, ',', '.');
         $yearText = $poz->year ? ' — ' . $poz->year . ' yılı' : '';
 
@@ -62,11 +64,9 @@ class PozPublicController extends Controller
             $profitText = 'Hayır, yayımlanan bu fiyata yüklenici kârı hariçtir.';
         }
 
-        // FAQ items
         $faqItems = is_array($poz->faq_data) ? $poz->faq_data : [];
         $hasFaq = count($faqItems) > 0;
 
-        // Schema JSON üretimi (controller'da)
         $faqSchema = null;
         if ($hasFaq) {
             $faqSchema = [
@@ -114,6 +114,7 @@ class PozPublicController extends Controller
         return view('poz.show', compact(
             'poz',
             'related',
+            'popular',
             'priceFormatted',
             'yearText',
             'profitText',
