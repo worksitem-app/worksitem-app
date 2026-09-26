@@ -1,13 +1,27 @@
 @extends('poz._layout')
 
 @section('title', $poz->poz_no . ' — ' . \Illuminate\Support\Str::limit($poz->description, 55) . ' | WORKSİTEM')
-@section('description', $poz->poz_no . ' pozunun 2026 birim fiyatı ' . $priceFormatted . ' TL/' . $poz->unit . '. Kaynak: ' . $poz->institution . '.')
+
+@section('description', $poz->meta_description ?: ($poz->poz_no . ' pozunun 2026 birim fiyatı ' . $priceFormatted . ' TL/' . $poz->unit . '. Kaynak: ' . $poz->institution . '.'))
+
 @section('canonical', url('/poz/' . $poz->poz_no))
 
 @section('breadcrumb')
   <a href="/pozlar">Pozlar</a><span>›</span>
   <span>{{ $poz->poz_no }}</span>
 @endsection
+
+@if($poz->meta_keywords)
+<meta name="keywords" content="{{ $poz->meta_keywords }}">
+@endif
+
+<script type="application/ld+json">{!! json_encode($productSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}</script>
+
+@if($hasFaq)
+<script type="application/ld+json">{!! json_encode($faqSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}</script>
+@endif
+
+<script type="application/ld+json">{!! json_encode($breadcrumbSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}</script>
 
 <div class="hero">
   <h1>{{ $poz->poz_no }} <span>{{ $poz->description }}</span></h1>
@@ -29,6 +43,15 @@
   </table>
 </div>
 
+@if($poz->long_description)
+<div class="card">
+  <h2>Detaylı Açıklama</h2>
+  <div class="long-description" style="line-height:1.8;color:var(--text)">
+    {!! nl2br(e($poz->long_description)) !!}
+  </div>
+</div>
+@endif
+
 <div class="cta-box">
   <h2>Bu Poz ile Maliyet Hesapla</h2>
   <p>{{ $poz->description }} işini projenize ekleyerek toplam maliyeti öğrenin.</p>
@@ -44,23 +67,32 @@
 <section style="margin-top:48px">
   <h2>Sıkça Sorulan Sorular</h2>
 
-  <details class="faq-item">
-    <summary>{{ $poz->poz_no }} pozu nedir?</summary>
-    <p>{{ $poz->description }}</p>
-  </details>
+  @if($hasFaq)
+    @foreach($faqItems as $faq)
+    <details class="faq-item">
+      <summary>{{ $faq['q'] ?? '' }}</summary>
+      <p>{{ $faq['a'] ?? '' }}</p>
+    </details>
+    @endforeach
+  @else
+    <details class="faq-item">
+      <summary>{{ $poz->poz_no }} pozu nedir?</summary>
+      <p>{{ $poz->description }}</p>
+    </details>
 
-  <details class="faq-item">
-    <summary>{{ $poz->poz_no }} birim fiyatı ne kadar?</summary>
-    <p>2026 rayicinde <strong>{{ $priceFormatted }} TL/{{ $poz->unit }}</strong> olarak belirlenmiştir. Kaynak: {{ $poz->institution }}.</p>
-  </details>
+    <details class="faq-item">
+      <summary>{{ $poz->poz_no }} birim fiyatı ne kadar?</summary>
+      <p>2026 rayicinde <strong>{{ $priceFormatted }} TL/{{ $poz->unit }}</strong> olarak belirlenmiştir. Kaynak: {{ $poz->institution }}.</p>
+    </details>
 
-  <details class="faq-item">
-    <summary>{{ $poz->poz_no }} hangi kurumun rayicinde?</summary>
-    <p>{{ $poz->institution }}{{ $yearText }}.</p>
-  </details>
+    <details class="faq-item">
+      <summary>{{ $poz->poz_no }} hangi kurumun rayicinde?</summary>
+      <p>{{ $poz->institution }}{{ $yearText }}.</p>
+    </details>
 
-  <details class="faq-item">
-    <summary>Bu poz için kâr dahil mi?</summary>
-    <p>{{ $profitText }}</p>
-  </details>
+    <details class="faq-item">
+      <summary>Bu poz için kâr dahil mi?</summary>
+      <p>{{ $profitText }}</p>
+    </details>
+  @endif
 </section>
