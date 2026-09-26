@@ -16,6 +16,7 @@ class SitemapController extends Controller
 
         // Statik sayfalar
         $staticPages = [
+            // Ana sayfalar
             ['loc' => '/', 'priority' => '1.0', 'changefreq' => 'daily'],
             ['loc' => '/araclar', 'priority' => '0.9', 'changefreq' => 'weekly'],
             ['loc' => '/araclar/otomatik-kesif-fiyatlandirma', 'priority' => '0.95', 'changefreq' => 'weekly'],
@@ -23,6 +24,13 @@ class SitemapController extends Controller
             ['loc' => '/pozlar', 'priority' => '0.9', 'changefreq' => 'daily'],
             ['loc' => '/araclar/beton-hesaplayici', 'priority' => '0.8', 'changefreq' => 'monthly'],
             ['loc' => '/araclar/dijital-metraj', 'priority' => '0.8', 'changefreq' => 'monthly'],
+
+            // KVKK / Legal sayfalar (2026/347 uyumlu)
+            ['loc' => '/legal/kvkk-aydinlatma', 'priority' => '0.4', 'changefreq' => 'monthly'],
+            ['loc' => '/legal/acik-riza', 'priority' => '0.4', 'changefreq' => 'monthly'],
+            ['loc' => '/legal/cerez-politikasi', 'priority' => '0.4', 'changefreq' => 'monthly'],
+            ['loc' => '/legal/gizlilik-politikasi', 'priority' => '0.4', 'changefreq' => 'monthly'],
+            ['loc' => '/legal/kvkk-basvuru', 'priority' => '0.4', 'changefreq' => 'monthly'],
         ];
 
         $today = date('c');

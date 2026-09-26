@@ -9,7 +9,7 @@
         >
         <span>
             <a
-                href="{{ route('kvkk.aydinlatma') }}"
+                href="{{ route('legal.kvkk_aydinlatma') }}"
                 target="_blank"
                 rel="noopener noreferrer"
                 style="color:#2563eb; font-weight:700; text-decoration:underline;"
