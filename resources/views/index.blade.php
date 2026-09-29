@@ -67,7 +67,27 @@ section.block{padding:72px 0}.section-head{max-width:770px;margin-bottom:30px}h2
 .est-upload-box{display:block;padding:14px;border:1px dashed #cbd5e1;border-radius:11px;background:#f8fafc;text-align:center;font-size:12px;font-weight:850;cursor:pointer}
 .est-file-name{font-size:10px;color:var(--muted);margin-top:6px}.est-ai-status{margin-top:12px;padding:12px;border-radius:10px;background:#f8fafc;font-size:12px}
 .est-ai-result{margin-top:16px;border-top:1px solid var(--line);padding-top:16px}.est-result-label{font-size:10px;font-weight:950;color:var(--yellow2);letter-spacing:.7px}
-.est-result-total{font-size:27px;font-weight:950;margin:4px 0}.est-result-meta,.est-result-note{font-size:10px;color:var(--muted);line-height:1.5}
+.est-result-total{font-size:27px;font-weight:950;margin:4px 0}.est-result-meta,.budget-breakdown{margin-top:18px;padding:18px 0 2px;border-top:1px solid var(--line)}
+.budget-breakdown[hidden]{display:none!important}
+.budget-breakdown-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:15px}
+.budget-breakdown-head strong{display:block;font-size:15px;line-height:1.3;color:var(--text)}
+.budget-breakdown-head span{display:block;margin-top:3px;font-size:11px;color:var(--muted)}
+.budget-breakdown-items{display:grid;gap:13px}
+.budget-breakdown-item{display:grid;gap:6px}
+.budget-breakdown-row{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:12px}
+.budget-breakdown-name{font-weight:750;color:var(--text)}
+.budget-breakdown-value{display:flex;align-items:center;gap:8px;font-weight:800;color:var(--text);white-space:nowrap}
+.budget-breakdown-percent{font-size:11px;font-weight:700;color:var(--muted)}
+.budget-breakdown-track{height:7px;border-radius:999px;background:var(--s2);overflow:hidden}
+.budget-breakdown-bar{height:100%;border-radius:999px;background:var(--brand)}
+.budget-breakdown-note{margin:13px 0 0;font-size:11px;line-height:1.55;color:var(--muted)}
+@media(max-width:760px){
+ .budget-breakdown{margin-top:16px;padding-top:16px}
+ .budget-breakdown-row{align-items:flex-start}
+ .budget-breakdown-name{max-width:52%}
+ .budget-breakdown-value{text-align:right}
+}
+.est-result-note{font-size:10px;color:var(--muted);line-height:1.5}
 .est-result-items{margin:13px 0}.est-result-row{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--line);font-size:11px}
 .est-result-row strong{text-align:right}.est-budget-gate{margin-top:15px;padding:14px;background:#f8fafc;border-radius:12px;font-size:12px}.est-budget-gate p{margin:6px 0 10px;color:var(--muted)}
 .est-budget-actions{display:flex;gap:7px}.est-budget-actions button{flex:1;border:1px solid var(--line);border-radius:9px;padding:10px;font-weight:800;cursor:pointer;background:#fff}
@@ -94,7 +114,7 @@ html{scroll-padding-top:24px}
 .home-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:18px;font-size:12px;color:var(--muted)}
 .home-toolbar nav{display:flex;flex-wrap:wrap;gap:16px}
 .home-toolbar a{padding:10px 0;text-decoration:underline;text-underline-offset:4px}
-.theme-toggle{display:flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:8px 13px;flex-shrink:0;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--text);font-weight:750;cursor:pointer}.theme-toggle[hidden]{display:none}
+.theme-toggle{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;min-width:36px;min-height:36px;padding:0;flex:0 0 36px;border:1px solid var(--line);border-radius:50%;background:var(--surface);color:var(--text);font-size:19px;line-height:1;cursor:pointer}.theme-toggle:hover{background:var(--s2)}.theme-toggle:focus-visible{outline:3px solid var(--focus);outline-offset:2px}.theme-toggle[hidden]{display:none}
 .hero{padding-top:44px}.hero-grid{grid-template-columns:minmax(0,1fr) minmax(380px,1fr);gap:36px;align-items:start}
 h1{font-size:clamp(38px,4.7vw,60px);line-height:1.08;letter-spacing:-2px}
 .hero-copy{font-size:17px}.hero-scope{margin-top:16px;font-size:12px;color:var(--muted);max-width:600px}
@@ -127,12 +147,36 @@ html[data-theme=dark] body .wks-nav a:hover,html[data-theme=dark] body .wks-part
 html[data-theme=dark] body .wks-offer{color:#111827!important;background:var(--yellow)!important}
 html[data-theme=dark] body .wks-foot-text,html[data-theme=dark] body .wks-partner span,html[data-theme=dark] body .wks-foot-bottom{color:var(--muted)!important;border-color:var(--line)!important}
 html[data-theme=dark] body .wks-foot-title{color:var(--yellow2)!important}
-html[data-theme=dark] body .wks-brand img,html[data-theme=dark] body .wks-foot-logo{background:#fff!important;border-radius:6px}
+html[data-theme=dark] body .wks-brand img,html[data-theme=dark] body .wks-foot-logo{background:transparent!important;border-radius:0}
 @media(max-width:980px){.hero-grid{grid-template-columns:1fr}.hero-copy{max-width:720px}.home-estimator{max-width:720px;width:100%}}
-@media(max-width:760px){html body .wks-foot-grid{grid-template-columns:1fr!important}.hero{padding-top:28px}.home-toolbar nav{gap:12px}.home-estimator{padding:18px}.trust{grid-template-columns:1fr 1fr}.theme-toggle{font-size:12px}}
+@media(max-width:760px){html body .wks-foot-grid{grid-template-columns:1fr!important}.hero{padding-top:28px}.home-toolbar nav{gap:12px}.home-estimator{padding:18px}.trust{grid-template-columns:1fr 1fr}.theme-toggle{width:40px;height:40px;min-width:40px;min-height:40px;flex-basis:40px;font-size:18px}}
 @media(max-width:440px){.est-choice{grid-template-columns:1fr}.est-mode{min-height:46px;text-align:left;padding:10px 14px}.home-toolbar{align-items:flex-start}.home-toolbar nav{gap:0 12px}.hero-actions .btn{padding:0 12px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition:none!important;animation:none!important}}
 
+
+.est-phone-field{
+ display:flex;
+ align-items:stretch;
+ width:100%;
+}
+.est-phone-prefix{
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ flex:0 0 auto;
+ padding:0 14px;
+ border:1px solid var(--border,#d9dee7);
+ border-right:0;
+ border-radius:10px 0 0 10px;
+ background:var(--surface-soft,#f6f7f9);
+ font-weight:700;
+ white-space:nowrap;
+}
+.est-phone-field #estLeadPhone{
+ flex:1 1 auto;
+ min-width:0;
+ border-radius:0 10px 10px 0;
+}
 </style>
 <script type="application/ld+json">
 {"@@context":"https://schema.org","@@type":"WebSite","@@id":"https://worksitem.com/#website","name":"WORKSİTEM","url":"https://worksitem.com/","inLanguage":"tr-TR","description":"İnşaat ve tadilat için maliyet, metraj ve ön keşif araçları; kentsel dönüşümde yeni yapı için yaklaşık bütçe.","publisher":{"@@type":"Organization","name":"Kainta İnşaat","url":"https://kainta.com"}}
@@ -147,10 +191,13 @@ html[data-theme=dark] body .wks-brand img,html[data-theme=dark] body .wks-foot-l
 </head>
 <body data-tool-slug="homepage">
 <a class="skip-link" href="#ana-icerik">Ana içeriğe geç</a>
-<x-site.contech-header />
+<x-site.contech-header>
+    <x-slot:actions>
+        <button type="button" id="homeThemeToggle" class="theme-toggle" aria-label="Koyu temaya geç" aria-pressed="false" hidden><span id="homeThemeIcon" aria-hidden="true">☾</span></button>
+    </x-slot:actions>
+</x-site.contech-header>
 <div class="container home-toolbar">
  <nav aria-label="Anasayfa bölümleri"><a href="#proje-hesaplayici">Hesaplayıcı</a><a href="#fiyatlama">Hesap yöntemi</a><a href="#sss">Sık sorulanlar</a></nav>
- <button type="button" id="homeThemeToggle" class="theme-toggle" aria-label="Koyu tema" aria-pressed="false" hidden><span id="homeThemeIcon" aria-hidden="true">☾</span><span id="homeThemeLabel">Koyu tema</span></button>
 </div>
 <main id="ana-icerik" tabindex="-1">
 <section class="hero">
@@ -172,6 +219,33 @@ html[data-theme=dark] body .wks-brand img,html[data-theme=dark] body .wks-foot-l
 <p class="hero-scope">Sonuçlar kesin teklif değildir. Projenize özel keşif ve teklif için <a href="https://kainta.com/" target="_blank" rel="noopener noreferrer">Kainta İnşaat</a> ile ilerleyebilirsiniz. <a href="#fiyatlama">Hesap kapsamını inceleyin.</a></p>
 </div>
 
+@php
+$homeBuildingTypes = \Illuminate\Support\Facades\DB::table('building_types')
+    ->where('is_active', true)
+    ->orderBy('category_key')
+    ->orderBy('sort_order')
+    ->orderBy('id')
+    ->get([
+        'key',
+        'name',
+        'category_key',
+        'category_name',
+        'sort_order',
+    ])
+    ->groupBy('category_key')
+    ->map(function ($items) {
+        return [
+            'category_name' => (string) $items->first()->category_name,
+            'items' => $items->map(function ($item) {
+                return [
+                    'key' => (string) $item->key,
+                    'name' => (string) $item->name,
+                ];
+            })->values(),
+        ];
+    });
+@endphp
+
 <aside class="home-estimator" id="proje-hesaplayici" aria-labelledby="estHeading">
 <div class="est-kicker">WORKSİTEM PROJE HESAPLAYICI</div>
 <h2 id="estHeading">Yaklaşık bütçenizi görün</h2>
@@ -183,7 +257,8 @@ html[data-theme=dark] body .wks-brand img,html[data-theme=dark] body .wks-foot-l
 <button type="button" class="est-mode" data-tip="tadilat" data-intent="tadilat" aria-pressed="false">🛠️ Komple Tadilat</button>
 <button type="button" class="est-mode" data-tip="insaat" data-intent="kentsel_donusum" aria-pressed="false">🏙️ Kentsel Dönüşüm</button>
 </div>
-<p id="estRenewalScope" class="est-scope" hidden><strong>Kentsel dönüşüm: yeni yapı ön bütçesi</strong>Dosyasız hesap, sıfırdan inşaat yöntemiyle yeni yapının yaklaşık bütçesini verir. Yıkım, tahliye, kira, ruhsat ve diğer dönüşüm giderleri ayrıca değerlendirilir. Destek veya hak sahipliği hesabı yapılmaz. <a href="#kentsel-donusum">Kapsamı okuyun.</a></p>
+<p id="estRenewalScope" class="est-scope" hidden><strong>Kentsel dönüşüm: yeni yapı ön bütçesi</strong>Dosyasız hesap, seçtiğiniz proje bilgilerine göre yeni yapının yaklaşık ön bütçesini verir. Yıkım, tahliye, kira, ruhsat ve diğer dönüşüm giderleri ayrıca değerlendirilir. Destek veya hak sahipliği hesabı yapılmaz. <a href="#kentsel-donusum">Kapsamı okuyun.</a></p>
+<div id="estLegacyProjectFields">
 <label class="est-label" for="estProject">Proje türü</label>
 <select id="estProject" class="est-input">
 <option value="villa" @selected(old('project_type') === 'villa')>Villa</option>
@@ -192,16 +267,65 @@ html[data-theme=dark] body .wks-brand img,html[data-theme=dark] body .wks-foot-l
 <option value="magaza" @selected(old('project_type') === 'magaza')>Mağaza / Ticari Alan</option>
 <option value="fabrika" @selected(old('project_type') === 'fabrika')>Fabrika / Endüstriyel</option>
 </select>
+</div>
+
+<div id="estRenovationScopeFields" hidden>
+<label class="est-label" for="estRenovationScope">
+Tadilat kapsamı
+</label>
+
+<select id="estRenovationScope" class="est-input">
+<option value="">Tadilat kapsamını seçin</option>
+<option value="partial">Kısmi Yenileme</option>
+<option value="medium">Orta Kapsamlı Tadilat</option>
+<option value="complete">Komple Anahtar Teslim</option>
+</select>
+
+<p class="est-scope" id="estRenovationScopeNote">
+<strong>Kısmi Yenileme:</strong> boya, zemin yenileme ve sınırlı onarımlar.<br>
+<strong>Orta Kapsamlı:</strong> mutfak/banyo, zemin, kapılar ve temel tesisat yenilemeleri.<br>
+<strong>Komple Anahtar Teslim:</strong> elektrik-su altyapısı, yüzeyler, sabit imalatlar ve kapsamlı iç mekân yenilemesi.
+</p>
+</div>
+
+<div id="estOfficialBuildingFields" hidden>
+<div id="estBuildingCategoryFields">
+<label class="est-label" for="estBuildingCategory">Yapınızın türü</label>
+<select id="estBuildingCategory" class="est-input">
+<option value="">Yapı türünü seçin</option>
+@foreach($homeBuildingTypes as $categoryKey => $category)
+<option value="{{ $categoryKey }}">{{ $category['category_name'] }}</option>
+@endforeach
+</select>
+</div>
+
+<label class="est-label" for="estBuildingType">Yapı alt türü</label>
+<select id="estBuildingType" class="est-input" disabled>
+<option value="">Önce yapı türünü seçin</option>
+</select>
+
+<p class="est-scope" id="estOfficialBuildingNote">
+Seçtiğiniz yapı türü ve toplam alana göre yaklaşık ön bütçe güvenli sunucu hesabıyla oluşturulur. Sonuç kesin teklif değildir. Fiyatlara KDV dahil değildir.
+</p>
+</div>
 
 <div class="est-two">
-<label class="est-field" for="estCity">Şehir<input id="estCity" class="est-input" value="{{ old('city', 'İstanbul') }}" placeholder="Örn. İstanbul" autocomplete="address-level1" maxlength="100" required></label>
+<label class="est-field" for="estCity">İl
+<select id="estCity" class="est-input" autocomplete="address-level1" required>
+<option value="">İl seçin</option>
+@foreach(config('turkey.provinces', []) as $province)
+<option value="{{ $province }}" @selected(old('city') === $province)>{{ $province }}</option>
+@endforeach
+</select>
+</label>
 <label class="est-field" for="estDistrict">İlçe<input id="estDistrict" class="est-input" value="{{ old('district') }}" placeholder="Örn. Ümraniye" autocomplete="address-level2" maxlength="150"></label>
 </div>
 <div class="est-two">
-<label class="est-field" for="estArea">Toplam inşaat / uygulama alanı (m²)<input id="estArea" class="est-input" type="number" min="20" step="0.01" required value="{{ old('calculated_area', 200) }}" placeholder="Toplam m²" inputmode="decimal"></label>
-<label class="est-field" for="estFloors">Kat sayısı (proje bilgisi)<input id="estFloors" class="est-input" type="number" min="1" step="1" required value="1" placeholder="Kat sayısı" inputmode="numeric"></label>
+<label class="est-field" for="estArea">Toplam inşaat / uygulama alanı (m²)<input id="estArea" class="est-input" type="number" min="20" step="0.01" required value="{{ old('calculated_area') }}" placeholder="Toplam m²" inputmode="decimal"></label>
+<label id="estFloorsField" class="est-field" for="estFloors">Kat sayısı (proje bilgisi)<input id="estFloors" class="est-input" type="number" min="1" step="1" required value="" placeholder="Örn. 1" inputmode="numeric"></label>
 </div>
 
+<div id="estQualityFields">
 <label class="est-label" for="estQuality">Malzeme ve uygulama kalitesi</label>
 <select id="estQuality" class="est-input">
 <option value="economic">Ekonomik</option>
@@ -209,6 +333,7 @@ html[data-theme=dark] body .wks-brand img,html[data-theme=dark] body .wks-foot-l
 <option value="premium">Premium</option>
 <option value="luxury">Lüks</option>
 </select>
+</div>
 
 <div class="est-ai-upload" id="estAiUpload">
  <div class="est-label">Proje dosyanız var mı? <small>Opsiyonel</small></div>
@@ -225,6 +350,22 @@ html[data-theme=dark] body .wks-brand img,html[data-theme=dark] body .wks-foot-l
  <div id="estResultTotal" class="est-result-total"></div>
  <div id="estResultMeta" class="est-result-meta"></div>
  <div id="estResultItems" class="est-result-items"></div>
+
+ <section id="estBudgetBreakdown" class="budget-breakdown" aria-labelledby="estBudgetBreakdownTitle" hidden>
+  <div class="budget-breakdown-head">
+   <div>
+    <strong id="estBudgetBreakdownTitle">Bütçenin ana dağılımı</strong>
+    <span>Yaklaşık iş grupları</span>
+   </div>
+  </div>
+
+  <div id="estBudgetBreakdownItems" class="budget-breakdown-items"></div>
+
+  <p class="budget-breakdown-note">
+   İş grubu dağılımları yaklaşık ön bütçe niteliğindedir; proje kapsamı ve teknik şartnameye göre değişebilir.
+  </p>
+ </section>
+
  <p id="estResultNote" class="est-result-note"></p>
 
  <div id="estBudgetGate" class="est-budget-gate" hidden data-mode="complete">
@@ -242,7 +383,8 @@ html[data-theme=dark] body .wks-brand img,html[data-theme=dark] body .wks-foot-l
   <input type="hidden" name="calculated_service" id="estLeadService" value="{{ old('calculated_service', 'WORKSİTEM Ön Bütçe') }}">
   <input type="hidden" name="has_file" id="estLeadHasFile" value="{{ old('has_file', '0') }}">
   <input type="hidden" name="budget_confirmed" id="estLeadBudgetConfirmed" value="{{ old('budget_confirmed', '0') }}">
-  <input type="hidden" name="calculated_area" id="estLeadArea" value="{{ old('calculated_area') }}">
+  <input type="hidden" name="calculation_id" id="estLeadCalculationId" value="{{ old('calculation_id') }}">
+<input type="hidden" name="calculated_area" id="estLeadArea" value="{{ old('calculated_area') }}">
   <input type="hidden" name="estimated_cost" id="estLeadCost" value="{{ old('estimated_cost') }}">
   <input type="hidden" name="estimated_min" id="estLeadMin" value="{{ old('estimated_min') }}">
   <input type="hidden" name="estimated_max" id="estLeadMax" value="{{ old('estimated_max') }}">
@@ -250,6 +392,12 @@ html[data-theme=dark] body .wks-brand img,html[data-theme=dark] body .wks-foot-l
   <input type="hidden" name="city" id="estLeadCity" value="{{ old('city') }}">
   <input type="hidden" name="district" id="estLeadDistrict" value="{{ old('district') }}">
   <input type="hidden" name="project_data" id="estLeadProjectData" value="{{ is_array(old('project_data')) ? json_encode(old('project_data'), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) : old('project_data') }}">
+  <input type="hidden" name="utm_source" value="{{ old('utm_source', request('utm_source')) }}">
+  <input type="hidden" name="utm_medium" value="{{ old('utm_medium', request('utm_medium')) }}">
+  <input type="hidden" name="utm_campaign" value="{{ old('utm_campaign', request('utm_campaign')) }}">
+  <input type="hidden" name="utm_content" value="{{ old('utm_content', request('utm_content')) }}">
+  <input type="hidden" name="utm_term" value="{{ old('utm_term', request('utm_term')) }}">
+  <input type="hidden" name="price_version" value="{{ $priceVersion }}">
 
   @if($errors->any())
    <div class="est-errors" role="alert">
@@ -261,18 +409,26 @@ html[data-theme=dark] body .wks-brand img,html[data-theme=dark] body .wks-foot-l
    </div>
   @endif
 
+  <label class="est-field" for="estLeadTimeline">Projeye ne zaman başlamayı planlıyorsunuz?</label>
+  <select id="estLeadTimeline" name="timeline" required>
+   <option value="">Başlangıç zamanı seçin</option>
+   <option value="now" @selected(old('timeline') === 'now')>Hemen / 1 ay içinde</option>
+   <option value="soon" @selected(old('timeline') === 'soon')>1–3 ay içinde</option>
+   <option value="later" @selected(old('timeline') === 'later')>3–6 ay içinde</option>
+   <option value="research" @selected(old('timeline') === 'research')>Şimdilik araştırıyorum</option>
+  </select>
   <label class="est-field" for="estLeadName">Ad Soyad / Firma</label>
   <input type="text" id="estLeadName" name="name" required maxlength="150" autocomplete="name" placeholder="Ad Soyad / Firma" value="{{ old('name') }}">
   <label class="est-field" for="estLeadPhone">Telefon</label>
-  <input type="tel" id="estLeadPhone" name="phone" required minlength="10" maxlength="30" autocomplete="tel" placeholder="Telefon" value="{{ old('phone') }}">
+  <div class="est-phone-field">
+   <span class="est-phone-prefix" aria-label="Türkiye ülke kodu">🇹🇷 +90</span>
+   <input type="tel" id="estLeadPhone" name="phone" required minlength="10" maxlength="18" autocomplete="tel-national" inputmode="tel" placeholder="532 123 45 67" value="{{ old('phone') }}">
+  </div>
   <label class="est-field" for="estLeadLocation">Proje konumu (şehir / ilçeden oluşturulur)</label>
   <input type="text" name="location" id="estLeadLocation" required readonly placeholder="Proje konumu" value="{{ old('location') }}">
   <label class="est-field" for="estLeadNotes">Açık adres ve proje notu</label>
   <textarea id="estLeadNotes" name="notes" maxlength="3000" placeholder="Açık adres ve proje hakkında ek bilgi">{{ old('notes') }}</textarea>
-  <label class="est-consent">
-   <input type="checkbox" name="contact_consent" value="1" required>
-   <span><a href="{{ route('kvkk.aydinlatma') }}" target="_blank" rel="noopener noreferrer">KVKK Aydınlatma Metni</a>'ni okudum; proje talebim için iletişime geçilmesini ve bilgilerimin işlenmesini kabul ediyorum.</span>
-  </label>
+  @include('components.lead-consent-fields')
   <button type="submit" id="estSubmitBtn">Net teklif talebini gönder →</button>
  </form>
 </div>
@@ -369,7 +525,7 @@ function applyTheme(theme){
  themeButton.setAttribute('aria-pressed',String(theme==='dark'));
  themeButton.setAttribute('title',theme==='dark'?'Açık temaya geç':'Koyu temaya geç');
  document.getElementById('homeThemeIcon').textContent=theme==='dark'?'☀':'☾';
- document.getElementById('homeThemeLabel').textContent=theme==='dark'?'Açık tema':'Koyu tema';
+
 }
 themeButton.hidden=false;
 applyTheme(document.documentElement.dataset.theme||'light');
@@ -461,6 +617,7 @@ const fileInput=$('estFile');
 if(!calcBtn||!fileInput)return;
 
 const HOME_PRICES=@json($homePrices ?? []);
+const HOME_BUILDING_TYPES=@json($homeBuildingTypes ?? []);
 const CALCULATE_LABEL='ÖN BÜTÇEYİ OLUŞTUR →';
 let activeAbortController=null;
 let currentRequestId=0;
@@ -473,6 +630,40 @@ function homePrice(key){
 function homeTL(value){
  return new Intl.NumberFormat('tr-TR').format(Math.round(value))+' TL';
 }
+function populateBuildingTypes(){
+ const categorySelect=$('estBuildingCategory');
+ const typeSelect=$('estBuildingType');
+
+ if(!categorySelect||!typeSelect)return;
+
+ const categoryKey=categorySelect.value;
+ const category=HOME_BUILDING_TYPES[categoryKey];
+
+ typeSelect.replaceChildren();
+
+ const placeholder=document.createElement('option');
+ placeholder.value='';
+ placeholder.textContent=categoryKey
+  ? 'Yapı alt türünü seçin'
+  : 'Önce yapı türünü seçin';
+
+ typeSelect.appendChild(placeholder);
+
+ if(!category||!Array.isArray(category.items)){
+  typeSelect.disabled=true;
+  return;
+ }
+
+ category.items.forEach(item=>{
+  const option=document.createElement('option');
+  option.value=item.key;
+  option.textContent=item.name;
+  typeSelect.appendChild(option);
+ });
+
+ typeSelect.disabled=false;
+}
+
 
 function homeCityKey(value){
  value=(value||'').toLocaleLowerCase('tr-TR');
@@ -497,17 +688,18 @@ function homeDirectEstimate(){
   konya:.92,gaziantep:.96,other:.95};
  const qualityM={economic:.85,standard:1,premium:1.28,luxury:1.60};
 
- let base;
  if(tip==='insaat'){
-  const class3b=homePrice('bina_sinif_3b_m2');
-  const class4a=homePrice('bina_sinif_4a_m2');
-  if(!class3b||!class4a)throw new Error('İnşaat birim fiyat verisi bulunamadı.');
-  base=(class3b+class4a)/2;
- }else{
-  const renovation=homePrice('tadilat_standart_m2');
-  if(!renovation)throw new Error('Tadilat birim fiyat verisi bulunamadı.');
-  base=renovation;
+  throw new Error('Sıfırdan inşaat maliyeti yalnızca doğrulanmış sunucu hesabıyla oluşturulabilir.');
  }
+
+ let base;
+ const renovation=homePrice('tadilat_standart_m2');
+
+ if(!renovation){
+  throw new Error('Tadilat birim fiyat verisi bulunamadı.');
+ }
+
+ base=renovation;
 
  base*=qualityM[quality]||1;
  base*=cityM[cityKey]||1;
@@ -527,6 +719,49 @@ function homeDirectEstimate(){
  return {tip,area,quality,total,min,max,base};
 }
 
+function formatTrPhoneInput(value){
+ let digits=(value||"").replace(/\D+/g,"");
+
+ if(digits.startsWith("0090")){
+  digits=digits.slice(4);
+ }else if(digits.startsWith("90") && digits.length>10){
+  digits=digits.slice(2);
+ }else if(digits.startsWith("0") && digits.length>10){
+  digits=digits.slice(1);
+ }
+
+ digits=digits.slice(0,10);
+
+ const parts=[];
+ if(digits.length>0)parts.push(digits.slice(0,3));
+ if(digits.length>3)parts.push(digits.slice(3,6));
+ if(digits.length>6)parts.push(digits.slice(6,8));
+ if(digits.length>8)parts.push(digits.slice(8,10));
+
+ return parts.join(" ");
+}
+
+function initTrPhoneField(){
+ const phone=$("estLeadPhone");
+ if(!phone)return;
+
+ phone.value=formatTrPhoneInput(phone.value);
+
+ phone.addEventListener("input",()=>{
+  const start=phone.selectionStart;
+  const before=phone.value;
+  phone.value=formatTrPhoneInput(phone.value);
+
+  if(document.activeElement===phone && start!==null){
+   const delta=phone.value.length-before.length;
+   const next=Math.max(0,Math.min(phone.value.length,start+delta));
+
+   try{
+    phone.setSelectionRange(next,next);
+   }catch(error){}
+  }
+ });
+}
 function syncLocationFields(){
  const city=($('estCity').value||'').trim();
  const district=($('estDistrict').value||'').trim();
@@ -558,7 +793,7 @@ function setBudgetGate(mode){
 
 function clearCalculationFields(){
  [
-  'estLeadArea','estLeadCost','estLeadMin','estLeadMax',
+  'estLeadCalculationId','estLeadArea','estLeadCost','estLeadMin','estLeadMax',
   'estLeadType','estLeadCity','estLeadDistrict','estLeadProjectData'
  ].forEach(id=>{
   const element=$(id);
@@ -588,12 +823,500 @@ function resetCalculationState(){
  $('estLeadForm').hidden=true;
  $('estResultItems').replaceChildren();
 
+ const breakdownBox=$('estBudgetBreakdown');
+ const breakdownItems=$('estBudgetBreakdownItems');
+
+ if(breakdownBox)breakdownBox.hidden=true;
+ if(breakdownItems)breakdownItems.replaceChildren();
+
  const errorBox=document.querySelector('.est-errors');
  if(errorBox)errorBox.remove();
 
  clearCalculationFields();
  syncLocationFields();
 }
+
+function showOfficialBuildingResult(result){
+ const {city,district,location}=syncLocationFields();
+
+ if(
+  !result ||
+  result.success!==true ||
+  !result.calculation_id ||
+  !result.building_type_key ||
+  !result.class_code ||
+  !Number.isFinite(Number(result.area)) ||
+  !Number.isFinite(Number(result.total)) ||
+  !Number.isFinite(Number(result.estimate_low)) ||
+  !Number.isFinite(Number(result.estimate_high)) ||
+  Number(result.area)<=0 ||
+  Number(result.total)<=0 ||
+  Number(result.estimate_low)<=0 ||
+  Number(result.estimate_high)<=0 ||
+  Number(result.estimate_low)>Number(result.total) ||
+  Number(result.estimate_high)<Number(result.total) ||
+  !result.market_version
+ ){
+  throw new Error('Proje bütçesi sonucu doğrulanamadı.');
+ }
+
+ const area=Number(result.area);
+ const total=Number(result.total);
+ const estimateLow=Number(result.estimate_low);
+ const estimateHigh=Number(result.estimate_high);
+
+ const budgetBreakdown=result.budget_breakdown;
+ const budgetItems=Array.isArray(budgetBreakdown?.items)
+  ? budgetBreakdown.items
+  : [];
+
+ $('estResultLabel').textContent='TAHMİNİ PROJE BÜTÇESİ';
+ $('estResultTotal').textContent=homeTL(total);
+
+ $('estResultMeta').textContent=
+  (result.building_type_name||'-')+
+  ' · '+area+' m²'+
+  ' · Yapı sınıfı '+(result.class_code||'-')+
+  (location?' · '+location:'');
+
+ $('estResultNote').textContent=
+  (result.period||'2026')+
+  ' yapı maliyet verileri, güncel piyasa koşulları ve proje bilgilerinize göre oluşturulmuş yaklaşık ön bütçedir. Kesin teklif değildir; proje, malzeme seçimi ve saha koşullarına göre değişebilir.';
+
+ const items=$('estResultItems');
+ items.replaceChildren();
+
+ [
+  ['Tahmini bütçe aralığı',homeTL(estimateLow)+' – '+homeTL(estimateHigh)],
+  ['Yapı türü',result.building_type_name||'-'],
+  ['Yapı sınıfı',result.class_code||'-'],
+  ['Toplam alan',area+' m²'],
+  ['Proje konumu',location||'Belirtilmedi']
+ ].forEach(([name,valueText])=>{
+  const row=document.createElement('div');
+  row.className='est-result-row';
+
+  const label=document.createElement('span');
+  label.textContent=name;
+
+  const value=document.createElement('strong');
+  value.textContent=valueText;
+
+  row.append(label,value);
+  items.append(row);
+ });
+
+ const breakdownBox=$('estBudgetBreakdown');
+ const breakdownItems=$('estBudgetBreakdownItems');
+
+ if(breakdownBox && breakdownItems){
+  breakdownItems.replaceChildren();
+  breakdownBox.hidden=true;
+
+  const breakdownSum=budgetItems.reduce(
+   (sum,item)=>sum+Number(item?.amount||0),
+   0
+  );
+
+  const percentageSum=budgetItems.reduce(
+   (sum,item)=>sum+Number(item?.percentage||0),
+   0
+  );
+
+  const breakdownValid=
+   budgetBreakdown &&
+   budgetBreakdown.model==='budget_breakdown_v1' &&
+   budgetItems.length===4 &&
+   Number.isFinite(breakdownSum) &&
+   Math.abs(breakdownSum-total)<0.01 &&
+   Number.isFinite(percentageSum) &&
+   Math.abs(percentageSum-100)<0.01 &&
+   budgetItems.every(item=>
+    item &&
+    typeof item.label==='string' &&
+    item.label.trim()!=='' &&
+    Number.isFinite(Number(item.percentage)) &&
+    Number(item.percentage)>=0 &&
+    Number(item.percentage)<=100 &&
+    Number.isFinite(Number(item.amount)) &&
+    Number(item.amount)>=0
+   );
+
+  if(breakdownValid){
+   budgetItems.forEach(item=>{
+    const percentage=Number(item.percentage);
+    const amount=Number(item.amount);
+
+    const wrapper=document.createElement('div');
+    wrapper.className='budget-breakdown-item';
+
+    const row=document.createElement('div');
+    row.className='budget-breakdown-row';
+
+    const name=document.createElement('span');
+    name.className='budget-breakdown-name';
+    name.textContent=item.label;
+
+    const value=document.createElement('span');
+    value.className='budget-breakdown-value';
+
+    const percent=document.createElement('span');
+    percent.className='budget-breakdown-percent';
+    percent.textContent='%'+percentage.toLocaleString('tr-TR',{
+     maximumFractionDigits:2
+    });
+
+    const money=document.createElement('strong');
+    money.textContent=homeTL(amount);
+
+    value.append(percent,money);
+    row.append(name,value);
+
+    const track=document.createElement('div');
+    track.className='budget-breakdown-track';
+    track.setAttribute('aria-hidden','true');
+
+    const bar=document.createElement('div');
+    bar.className='budget-breakdown-bar';
+    bar.style.width=Math.min(
+     100,
+     Math.max(0,percentage)
+    )+'%';
+
+    track.append(bar);
+    wrapper.append(row,track);
+    breakdownItems.append(wrapper);
+   });
+
+   breakdownBox.hidden=false;
+  }
+ }
+
+ /*
+  * Hidden alanlar güvenlik sınırı değildir.
+  * LeadController calculation_id üzerinden server snapshot ile
+  * bu değerleri yeniden doğrular ve üzerine yazar.
+  */
+ $('estLeadCalculationId').value=result.calculation_id;
+ $('estLeadService').value='WORKSİTEM Proje Ön Bütçesi';
+ $('estLeadHasFile').value='0';
+ $('estLeadBudgetConfirmed').value='0';
+ $('estLeadArea').value=String(area);
+ $('estLeadCost').value=String(Math.round(total));
+ $('estLeadMin').value=String(Math.round(estimateLow));
+ $('estLeadMax').value=String(Math.round(estimateHigh));
+ $('estLeadType').value=result.building_type_key;
+
+ const priceVersionField=document.querySelector(
+  '#estLeadForm input[name="price_version"]'
+ );
+
+ if(priceVersionField){
+  priceVersionField.value=result.market_version;
+ }
+
+ $('estLeadProjectData').value=JSON.stringify({
+  calculation_mode:'worksitem_market_estimate',
+  project_intent:'insaat',
+  building_type_key:result.building_type_key,
+  building_type_name:result.building_type_name,
+  category_key:result.category_key,
+  category_name:result.category_name,
+  class_code:result.class_code,
+  class_name:result.class_name,
+  area,
+  floors:$('estFloors').value,
+  total,
+  estimate_low:estimateLow,
+  estimate_high:estimateHigh,
+  period:result.period,
+  market_version:result.market_version,
+  city,
+  district
+ });
+
+ $('estAiStatus').hidden=true;
+ $('estAiResult').hidden=false;
+ $('estLeadForm').hidden=true;
+ $('estBudgetActions').hidden=false;
+ $('estBudgetThanks').hidden=true;
+
+ setBudgetGate('complete');
+ $('estAiResult').scrollIntoView({
+  behavior:'smooth',
+  block:'nearest'
+ });
+}
+async function executeRenovationEstimate(){
+ const scope=$('estRenovationScope')?.value||'';
+ const area=Number($('estArea').value)||0;
+
+ if(!scope){
+  $('estRenovationScope')?.reportValidity();
+  return;
+ }
+
+ calcBtn.disabled=true;
+ calcBtn.textContent='TADİLAT BÜTÇESİ HESAPLANIYOR...';
+
+ $('estAiStatus').hidden=true;
+ $('estAiStatus').textContent='';
+
+ try{
+  const response=await fetch('/hesaplama/tadilat-maliyeti',{
+   method:'POST',
+   headers:{
+    'Accept':'application/json',
+    'Content-Type':'application/json',
+    'X-CSRF-TOKEN':'{{ csrf_token() }}'
+   },
+   body:JSON.stringify({
+    scope:scope,
+    quality:'standard',
+    area:area
+   })
+  });
+
+  const data=await response.json();
+
+  if(
+   !response.ok ||
+   !data.success ||
+   !data.calculation_id ||
+   !Number.isFinite(Number(data.total)) ||
+   Number(data.total)<=0
+  ){
+   const message=
+    data?.errors?.scope?.[0] ||
+    data?.message ||
+    'Tadilat ön bütçesi hesaplanamadı.';
+
+   throw new Error(message);
+  }
+
+  showRenovationResult(data);
+ }catch(error){
+  $('estAiStatus').hidden=false;
+  $('estAiStatus').textContent=
+   error.message||'Tadilat ön bütçesi hesaplanamadı.';
+ }finally{
+  calcBtn.disabled=false;
+  calcBtn.textContent=CALCULATE_LABEL;
+ }
+}
+
+
+async function executeOfficialBuildingEstimate(){
+ const buildingCategory=$('estBuildingCategory');
+ const buildingType=$('estBuildingType');
+ const areaInput=$('estArea');
+
+ if(!buildingCategory?.value){
+  buildingCategory?.focus();
+  throw new Error('Yapınızın türünü seçin.');
+ }
+
+ if(!buildingType?.value){
+  buildingType?.focus();
+  throw new Error('Yapı alt türünü seçin.');
+ }
+
+ if(!areaInput?.reportValidity()){
+  throw new Error('Geçerli bir toplam inşaat alanı girin.');
+ }
+
+ const area=Number(areaInput.value);
+
+ if(!Number.isFinite(area)||area<=0){
+  throw new Error('Geçerli bir toplam inşaat alanı girin.');
+ }
+
+ const requestId=++currentRequestId;
+ const controller=new AbortController();
+ activeAbortController=controller;
+
+ calcBtn.disabled=true;
+ calcBtn.textContent='RESMÎ MALİYET HESAPLANIYOR...';
+
+ $('estAiStatus').hidden=false;
+ $('estAiStatus').textContent=
+  '2026 resmî yapı yaklaşık birim maliyeti sunucudan hesaplanıyor...';
+
+ try{
+  const response=await fetch('/hesaplama/yapi-maliyeti',{
+   method:'POST',
+   headers:{
+    'X-CSRF-TOKEN':'{{ csrf_token() }}',
+    'Accept':'application/json',
+    'Content-Type':'application/json',
+    'X-Requested-With':'XMLHttpRequest'
+   },
+   body:JSON.stringify({
+    building_type_key:buildingType.value,
+    area
+   }),
+   signal:controller.signal
+  });
+
+  if(requestId!==currentRequestId)return;
+
+  const contentType=response.headers.get('content-type')||'';
+
+  if(!contentType.includes('application/json')){
+   throw new Error('Sunucu yanıtı işlenemedi. Lütfen tekrar deneyin.');
+  }
+
+  let data;
+
+  try{
+   data=await response.json();
+  }catch(error){
+   throw new Error('Sunucu yanıtı işlenemedi. Lütfen tekrar deneyin.');
+  }
+
+  if(requestId!==currentRequestId)return;
+
+  if(!response.ok){
+   const validationMessage=
+    data?.errors?.building_type_key?.[0] ||
+    data?.errors?.area?.[0] ||
+    data?.message;
+
+   throw new Error(
+    validationMessage ||
+    'Resmî yapı maliyeti hesaplanamadı.'
+   );
+  }
+
+  showOfficialBuildingResult(data);
+
+ }catch(error){
+  if(requestId!==currentRequestId)return;
+  if(error.name==='AbortError')return;
+
+  $('estAiStatus').hidden=false;
+  $('estAiStatus').textContent=
+   error.message ||
+   'Resmî yapı maliyeti hesaplanamadı. Lütfen tekrar deneyin.';
+
+ }finally{
+  if(requestId===currentRequestId){
+   if(activeAbortController===controller){
+    activeAbortController=null;
+   }
+
+   calcBtn.disabled=false;
+   calcBtn.textContent=CALCULATE_LABEL;
+  }
+ }
+}
+function showRenovationResult(result){
+ const {city,district,location}=syncLocationFields();
+
+ if(
+  !result ||
+  result.success!==true ||
+  !result.calculation_id ||
+  !['partial','medium','complete'].includes(result.scope) ||
+  result.quality!=='standard' ||
+  !Number.isFinite(Number(result.area)) ||
+  !Number.isFinite(Number(result.total)) ||
+  !Number.isFinite(Number(result.estimate_low)) ||
+  !Number.isFinite(Number(result.estimate_high)) ||
+  Number(result.area)<=0 ||
+  Number(result.total)<=0 ||
+  Number(result.estimate_low)<=0 ||
+  Number(result.estimate_high)<=0 ||
+  Number(result.estimate_low)>Number(result.total) ||
+  Number(result.estimate_high)<Number(result.total)
+ ){
+  throw new Error('Tadilat bütçesi sonucu doğrulanamadı.');
+ }
+
+ const area=Number(result.area);
+ const total=Number(result.total);
+ const estimateLow=Number(result.estimate_low);
+ const estimateHigh=Number(result.estimate_high);
+ const scopeLabel=result.scope_label||'Tadilat / Yenileme';
+
+ $('estResultLabel').textContent='TAHMİNİ PROJE BÜTÇESİ';
+ $('estResultTotal').textContent=homeTL(total);
+
+ $('estResultMeta').textContent=
+  scopeLabel+
+  ' · '+area+' m²'+
+  (location?' · '+location:'');
+
+ $('estResultNote').textContent=
+  'Bu hesaplama ön keşif ve bütçe planlaması amacıyla hazırlanmıştır; kesin teklif değildir. '+
+  'Proje detayları, malzeme seçimi, saha koşulları ve güncel piyasa fiyatlarına göre değişebilir. '+
+  'Fiyatlara KDV dahil değildir.';
+
+ const items=$('estResultItems');
+ items.replaceChildren();
+
+ [
+  ['Tahmini bütçe aralığı',homeTL(estimateLow)+' – '+homeTL(estimateHigh)],
+  ['Tadilat kapsamı',scopeLabel],
+  ['Uygulama standardı','Standart'],
+  ['Toplam alan',area+' m²'],
+  ['Proje konumu',location||'Belirtilmedi']
+ ].forEach(([name,valueText])=>{
+  const row=document.createElement('div');
+  row.className='est-result-row';
+
+  const label=document.createElement('span');
+  label.textContent=name;
+
+  const value=document.createElement('strong');
+  value.textContent=valueText;
+
+  row.append(label,value);
+  items.append(row);
+ });
+
+ const breakdownBox=$('estBudgetBreakdown');
+ const breakdownItems=$('estBudgetBreakdownItems');
+
+ if(breakdownBox)breakdownBox.hidden=true;
+ if(breakdownItems)breakdownItems.replaceChildren();
+
+ $('estLeadService').value='WORKSİTEM Tadilat Ön Bütçe';
+ $('estLeadHasFile').value='0';
+ $('estLeadBudgetConfirmed').value='0';
+
+ $('estLeadCalculationId').value=result.calculation_id;
+ $('estLeadArea').value=String(area);
+ $('estLeadCost').value=String(Math.round(total));
+ $('estLeadMin').value=String(Math.round(estimateLow));
+ $('estLeadMax').value=String(Math.round(estimateHigh));
+ $('estLeadType').value='tadilat';
+
+ $('estLeadProjectData').value=JSON.stringify({
+  calculation_mode:'renovation_market_estimate',
+  project_intent:'tadilat',
+  scope:result.scope,
+  scope_label:scopeLabel,
+  quality:'standard',
+  area:area,
+  city:city,
+  district:district
+ });
+
+ $('estAiStatus').hidden=true;
+ $('estAiResult').hidden=false;
+ $('estLeadForm').hidden=true;
+ $('estBudgetActions').hidden=false;
+ $('estBudgetThanks').hidden=true;
+
+ setBudgetGate('complete');
+
+ $('estAiResult').scrollIntoView({
+  behavior:'smooth',
+  block:'nearest'
+ });
+}
+
 
 function showManualResult(result){
  const project=$('estProject').options[$('estProject').selectedIndex]?.text||'-';
@@ -893,15 +1616,81 @@ function projectIntent(){return document.querySelector('.est-mode.active')?.data
 function isRenewal(){return projectIntent()==='kentsel_donusum';}
 function updateModeState(){
  document.querySelectorAll('.est-mode').forEach(button=>button.setAttribute('aria-pressed',String(button.classList.contains('active'))));
- $('estRenewalScope').hidden=!isRenewal();
+
+ const intent=projectIntent();
+ const isOfficialBuilding=['insaat','kentsel_donusum'].includes(intent);
+
+ const officialFields=$('estOfficialBuildingFields');
+ const legacyProjectFields=$('estLegacyProjectFields');
+ const qualityFields=$('estQualityFields');
+ const renovationScopeFields=$('estRenovationScopeFields');
+ const categoryFields=$('estBuildingCategoryFields');
+ const floorsField=$('estFloorsField');
+ const isKentsel=intent==='kentsel_donusum';
+ const isRenovation=intent==='tadilat';
+
+ $('estRenewalScope').hidden=!isKentsel;
+
+ if(renovationScopeFields){
+  renovationScopeFields.hidden=!isRenovation;
+
+  const renovationScope=$("estRenovationScope");
+  if(renovationScope){
+   renovationScope.required=isRenovation;
+  }
+ }
+
+ if(categoryFields){
+  categoryFields.hidden=isKentsel;
+ }
+
+ if(floorsField){
+  floorsField.hidden=isOfficialBuilding||isRenovation;
+
+  const floorsInput=$('estFloors');
+  if(floorsInput){
+   floorsInput.required=!isOfficialBuilding&&!isRenovation;
+  }
+ }
+
+ if(isKentsel){
+  const category=$('estBuildingCategory');
+  if(category && category.value!=='konut'){
+   category.value='konut';
+   populateBuildingTypes();
+  }
+ }
+
+ if(officialFields){
+  officialFields.hidden=!isOfficialBuilding;
+ }
+
+ if(legacyProjectFields){
+  legacyProjectFields.hidden=isOfficialBuilding||isRenovation;
+ }
+
+ if(qualityFields){
+  qualityFields.hidden=isOfficialBuilding||isRenovation;
+ }
+
+ if(isRenovation){
+  const quality=$('estQuality');
+  if(quality){
+   quality.value='standard';
+  }
+ }
 }
 document.querySelectorAll('.est-mode').forEach(button=>{
  button.addEventListener('click',()=>{
   const alreadyActive=button.classList.contains('active');
   document.querySelectorAll('.est-mode').forEach(item=>item.classList.remove('active'));
   button.classList.add('active');
+
+  if(!alreadyActive){
+   resetCalculationState();
+  }
+
   updateModeState();
-  if(!alreadyActive)resetCalculationState();
  });
 });
 $('chooseRenewal').addEventListener('click',()=>{
@@ -911,6 +1700,18 @@ $('chooseRenewal').addEventListener('click',()=>{
 
 ['estProject','estCity','estDistrict','estArea','estFloors','estQuality'].forEach(id=>{
  $(id)?.addEventListener('input',resetCalculationState);
+});
+$('estRenovationScope')?.addEventListener('change',()=>{
+ resetCalculationState();
+});
+
+$('estBuildingCategory')?.addEventListener('change',()=>{
+ populateBuildingTypes();
+ resetCalculationState();
+});
+
+$('estBuildingType')?.addEventListener('change',()=>{
+ resetCalculationState();
 });
 
 fileInput.addEventListener('change',()=>{
@@ -929,7 +1730,13 @@ $('estRemoveFile').addEventListener('click',()=>{
 calcBtn.addEventListener('click',()=>{
  if(calcBtn.disabled)return;
 
- for(const id of ['estCity','estArea','estFloors']){
+ const requiredEstimateFields=['estCity','estArea'];
+
+ if(!['insaat','kentsel_donusum','tadilat'].includes(projectIntent())){
+  requiredEstimateFields.push('estFloors');
+ }
+
+ for(const id of requiredEstimateFields){
   if(!$(id).reportValidity())return;
  }
 
@@ -953,12 +1760,19 @@ calcBtn.addEventListener('click',()=>{
  }
 
  resetCalculationState();
- try{
-  showManualResult(homeDirectEstimate());
- }catch(error){
-  $('estAiStatus').hidden=false;
-  $('estAiStatus').textContent=error.message||'Ön bütçe hesaplanamadı.';
+
+ if(['insaat','kentsel_donusum'].includes(projectIntent())){
+  executeOfficialBuildingEstimate();
+  return;
  }
+
+ if(projectIntent()==='tadilat'){
+  executeRenovationEstimate();
+  return;
+ }
+
+ $('estAiStatus').hidden=false;
+ $('estAiStatus').textContent='Bu hesaplama modu desteklenmiyor.';
 });
 
 $('estBudgetYes').addEventListener('click',()=>{
@@ -1037,6 +1851,7 @@ function restoreFormState(){
 }
 restoreFormState();
 updateModeState();
+initTrPhoneField();
 syncLocationFields();
 })();
 </script>

@@ -11,7 +11,13 @@ class UnitPrice extends Model
     
     protected $guarded = [];
     protected static function booted(): void {
-        static::saved(function () { \Illuminate\Support\Facades\Cache::forget("global_system_prices"); });
-        static::deleted(function () { \Illuminate\Support\Facades\Cache::forget("global_system_prices"); });
+        static::saved(function () {
+            \Illuminate\Support\Facades\Cache::forget("global_system_prices");
+            \Illuminate\Support\Facades\Cache::forget("pricing_engine_snapshot");
+        });
+        static::deleted(function () {
+            \Illuminate\Support\Facades\Cache::forget("global_system_prices");
+            \Illuminate\Support\Facades\Cache::forget("pricing_engine_snapshot");
+        });
     }
 }

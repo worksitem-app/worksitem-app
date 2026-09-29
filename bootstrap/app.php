@@ -27,7 +27,11 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
         // Giris yapmamis kullanicilari Filament login sayfasina yonlendir
-        $middleware->redirectGuestsTo(fn () => route('filament.admin.auth.login'));
+        $middleware->redirectGuestsTo(
+            fn (Request $request) => $request->is('admin/*')
+                ? route('filament.admin.auth.login')
+                : route('login')
+        );
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(
