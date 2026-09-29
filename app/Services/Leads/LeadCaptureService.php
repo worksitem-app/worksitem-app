@@ -146,6 +146,7 @@ class LeadCaptureService
             'status' => 'yeni',
             'city' => $city,
             'district' => $district,
+            'area' => $area > 0 ? $area : null,
             'timeline' => $timeline,
             'utm_source' => $this->nullableString($input['utm_source'] ?? null),
             'utm_medium' => $this->nullableString($input['utm_medium'] ?? null),
@@ -161,18 +162,10 @@ class LeadCaptureService
             'price_version' => $this->nullableString(
                 $input['price_version'] ?? 'worksitem-2026'
             ),
-            'price_snapshot' => [
-                'estimated_cost' => $this->nullableNumber(
-                    $input['estimated_cost'] ?? null
-                ),
-                'estimated_min' => $this->nullableNumber(
-                    $input['estimated_min'] ?? null
-                ),
-                'estimated_max' => $this->nullableNumber(
-                    $input['estimated_max'] ?? null
-                ),
-                'captured_at' => now()->toIso8601String(),
-            ],
+            'price_snapshot' => $this->priceSnapshot(
+                input: $input,
+                projectData: $projectData
+            ),
             'contact_consent' => $contactConsent,
             'marketing_consent' => $marketingConsent,
             'consent_version' => (
@@ -233,6 +226,134 @@ class LeadCaptureService
         });
     }
 
+    private function priceSnapshot(
+        array $input,
+        array $projectData
+    ): array {
+        $trusted = $projectData['trusted_calculation'] ?? null;
+
+        if (
+            is_array($trusted)
+            && ($trusted['calculation_type'] ?? null)
+                === 'building_official_reference'
+        ) {
+            return [
+                'trust_level' => 'server_verified',
+                'calculation_id' => $trusted['calculation_id'] ?? null,
+                'calculation_type' => $trusted['calculation_type'] ?? null,
+                'building_type_key' => $trusted['building_type_key'] ?? null,
+                'building_type_name' => $trusted['building_type_name'] ?? null,
+                'category_key' => $trusted['category_key'] ?? null,
+                'category_name' => $trusted['category_name'] ?? null,
+                'class_code' => $trusted['class_code'] ?? null,
+                'class_name' => $trusted['class_name'] ?? null,
+                'area' => $this->nullableNumber(
+                    $trusted['area'] ?? null
+                ),
+                'unit_price' => $this->nullableNumber(
+                    $trusted['unit_price'] ?? null
+                ),
+                'total' => $this->nullableNumber(
+                    $trusted['total'] ?? null
+                ),
+                'period' => $trusted['period'] ?? null,
+                'source_name' => $trusted['source_name'] ?? null,
+                'source_date' => $trusted['source_date'] ?? null,
+                'vat_included' => (bool) (
+                    $trusted['vat_included'] ?? false
+                ),
+                'price_version' => $trusted['price_version'] ?? null,
+                'calculated_at' => $trusted['calculated_at'] ?? null,
+                'captured_at' => now()->toIso8601String(),
+            ];
+        }
+
+        /*
+         * Tadilat ön bütçesi LeadController tarafından server snapshot
+         * üzerinden doğrulanıp trusted_calculation olarak aktarılır.
+         */
+        if (
+            is_array($trusted)
+            && ($trusted['calculation_type'] ?? null)
+                === 'renovation_market_estimate'
+        ) {
+            return [
+                'trust_level' => 'server_verified',
+
+                'calculation_id' =>
+                    $trusted['calculation_id'] ?? null,
+
+                'calculation_type' =>
+                    $trusted['calculation_type'] ?? null,
+
+                'scope' =>
+                    $trusted['scope'] ?? null,
+
+                'scope_label' =>
+                    $trusted['scope_label'] ?? null,
+
+                'quality' =>
+                    $trusted['quality'] ?? null,
+
+                'quality_label' =>
+                    $trusted['quality_label'] ?? null,
+
+                'area' => $this->nullableNumber(
+                    $trusted['area'] ?? null
+                ),
+
+                'base_unit_price' => $this->nullableNumber(
+                    $trusted['base_unit_price'] ?? null
+                ),
+
+                'unit_price' => $this->nullableNumber(
+                    $trusted['unit_price'] ?? null
+                ),
+
+                'total' => $this->nullableNumber(
+                    $trusted['total'] ?? null
+                ),
+
+                'estimate_low' => $this->nullableNumber(
+                    $trusted['estimate_low'] ?? null
+                ),
+
+                'estimate_high' => $this->nullableNumber(
+                    $trusted['estimate_high'] ?? null
+                ),
+
+                'vat_included' => (bool) (
+                    $trusted['vat_included'] ?? false
+                ),
+
+                'price_version' =>
+                    $trusted['price_version'] ?? null,
+
+                'calculated_at' =>
+                    $trusted['calculated_at'] ?? null,
+
+                'captured_at' =>
+                    now()->toIso8601String(),
+            ];
+        }
+        /*
+         * Legacy hesaplar P0.5D/P0.5E tamamlanana kadar korunur,
+         * ancak güven seviyesi açıkça işaretlenir.
+         */
+        return [
+            'trust_level' => 'legacy_browser_input',
+            'estimated_cost' => $this->nullableNumber(
+                $input['estimated_cost'] ?? null
+            ),
+            'estimated_min' => $this->nullableNumber(
+                $input['estimated_min'] ?? null
+            ),
+            'estimated_max' => $this->nullableNumber(
+                $input['estimated_max'] ?? null
+            ),
+            'captured_at' => now()->toIso8601String(),
+        ];
+    }
     public function normalizePhone(?string $phone): ?string
     {
         $digits = preg_replace('/\D+/', '', (string) $phone);

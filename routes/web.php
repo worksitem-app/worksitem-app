@@ -14,9 +14,21 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     try {
+        /*
+         * Public homepage allowlist:
+         * Yalnızca homepage legacy tadilat hesabının gerçekten kullandığı
+         * piyasa fiyatları tarayıcıya gönderilir.
+         *
+         * Resmî yapı sınıfı fiyatları burada ASLA yayınlanmaz.
+         * Sıfırdan inşaat hesabı BuildingEstimateService üzerinden yapılır.
+         */
         $homePrices = \Illuminate\Support\Facades\DB::table('unit_prices')
             ->where('price_pool', 'market')
             ->where('is_active', true)
+            ->where('review_status', 'approved')
+            ->whereIn('key', [
+                'tadilat_standart_m2',
+            ])
             ->pluck('price', 'key')
             ->map(fn ($v) => (float) $v)
             ->toArray();
@@ -24,29 +36,26 @@ Route::get('/', function () {
         $homePrices = [];
     }
 
-    try {
-        $officialBuildingPrices = \Illuminate\Support\Facades\DB::table('building_classes as c')
-            ->join('building_class_costs as p', 'p.building_class_id', '=', 'c.id')
-            ->whereIn('c.code', ['3B', '4A'])
-            ->where('c.is_active', true)
-            ->where('p.is_active', true)
-            ->orderByDesc('p.period')
-            ->select('c.code', 'p.unit_price')
-            ->get()
-            ->unique('code');
 
-        foreach ($officialBuildingPrices as $officialPrice) {
-            $homePrices[
-                $officialPrice->code === '3B'
-                    ? 'bina_sinif_3b_m2'
-                    : 'bina_sinif_4a_m2'
-            ] = (float) $officialPrice->unit_price;
-        }
-    } catch (\Throwable $e) {
-        // Resmî fiyat bulunamazsa ana sayfa uydurma bütçe üretmez.
-    }
+    /*
+     * Fiyat sürümü, hesaplamada kullanılan anahtar ve fiyatlardan üretilir.
+     * Fiyatlardan biri değiştiğinde sürüm de otomatik olarak değişir.
+     */
+    ksort($homePrices);
 
-    return view('index', compact('homePrices'));
+    $priceVersion = 'market-' . substr(
+        hash(
+            'sha256',
+            json_encode(
+                $homePrices,
+                JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+            )
+        ),
+        0,
+        16
+    );
+
+    return view('index', compact('homePrices', 'priceVersion'));
 })->name('home');
 
     // YENİ EKLENEN İLERİ MÜHENDİSLİK VE NİŞ ARAÇLAR
@@ -96,6 +105,17 @@ Route::post('/maliyet-hesapla/proje/{project}/render', [\App\Http\Controllers\Pr
 
 Route::post('/maliyet-hesapla/kaydet', [\App\Http\Controllers\ProjectController::class, 'store'])->name('projects.store');
 
+// Zero-Trust resmi yapı yaklaşık maliyet hesabı
+Route::post(
+    '/hesaplama/yapi-maliyeti',
+    [\App\Http\Controllers\Pricing\BuildingEstimateController::class, 'calculate']
+)->name('pricing.building.calculate');
+
+// Zero-Trust tadilat piyasa on butce hesabi
+Route::post(
+    '/hesaplama/tadilat-maliyeti',
+    [\App\Http\Controllers\Pricing\RenovationEstimateController::class, 'calculate']
+)->name('pricing.renovation.calculate');
 // Kainta Profesyonel Keşif Talebi Rotası
 use App\Http\Controllers\LeadController;
 Route::post('/leads/store', [LeadController::class, 'store'])->name('leads.store');
@@ -879,6 +899,8 @@ Route::get('/araclar/insaat-maliyeti-hesaplama', function () {
 | insaatvtadilat.com'dan gelen eski URL'ler ve ölü linkler için.
 | 404 yerine 301 ile ana sayfaya göndererek SEO değerini korur.
 */
+require __DIR__.'/auth.php';
+
 Route::fallback(function () {
     return redirect('/', 301);
 });

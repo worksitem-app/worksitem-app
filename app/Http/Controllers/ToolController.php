@@ -69,7 +69,7 @@ class ToolController extends Controller
 
     public function concreteCalculator() { return view('tools.concrete-calculator'); }
     public function bathroomCalculator() { return view('tools.bathroom-calculator'); }
-    public function rebarCalculator() { $rebarPricing = \Illuminate\Support\Facades\DB::table('tool_price_bindings as b')->join('unit_prices as p', 'p.key', '=', 'b.price_key')->where('b.tool_slug', 'demir-metraji-hesaplayici')->where('b.role', 'material')->where('p.price_pool', 'market')->where('p.is_active', true)->select('p.price', 'p.unit', 'p.source_name', 'p.source_date', 'p.review_status', 'b.multiplier')->first(); return view('tools.rebar-calculator', compact('rebarPricing')); }
+    public function rebarCalculator() { $rebarPricing = \Illuminate\Support\Facades\DB::table('tool_price_bindings as b')->join('unit_prices as p', 'p.key', '=', 'b.price_key')->where('b.tool_slug', 'demir-metraji-hesaplayici')->where('b.role', 'material')->where('p.price_pool', 'market')->where('p.is_active', true)->where('p.review_status', 'approved')->select('p.price', 'p.unit', 'p.source_name', 'p.source_date', 'p.review_status', 'b.multiplier')->first(); return view('tools.rebar-calculator', compact('rebarPricing')); }
     public function pvcCalculator() { return view('tools.pvc-calculator'); }
     public function stairCalculator() { return view('tools.stair-calculator'); }
 
