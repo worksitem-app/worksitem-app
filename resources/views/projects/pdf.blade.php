@@ -207,7 +207,7 @@
 
     <!-- SAYFA ALTI BİLGİSİ -->
     <div class="footer-strip">
-        Bu belge elektronik olarak üretilmiştir. Barkod No: WKS-{{ date('Ymd-His') }} | İletişim: info@kainta.com - www.worksitem.com
+        Bu belge elektronik olarak üretilmiştir. Barkod No: WKS-{{ date('Ymd-His') }} | İletişim: info@worksitem.com - www.worksitem.com
     </div>
 
 </body>

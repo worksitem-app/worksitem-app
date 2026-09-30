@@ -21,7 +21,7 @@ class SalesLeadNotifier
         }
 
         $recipients = User::query()
-            ->whereRaw('LOWER(email) = ?', ['admin@kainta.com'])
+            ->where('is_admin', true)
             ->get();
 
         if ($recipients->isEmpty()) {

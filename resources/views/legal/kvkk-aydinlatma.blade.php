@@ -100,7 +100,7 @@ html[data-theme="dark"] .cookie-manage{
     <p>
         <strong>Adres:</strong> Fatih Sultan Mehmet Mahallesi, Poligon Caddesi, Buyaka 2 Sitesi,
         3 Blok, No: 8 C/1, 34771 Ümraniye/İstanbul<br>
-        <strong>E-posta:</strong> <a href="mailto:kvkk@kainta.com">kvkk@kainta.com</a><br>
+        <strong>E-posta:</strong> <a href="mailto:info@worksitem.com">info@worksitem.com</a><br>
         <strong>Telefon:</strong> <a href="tel:+908503464983">+90 850 346 49 83</a>
     </p>
 
@@ -205,7 +205,7 @@ html[data-theme="dark"] .cookie-manage{
     <p>
         <strong>Başvuru:</strong> Yukarıdaki haklarınızı kullanmak için
         <a href="/legal/kvkk-basvuru">KVKK Başvuru Formu</a>'nu kullanabilir
-        veya <a href="mailto:kvkk@kainta.com">kvkk@kainta.com</a> adresine
+        veya <a href="mailto:info@worksitem.com">info@worksitem.com</a> adresine
         yazabilirsiniz. Başvurularınız en geç <strong>30 gün</strong> içinde
         cevaplandırılır.
     </p>

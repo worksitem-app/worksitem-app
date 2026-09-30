@@ -70,12 +70,12 @@ $csrfToken = csrf_token();
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>İnşaat & Tadilat Maliyet Hesaplama | WORKSİTEM</title>
-<meta name="description" content="İnşaat veya tadilat projenizin yaklaşık bütçesini 60 saniyeden kısa sürede hesaplayın. Gereksiz sorular olmadan Türkiye piyasa verileriyle ön bütçenizi öğrenin.">
+<meta name="description" content="İnşaat veya tadilat projenizin yaklaşık bütçesini proje tipi, konum, alan ve kalite seviyesine göre hesaplayın. Yaklaşık 1 dakikada ön bütçenizi görün.">
 <meta name="robots" content="index,follow,max-image-preview:large">
 <link rel="canonical" href="https://worksitem.com/maliyet-hesapla">
 <meta property="og:type" content="website">
 <meta property="og:title" content="İnşaat & Tadilat Maliyet Hesaplama | WORKSİTEM">
-<meta property="og:description" content="Projenizin yaklaşık bütçesini 60 saniyeden kısa sürede öğrenin.">
+<meta property="og:description" content="İnşaat veya tadilat projenizin yaklaşık bütçesini yaklaşık 1 dakikada öğrenin.">
 <meta property="og:url" content="https://worksitem.com/maliyet-hesapla">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -193,6 +193,39 @@ a{color:inherit;text-decoration:none;}
 .break-item strong{display:block;font-size:14px;}
 .result-info{margin:0 22px 18px;background:#fffaf0;border:1px solid #f6d878;border-radius:15px;padding:14px;font-size:12px;line-height:1.55;color:#63531d;}
 
+
+.work-related{
+    margin-top:16px;
+    padding-top:15px;
+    border-top:1px solid var(--line);
+}
+.work-related>strong{
+    display:block;
+    font-size:12px;
+    margin-bottom:9px;
+}
+.work-related-links{
+    display:flex;
+    flex-wrap:wrap;
+    gap:7px;
+}
+.work-related-links a{
+    display:inline-flex;
+    align-items:center;
+    min-height:34px;
+    padding:0 10px;
+    border:1px solid var(--line);
+    border-radius:9px;
+    background:#fff;
+    color:#111;
+    text-decoration:none;
+    font-size:10px;
+    font-weight:800;
+}
+.work-related-links a:hover{
+    border-color:var(--accent);
+    background:#fffaf0;
+}
 /* AI RENDER BOX */
 .ai-render-box {
     margin: 0 22px 25px;
@@ -281,6 +314,95 @@ a{color:inherit;text-decoration:none;}
     .price-card,.result-info,.lead-box,.qualification,.qualified-message,.ai-render-box{margin-left:14px;margin-right:14px;}
     .breakdown,.result-actions{padding-left:14px;padding-right:14px;}
 }
+
+/* WORK GROUPS V1 */
+.work-groups{
+    margin:18px 22px 24px;
+    padding:20px;
+    border:1px solid var(--line);
+    border-radius:18px;
+    background:var(--surface);
+}
+.work-head{
+    margin-bottom:16px;
+}
+.work-head span{
+    display:block;
+    margin-bottom:5px;
+    font-size:10px;
+    font-weight:900;
+    letter-spacing:.9px;
+    color:var(--accent);
+}
+.work-head h3{
+    margin:0 0 6px;
+    font-size:19px;
+    line-height:1.25;
+    font-weight:900;
+}
+.work-head p{
+    margin:0;
+    color:var(--muted);
+    font-size:12px;
+    line-height:1.55;
+}
+.work-grid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:10px;
+}
+.work-card{
+    padding:14px;
+    border:1px solid var(--line);
+    border-radius:14px;
+    background:var(--bg);
+}
+.work-card h4{
+    margin:0 0 9px;
+    font-size:13px;
+    font-weight:900;
+}
+.work-card ul{
+    margin:0;
+    padding:0;
+    list-style:none;
+}
+.work-card li{
+    position:relative;
+    margin:6px 0;
+    padding-left:14px;
+    color:var(--muted);
+    font-size:11px;
+    line-height:1.45;
+}
+.work-card li::before{
+    content:"";
+    position:absolute;
+    left:0;
+    top:.55em;
+    width:5px;
+    height:5px;
+    border-radius:50%;
+    background:var(--accent);
+}
+.work-note{
+    margin-top:13px;
+    padding-top:12px;
+    border-top:1px solid var(--line);
+    color:var(--muted);
+    font-size:10px;
+    line-height:1.5;
+}
+@media (max-width:640px){
+    .work-groups{
+        margin-left:14px;
+        margin-right:14px;
+        padding:16px;
+    }
+    .work-grid{
+        grid-template-columns:1fr;
+    }
+}
 </style>
 </head>
 
@@ -298,20 +420,20 @@ a{color:inherit;text-decoration:none;}
 <main class="main">
 
 <section class="hero">
-    <div class="badge"><span class="badge-dot"></span>60 saniyeden kısa sürede yaklaşık bütçe</div>
-    <h1>Projenizin gerçekçi<br><strong>bütçesini öğrenin.</strong></h1>
-    <p>Gereksiz keşif soruları yok. Maliyeti gerçekten değiştiren birkaç bilgiyle projenizin yaklaşık bütçesini hesaplayın.</p>
+    <div class="badge"><span class="badge-dot"></span>Yaklaşık 1 dakikada ön bütçe</div>
+    <h1>İnşaat veya tadilat projenizin<br><strong>yaklaşık bütçesini hesaplayın.</strong></h1>
+    <p>Proje tipi, konum, alan ve kalite seviyesine göre yaklaşık bütçenizi hesaplayın.</p>
 </section>
 
 <section class="calculator" id="calculator">
     <div class="progress-wrap"><div class="progress" id="progress"></div></div>
     <div class="calc-top">
         <span class="step-text" id="stepText">1 / 7</span>
-        <span class="time-text">⚡ Yaklaşık 45 saniye</span>
+
     </div>
 
     <!-- STEPS 1-7 (Same HTML as previously established) -->
-    
+
     <div class="step active" data-step="1">
         <div class="question">Ne yapmak istiyorsunuz?</div>
         <div class="question-sub">Projenizin ana tipini seçin.</div>
@@ -439,16 +561,33 @@ a{color:inherit;text-decoration:none;}
         </div>
 
         <div class="result-info" id="resultInfo"></div>
+<div class="work-groups" id="projectWorkGroups">
+    <div class="work-head">
+        <span>PROJE DETAYI</span>
+        <h3>Projeniz için iş ve malzeme grupları</h3>
+        <p id="workGroupsIntro"></p>
+    </div>
 
-        <!-- WORKSITEM AI RENDER MODÜLÜ -->
+    <div class="work-grid" id="workGroupsGrid"></div>
+<div class="work-related">
+    <strong>Bu proje için ilgili hesaplamalar</strong>
+    <div class="work-related-links" id="workRelatedLinks"></div>
+</div>
+
+    <div class="work-note">
+        Bu liste ön planlama içindir. Kesin miktarlar proje ve uygulama detaylarına göre değişir.
+    </div>
+</div>
+
+<!-- WORKSITEM AI RENDER MODÜLÜ -->
         <div class="ai-render-box" id="aiRenderBox">
             <div class="ai-badge">✨ Worksitem AI Vision</div>
             <h3>Hayalinizdeki projeyi görselleştirin</h3>
             <p>
-                Seçtiğiniz <strong id="renderParamText">Kalite</strong> standartlarına uygun 
+                Seçtiğiniz <strong id="renderParamText">Kalite</strong> standartlarına uygun
                 konsept bir 3D render oluşturmak için yapay zekayı tetikleyin.
             </p>
-            
+
             <button type="button" class="ai-submit-btn" id="btnGenerateRender">
                 Konsept Render Üret (10 sn) →
             </button>
@@ -516,7 +655,7 @@ a{color:inherit;text-decoration:none;}
 </section>
 
 <div class="trust">
-    <div class="trust-item"><strong>⚡ 60 saniye</strong><span>Gereksiz soru yok</span></div>
+    <div class="trust-item"><strong>⚡ Yaklaşık 1 dakika</strong><span>Hızlı ön bütçe</span></div>
     <div class="trust-item"><strong>📐 Piyasa verisi</strong><span>Birim maliyet yaklaşımı</span></div>
     <div class="trust-item"><strong>🏗️ Kainta İnşaat</strong><span>Uygun projelere odaklanır</span></div>
 </div>
@@ -740,9 +879,243 @@ function updateLeadQuality(){
     else if(state.budget_confirmed && state.timeline === "soon"){ quality = "warm"; }
     else if(state.budget_confirmed && state.timeline === "later"){ quality = "nurture"; }
     else if(state.timeline === "research"){ quality = "research"; }
-    
+
     state.lead_quality = quality;
     document.getElementById("leadQuality").value = quality;
+}
+
+
+/* WORK GROUPS DATA V1 */
+const WORK_GROUPS = {
+    new_build: [
+        {
+            title: "Proje ve hazırlık",
+            items: [
+                "Şantiye ve saha hazırlığı",
+                "Proje ve uygulama koordinasyonu",
+                "Kazı ve temel hazırlıkları"
+            ]
+        },
+        {
+            title: "Kaba yapı",
+            items: [
+                "Betonarme taşıyıcı sistem",
+                "Duvar ve bölme imalatları",
+                "Çatı ve temel yalıtımları"
+            ]
+        },
+        {
+            title: "İnce işler",
+            items: [
+                "Sıva, alçı ve boya",
+                "Şap ve zemin kaplamaları",
+                "Kapı, doğrama ve tamamlayıcı imalatlar"
+            ]
+        },
+        {
+            title: "Mekanik ve elektrik",
+            items: [
+                "Temiz ve atık su tesisatı",
+                "Isıtma, soğutma ve havalandırma",
+                "Elektrik ve aydınlatma altyapısı"
+            ]
+        }
+    ],
+
+    renovation: [
+        {
+            title: "Söküm ve hazırlık",
+            items: [
+                "Mevcut imalatların kontrollü sökümü",
+                "Yüzey ve altyapı hazırlıkları",
+                "Gerekli tamiratlar"
+            ]
+        },
+        {
+            title: "İnce işler",
+            items: [
+                "Duvar, tavan ve alçı uygulamaları",
+                "Boya ve dekoratif uygulamalar",
+                "Zemin ve kaplama işleri"
+            ]
+        },
+        {
+            title: "Mekanik ve elektrik",
+            items: [
+                "Tesisat revizyonları",
+                "Elektrik ve aydınlatma işleri",
+                "Havalandırma ve iklimlendirme düzenlemeleri"
+            ]
+        },
+        {
+            title: "Tamamlama",
+            items: [
+                "Kapı ve doğrama işleri",
+                "Armatür ve aksesuar montajları",
+                "Son kontroller ve teslim hazırlığı"
+            ]
+        }
+    ],
+
+    partial_renovation: [
+        {
+            title: "Lokal söküm",
+            items: [
+                "Değişecek imalatların sökümü",
+                "Hasarlı alanların hazırlanması",
+                "Lokal tamiratlar"
+            ]
+        },
+        {
+            title: "Seçili ince işler",
+            items: [
+                "Boya ve yüzey yenilemeleri",
+                "Zemin veya duvar kaplamaları",
+                "Tavan ve bölme düzenlemeleri"
+            ]
+        },
+        {
+            title: "Tesisat revizyonları",
+            items: [
+                "Gerekli mekanik müdahaleler",
+                "Elektrik hattı düzenlemeleri",
+                "Armatür değişimleri"
+            ]
+        },
+        {
+            title: "Tamamlama",
+            items: [
+                "Montaj ve rötuşlar",
+                "Temizlik ve kontrol",
+                "Teslim hazırlığı"
+            ]
+        }
+    ],
+
+    commercial: [
+        {
+            title: "Mahal ve uygulama hazırlığı",
+            items: [
+                "Mevcut alanın hazırlanması",
+                "Bölme ve yerleşim düzenlemeleri",
+                "Uygulama koordinasyonu"
+            ]
+        },
+        {
+            title: "İnce işler",
+            items: [
+                "Tavan ve duvar sistemleri",
+                "Zemin kaplamaları",
+                "Boya ve dekoratif uygulamalar"
+            ]
+        },
+        {
+            title: "Mekanik sistemler",
+            items: [
+                "Isıtma, soğutma ve havalandırma",
+                "Temiz ve atık su altyapısı",
+                "Kullanım amacına bağlı mekanik düzenlemeler"
+            ]
+        },
+        {
+            title: "Elektrik ve tamamlayıcı işler",
+            items: [
+                "Elektrik ve aydınlatma",
+                "Zayıf akım altyapısı",
+                "Son montaj ve teslim kontrolleri"
+            ]
+        }
+    ]
+};
+
+const WORK_GROUP_INTROS = {
+    new_build:
+        "Sıfırdan inşaatta taşıyıcı sistem, duvarlar, kaplamalar, mekanik ve elektrik imalatları birlikte değerlendirilir.",
+
+    renovation:
+        "Komple tadilatta söküm, mevcut altyapının durumu, ıslak hacimler, yüzeyler ve tesisat yenilemeleri bütçeyi birlikte etkiler.",
+
+    partial_renovation:
+        "Kısmi tadilatta yalnız müdahale edilecek mahal ve imalatlara odaklanmak daha sağlıklı bir ön bütçe oluşturur.",
+
+    commercial:
+        "Ticari projelerde bölme-tavan sistemleri, yoğun kullanıma uygun zeminler, HVAC ve elektrik altyapısı öne çıkar."
+};
+
+const WORK_RELATED_TOOLS = {
+    new_build: [
+        ["Beton Hacmi ve Maliyeti","/araclar/beton-hesaplayici"],
+        ["Demir Donatı Metrajı","/araclar/demir-metraji-hesaplayici"],
+        ["Kalıp / Plywood Maliyeti","/araclar/kalip-plywood-maliyeti"],
+        ["Hafriyat ve Kazı","/araclar/hafriyat-kazi-hesabi"]
+    ],
+
+    renovation: [
+        ["Mutfak Tadilatı","/araclar/mutfak-maliyet-hesaplayici"],
+        ["Banyo Tadilatı","/araclar/banyo-maliyet-hesaplayici"],
+        ["Boya Hesabı","/araclar/boya-hesaplayici"],
+        ["Parke Maliyeti","/araclar/parke-maliyet-hesaplayici"]
+    ],
+
+    partial_renovation: [
+        ["Boya Hesabı","/araclar/boya-hesaplayici"],
+        ["Seramik Maliyeti","/araclar/seramik-maliyet-hesaplayici"],
+        ["Alçıpan Hesabı","/araclar/alcipan-hesaplayici"],
+        ["Su Tesisatı","/araclar/su-tesisat-hesaplama"]
+    ],
+
+    commercial: [
+        ["Havalandırma / HVAC","/araclar/havalandirma-hesaplayici"],
+        ["Asma Tavan","/araclar/asma-tavan-hesaplayici"],
+        ["Epoksi Zemin","/araclar/epoksi-zemin-hesaplayici"],
+        ["Kablo Kesiti","/araclar/kablo-kesiti-hesabi"]
+    ]
+};
+function renderWorkGroups(){
+    const intro = document.getElementById("workGroupsIntro");
+    const grid = document.getElementById("workGroupsGrid");
+
+    if(!intro || !grid){
+        return;
+    }
+
+    const groups = WORK_GROUPS[state.project_type] || [];
+
+    intro.textContent =
+        WORK_GROUP_INTROS[state.project_type] ||
+        "Projeniz için öne çıkan iş grupları gösterilmektedir.";
+
+    const related = document.getElementById("workRelatedLinks");
+
+    if(related){
+        const tools = WORK_RELATED_TOOLS[state.project_type] || [];
+
+        related.innerHTML = tools.map(function(tool){
+            return "<a href=\"" + tool[1] + "\">" + tool[0] + " →</a>";
+        }).join("");
+    }
+
+    grid.innerHTML = "";
+
+    groups.forEach(function(group){
+        const card = document.createElement("div");
+        card.className = "work-card";
+
+        const title = document.createElement("h4");
+        title.textContent = group.title;
+
+        const list = document.createElement("ul");
+
+        group.items.forEach(function(item){
+            const li = document.createElement("li");
+            li.textContent = item;
+            list.appendChild(li);
+        });
+
+        card.appendChild(title);
+        card.appendChild(list);
+        grid.appendChild(card);
+    });
 }
 
 function calculateAndShow(){
@@ -762,6 +1135,7 @@ function calculateAndShow(){
     document.getElementById("break3").textContent = tl(breakdown.three);
     document.getElementById("break4").textContent = tl(breakdown.four);
     document.getElementById("resultInfo").textContent = buildResultInfo();
+    renderWorkGroups();
 
     document.getElementById("estimatedCost").value = Math.round(result.total);
     document.getElementById("estimatedMin").value = Math.round(result.min);
@@ -786,7 +1160,7 @@ function calculateAndShow(){
     document.querySelectorAll(".step").forEach(function(el){ el.classList.remove("active"); });
     document.getElementById("result").classList.add("active");
     document.getElementById("progress").style.width = "100%";
-    
+
     document.getElementById("leadBox").style.display = "none";
     document.getElementById("qualifiedMessage").classList.remove("active");
     document.querySelectorAll(".qual-option").forEach(function(el){ el.classList.remove("selected"); });

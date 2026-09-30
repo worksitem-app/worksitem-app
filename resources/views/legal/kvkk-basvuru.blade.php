@@ -92,7 +92,7 @@ html[data-theme="dark"] .cookie-manage{
         <p><strong>Veri Sorumlusu:</strong> Kainta İnşaat Mimarlık & Mühendislik</p>
         <p><strong>Adres:</strong> Fatih Sultan Mehmet Mahallesi, Poligon Caddesi,
         Buyaka 2 Sitesi, 3 Blok, No: 8 C/1, 34771 Ümraniye/İstanbul</p>
-        <p><strong>E-posta:</strong> <a href="mailto:kvkk@kainta.com">kvkk@kainta.com</a></p>
+        <p><strong>E-posta:</strong> <a href="mailto:info@worksitem.com">info@worksitem.com</a></p>
         <p><strong>Telefon:</strong> <a href="tel:+908503464983">+90 850 346 49 83</a></p>
     </div>
 
@@ -101,9 +101,9 @@ html[data-theme="dark"] .cookie-manage{
     <ul>
         <li><strong>Yazılı başvuru:</strong> Yukarıdaki posta adresine iadeli taahhütlü</li>
         <li><strong>E-posta:</strong> Kayıtlı elektronik posta (KEP) adresinizden
-            <a href="mailto:kvkk@kainta.com">kvkk@kainta.com</a>'a</li>
+            <a href="mailto:info@worksitem.com">info@worksitem.com</a>'a</li>
         <li><strong>Elektronik başvuru:</strong> Sisteme kayıtlı e-posta adresinizden
-            <a href="mailto:kvkk@kainta.com">kvkk@kainta.com</a>'a</li>
+            <a href="mailto:info@worksitem.com">info@worksitem.com</a>'a</li>
     </ul>
 
     <h2>2. Başvuruda Bulunması Gereken Bilgiler</h2>
@@ -147,7 +147,7 @@ html[data-theme="dark"] .cookie-manage{
     </ul>
 
     <p>
-        <strong>Not:</strong> Başvuru formu <a href="mailto:kvkk@kainta.com">kvkk@kainta.com</a>
+        <strong>Not:</strong> Başvuru formu <a href="mailto:info@worksitem.com">info@worksitem.com</a>
         adresine yazılı olarak gönderilebilir. Formda belirtilen bilgiler KVKK Başvuru
         Formu formatına uygun olmalıdır.
     </p>
@@ -178,7 +178,7 @@ html[data-theme="dark"] .cookie-manage{
 
     <p>
         Başvuru ile ilgili sorularınız için:
-        <a href="mailto:kvkk@kainta.com">kvkk@kainta.com</a>
+        <a href="mailto:info@worksitem.com">info@worksitem.com</a>
     </p>
 
     <div class="nav-links">

@@ -95,7 +95,7 @@ html[data-theme="dark"] .cookie-manage{
         <strong>Kainta İnşaat Mimarlık & Mühendislik</strong><br>
         <strong>Adres:</strong> Fatih Sultan Mehmet Mahallesi, Poligon Caddesi,
         Buyaka 2 Sitesi, 3 Blok, No: 8 C/1, 34771 Ümraniye/İstanbul<br>
-        <strong>E-posta:</strong> <a href="mailto:kvkk@kainta.com">kvkk@kainta.com</a>
+        <strong>E-posta:</strong> <a href="mailto:info@worksitem.com">info@worksitem.com</a>
     </p>
 
     <h2>2. Açık Rıza Verilen İşleme Faaliyetleri</h2>
@@ -138,7 +138,7 @@ html[data-theme="dark"] .cookie-manage{
     <h2>4. Rızanızı Nasıl Geri Çekersiniz?</h2>
 
     <ul>
-        <li><strong>E-posta:</strong> <a href="mailto:kvkk@kainta.com">kvkk@kainta.com</a></li>
+        <li><strong>E-posta:</strong> <a href="mailto:info@worksitem.com">info@worksitem.com</a></li>
         <li><strong>Başvuru Formu:</strong> <a href="/legal/kvkk-basvuru">KVKK Başvuru Formu</a></li>
         <li><strong>SMS:</strong> Ticari iletiler için "RED" yazıp gönderin</li>
     </ul>

@@ -12,26 +12,24 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'email', 'password'])]
+#[Fillable(['name', 'email', 'password', 'is_admin'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable implements FilamentUser
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
+
     /**
-     * Admin mi? (AdminMiddleware tarafından kullanılır)
+     * Admin yetkisi e-posta adresinden bağımsızdır.
      */
     public function isAdmin(): bool
     {
-        // 1) Filament panel erişimi varsa
-        // 2) veya email admin@kainta.com ise
-        // 3) veya is_admin alanı true ise
-        return strtolower((string) $this->email) === 'admin@kainta.com'
-            || ($this->is_admin ?? false) === true;
+        return (bool) $this->is_admin;
     }
+
     public function canAccessPanel(Panel $panel): bool
     {
-        return strtolower((string) $this->email) === 'admin@kainta.com';
+        return $this->isAdmin();
     }
 
     protected function casts(): array
@@ -39,6 +37,7 @@ class User extends Authenticatable implements FilamentUser
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_admin' => 'boolean',
         ];
     }
 }
