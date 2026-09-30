@@ -26,6 +26,8 @@
     </style>
 </head>
 <body>
+
+<x-site.contech-header />
 <main>
     <h1>Çerez Politikası</h1>
 
@@ -158,5 +160,8 @@
         <a href="/legal/kvkk-basvuru">Başvuru Formu</a>
     </div>
 </main>
+
+<x-site.contech-footer />
+
 </body>
 </html>

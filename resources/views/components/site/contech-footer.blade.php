@@ -526,3 +526,56 @@
 
 </div>
 </footer>
+
+<style>
+/* WORKSITEM Footer V2 — global light/dark theme integration */
+
+html[data-theme="light"] .wks-footer{
+    --wf-bg:#f6f7f9;
+    --wf-panel:#ffffff;
+    --wf-panel-hover:#f1f3f6;
+    --wf-text:#111827;
+    --wf-muted:#667085;
+    --wf-line:#e2e7ee;
+}
+
+html[data-theme="light"] .wks-footer{
+    background:var(--wf-bg)!important;
+    color:var(--wf-text)!important;
+    border-color:var(--wf-line)!important;
+}
+
+html[data-theme="light"] .wks-footer a{
+    color:var(--wf-muted)!important;
+}
+
+html[data-theme="light"] .wks-footer a:hover{
+    color:var(--wf-text)!important;
+}
+
+html[data-theme="light"] .wks-footer .wks-footer-cta,
+html[data-theme="light"] .wks-footer .wks-partner{
+    background:var(--wf-panel)!important;
+    border-color:var(--wf-line)!important;
+}
+
+html[data-theme="light"] .wks-footer .wks-foot-text,
+html[data-theme="light"] .wks-footer .wks-partner span,
+html[data-theme="light"] .wks-footer .wks-foot-bottom{
+    color:var(--wf-muted)!important;
+    border-color:var(--wf-line)!important;
+}
+
+html[data-theme="light"] .wks-footer .wks-foot-title{
+    color:#9a6800!important;
+}
+
+html[data-theme="dark"] .wks-footer{
+    --wf-bg:#111827;
+    --wf-panel:#182231;
+    --wf-panel-hover:#202c3d;
+    --wf-text:#f8fafc;
+    --wf-muted:#aab4c3;
+    --wf-line:rgba(255,255,255,.11);
+}
+</style>

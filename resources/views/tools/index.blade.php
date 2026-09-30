@@ -1079,6 +1079,8 @@ echo json_encode(
 
 <body data-tool-slug="araclar">
 
+<x-site.contech-header />
+
 {{-- =========================================================
      DYNAMIC TOOL DATA
 ========================================================== --}}
@@ -2412,5 +2414,8 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
 
     <script src="/js/tool-events.js" defer></script>
+
+<x-site.contech-footer />
+
 </body>
 </html>
