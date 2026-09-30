@@ -22,6 +22,8 @@
     </style>
 </head>
 <body>
+
+<x-site.contech-header />
 <main>
     <h1>KVKK Başvuru Formu</h1>
 
@@ -133,5 +135,8 @@
         <a href="/legal/gizlilik-politikasi">Gizlilik Politikası</a>
     </div>
 </main>
+
+<x-site.contech-footer />
+
 </body>
 </html>
