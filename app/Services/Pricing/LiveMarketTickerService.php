@@ -5,23 +5,38 @@ namespace App\Services\Pricing;
 use App\Models\MaterialPrice;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Str;
 
 class LiveMarketTickerService
 {
-    public const LABOR_MULTIPLIER = 1.60;
+    public const MARKET_MULTIPLIER = 1.60;
 
     public function data(): array
     {
         $materials = $this->materials();
-        $labor = $this->labor();
+        $works = $this->tenderWorks();
 
         return [
             'generated_at' => now()->toIso8601String(),
-            'labor_multiplier' => self::LABOR_MULTIPLIER,
+
+            'market_multiplier' =>
+                self::MARKET_MULTIPLIER,
+
             'materials' => $materials,
-            'labor' => $labor,
-            'items' => array_merge($materials, $labor),
+
+            /*
+             * Yeni doğru isim.
+             */
+            'works' => $works,
+
+            /*
+             * Eski API uyumluluğu bozulmasın.
+             */
+            'labor' => $works,
+
+            'items' => array_merge(
+                $materials,
+                $works
+            ),
         ];
     }
 
@@ -38,12 +53,24 @@ class LiveMarketTickerService
                     'type' => 'material',
                     'key' => $row->key,
                     'label' => $row->name,
-                    'price' => round((float) $row->current_price, 2),
+                    'description' => $row->name,
+
+                    'price' => round(
+                        (float) $row->current_price,
+                        2
+                    ),
+
                     'base_price' => null,
                     'unit' => $row->unit,
-                    'source' => $row->source_name,
-                    'source_date' => optional($row->source_date)
-                        ->format('Y-m-d'),
+
+                    'source' =>
+                        $row->source_name,
+
+                    'source_date' =>
+                        optional(
+                            $row->source_date
+                        )->format('Y-m-d'),
+
                     'poz_no' => null,
                 ];
             })
@@ -51,196 +78,354 @@ class LiveMarketTickerService
             ->all();
     }
 
-    private function labor(): array
+    private function tenderWorks(): array
     {
         if (!Schema::hasTable('tender_pozs')) {
             return [];
         }
 
-        $columns = Schema::getColumnListing('tender_pozs');
+        $columns =
+            Schema::getColumnListing(
+                'tender_pozs'
+            );
 
-        $descriptionColumn = in_array('description', $columns, true)
-            ? 'description'
-            : null;
-
-        if (!$descriptionColumn) {
+        if (!in_array(
+            'description',
+            $columns,
+            true
+        )) {
             return [];
         }
 
         /*
-         * Sadece ham/resmi poz fiyatı.
-         * offer_unit_price özellikle kullanılmaz.
+         * Kullanıcının istediği:
+         * Resmi poz fiyatını oku,
+         * sonra ×1.60 uygula.
          */
         $priceColumn = collect([
             'unit_price',
             'price',
             'official_unit_price',
             'rayic_price',
-            'normalized_unit_cost',
         ])->first(
             fn ($column) =>
-                in_array($column, $columns, true)
+                in_array(
+                    $column,
+                    $columns,
+                    true
+                )
         );
 
         if (!$priceColumn) {
             return [];
         }
 
-        $query = DB::table('tender_pozs')
-            ->whereNotNull($priceColumn)
-            ->where($priceColumn, '>', 0);
+        $latestYear = null;
 
-        if (in_array('is_active', $columns, true)) {
-            $query->where('is_active', true);
+        if (in_array(
+            'year',
+            $columns,
+            true
+        )) {
+            $latestYear =
+                DB::table('tender_pozs')
+                    ->max('year');
         }
-
-        if (in_array('year', $columns, true)) {
-            $latestYear = DB::table('tender_pozs')
-                ->max('year');
-
-            if ($latestYear) {
-                $query->where('year', $latestYear);
-            }
-        }
-
-        $keywords = [
-            'işçi',
-            'işçilik',
-            'usta',
-            'elektrikçi',
-            'tesisatçı',
-            'boyacı',
-            'kaynakçı',
-            'marangoz',
-            'operatör',
-            'şoför',
-            'teknisyen',
-            'formen',
-        ];
-
-        $query->where(function ($q) use (
-            $keywords,
-            $descriptionColumn
-        ) {
-            foreach ($keywords as $keyword) {
-                $q->orWhere(
-                    $descriptionColumn,
-                    'like',
-                    '%'.$keyword.'%'
-                );
-            }
-        });
-
-        if (in_array('poz_no', $columns, true)) {
-            $query->orderBy('poz_no');
-        }
-
-        $rows = $query
-            ->limit(120)
-            ->get();
 
         /*
-         * Farklı işçiliklerden karışık seçim.
+         * Canlı piyasada kullanıcıya anlamlı,
+         * farklı inşaat işlerinden karışık sepet.
          */
         $groups = [
-            'işçi' => ['işçi', 'işçilik'],
-            'usta' => ['usta'],
-            'elektrik' => ['elektrikçi'],
-            'tesisat' => ['tesisatçı'],
-            'boya' => ['boyacı'],
-            'kaynak' => ['kaynakçı'],
-            'operatör' => ['operatör'],
-            'teknisyen' => ['teknisyen'],
+
+            [
+                'label' => 'Duvar Örme',
+                'include' => [
+                    'duvar örülmesi',
+                    'duvar örme',
+                    'tuğla ile duvar',
+                    'gazbeton ile duvar',
+                    'duvar yapılması',
+                ],
+                'exclude' => [
+                    'yıkılması',
+                    'sökülmesi',
+                    'boyanması',
+                    'kaplanması',
+                ],
+            ],
+
+            [
+                'label' => 'Betonarme Kalıp',
+                'include' => [
+                    'betonarme kalıbı',
+                    'betonarme kalıp',
+                    'kalıp yapılması',
+                    'kalıp yapılması ve sökülmesi',
+                ],
+                'exclude' => [
+                    'iskele',
+                    'doğrama',
+                ],
+            ],
+
+            [
+                'label' => 'Sıva',
+                'include' => [
+                    'sıva yapılması',
+                    'çimento harçlı sıva',
+                    'alçı sıva',
+                ],
+                'exclude' => [
+                    'sökülmesi',
+                    'kazınması',
+                ],
+            ],
+
+            [
+                'label' => 'Şap',
+                'include' => [
+                    'şap yapılması',
+                    'çimento şap',
+                    'şap betonu',
+                ],
+                'exclude' => [
+                    'sökülmesi',
+                ],
+            ],
+
+            [
+                'label' => 'Seramik Kaplama',
+                'include' => [
+                    'seramik kaplama yapılması',
+                    'seramik kaplama',
+                    'seramik karo',
+                ],
+                'exclude' => [
+                    'sökülmesi',
+                ],
+            ],
+
+            [
+                'label' => 'Alçıpan Bölme',
+                'include' => [
+                    'alçıpan bölme',
+                    'alçı levha ile bölme',
+                    'alçı levha bölme',
+                    'alçıpan',
+                ],
+                'exclude' => [
+                    'sökülmesi',
+                    'asma tavan',
+                ],
+            ],
+
+            [
+                'label' => 'Boya',
+                'include' => [
+                    'plastik boya yapılması',
+                    'silikonlu boya yapılması',
+                    'boya yapılması',
+                    'boyacı ustası',
+                ],
+                'exclude' => [
+                    'sökülmesi',
+                ],
+            ],
+
+            [
+                'label' => 'Kazı',
+                'include' => [
+                    'makine ile kazı',
+                    'kazı yapılması',
+                    'kazılması',
+                ],
+                'exclude' => [
+                    'elle kazı',
+                ],
+            ],
         ];
 
         $selected = collect();
+        $usedPoz = [];
 
-        foreach ($groups as $terms) {
-            $match = $rows->first(
-                function ($row) use (
-                    $terms,
-                    $descriptionColumn,
-                    $selected
-                ) {
-                    $description =
-                        mb_strtolower(
-                            (string) $row->{$descriptionColumn},
-                            'UTF-8'
+        foreach ($groups as $group) {
+
+            $query =
+                DB::table('tender_pozs')
+                    ->whereNotNull(
+                        $priceColumn
+                    )
+                    ->where(
+                        $priceColumn,
+                        '>',
+                        0
+                    );
+
+            if ($latestYear !== null) {
+                $query->where(
+                    'year',
+                    $latestYear
+                );
+            }
+
+            $query->where(
+                function ($q) use ($group) {
+
+                    foreach (
+                        $group['include']
+                        as $keyword
+                    ) {
+                        $q->orWhere(
+                            'description',
+                            'like',
+                            '%'.$keyword.'%'
                         );
-
-                    $matched = false;
-
-                    foreach ($terms as $term) {
-                        if (
-                            str_contains(
-                                $description,
-                                mb_strtolower($term, 'UTF-8')
-                            )
-                        ) {
-                            $matched = true;
-                            break;
-                        }
                     }
+                }
+            );
 
-                    if (!$matched) {
-                        return false;
-                    }
+            foreach (
+                $group['exclude']
+                as $keyword
+            ) {
+                $query->where(
+                    'description',
+                    'not like',
+                    '%'.$keyword.'%'
+                );
+            }
 
-                    $pozNo = property_exists($row, 'poz_no')
-                        ? (string) $row->poz_no
-                        : $description;
+            /*
+             * Genel ve okunabilir pozları
+             * öne almaya çalışıyoruz.
+             */
+            $query->orderByRaw(
+                'CHAR_LENGTH(description) ASC'
+            );
 
-                    return !$selected->contains(
-                        fn ($item) =>
-                            $item['poz_no'] === $pozNo
+            if (in_array(
+                'poz_no',
+                $columns,
+                true
+            )) {
+                $query->orderBy(
+                    'poz_no'
+                );
+            }
+
+            $candidates =
+                $query
+                    ->limit(30)
+                    ->get();
+
+            $row = $candidates->first(
+                function ($candidate) use (
+                    &$usedPoz
+                ) {
+                    $poz =
+                        property_exists(
+                            $candidate,
+                            'poz_no'
+                        )
+                            ? (string)
+                                $candidate->poz_no
+                            : md5(
+                                (string)
+                                $candidate->description
+                            );
+
+                    return !in_array(
+                        $poz,
+                        $usedPoz,
+                        true
                     );
                 }
             );
 
-            if (!$match) {
+            if (!$row) {
                 continue;
             }
 
-            $basePrice =
-                (float) $match->{$priceColumn};
-
             $pozNo =
-                property_exists($match, 'poz_no')
-                    ? (string) $match->poz_no
+                property_exists(
+                    $row,
+                    'poz_no'
+                )
+                    ? (string) $row->poz_no
                     : '-';
 
+            $usedPoz[] = $pozNo;
+
+            $basePrice =
+                (float)
+                $row->{$priceColumn};
+
             $unit =
-                property_exists($match, 'unit')
-                    ? (string) $match->unit
+                property_exists(
+                    $row,
+                    'unit'
+                )
+                    ? (string) $row->unit
                     : '';
 
             $institution =
-                property_exists($match, 'institution')
-                    ? (string) $match->institution
-                    : null;
+                property_exists(
+                    $row,
+                    'institution'
+                )
+                    ? (string)
+                        $row->institution
+                    : 'Tender Poz';
 
             $selected->push([
-                'type' => 'labor',
-                'key' => 'labor_'.$pozNo,
-                'label' => Str::limit(
-                    (string) $match->{$descriptionColumn},
-                    70
-                ),
-                'price' => round(
-                    $basePrice * self::LABOR_MULTIPLIER,
-                    2
-                ),
-                'base_price' => round($basePrice, 2),
-                'unit' => $unit,
-                'source' => $institution ?: 'Tender Poz',
-                'source_date' => null,
-                'poz_no' => $pozNo,
-                'price_column' => $priceColumn,
-            ]);
+                'type' => 'tender',
 
-            if ($selected->count() >= 6) {
-                break;
-            }
+                'key' =>
+                    'tender_'.$pozNo,
+
+                /*
+                 * Tickerda kısa,
+                 * herkesin anlayacağı isim.
+                 */
+                'label' =>
+                    $group['label'],
+
+                /*
+                 * Tam açıklama API'de korunuyor.
+                 */
+                'description' =>
+                    (string)
+                    $row->description,
+
+                'poz_no' =>
+                    $pozNo,
+
+                'base_price' =>
+                    round(
+                        $basePrice,
+                        2
+                    ),
+
+                'price' =>
+                    round(
+                        $basePrice
+                        * self::MARKET_MULTIPLIER,
+                        2
+                    ),
+
+                'unit' =>
+                    $unit,
+
+                'source' =>
+                    $institution,
+
+                'source_date' =>
+                    null,
+
+                'price_column' =>
+                    $priceColumn,
+            ]);
         }
 
         return $selected
@@ -250,24 +435,18 @@ class LiveMarketTickerService
 
     public function diagnostics(): array
     {
-        $columns = Schema::hasTable('tender_pozs')
-            ? Schema::getColumnListing('tender_pozs')
-            : [];
-
-        $priceColumn = collect([
-            'unit_price',
-            'price',
-            'official_unit_price',
-            'rayic_price',
-            'normalized_unit_cost',
-        ])->first(
-            fn ($column) =>
-                in_array($column, $columns, true)
-        );
-
         return [
-            'price_column' => $priceColumn,
-            'multiplier' => self::LABOR_MULTIPLIER,
+            'multiplier' =>
+                self::MARKET_MULTIPLIER,
+
+            'tender_total' =>
+                Schema::hasTable(
+                    'tender_pozs'
+                )
+                    ? DB::table(
+                        'tender_pozs'
+                    )->count()
+                    : 0,
         ];
     }
 }
