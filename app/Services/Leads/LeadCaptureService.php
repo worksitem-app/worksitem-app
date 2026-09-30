@@ -4,13 +4,15 @@ namespace App\Services\Leads;
 
 use App\Models\Lead;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
 class LeadCaptureService
 {
     public function __construct(
-        private readonly LeadScoringService $scoring
+        private readonly LeadScoringService $scoring,
+        private readonly NewLeadEmailNotifier $emailNotifier
     ) {
     }
 
@@ -178,7 +180,7 @@ class LeadCaptureService
             'last_activity_at' => now(),
         ];
 
-        return DB::transaction(function () use (
+        $result = DB::transaction(function () use (
             $attributes,
             $phoneNormalized,
             $source,
@@ -224,6 +226,31 @@ class LeadCaptureService
                 'duplicate' => false,
             ];
         });
+
+        /*
+         * E-posta DB transaction tamamlandıktan sonra gönderilir.
+         * SMTP hatası müşterinin lead kaydını bozmaz.
+         * Duplicate lead yeniden e-posta üretmez.
+         */
+        if (! $result['duplicate']) {
+            try {
+                $this->emailNotifier->notify(
+                    $result['lead']
+                );
+            } catch (\Throwable $exception) {
+                Log::error(
+                    'New lead email notification failed',
+                    [
+                        'lead_id' =>
+                            $result['lead']->id ?? null,
+                        'error' =>
+                            $exception->getMessage(),
+                    ]
+                );
+            }
+        }
+
+        return $result;
     }
 
     private function priceSnapshot(

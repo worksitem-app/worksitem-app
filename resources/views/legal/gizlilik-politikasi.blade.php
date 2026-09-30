@@ -154,7 +154,7 @@ html[data-theme="dark"] .cookie-manage{
 
     <p>
         Gizlilik ile ilgili soru ve talepleriniz için:
-        <a href="mailto:kvkk@kainta.com">kvkk@kainta.com</a>
+        <a href="mailto:info@worksitem.com">info@worksitem.com</a>
     </p>
 
     <div class="nav-links">

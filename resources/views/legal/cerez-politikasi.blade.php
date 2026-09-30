@@ -203,7 +203,7 @@ html[data-theme="dark"] .cookie-manage{
 
     <p>
         Çerez politikamıza ilişkin sorularınız için:
-        <a href="mailto:kvkk@kainta.com">kvkk@kainta.com</a>
+        <a href="mailto:info@worksitem.com">info@worksitem.com</a>
     </p>
 
     <div class="nav-links">

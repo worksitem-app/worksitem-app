@@ -75,8 +75,8 @@ Route::get('/', function () {
                 // İHALE VE YAKLAŞIK MALİYET MODÜLÜ
     Route::get('/araclar/ihale-modulu', [\App\Http\Controllers\ToolController::class, 'tenderModule'])->name('tools.tender');
     // KULLANICI OTOMATİK METRAJ FİYATLANDIRICI
-    
-    
+
+
 
 Route::post('/maliyet-hesapla/baslat/{projectType:slug}', [ProjectController::class, 'start'])
     ->name('projects.start');
@@ -212,7 +212,7 @@ Route::post('/lead-kaydet', [\App\Http\Controllers\LeadController::class, 'store
 
 
 Route::get('/maliyet-hesapla', function() { return view('maliyet-hesapla');
-    
+
      })->name('maliyet_hesapla');
 
 // Maliyet Hesaplama Form Gönderimi (POST)
@@ -221,7 +221,7 @@ Route::post('/maliyet-hesapla', [\App\Http\Controllers\ProjectController::class,
 // ADMIN PANELİ ROTALARI
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/fiyatlar', [\App\Http\Controllers\AdminController::class, 'index'])->name('admin.prices.index');
-    
+
 
 // SEO 301 YÖNLENDİRMELERİ (Eski URL'leri Yeni ConTech Hub'a Bağlama)
 
@@ -279,7 +279,7 @@ Route::get('/api/pozlar/search', function(\Illuminate\Http\Request $request) {
 // ADMIN EXCEL POZ IMPORT ROTALARI
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/poz-import', [\App\Http\Controllers\AdminController::class, 'pozImportForm'])->name('admin.poz.import.form');
-    
+
 
 // SEO 301 YÖNLENDİRMELERİ (Eski URL'leri Yeni ConTech Hub'a Bağlama)
 
@@ -377,7 +377,7 @@ Route::get('/araclar/kat-karsiligi-analiz', function() { return view('tools.kat-
 Route::redirect('/araclar/taksit-pesin-kiyaslama', '/araclar', 301);
 
 
- 
+
 
 // ☀️ B2B GÜNEŞ PANELİ (GES) HESAPLAYICI (Kesin Override)
 Route::get('/araclar/gunes-paneli-hesaplama', function() { return view('tools.ges-calculator'); })->name('tools.ges_calculator');
@@ -386,7 +386,7 @@ Route::get('/araclar/gunes-paneli-hesaplama', function() { return view('tools.ge
 Route::get('/araclar/daire-kira-degeri', function() { return view('tools.kira-calculator'); })->name('tools.kira_calculator');
 
 
-// 🛠️ DÜZELTİLMİŞ İNCE İŞLER & ÇATI ROTALARI 
+// 🛠️ DÜZELTİLMİŞ İNCE İŞLER & ÇATI ROTALARI
 Route::get(
     '/araclar/alcipan-hesaplayici',
     [
@@ -397,11 +397,11 @@ Route::get(
 Route::get('/araclar/cati-maliyet-hesaplayici', function() { return view('tools.cati-calculator'); })->name('tools.cati_calculator');
 Route::get('/araclar/mantolama-maliyeti', function() { return view('tools.yalitim-calculator'); })->name('tools.yalitim_calculator');
 
-// 🔄 MENÜ İÇİN YEDEK (ALIAS) ROTALAR 
+// 🔄 MENÜ İÇİN YEDEK (ALIAS) ROTALAR
 Route::redirect('/araclar/alcipan-asma-tavan-hesaplayici', '/araclar/alcipan-hesaplayici', 301);
 Route::redirect('/araclar/yalitim-mantolama-hesaplayici', '/araclar/mantolama-maliyeti', 301);
 
-// 🏗️ YENİ EKSİK B2B MOTORLARI (Beton, Fayans, Duvar) 
+// 🏗️ YENİ EKSİK B2B MOTORLARI (Beton, Fayans, Duvar)
 Route::get('/araclar/beton-hesaplayici', function () {
     $toolPrices = app(\App\Services\ToolPriceService::class)
         ->forTool('beton-hesaplayici');
@@ -899,7 +899,9 @@ Route::get('/araclar/insaat-maliyeti-hesaplama', function () {
 | insaatvtadilat.com'dan gelen eski URL'ler ve ölü linkler için.
 | 404 yerine 301 ile ana sayfaya göndererek SEO değerini korur.
 */
-require __DIR__.'/auth.php';
+if (class_exists(\App\Http\Controllers\Auth\PublicAuthController::class) && file_exists(__DIR__.'/auth.php')) {
+    require __DIR__.'/auth.php';
+}
 
 Route::fallback(function () {
     return redirect('/', 301);
@@ -951,3 +953,18 @@ Route::prefix('legal')->name('legal.')->group(function () {
         return view('legal.kvkk-basvuru');
     })->name('kvkk_basvuru');
 });
+
+
+/*
+|--------------------------------------------------------------------------
+| WORKSITEM Live Market
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/api/live-market', function (
+    \App\Services\Pricing\LiveMarketTickerService $service
+) {
+    return response()->json(
+        $service->data()
+    );
+})->name('api.live-market');

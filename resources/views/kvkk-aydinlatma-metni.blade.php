@@ -88,7 +88,7 @@
         34771 Ümraniye/İstanbul
         <br>
         E-posta:
-        <a href="mailto:info@kainta.com">info@kainta.com</a>
+        <a href="mailto:info@worksitem.com">info@worksitem.com</a>
         <br>
         Telefon:
         <a href="tel:+908503464983">+90 850 346 49 83</a>
@@ -163,7 +163,7 @@
 
     <p>
         Başvurularınızı kimliğinizi doğrulayıcı bilgilerle birlikte
-        <a href="mailto:info@kainta.com">info@kainta.com</a>
+        <a href="mailto:info@worksitem.com">info@worksitem.com</a>
         adresine veya yukarıdaki posta adresine iletebilirsiniz.
     </p>
 
