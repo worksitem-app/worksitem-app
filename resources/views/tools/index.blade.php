@@ -1075,6 +1075,17 @@ echo json_encode(
     }
     </script>
     <meta name="csrf-token" content="{{ csrf_token() }}">
+<script id="worksitem-tools-theme-bridge">
+(function(){
+    var theme=null;
+    try{theme=localStorage.getItem("worksitem-theme");}catch(e){}
+    if(theme!=="light" && theme!=="dark"){
+        theme=window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    }
+    document.documentElement.setAttribute("data-theme",theme);
+    document.documentElement.classList.toggle("dark",theme==="dark");
+})();
+</script>
 </head>
 
 <body data-tool-slug="araclar">
@@ -1452,75 +1463,6 @@ usort($allTools, function ($a, $b) {
 {{-- =========================================================
      HEADER
 ========================================================== --}}
-
-<header class="site-header">
-
-    <div class="container header-inner">
-
-        <a href="/" class="brand" aria-label="WORKSİTEM Ana Sayfa">
-
-            <img
-                src="/brand/worksitem-logo.png"
-                alt="WORKSİTEM"
-                width="120"
-                height="34"
-                onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
-            >
-
-            <span class="brand-fallback" style="display:none;">
-                WORKSİTEM
-            </span>
-
-        </a>
-
-        <nav class="main-nav" aria-label="Ana navigasyon">
-
-            <a href="/araclar">
-                Araçlar
-            </a>
-
-            <a href="/araclar/otomatik-kesif-fiyatlandirma">
-                Keşif & Maliyet
-            </a>
-
-            <a href="/araclar/ihale-modulu">
-                İhale
-            </a>
-
-            <a href="/araclar/oda-planlayici">
-                AI İç Mimari
-            </a>
-
-        </nav>
-
-        <div class="header-actions">
-
-            <button
-                type="button"
-                class="theme-toggle"
-                id="themeToggle"
-                aria-label="Tema değiştir"
-                title="Tema değiştir"
-            >
-                <span id="themeIcon">☾</span>
-            </button>
-
-            <a
-                href="https://kainta.com"
-                class="header-cta"
-                target="_blank"
-                rel="noopener"
-            >
-                Bütçeniz uygunsa Kainta İnşaat'tan net teklif alın →
-            </a>
-
-        </div>
-
-    </div>
-
-</header>
-
-
 <main>
 
 {{-- =========================================================
@@ -2118,53 +2060,6 @@ usort($allTools, function ($a, $b) {
 {{-- =========================================================
      FOOTER
 ========================================================== --}}
-
-<footer class="site-footer">
-
-    <div class="container footer-inner">
-
-        <div>
-
-            <div class="footer-brand">
-                WORKSİTEM
-            </div>
-
-            <div class="footer-copy">
-                İnşaat ve tadilat projeleri için dijital hesaplama araçları.
-            </div>
-
-        </div>
-
-
-        <div class="footer-links">
-
-            <a href="/">
-                Ana Sayfa
-            </a>
-
-            <a href="/araclar">
-                Araçlar
-            </a>
-
-            <a href="/maliyet-hesapla">
-                Maliyet Hesapla
-            </a>
-
-            <a
-                href="https://kainta.com"
-                target="_blank"
-                rel="noopener"
-            >
-                Kainta İnşaat
-            </a>
-
-        </div>
-
-    </div>
-
-</footer>
-
-
 {{-- =========================================================
      FAQ STRUCTURED DATA
 ========================================================== --}}
@@ -2336,16 +2231,24 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function applyTheme(theme) {
 
-        if (theme === 'dark') {
+        const normalizedTheme =
+            theme === "dark" ? "dark" : "light";
 
-            document.documentElement.classList.add('dark');
-            themeIcon.textContent = '☀';
+        document.documentElement.setAttribute(
+            "data-theme",
+            normalizedTheme
+        );
 
-        } else {
+        document.documentElement.classList.toggle(
+            "dark",
+            normalizedTheme === "dark"
+        );
 
-            document.documentElement.classList.remove('dark');
-            themeIcon.textContent = '☾';
-
+        if (themeIcon) {
+            themeIcon.textContent =
+                normalizedTheme === "dark"
+                    ? "☀"
+                    : "☾";
         }
 
     }
