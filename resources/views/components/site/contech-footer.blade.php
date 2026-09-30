@@ -579,3 +579,97 @@ html[data-theme="dark"] .wks-footer{
     --wf-line:rgba(255,255,255,.11);
 }
 </style>
+
+<style id="worksitem-footer-theme-v1">
+/* WORKSITEM Global Theme V1 */
+
+html[data-theme="light"] .wks-footer{
+    --wf-bg:#f6f7f9;
+    --wf-panel:#ffffff;
+    --wf-panel-hover:#f1f3f6;
+    --wf-text:#111827;
+    --wf-muted:#667085;
+    --wf-line:#e2e7ee;
+
+    background:var(--wf-bg)!important;
+    color:var(--wf-text)!important;
+    border-color:var(--wf-line)!important;
+}
+
+/* Gerçek CTA sınıfı */
+html[data-theme="light"] .wks-footer .wks-foot-cta{
+    background:
+        radial-gradient(circle at 90% 20%,rgba(245,180,0,.13),transparent 34%),
+        var(--wf-panel)!important;
+    border-color:var(--wf-line)!important;
+}
+
+html[data-theme="light"] .wks-footer .wks-foot-cta h2{
+    color:var(--wf-text)!important;
+}
+
+html[data-theme="light"] .wks-footer .wks-foot-cta p{
+    color:var(--wf-muted)!important;
+}
+
+html[data-theme="light"] .wks-footer .wks-foot-btn:not(.wks-foot-btn-primary){
+    color:var(--wf-text)!important;
+    background:var(--wf-panel)!important;
+    border-color:var(--wf-line)!important;
+}
+
+html[data-theme="light"] .wks-footer .wks-foot-btn:not(.wks-foot-btn-primary):hover{
+    background:var(--wf-panel-hover)!important;
+}
+
+html[data-theme="light"] .wks-footer .wks-foot-links a{
+    color:var(--wf-muted)!important;
+}
+
+html[data-theme="light"] .wks-footer .wks-foot-links a:hover{
+    color:var(--wf-text)!important;
+}
+
+html[data-theme="light"] .wks-footer .wks-foot-proof span{
+    color:var(--wf-muted)!important;
+    background:var(--wf-panel)!important;
+    border-color:var(--wf-line)!important;
+}
+
+html[data-theme="light"] .wks-footer .wks-partner{
+    background:var(--wf-panel)!important;
+    border-color:var(--wf-line)!important;
+}
+
+html[data-theme="light"] .wks-footer .wks-partner strong{
+    color:var(--wf-text)!important;
+}
+
+html[data-theme="light"] .wks-footer .wks-foot-text,
+html[data-theme="light"] .wks-footer .wks-partner span,
+html[data-theme="light"] .wks-footer .wks-foot-bottom{
+    color:var(--wf-muted)!important;
+}
+
+html[data-theme="light"] .wks-footer .wks-foot-bottom{
+    border-color:var(--wf-line)!important;
+}
+
+html[data-theme="light"] .wks-footer .wks-foot-title{
+    color:#9a6800!important;
+}
+
+html[data-theme="light"] .wks-footer .wks-foot-logo{
+    background:#fff!important;
+}
+
+/* Dark standardı */
+html[data-theme="dark"] .wks-footer{
+    --wf-bg:#111827;
+    --wf-panel:#182231;
+    --wf-panel-hover:#202c3d;
+    --wf-text:#f8fafc;
+    --wf-muted:#aab4c3;
+    --wf-line:rgba(255,255,255,.11);
+}
+</style>

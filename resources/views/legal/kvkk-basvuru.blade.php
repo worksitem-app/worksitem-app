@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
+<script id="worksitem-legal-theme-init">
+(function(){
+    var theme=null;
+    try{theme=localStorage.getItem("worksitem-theme");}catch(e){}
+    if(theme!=="light" && theme!=="dark"){
+        theme=window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    }
+    document.documentElement.setAttribute("data-theme",theme);
+})();
+</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KVKK Başvuru Formu | Worksitem</title>
@@ -20,6 +30,49 @@
         ul li { margin-bottom: 8px; }
         .info-box { background: #eff6ff; padding: 16px; border-radius: 8px; border-left: 4px solid #2563eb; margin: 16px 0; }
     </style>
+<style id="worksitem-legal-theme-v1">
+html[data-theme="light"]{
+    color-scheme:light;
+}
+html[data-theme="dark"]{
+    color-scheme:dark;
+}
+html[data-theme="dark"] body{
+    background:#10151d!important;
+    color:#f3f6fa!important;
+}
+html[data-theme="dark"] main{
+    background:#18212c!important;
+    color:#f3f6fa!important;
+    border-color:rgba(230,238,250,.18)!important;
+}
+html[data-theme="dark"] h1,
+html[data-theme="dark"] h2,
+html[data-theme="dark"] h3,
+html[data-theme="dark"] strong{
+    color:#f3f6fa;
+}
+html[data-theme="dark"] p,
+html[data-theme="dark"] li,
+html[data-theme="dark"] td{
+    color:#b4c0ce;
+}
+html[data-theme="dark"] th{
+    background:#202c3a!important;
+    color:#f3f6fa!important;
+}
+html[data-theme="dark"] table,
+html[data-theme="dark"] th,
+html[data-theme="dark"] td{
+    border-color:rgba(230,238,250,.18)!important;
+}
+html[data-theme="dark"] .summary,
+html[data-theme="dark"] .info-box,
+html[data-theme="dark"] .cookie-manage{
+    background:#202c3a!important;
+    color:#f3f6fa!important;
+}
+</style>
 </head>
 <body>
 
