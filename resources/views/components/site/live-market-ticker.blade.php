@@ -205,6 +205,62 @@
         display:none;
     }
 }
+
+/* WORKSITEM_FORCE_AUTO_SCROLL_START */
+
+/*
+ * Kullanıcı açıkça otomatik kayan canlı piyasa istiyor.
+ * OS/browser reduced-motion ayarı tickerı durdurmamalı.
+ */
+#worksitem-live-market{
+    overflow:hidden !important;
+}
+
+#worksitem-live-market .wi-market-shell{
+    overflow:hidden !important;
+}
+
+#worksitem-live-market .wi-market-window{
+    min-width:0 !important;
+    overflow:hidden !important;
+    scrollbar-width:none !important;
+    -ms-overflow-style:none !important;
+}
+
+#worksitem-live-market .wi-market-window::-webkit-scrollbar{
+    width:0 !important;
+    height:0 !important;
+    display:none !important;
+}
+
+#worksitem-live-market .wi-market-track{
+    display:flex !important;
+    width:max-content !important;
+
+    animation-name:worksitem-market-scroll !important;
+    animation-duration:38s !important;
+    animation-timing-function:linear !important;
+    animation-iteration-count:infinite !important;
+
+    animation-play-state:running !important;
+
+    will-change:transform;
+}
+
+#worksitem-live-market .wi-market-track:hover{
+    animation-play-state:running !important;
+}
+
+#worksitem-live-market .wi-market-set{
+    display:flex !important;
+    flex-shrink:0 !important;
+}
+
+#worksitem-live-market .wi-market-set:nth-child(2){
+    display:flex !important;
+}
+
+/* WORKSITEM_FORCE_AUTO_SCROLL_END */
 </style>
 
 <section
