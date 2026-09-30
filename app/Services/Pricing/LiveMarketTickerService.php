@@ -104,241 +104,420 @@ class LiveMarketTickerService
             return [];
         }
 
-        $query = DB::table('tender_pozs')
-            ->whereNotNull($priceColumn)
-            ->where($priceColumn, '>', 0);
+        $latestYear = in_array('year', $columns, true)
+            ? DB::table('tender_pozs')->max('year')
+            : null;
 
         /*
-         * Son yılın pozlarını kullan.
-         */
-        if (in_array('year', $columns, true)) {
-
-            $latestYear = DB::table('tender_pozs')
-                ->max('year');
-
-            if ($latestYear) {
-                $query->where('year', $latestYear);
-            }
-        }
-
-        /*
-         * Kullanıcıya birimi belli olmayan
-         * anlamsız satırları göstermiyoruz.
-         */
-        if (in_array('unit', $columns, true)) {
-            $query
-                ->whereNotNull('unit')
-                ->where('unit', '<>', '');
-        }
-
-        /*
-         * Ana sayfada yalnız herkesin anlayabileceği
-         * gerçek inşaat / tadilat uygulamaları.
+         * Ana sayfada kullanıcıların anlayacağı
+         * temel inşaat/tadilat iş grupları.
          *
-         * Havuz hala 43 bin pozdan geliyor;
-         * sadece vitrinde anlamsız/niche pozları eliyoruz.
+         * Gruplar her requestte karıştırılır.
+         * Her gruptan da rastgele bir poz alınır.
          */
-        $allowed = [
-            'duvar',
-            'kalıp',
-            'beton',
-            'sıva',
-            'şap',
-            'seramik',
-            'fayans',
-            'granit',
-            'mermer',
-            'parke',
-            'boya',
-            'badana',
-            'alçı',
-            'alçıpan',
-            'asma tavan',
-            'yalıtım',
-            'mantolama',
-            'çatı',
-            'kaplama',
-            'doğrama',
-            'kapı',
-            'pencere',
-            'cephe',
-            'kazı',
-            'dolgu',
-            'hafriyat',
-            'döşeme',
-            'kaldırım',
-            'bordür',
-            'taş duvar',
-            'betonarme',
-            'demir',
-            'donatı',
-            'iskele',
-            'boru döşenmesi',
-            'kanal döşenmesi',
+        $groups = [
+
+            [
+                'label' => 'Duvar Örme',
+                'include' => [
+                    'gazbeton duvar',
+                    'tuğla duvar',
+                    'duvar örülmesi',
+                    'duvar yapılması',
+                    'taş duvar yapılması',
+                ],
+                'exclude' => [
+                    'sökülmesi',
+                    'yıkılması',
+                    'onarılması',
+                    'deney',
+                ],
+            ],
+
+            [
+                'label' => 'Betonarme Kalıp',
+                'include' => [
+                    'kalıp yapılması',
+                    'betonarme kalıp',
+                    'ahşap seri kalıp',
+                ],
+                'exclude' => [
+                    'iskele',
+                    'deney',
+                    'köprü',
+                ],
+            ],
+
+            [
+                'label' => 'Sıva',
+                'include' => [
+                    'sıva yapılması',
+                    'alçı sıva',
+                    'çimento harçlı sıva',
+                ],
+                'exclude' => [
+                    'sökülmesi',
+                    'deney',
+                    'malzeme',
+                ],
+            ],
+
+            [
+                'label' => 'Şap',
+                'include' => [
+                    'şap yapılması',
+                    'çimento şap',
+                    'şap betonu',
+                ],
+                'exclude' => [
+                    'sökülmesi',
+                    'deney',
+                ],
+            ],
+
+            [
+                'label' => 'Seramik Kaplama',
+                'include' => [
+                    'seramik kaplama yapılması',
+                    'seramik karo',
+                    'fayans kaplama',
+                    'porselen karo',
+                ],
+                'exclude' => [
+                    'ustası',
+                    'sökülmesi',
+                    'deney',
+                ],
+            ],
+
+            [
+                'label' => 'Alçıpan Bölme',
+                'include' => [
+                    'alçıpan bölme',
+                    'alçı levha ile bölme',
+                    'alçı levha bölme',
+                ],
+                'exclude' => [
+                    'boya',
+                    'sökülmesi',
+                    'asma tavan',
+                ],
+            ],
+
+            [
+                'label' => 'Asma Tavan',
+                'include' => [
+                    'asma tavan yapılması',
+                    'alçıpan asma tavan',
+                    'alçı levha asma tavan',
+                ],
+                'exclude' => [
+                    'sökülmesi',
+                ],
+            ],
+
+            [
+                'label' => 'İç Cephe Boya',
+                'include' => [
+                    'iç cephe boya yapılması',
+                    'plastik boya yapılması',
+                    'silikonlu boya yapılması',
+                ],
+                'exclude' => [
+                    'ustası',
+                    'astar malzemesi',
+                    'sökülmesi',
+                ],
+            ],
+
+            [
+                'label' => 'Dış Cephe Boya',
+                'include' => [
+                    'dış cephe boya',
+                    'akrilik esaslı dış cephe',
+                    'silikon esaslı dış cephe',
+                ],
+                'exclude' => [
+                    'malzemesi',
+                    'deney',
+                ],
+            ],
+
+            [
+                'label' => 'Isı Yalıtımı',
+                'include' => [
+                    'ısı yalıtımı yapılması',
+                    'mantolama yapılması',
+                    'xps levha ile',
+                    'eps levha ile',
+                ],
+                'exclude' => [
+                    'boru',
+                    'kanal',
+                    'tesisat',
+                    'deney',
+                ],
+            ],
+
+            [
+                'label' => 'Çatı',
+                'include' => [
+                    'çatı örtüsü yapılması',
+                    'çatı kaplaması yapılması',
+                    'sandviç panel çatı',
+                    'kiremit çatı',
+                ],
+                'exclude' => [
+                    'sökülmesi',
+                    'deney',
+                ],
+            ],
+
+            [
+                'label' => 'Kazı',
+                'include' => [
+                    'makine ile kazı',
+                    'kazı yapılması',
+                    'temel kazısı',
+                ],
+                'exclude' => [
+                    'deney',
+                    'sondaj',
+                    'arkeolojik',
+                ],
+            ],
+
+            [
+                'label' => 'Dolgu',
+                'include' => [
+                    'dolgu yapılması',
+                    'kum çakıl dolgu',
+                    'stabilize dolgu',
+                ],
+                'exclude' => [
+                    'baraj',
+                    'sedde',
+                    'deney',
+                ],
+            ],
+
+            [
+                'label' => 'Parke Döşeme',
+                'include' => [
+                    'laminat parke',
+                    'ahşap parke yapılması',
+                    'parke döşenmesi',
+                ],
+                'exclude' => [
+                    'sökülmesi',
+                    'taşı',
+                ],
+            ],
+
+            [
+                'label' => 'Mermer Kaplama',
+                'include' => [
+                    'mermer kaplama yapılması',
+                    'mermer döşeme',
+                    'mermer plak',
+                ],
+                'exclude' => [
+                    'malzeme bedeli',
+                    'deney',
+                ],
+            ],
+
+            [
+                'label' => 'Kapı',
+                'include' => [
+                    'ahşap kapı yapılması',
+                    'çelik kapı',
+                    'kapı kasası ve kanadı',
+                ],
+                'exclude' => [
+                    'aksesuar',
+                    'kilit',
+                    'sökülmesi',
+                ],
+            ],
+
+            [
+                'label' => 'Pencere / Doğrama',
+                'include' => [
+                    'pvc doğrama yapılması',
+                    'alüminyum doğrama yapılması',
+                    'pencere doğraması',
+                ],
+                'exclude' => [
+                    'profil',
+                    'malzeme',
+                    'sökülmesi',
+                ],
+            ],
+
+            [
+                'label' => 'Kaldırım',
+                'include' => [
+                    'kilitli parke taşı döşenmesi',
+                    'beton parke taşı döşenmesi',
+                    'kaldırım yapılması',
+                ],
+                'exclude' => [
+                    'sökülmesi',
+                    'malzeme',
+                ],
+            ],
         ];
 
-        $query->where(function ($q) use ($allowed) {
-            foreach ($allowed as $keyword) {
-                $q->orWhere(
+        /*
+         * Her requestte kategori sırası değişir.
+         * 10 başarılı kategori bulunana kadar devam eder.
+         */
+        $groups = collect($groups)
+            ->shuffle()
+            ->values();
+
+        $selected = collect();
+        $usedPoz = [];
+
+        foreach ($groups as $group) {
+
+            if ($selected->count() >= 10) {
+                break;
+            }
+
+            $query = DB::table('tender_pozs')
+                ->whereNotNull($priceColumn)
+                ->where($priceColumn, '>', 0);
+
+            if ($latestYear !== null) {
+                $query->where('year', $latestYear);
+            }
+
+            if (in_array('unit', $columns, true)) {
+                $query
+                    ->whereNotNull('unit')
+                    ->where('unit', '<>', '');
+            }
+
+            $query->where(
+                function ($q) use ($group) {
+                    foreach ($group['include'] as $keyword) {
+                        $q->orWhere(
+                            'description',
+                            'like',
+                            '%'.$keyword.'%'
+                        );
+                    }
+                }
+            );
+
+            foreach ($group['exclude'] as $keyword) {
+                $query->where(
                     'description',
-                    'like',
+                    'not like',
                     '%'.$keyword.'%'
                 );
             }
-        });
 
-        /*
-         * Ana sayfada anlamsız veya aşırı teknik
-         * kalemleri göstermiyoruz.
-         */
-        $excluded = [
-            'deney',
-            'test ',
-            'laboratuvar',
-            'medikal',
-            'hoparlör',
-            'kamera',
-            'busbar',
-            'santral',
-            'asansör',
-            'jeneratör',
-            'trafo',
-            'vana kutusu',
-            'fotovoltaik',
-            'kablo',
-            'elektronik',
-            'cihaz',
-            'ekipman',
-            'baraj',
-            'köprü',
-            'havaalanı',
-            'liman',
-            'demiryolu',
-        ];
-
-        foreach ($excluded as $keyword) {
-            $query->where(
-                'description',
-                'not like',
-                '%'.$keyword.'%'
+            /*
+             * Aşırı teknik/uzun pozlar vitrinde olmasın.
+             */
+            $query->whereRaw(
+                'CHAR_LENGTH(description) BETWEEN 18 AND 180'
             );
-        }
 
-        /*
-         * Açıklaması sadece ölçü/kod gibi görünen
-         * satırlar da vitrinden çıkıyor.
-         */
-        $query->whereRaw(
-            'CHAR_LENGTH(description) BETWEEN 18 AND 150'
-        );
+            /*
+             * Aynı poz tekrar seçilmesin.
+             */
+            if (
+                !empty($usedPoz)
+                && in_array('poz_no', $columns, true)
+            ) {
+                $query->whereNotIn(
+                    'poz_no',
+                    $usedPoz
+                );
+            }
 
-        /*
-         * HER REQUESTTE FARKLI:
-         * filtrelenmiş gerçek inşaat pozlarından
-         * rastgele 10 adet.
-         */
-        $rows = $query
-            ->inRandomOrder()
-            ->limit(10)
-            ->get();
+            $row = $query
+                ->inRandomOrder()
+                ->first();
 
-        return $rows
-            ->map(function ($row) use ($priceColumn) {
+            if (!$row) {
+                continue;
+            }
 
-                $basePrice =
-                    (float) $row->{$priceColumn};
+            $pozNo = property_exists($row, 'poz_no')
+                ? (string) $row->poz_no
+                : '-';
 
-                $description =
-                    trim(
-                        (string) $row->description
-                    );
+            $usedPoz[] = $pozNo;
+
+            $basePrice =
+                (float) $row->{$priceColumn};
+
+            $unit = property_exists($row, 'unit')
+                ? trim((string) $row->unit)
+                : '';
+
+            $institution =
+                property_exists($row, 'institution')
+                    ? (string) $row->institution
+                    : 'Tender Poz';
+
+            $selected->push([
+                'type' => 'tender',
 
                 /*
-                 * Kayan yazıda fazla uzun açıklamayı
-                 * okunabilir şekilde kısalt.
+                 * Ticker temiz görünür.
                  */
-                $label =
-                    mb_strlen(
-                        $description,
-                        'UTF-8'
-                    ) > 72
-                        ? mb_substr(
-                            $description,
-                            0,
-                            69,
-                            'UTF-8'
-                        ).'…'
-                        : $description;
+                'label' =>
+                    $group['label'],
 
-                $pozNo =
-                    property_exists(
-                        $row,
-                        'poz_no'
-                    )
-                        ? (string) $row->poz_no
-                        : '-';
+                /*
+                 * API'de hangi gerçek pozdan
+                 * geldiği tamamen korunur.
+                 */
+                'description' =>
+                    trim(
+                        (string) $row->description
+                    ),
 
-                $unit =
-                    property_exists(
-                        $row,
-                        'unit'
-                    )
-                        ? trim(
-                            (string) $row->unit
-                        )
-                        : '';
+                'key' =>
+                    'tender_'.$pozNo,
 
-                $institution =
-                    property_exists(
-                        $row,
-                        'institution'
-                    )
-                        ? (string)
-                            $row->institution
-                        : 'Tender Poz';
+                'poz_no' =>
+                    $pozNo,
 
-                return [
-                    'type' =>
-                        'tender',
+                'base_price' =>
+                    round(
+                        $basePrice,
+                        2
+                    ),
 
-                    'key' =>
-                        'tender_'.$pozNo,
+                'price' =>
+                    round(
+                        $basePrice
+                        * self::MARKET_MULTIPLIER,
+                        2
+                    ),
 
-                    'label' =>
-                        $label,
+                'unit' =>
+                    $unit,
 
-                    'description' =>
-                        $description,
+                'source' =>
+                    $institution,
 
-                    'poz_no' =>
-                        $pozNo,
+                'source_date' =>
+                    null,
 
-                    'base_price' =>
-                        round(
-                            $basePrice,
-                            2
-                        ),
+                'price_column' =>
+                    $priceColumn,
+            ]);
+        }
 
-                    'price' =>
-                        round(
-                            $basePrice
-                            * self::MARKET_MULTIPLIER,
-                            2
-                        ),
-
-                    'unit' =>
-                        $unit,
-
-                    'source' =>
-                        $institution,
-
-                    'source_date' =>
-                        null,
-
-                    'price_column' =>
-                        $priceColumn,
-                ];
-            })
+        return $selected
             ->values()
             ->all();
     }
