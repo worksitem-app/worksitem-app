@@ -132,15 +132,110 @@ class LiveMarketTickerService
         }
 
         /*
-         * Tickerda okunabilir açıklamalar.
+         * Ana sayfada yalnız herkesin anlayabileceği
+         * gerçek inşaat / tadilat uygulamaları.
+         *
+         * Havuz hala 43 bin pozdan geliyor;
+         * sadece vitrinde anlamsız/niche pozları eliyoruz.
+         */
+        $allowed = [
+            'duvar',
+            'kalıp',
+            'beton',
+            'sıva',
+            'şap',
+            'seramik',
+            'fayans',
+            'granit',
+            'mermer',
+            'parke',
+            'boya',
+            'badana',
+            'alçı',
+            'alçıpan',
+            'asma tavan',
+            'yalıtım',
+            'mantolama',
+            'çatı',
+            'kaplama',
+            'doğrama',
+            'kapı',
+            'pencere',
+            'cephe',
+            'kazı',
+            'dolgu',
+            'hafriyat',
+            'döşeme',
+            'kaldırım',
+            'bordür',
+            'taş duvar',
+            'betonarme',
+            'demir',
+            'donatı',
+            'iskele',
+            'boru döşenmesi',
+            'kanal döşenmesi',
+        ];
+
+        $query->where(function ($q) use ($allowed) {
+            foreach ($allowed as $keyword) {
+                $q->orWhere(
+                    'description',
+                    'like',
+                    '%'.$keyword.'%'
+                );
+            }
+        });
+
+        /*
+         * Ana sayfada anlamsız veya aşırı teknik
+         * kalemleri göstermiyoruz.
+         */
+        $excluded = [
+            'deney',
+            'test ',
+            'laboratuvar',
+            'medikal',
+            'hoparlör',
+            'kamera',
+            'busbar',
+            'santral',
+            'asansör',
+            'jeneratör',
+            'trafo',
+            'vana kutusu',
+            'fotovoltaik',
+            'kablo',
+            'elektronik',
+            'cihaz',
+            'ekipman',
+            'baraj',
+            'köprü',
+            'havaalanı',
+            'liman',
+            'demiryolu',
+        ];
+
+        foreach ($excluded as $keyword) {
+            $query->where(
+                'description',
+                'not like',
+                '%'.$keyword.'%'
+            );
+        }
+
+        /*
+         * Açıklaması sadece ölçü/kod gibi görünen
+         * satırlar da vitrinden çıkıyor.
          */
         $query->whereRaw(
-            'CHAR_LENGTH(description) BETWEEN 8 AND 160'
+            'CHAR_LENGTH(description) BETWEEN 18 AND 150'
         );
 
         /*
          * HER REQUESTTE FARKLI:
-         * 43 bin poz içinden rastgele 10 adet.
+         * filtrelenmiş gerçek inşaat pozlarından
+         * rastgele 10 adet.
          */
         $rows = $query
             ->inRandomOrder()
