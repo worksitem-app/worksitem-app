@@ -190,7 +190,6 @@ html[data-theme=dark] body .wks-brand img,html[data-theme=dark] body .wks-foot-l
 <link rel="stylesheet" href="/css/worksitem-design.css">
 </head>
 <body data-tool-slug="homepage">
-@include('components.site.live-market-ticker')
 <a class="skip-link" href="#ana-icerik">Ana içeriğe geç</a>
 <x-site.contech-header>
     <x-slot:actions>
