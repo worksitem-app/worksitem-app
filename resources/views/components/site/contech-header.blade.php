@@ -184,6 +184,28 @@ html[data-theme="dark"] .wks-search-open:hover{
 
 .wks-head-actions .theme-toggle{
     flex:0 0 auto;
+    width:42px;
+    height:42px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:0;
+    border:1px solid var(--wks-line);
+    border-radius:10px;
+    background:var(--wks-panel);
+    color:var(--wks-text);
+    font-size:17px;
+    line-height:1;
+    cursor:pointer;
+}
+
+.wks-head-actions .theme-toggle:hover{
+    background:var(--wks-panel-2);
+}
+
+.wks-head-actions .theme-toggle:focus-visible{
+    outline:3px solid rgba(245,180,0,.28);
+    outline-offset:2px;
 }
 
 .wks-menu{
@@ -557,6 +579,18 @@ html[data-theme="dark"] .wks-search-open:hover{
 
 
         <button
+            type="button"
+            class="theme-toggle"
+            id="wksThemeToggle"
+            aria-label="Koyu temaya geç"
+            aria-pressed="false"
+            title="Tema değiştir"
+        >
+            <span id="wksThemeIcon" aria-hidden="true">☾</span>
+        </button>
+
+
+        <button
             class="wks-menu"
             id="wksMenuButton"
             type="button"
@@ -636,6 +670,95 @@ html[data-theme="dark"] .wks-search-open:hover{
 
 <script id="wks-header-v2-js">
 (function () {
+
+    const root = document.documentElement;
+    const storageKey = 'worksitem-theme';
+
+    let savedTheme = null;
+
+    try {
+        savedTheme = localStorage.getItem(storageKey);
+    } catch (e) {
+        savedTheme = null;
+    }
+
+    const initialTheme =
+        savedTheme === 'dark' || savedTheme === 'light'
+            ? savedTheme
+            : 'light';
+
+    function applyTheme(theme) {
+        root.setAttribute('data-theme', theme);
+
+        const button =
+            document.getElementById('wksThemeToggle');
+
+        const icon =
+            document.getElementById('wksThemeIcon');
+
+        const dark = theme === 'dark';
+
+        if (button) {
+            button.setAttribute(
+                'aria-label',
+                dark
+                    ? 'Açık temaya geç'
+                    : 'Koyu temaya geç'
+            );
+
+            button.setAttribute(
+                'aria-pressed',
+                String(dark)
+            );
+        }
+
+        if (icon) {
+            icon.textContent = dark ? '☀' : '☾';
+        }
+
+        const metaTheme =
+            document.querySelector(
+                'meta[name="theme-color"]'
+            );
+
+        if (metaTheme) {
+            metaTheme.setAttribute(
+                'content',
+                dark ? '#111827' : '#ffffff'
+            );
+        }
+    }
+
+    applyTheme(initialTheme);
+
+    const themeButton =
+        document.getElementById('wksThemeToggle');
+
+    if (themeButton) {
+        themeButton.addEventListener(
+            'click',
+            function () {
+
+                const nextTheme =
+                    root.getAttribute('data-theme') === 'dark'
+                        ? 'light'
+                        : 'dark';
+
+                applyTheme(nextTheme);
+
+                try {
+                    localStorage.setItem(
+                        storageKey,
+                        nextTheme
+                    );
+                } catch (e) {
+                    /* localStorage kullanılamıyorsa tema yine çalışır */
+                }
+            }
+        );
+    }
+
+
 
     const tools = {!! json_encode(
         $wksSearchTools,

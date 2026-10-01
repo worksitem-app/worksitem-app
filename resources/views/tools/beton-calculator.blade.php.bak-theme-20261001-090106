@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beton Hacim ve Maliyet Motoru | WORKSİTEM</title>
+    <meta name="description" content="Temel, döşeme, kolon veya saha betonu için gerekli hacmi, transmikser sefer sayısını ve beton sınıfına göre yaklaşık maliyeti hesaplayın.">
+    <link rel="canonical" href="https://worksitem.com/araclar/beton-hesaplayici">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg:#f5f6f8;
+            --surface:#ffffff;
+            --surface-2:#f8f9fb;
+            --text:#101318;
+            --muted:#6b7280;
+            --line:#e4e7eb;
+            --accent:#ffb800;
+            --control-bg:#ffffff;
+            --button-bg:#101318;
+            --button-text:#ffffff;
+            --radius:16px;
+        }
+
+        html[data-theme="dark"] {
+            --bg:#0f1720;
+            --surface:#17212d;
+            --surface-2:#1c2734;
+            --text:#f8fafc;
+            --muted:#aab4c3;
+            --line:rgba(255,255,255,.12);
+            --control-bg:#1c2734;
+            --button-bg:#f8fafc;
+            --button-text:#111827;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; padding-bottom: 60px; }
+        a { text-decoration: none; color: inherit; }
+        .header { background: #fff; border-bottom: 1px solid var(--line); padding: 15px 20px; position: sticky; top: 0; z-index: 10; display: flex; align-items: center; justify-content: space-between; }
+        .back-btn { font-size: 14px; font-weight: 700; color: var(--muted); }
+        .brand img { height: 30px; }
+        .container { max-width: 800px; margin: 40px auto; padding: 0 20px; }
+        .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 30px; margin-bottom: 30px; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-size: 13px; font-weight: 800; margin-bottom: 8px; }
+        .form-control { width:100%; height:50px; border:1px solid var(--line); border-radius:12px; padding:0 15px; font-size:15px; font-family:inherit; background:var(--control-bg); color:var(--text); }
+        .result-box { background: #111; color: #fff; border-radius: var(--radius); padding: 30px; text-align: center; margin-top: 10px; display: none; }
+        .result-price { font-size: 38px; font-weight: 900; color: var(--accent); margin: 5px 0 15px; letter-spacing: -1px; }
+        .ai-insight { background: rgba(255, 184, 0, 0.1); border: 1px solid rgba(255, 184, 0, 0.3); padding: 15px; border-radius: 12px; margin-top: 15px; text-align: left; display: flex; gap: 12px; }
+        .ai-insight-text strong { color: var(--accent); font-size: 14px; display: block; margin-bottom: 4px;}
+        .budget-confirm-box { margin-top: 25px; padding: 25px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); display: none; text-align: center; }
+        .budget-confirm-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top:15px; }
+        .budget-btn { min-height: 52px; border-radius: 13px; font-weight: 800; cursor: pointer; border: 1px solid var(--line); background: var(--control-bg); color:var(--text);}
+        .budget-yes { color: #111; } .budget-yes:hover { border-color: var(--accent); background: #fffaf0; }
+        .lead-box { display: none; background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius); padding: 30px; margin-top: 15px; }
+        .btn-calc, .btn-submit { background: var(--button-bg); color: var(--button-text); width: 100%; height: 50px; border:none; border-radius:12px; font-weight:800; cursor:pointer;}
+        .btn-submit { background: var(--accent); color: #000; }
+    </style>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <meta property="og:image" content="https://worksitem.com/brand/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://worksitem.com/brand/og-image.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <meta name="theme-color" content="#ffffff">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+</head>
+<body data-tool-slug="beton-calculator">
+<x-site.contech-header />
+<div class="container">
+    <div style="text-align: center; margin-bottom: 30px;">
+        <h1 style="font-size: 28px; font-weight: 900; letter-spacing: -1px; margin-bottom: 10px;">🏢 Hazır Beton Bütçe Motoru</h1>
+        <p style="color: var(--muted); font-size: 15px;">Temel, döşeme, kolon veya saha betonunuz için gereken hacmi (m³), transmikser sefer sayısını ve beton sınıfına göre güncel maliyeti hesaplayın.</p>
+    </div>
+    <div class="card">
+        <div class="form-group">
+            <label>Betonarme Eleman / Döküm Tipi</label>
+            <select id="geometryType" class="form-control">
+                <option value="slab">Döşeme / Saha Betonu</option>
+                <option value="raft">Radye Temel</option>
+                <option value="footing">Tekil Temel</option>
+                <option value="strip">Sürekli Temel</option>
+                <option value="column_rect">Dikdörtgen Kolon</option>
+                <option value="column_round">Dairesel Kolon</option>
+                <option value="beam">Kiriş</option>
+                <option value="wall">Betonarme Perde</option>
+                <option value="stair">Betonarme Merdiven</option>
+                <option value="pile">Betonarme Kazık</option>
+            </select>
+        </div>
+
+        <div class="form-grid" id="geometryFields"></div>
+
+        <div class="form-group">
+            <label>Beton Sınıfı (Birim Fiyat)</label>
+            <select id="concreteClass" class="form-control">
+                @foreach ([
+                    'lean_concrete' => 'C16 Grobeton',
+                    'concrete_c20' => 'C20/25 Hazır Beton',
+                    'concrete_c25' => 'C25/30 Hazır Beton',
+                    'concrete_c30' => 'C30/37 Hazır Beton',
+                    'concrete_c35' => 'C35/45 Hazır Beton',
+                ] as $role => $label)
+                    @php
+                        $item = $toolPrices->get($role);
+                    @endphp
+
+                    <option
+                            value="{{ $role }}"
+                            @selected($role === 'concrete_c25')
+                        >
+                            {{ $label }}
+                            @if ($item)
+                                — {{ number_format((float) $item->price, 0, ",", ".") }} TL/m³
+                            @endif
+                    </option>
+                @endforeach
+            </select>
+            <small
+                id="priceSource"
+                style="display:block;margin-top:7px;color:#6b7280;font-size:11px;"
+            ></small>
+        </div>
+        <div class="form-group">
+            <label>Mobil Pompa Hizmeti</label>
+            <select id="pump" class="form-control">
+                <option value="no">
+                    Gerekmiyor (mikser doğrudan dökecek)
+                </option>
+                <option value="yes" selected>
+                    Evet, mobil pompa gerekli
+                    @if ($toolPrices->has('pump'))
+                        (+{{ number_format((float) $toolPrices->get('pump')->price, 0, ',', '.') }} TL/döküm)
+                    @endif
+                </option>
+            </select>
+        </div>
+        <button type="button" class="btn-calc" id="calcBtn">Beton Hacmini ve Bütçeyi Çıkar →</button>
+    </div>
+
+    <div class="result-box" id="resBox">
+        <div style="font-size: 12px; color: #a1a1aa; font-weight: 700; letter-spacing: 1px;">HAZIR BETON VE POMPA MALİYETİ</div>
+        <div class="result-price" id="resPrice">0 TL</div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; text-align: left;">
+            <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
+                <span style="display: block; font-size: 12px; color: #a1a1aa;">Sipariş Hacmi (%5 fire dahil)</span>
+                <strong id="resVol" style="display: block; font-size: 18px; color: #fff; font-weight: 800;">0 m³</strong>
+                <small id="resNetVol" style="display:block;margin-top:4px;color:#a1a1aa;font-size:11px;">Net hacim: 0 m³</small>
+            </div>
+            <div style="background: rgba(255,184,0,0.1); padding: 15px; border-radius: 12px; border: 1px solid rgba(255,184,0,0.3);">
+                <span style="display: block; font-size: 12px; color: #a1a1aa;">Transmikser Seferi (~8m³)</span>
+                <strong id="resMixer" style="display: block; font-size: 18px; color: var(--accent); font-weight: 800;">0 Sefer</strong>
+            </div>
+        </div>
+        <div
+            id="materialBreakdown"
+            style="display:none;margin-top:18px;padding:18px;border-radius:14px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.10);text-align:left;"
+        >
+            <div style="font-size:12px;font-weight:900;letter-spacing:.8px;color:#ffb800;margin-bottom:4px;">
+                YAKLAŞIK MALZEME DAĞILIMI
+            </div>
+
+            <div
+                id="materialClass"
+                style="font-size:12px;color:#d1d5db;margin-bottom:14px;"
+            ></div>
+
+            <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:9px;">
+                <div style="padding:12px;border-radius:10px;background:rgba(255,255,255,.04);">
+                    <span style="display:block;font-size:10px;color:#9ca3af;">Çimento</span>
+                    <strong id="materialCement" style="font-size:14px;">—</strong>
+                    <small id="materialCementBag" style="display:block;color:#9ca3af;margin-top:3px;"></small>
+                </div>
+
+                <div style="padding:12px;border-radius:10px;background:rgba(255,255,255,.04);">
+                    <span style="display:block;font-size:10px;color:#9ca3af;">Kum</span>
+                    <strong id="materialSand" style="font-size:14px;">—</strong>
+                </div>
+
+                <div style="padding:12px;border-radius:10px;background:rgba(255,255,255,.04);">
+                    <span style="display:block;font-size:10px;color:#9ca3af;">Mıcır / Agrega</span>
+                    <strong id="materialAggregate" style="font-size:14px;">—</strong>
+                </div>
+
+                <div style="padding:12px;border-radius:10px;background:rgba(255,255,255,.04);">
+                    <span style="display:block;font-size:10px;color:#9ca3af;">Su</span>
+                    <strong id="materialWater" style="font-size:14px;">—</strong>
+                </div>
+
+                <div
+                    id="materialAdditiveBox"
+                    style="display:none;padding:12px;border-radius:10px;background:rgba(255,255,255,.04);grid-column:1/-1;"
+                >
+                    <span style="display:block;font-size:10px;color:#9ca3af;">Kimyasal Katkı</span>
+                    <strong id="materialAdditive" style="font-size:14px;">—</strong>
+                </div>
+            </div>
+
+            <p style="font-size:10px;line-height:1.55;color:#9ca3af;margin-top:13px;">
+                Referans amaçlı yaklaşık malzeme karşılığıdır; gerçek hazır beton reçetesi değildir.
+                Santral reçetesi agrega özellikleri, nem, çevresel etki sınıfı, katkılar ve teknik şartnameye göre değişebilir.
+            </p>
+        </div>
+
+        <div class="ai-insight">
+            <div style="font-size: 24px;">🤖</div>
+            <div class="ai-insight-text"><strong id="aiTitle">Beton Sınıfı Notu</strong><p id="aiText"></p></div>
+        </div>
+    </div>
+    
+    <div class="budget-confirm-box" id="bConf"><div style="font-size: 18px; font-weight: 900;">Kaba İnşaat için teklif ister misiniz?</div><div class="budget-confirm-actions"><button class="budget-btn budget-yes" id="bYes">✓ Evet, betonarme teklifi istiyorum.</button><button class="budget-btn" id="bNo">Sadece metraja baktım.</button></div></div>
+    
+    <div class="lead-box" id="leadForm">
+        <h3>Profesyonel Kaba İnşaat Teklifi</h3>
+        <form action="{{ route('lead.store') }}" method="POST">
+            @csrf <input type="hidden" name="calculated_service" value="Hazır Beton Hesabı">
+            <input type="text" name="name" class="form-control" required placeholder="Adınız Soyadınız" style="margin-bottom:15px;">
+            <input type="tel" name="phone" class="form-control" required placeholder="Telefon Numaranız" style="margin-bottom:15px;">
+            <input type="text" name="location" class="form-control" required placeholder="Şehir/İlçe" style="margin-bottom:15px;">
+            <button type="submit" class="btn-submit">Teklif Al →</button>
+        </form>
+    </div>
+</div>
+@php
+    $concretePriceData = $toolPrices->mapWithKeys(
+        function ($item, $role) {
+            return [
+                $role => [
+                    'name' => $item->name,
+                    'price' => (float) $item->price,
+                    'unit' => $item->unit,
+                    'source_name' => $item->source_name,
+                    'source_date' => $item->source_date,
+                    'vat_included' => (bool) $item->vat_included,
+                    'review_status' => $item->review_status,
+                ],
+            ];
+        }
+    );
+@endphp
+
+<script>
+const concretePrices = @json($concretePriceData);
+
+const CONCRETE_MIXES = {
+    concrete_c20: {
+        label: "C20/25",
+        cement: 260,
+        sand: 670,
+        aggregate: 1070,
+        water: 177,
+        additive: 0
+    },
+
+    concrete_c25: {
+        label: "C25/30",
+        cement: 310,
+        sand: 640,
+        aggregate: 1120,
+        water: 167,
+        additive: 0
+    },
+
+    concrete_c30: {
+        label: "C30/37",
+        cement: 360,
+        sand: 600,
+        aggregate: 1130,
+        water: 157,
+        additive: 0
+    },
+
+    concrete_c35: {
+        label: "C35/45",
+        cement: 390,
+        sand: 580,
+        aggregate: 1140,
+        water: 155,
+        additive: 4
+    }
+};
+
+
+function calculateConcreteMaterials(volume, concreteClass) {
+    const mix = CONCRETE_MIXES[concreteClass] || null;
+
+    if (
+        mix === null ||
+        Number.isFinite(volume) === false ||
+        volume <= 0
+    ) {
+        return null;
+    }
+
+    const cementKg = volume * mix.cement;
+    const sandKg = volume * mix.sand;
+    const aggregateKg = volume * mix.aggregate;
+    const waterLiters = volume * mix.water;
+    const additiveKg = volume * mix.additive;
+
+    return {
+        label: mix.label,
+        volume: volume,
+
+        cementKg: cementKg,
+        cementTon: cementKg / 1000,
+        cementBags50: cementKg / 50,
+
+        sandKg: sandKg,
+        sandTon: sandKg / 1000,
+
+        aggregateKg: aggregateKg,
+        aggregateTon: aggregateKg / 1000,
+
+        waterLiters: waterLiters,
+        waterM3: waterLiters / 1000,
+
+        additiveKg: additiveKg
+    };
+}
+
+
+function renderConcreteMaterials(volume, concreteClass) {
+    const box = document.getElementById('materialBreakdown');
+    const classText = document.getElementById('materialClass');
+    const additiveBox = document.getElementById('materialAdditiveBox');
+
+    const materials = calculateConcreteMaterials(
+        volume,
+        concreteClass
+    );
+
+    box.style.display = 'block';
+
+    if (materials === null) {
+        classText.textContent =
+            'Bu beton sınıfı için referans karışım verisi tanımlanmadı.';
+
+        document.getElementById('materialCement').textContent = '—';
+        document.getElementById('materialCementBag').textContent = '';
+        document.getElementById('materialSand').textContent = '—';
+        document.getElementById('materialAggregate').textContent = '—';
+        document.getElementById('materialWater').textContent = '—';
+
+        additiveBox.style.display = 'none';
+        return;
+    }
+
+    const number0 = new Intl.NumberFormat(
+        'tr-TR',
+        { maximumFractionDigits: 0 }
+    );
+
+    const number2 = new Intl.NumberFormat(
+        'tr-TR',
+        {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        }
+    );
+
+    classText.textContent =
+        materials.label +
+        ' • ' +
+        volume.toFixed(2) +
+        ' m³ fire dahil beton hacmi için referans karşılığı';
+
+    document.getElementById('materialCement').textContent =
+        number0.format(materials.cementKg) +
+        ' kg (' +
+        number2.format(materials.cementTon) +
+        ' ton)';
+
+    document.getElementById('materialCementBag').textContent =
+        '≈ ' +
+        number0.format(materials.cementBags50) +
+        ' adet 50 kg torba eşdeğeri';
+
+    document.getElementById('materialSand').textContent =
+        number0.format(materials.sandKg) +
+        ' kg (' +
+        number2.format(materials.sandTon) +
+        ' ton)';
+
+    document.getElementById('materialAggregate').textContent =
+        number0.format(materials.aggregateKg) +
+        ' kg (' +
+        number2.format(materials.aggregateTon) +
+        ' ton)';
+
+    document.getElementById('materialWater').textContent =
+        number0.format(materials.waterLiters) +
+        ' L (' +
+        number2.format(materials.waterM3) +
+        ' m³)';
+
+    if (materials.additiveKg > 0) {
+        document.getElementById('materialAdditive').textContent =
+            number2.format(materials.additiveKg) + ' kg';
+
+        additiveBox.style.display = 'block';
+    } else {
+        additiveBox.style.display = 'none';
+    }
+}
+
+
+function updateConcreteSource() {
+    const role = document.getElementById('concreteClass').value;
+    const record = concretePrices[role] || null;
+    const target = document.getElementById('priceSource');
+
+    if (record === null) {
+        target.textContent = 'Aktif piyasa fiyatı bulunamadı.';
+        return;
+    }
+
+    const source = record.source_name || 'Kaynak belirtilmedi';
+    const date = record.source_date || 'Tarih belirtilmedi';
+    const vat = record.vat_included ? 'KDV dahil' : 'KDV hariç';
+    const review = record.review_status === 'approved'
+        ? 'Mühendis onaylı'
+        : 'Mühendis kontrolü bekliyor';
+
+    target.textContent =
+        source + ' · ' + date + ' · ' + vat + ' · ' + review;
+}
+
+document
+    .getElementById('concreteClass')
+    .addEventListener('change', updateConcreteSource);
+
+updateConcreteSource();
+
+const GEOMETRY_FIELDS = {
+    slab: [
+        ["area", "Döküm Alanı (m²)", 100],
+        ["thickness", "Kalınlık (cm)", 20]
+    ],
+    raft: [
+        ["area", "Radye Alanı (m²)", 100],
+        ["thickness", "Radye Kalınlığı (cm)", 50]
+    ],
+    footing: [
+        ["width", "Temel Genişliği (m)", 2],
+        ["length", "Temel Uzunluğu (m)", 2],
+        ["height", "Temel Yüksekliği (cm)", 60],
+        ["count", "Adet", 1]
+    ],
+    strip: [
+        ["width", "Temel Genişliği (m)", 0.8],
+        ["height", "Temel Yüksekliği (cm)", 50],
+        ["length", "Toplam Uzunluk (m)", 20]
+    ],
+    column_rect: [
+        ["width", "Kolon Eni (cm)", 40],
+        ["depth", "Kolon Boyu (cm)", 40],
+        ["height", "Kolon Yüksekliği (m)", 3],
+        ["count", "Adet", 1]
+    ],
+    column_round: [
+        ["diameter", "Kolon Çapı (cm)", 50],
+        ["height", "Kolon Yüksekliği (m)", 3],
+        ["count", "Adet", 1]
+    ],
+    beam: [
+        ["width", "Kiriş Eni (cm)", 30],
+        ["height", "Kiriş Yüksekliği (cm)", 60],
+        ["length", "Toplam Kiriş Uzunluğu (m)", 20],
+        ["count", "Adet", 1]
+    ],
+    wall: [
+        ["length", "Perde Uzunluğu (m)", 5],
+        ["height", "Perde Yüksekliği (m)", 3],
+        ["thickness", "Perde Kalınlığı (cm)", 25],
+        ["count", "Adet", 1]
+    ],
+    stair: [
+        ["run", "Yatay Merdiven Boyu (m)", 3],
+        ["rise", "Kat Yüksekliği (m)", 3],
+        ["width", "Merdiven Genişliği (m)", 1.2],
+        ["waist", "Plak Kalınlığı (cm)", 15],
+        ["stepCount", "Basamak Sayısı", 17],
+        ["tread", "Basamak Genişliği (cm)", 28],
+        ["riser", "Rıht Yüksekliği (cm)", 17.5],
+        ["landingArea", "Sahanlık Alanı (m², yoksa 0)", 0]
+    ],
+    pile: [
+        ["diameter", "Kazık Çapı (cm)", 80],
+        ["length", "Kazık Boyu (m)", 15],
+        ["count", "Adet", 1]
+    ]
+};
+
+function renderGeometryFields() {
+    const type = document.getElementById("geometryType").value;
+    const target = document.getElementById("geometryFields");
+    const fields = GEOMETRY_FIELDS[type] || [];
+
+    target.innerHTML = fields.map(function(field) {
+        return '<div class="form-group">' +
+            '<label>' + field[1] + '</label>' +
+            '<input type="number" class="form-control geometry-input" ' +
+            'data-field="' + field[0] + '" value="' + field[2] + '" step="any" min="0">' +
+            '</div>';
+    }).join("");
+}
+
+function geometryValue(name) {
+    const el = document.querySelector('[data-field="' + name + '"]');
+    return el ? (parseFloat(el.value) || 0) : 0;
+}
+
+function calculateGeometryVolume() {
+    const type = document.getElementById("geometryType").value;
+
+    if (type === "slab" || type === "raft") {
+        return geometryValue("area") * (geometryValue("thickness") / 100);
+    }
+
+    if (type === "footing") {
+        return geometryValue("width") *
+            geometryValue("length") *
+            (geometryValue("height") / 100) *
+            geometryValue("count");
+    }
+
+    if (type === "strip") {
+        return geometryValue("width") *
+            (geometryValue("height") / 100) *
+            geometryValue("length");
+    }
+
+    if (type === "column_rect") {
+        return (geometryValue("width") / 100) *
+            (geometryValue("depth") / 100) *
+            geometryValue("height") *
+            geometryValue("count");
+    }
+
+    if (type === "column_round") {
+        const radius = geometryValue("diameter") / 200;
+        return Math.PI * radius * radius *
+            geometryValue("height") *
+            geometryValue("count");
+    }
+
+    if (type === "beam") {
+        return (geometryValue("width") / 100) *
+            (geometryValue("height") / 100) *
+            geometryValue("length") *
+            geometryValue("count");
+    }
+
+    if (type === "wall") {
+        return geometryValue("length") *
+            geometryValue("height") *
+            (geometryValue("thickness") / 100) *
+            geometryValue("count");
+    }
+
+    if (type === "stair") {
+        const run = geometryValue("run");
+        const rise = geometryValue("rise");
+        const width = geometryValue("width");
+        const waist = geometryValue("waist") / 100;
+
+        const slope = Math.sqrt((run * run) + (rise * rise));
+        const waistVolume = slope * width * waist;
+
+        const stepVolume =
+            geometryValue("stepCount") *
+            ((geometryValue("tread") / 100) *
+             (geometryValue("riser") / 100) / 2) *
+            width;
+
+        const landingVolume =
+            geometryValue("landingArea") * waist;
+
+        return waistVolume + stepVolume + landingVolume;
+    }
+
+    if (type === "pile") {
+        const radius = geometryValue("diameter") / 200;
+        return Math.PI * radius * radius *
+            geometryValue("length") *
+            geometryValue("count");
+    }
+
+    return 0;
+}
+
+document
+    .getElementById("geometryType")
+    .addEventListener("change", renderGeometryFields);
+
+renderGeometryFields();
+
+
+document.getElementById('calcBtn').onclick = () => {
+    const volume = calculateGeometryVolume();
+
+    const role = document.getElementById('concreteClass').value;
+    const concrete = concretePrices[role] || null;
+
+    const concretePrice = concrete === null
+        ? 0
+        : Number(concrete.price);
+
+    const pumpRequested =
+        document.getElementById('pump').value === 'yes';
+
+    const pumpRecord = concretePrices.pump || null;
+    const pumpPrice = pumpRecord === null
+        ? 0
+        : Number(pumpRecord.price);
+
+    if (Number.isFinite(volume) === false || volume <= 0) {
+        alert('Lütfen geçerli ölçüler giriniz.');
+        return;
+    }
+
+    const hasConcretePrice =
+        concrete !== null &&
+        Number.isFinite(concretePrice) &&
+        concretePrice > 0;
+
+    const hasPumpPrice =
+        pumpRecord !== null &&
+        Number.isFinite(pumpPrice) &&
+        pumpPrice > 0;
+
+    const volumeWithWaste = volume * 1.05;
+
+    const pumpCost =
+        pumpRequested && hasPumpPrice
+            ? pumpPrice
+            : 0;
+
+    const total =
+        hasConcretePrice
+            ? (volumeWithWaste * concretePrice) + pumpCost
+            : null;
+    const mixers = Math.ceil(volumeWithWaste / 8);
+
+    renderConcreteMaterials(
+        volumeWithWaste,
+        role
+    );
+
+    const money = new Intl.NumberFormat(
+        'tr-TR',
+        { maximumFractionDigits: 0 }
+    );
+
+    document.getElementById('resPrice').innerText =
+        total === null
+            ? 'Güncel fiyat verisi bekleniyor'
+            : money.format(total) + ' TL';
+
+    document.getElementById('resVol').innerText =
+        volumeWithWaste.toFixed(1) + ' m³';
+
+    document.getElementById('resNetVol').innerText =
+        'Net hacim: ' + volume.toFixed(2) + ' m³';
+
+    document.getElementById('resMixer').innerText =
+        mixers + ' Sefer';
+
+    const ai = document.getElementById('aiText');
+
+    if (role === 'lean_concrete') {
+        ai.innerText =
+            'Grobeton, temel altı hazırlık ve temiz çalışma yüzeyi amacıyla değerlendirilir.';
+    } else {
+        ai.innerText =
+            'Beton sınıfı statik proje, çevresel etki sınıfı ve teknik şartnameye göre yetkili mühendis tarafından belirlenmelidir.';
+    }
+
+    document.getElementById('resBox').style.display = 'block';
+    document.getElementById('bConf').style.display = 'block';
+    document.getElementById('leadForm').style.display = 'none';
+};
+
+document.getElementById('bYes').onclick = () => {
+    document.getElementById('bConf').style.display = 'none';
+    document.getElementById('leadForm').style.display = 'block';
+};
+
+document.getElementById('bNo').onclick = () => {
+    document.getElementById('bConf').innerHTML =
+        '<p>Bizi tercih ettiğiniz için teşekkürler.</p>';
+};
+</script>
+<x-site.contech-footer />
+    <script src="/js/tool-events.js" defer></script>
+</body></html>

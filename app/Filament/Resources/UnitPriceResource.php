@@ -15,9 +15,9 @@ class UnitPriceResource extends Resource
 {
     protected static ?string $model = UnitPrice::class;
     protected static ?string $navigationIcon = 'heroicon-o-currency-dollar';
-    protected static ?string $navigationGroup = 'Sistem Yönetimi';
-    protected static ?string $modelLabel = 'Birim Fiyat';
-    protected static ?string $pluralModelLabel = 'Merkezi Fiyat Motoru';
+    protected static ?string $navigationGroup = 'Fiyat Merkezi';
+    protected static ?string $modelLabel = 'Araç Fiyatı';
+    protected static ?string $pluralModelLabel = 'Araç Fiyatları';
     protected static ?int $navigationSort = 1;
 
     public static function form(Form $form): Form
@@ -38,8 +38,8 @@ class UnitPriceResource extends Resource
                 Forms\Components\Select::make('review_status')
                     ->label('Onay Durumu')
                     ->options([
-                        'needs_engineer_review' => 'Mühendis Kontrolü Bekliyor',
-                        'approved' => 'Mühendis Onaylı',
+                        'needs_engineer_review' => 'Kontrol Bekliyor',
+                        'approved' => 'Yayın Onaylı',
                         'official_reference' => 'Resmî Referans',
                         'needs_source' => 'Kaynak Bekliyor',
                     ])
@@ -97,7 +97,7 @@ class UnitPriceResource extends Resource
                     ->default(true),
 
                 Forms\Components\Textarea::make('notes')
-                    ->label('Mühendis Notu')
+                    ->label('Kontrol / Kaynak Notu')
                     ->rows(4)
                     ->columnSpanFull(),
             ])
@@ -152,7 +152,7 @@ class UnitPriceResource extends Resource
                     ->label('Onay')
                     ->badge()
                     ->formatStateUsing(fn (?string $state): string => match ($state) {
-                        'approved' => 'Mühendis Onaylı',
+                        'approved' => 'Yayın Onaylı',
                         'needs_engineer_review' => 'Kontrol Bekliyor',
                         'official_reference' => 'Resmî Referans',
                         'needs_source' => 'Kaynak Bekliyor',
@@ -196,8 +196,8 @@ class UnitPriceResource extends Resource
                 Tables\Filters\SelectFilter::make('review_status')
                     ->label('Onay Durumu')
                     ->options([
-                        'needs_engineer_review' => 'Mühendis Kontrolü Bekliyor',
-                        'approved' => 'Mühendis Onaylı',
+                        'needs_engineer_review' => 'Kontrol Bekliyor',
+                        'approved' => 'Yayın Onaylı',
                         'official_reference' => 'Resmî Referans',
                         'needs_source' => 'Kaynak Bekliyor',
                     ]),

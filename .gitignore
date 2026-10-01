@@ -60,3 +60,10 @@ price_stage_*
 .env.backup*
 
 /.env.bak*
+
+# Internal / Investor documents — never public
+INVESTOR_*.md
+DEMO_SCRIPT.md
+docs/pitch-deck/
+docs/investor/
+docs/internal/

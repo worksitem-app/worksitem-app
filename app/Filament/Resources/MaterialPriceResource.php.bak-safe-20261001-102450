@@ -1,0 +1,166 @@
+<?php
+
+namespace App\Filament\Resources;
+
+use App\Filament\Resources\MaterialPriceResource\Pages;
+use App\Filament\Resources\MaterialPriceResource\RelationManagers;
+use App\Models\MaterialPrice;
+use Filament\Forms;
+use Filament\Forms\Form;
+use Filament\Resources\Resource;
+use Filament\Tables;
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
+
+class MaterialPriceResource extends Resource
+{
+    protected static ?string $model = MaterialPrice::class;
+
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+
+    public static function form(Form $form): Form
+    {
+        return $form
+            ->schema([
+                Forms\Components\TextInput::make('key')
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('name')
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('category')
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('spec')
+                    ->maxLength(255)
+                    ->default(null),
+                Forms\Components\TextInput::make('unit')
+                    ->required()
+                    ->maxLength(50),
+                Forms\Components\TextInput::make('region')
+                    ->required()
+                    ->maxLength(100)
+                    ->default('Türkiye'),
+                Forms\Components\TextInput::make('currency')
+                    ->required()
+                    ->maxLength(3)
+                    ->default('TRY'),
+                Forms\Components\TextInput::make('current_price')
+                    ->numeric()
+                    ->default(null),
+                Forms\Components\TextInput::make('previous_price')
+                    ->numeric()
+                    ->default(null),
+                Forms\Components\TextInput::make('change_amount')
+                    ->numeric()
+                    ->default(null),
+                Forms\Components\TextInput::make('change_percent')
+                    ->numeric()
+                    ->default(null),
+                Forms\Components\TextInput::make('source_name')
+                    ->maxLength(255)
+                    ->default(null),
+                Forms\Components\Textarea::make('source_url')
+                    ->columnSpanFull(),
+                Forms\Components\DatePicker::make('source_date'),
+                Forms\Components\DateTimePicker::make('observed_at'),
+                Forms\Components\Toggle::make('vat_included')
+                    ->required(),
+                Forms\Components\TextInput::make('confidence_score')
+                    ->numeric()
+                    ->default(null),
+                Forms\Components\TextInput::make('verification_status')
+                    ->required()
+                    ->maxLength(30)
+                    ->default('needs_review'),
+                Forms\Components\Toggle::make('is_active')
+                    ->required(),
+            ]);
+    }
+
+    public static function table(Table $table): Table
+    {
+        return $table
+            ->columns([
+                Tables\Columns\TextColumn::make('key')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('name')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('category')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('spec')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('unit')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('region')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('currency')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('current_price')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('previous_price')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('change_amount')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('change_percent')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('source_name')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('source_date')
+                    ->date()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('observed_at')
+                    ->dateTime()
+                    ->sortable(),
+                Tables\Columns\IconColumn::make('vat_included')
+                    ->boolean(),
+                Tables\Columns\TextColumn::make('confidence_score')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('verification_status')
+                    ->searchable(),
+                Tables\Columns\IconColumn::make('is_active')
+                    ->boolean(),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+            ])
+            ->filters([
+                //
+            ])
+            ->actions([
+                Tables\Actions\EditAction::make(),
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),
+            ]);
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            //
+        ];
+    }
+
+    public static function getPages(): array
+    {
+        return [
+            'index' => Pages\ListMaterialPrices::route('/'),
+            'create' => Pages\CreateMaterialPrice::route('/create'),
+            'edit' => Pages\EditMaterialPrice::route('/{record}/edit'),
+        ];
+    }
+}
