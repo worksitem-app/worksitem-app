@@ -25,12 +25,11 @@ jobs:
         run: |
           cp .env.example .env
           php artisan key:generate --force 2>&1 || true
-          echo "APP_KEY set: $(grep APP_KEY .env | head -1 | cut -c1-30)..."
 
       - name: Install Composer dependencies
         run: composer install --prefer-dist --no-progress --no-interaction
 
-      - name: List installed packages (debug)
+      - name: List installed packages
         run: composer show --direct | head -30
 
       - name: Run tests
