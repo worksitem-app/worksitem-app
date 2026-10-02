@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Beton Hesaplama (m³): Kaç m³ Beton Gerekir? | WORKSİTEM</title>
-    <meta name="description" content="Beton hacmini m³ olarak hesaplayın. Döşeme, temel, kolon, kiriş, perde ve kazık için net hacim, %5 fire, transmikser ve yaklaşık malzeme dağılımını görün.">
+    <meta name="description" content="Beton hacmini m³ olarak hesaplayın. Döşeme, temel, kolon, kiriş, perde ve kazık için net hacim, ayarlanabilir fire oranı, transmikser ve yaklaşık malzeme dağılımını görün.">
     <link rel="canonical" href="https://worksitem.com/araclar/beton-hesaplayici">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
@@ -55,7 +55,45 @@
         .lead-box { display: none; background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius); padding: 30px; margin-top: 15px; }
         .btn-calc, .btn-submit { background: var(--button-bg); color: var(--button-text); width: 100%; height: 50px; border:none; border-radius:12px; font-weight:800; cursor:pointer;}
         .btn-submit { background: var(--accent); color: #000; }
-    </style>
+    
+/* BETON_REVENUE_FUNNEL_V2 */
+.supplier-slot{
+    margin-top:18px;
+    padding:18px;
+    text-align:left;
+    border:1px dashed var(--line);
+    border-radius:14px;
+    background:var(--surface-2);
+}
+.supplier-slot small{
+    font-weight:900;
+    letter-spacing:.08em;
+    color:var(--muted);
+}
+.supplier-slot strong{
+    display:block;
+    margin:7px 0;
+    font-size:17px;
+}
+.supplier-slot p{
+    margin:0 0 12px;
+    color:var(--muted);
+    font-size:13px;
+}
+.supplier-slot a{
+    font-weight:900;
+    text-decoration:underline;
+}
+.beton-exit{
+    width:100%;
+    margin-top:10px;
+    padding:10px;
+    border:0;
+    background:transparent;
+    color:var(--muted);
+    font-weight:700;
+    cursor:pointer;
+}</style>
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
     <meta property="og:image" content="https://worksitem.com/brand/og-image.png">
     <meta property="og:image:width" content="1200">
@@ -66,17 +104,70 @@
     <link rel="manifest" href="/site.webmanifest">
     <meta name="theme-color" content="#ffffff">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+
+<style>
+/* BETON_FINAL_QA_V1 */
+
+.beton-result-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-top:20px;
+    text-align:left;
+}
+
+.beton-material-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:9px;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible{
+    outline:3px solid var(--accent);
+    outline-offset:3px;
+}
+
+@media(max-width:640px){
+
+    .form-grid,
+    .budget-confirm-actions,
+    .beton-result-grid,
+    .beton-material-grid{
+        grid-template-columns:1fr !important;
+    }
+
+    .container{
+        padding-left:14px;
+        padding-right:14px;
+    }
+
+    .geometry-help{
+        align-items:flex-start;
+    }
+
+    .geometry-help svg{
+        width:58px;
+        height:44px;
+    }
+}
+</style>
+
 </head>
 <body data-tool-slug="beton-calculator">
 <x-site.contech-header />
 <div class="container">
     <div style="text-align: center; margin-bottom: 30px;">
         <h1 style="font-size: 28px; font-weight: 900; letter-spacing: -1px; margin-bottom: 10px;">Beton Hesaplama (m³): Kaç m³ Beton Gerekir?</h1>
-        <p style="color: var(--muted); font-size: 15px;">Döşeme, radye temel, tekil veya sürekli temel, kolon, kiriş, perde, merdiven ve kazık ölçülerini girin; net beton hacmini, %5 fire dahil sipariş miktarını, transmikser seferini ve beton sınıfına göre yaklaşık malzeme dağılımını hesaplayın.</p>
+        <p style="color: var(--muted); font-size: 15px;">Döşeme, radye temel, tekil veya sürekli temel, kolon, kiriş, perde, merdiven ve kazık ölçülerini girin; net beton hacmini, seçtiğiniz fire oranına göre sipariş miktarını, transmikser seferini ve beton sınıfına göre yaklaşık malzeme dağılımını hesaplayın.</p>
     </div>
     <div class="card">
         <div class="form-group">
-            <label>Betonarme Eleman / Döküm Tipi</label>
+            <label for="geometryType">Betonarme Eleman / Döküm Tipi</label>
             <select id="geometryType" class="form-control">
                 <option value="slab">Döşeme / Saha Betonu</option>
                 <option value="raft">Radye Temel</option>
@@ -91,10 +182,65 @@
             </select>
         </div>
 
+        <div class="calc-mode-switch" aria-label="Hesaplama yöntemi">
+            <button type="button" class="calc-mode-btn is-active" id="modeGeometry">
+                Ölçülerden Hesapla
+            </button>
+            <button type="button" class="calc-mode-btn" id="modeVolume">
+                Net Hacmi (m³) Biliyorum
+            </button>
+        </div>
+
+        <div id="geometryHelp" class="geometry-help"></div>
+
         <div class="form-grid" id="geometryFields"></div>
 
+        <div id="directVolumeBox" class="form-group" hidden>
+            <label for="knownVolume">Net Beton Hacmi (m³)</label>
+            <input
+                type="number"
+                id="knownVolume"
+                class="form-control"
+                min="0"
+                step="0.01"
+                inputmode="decimal"
+                placeholder="Örn. 42,00"
+            >
+        </div>
+
+        <div class="pro-meta">
+            <div class="form-group">
+                <label for="wastePercent">Fire Oranı (%)</label>
+                <input
+                    type="number"
+                    id="wastePercent"
+                    class="form-control"
+                    value="5"
+                    min="0"
+                    max="30"
+                    step="0.5"
+                    inputmode="decimal"
+                >
+            </div>
+
+            
+        </div>
+
+        <div class="form-group" id="slabSystemBox">
+            <label for="slabSystem">Döşeme Sistemi</label>
+            <select id="slabSystem" class="form-control">
+                <option value="">Seçiniz</option>
+                <option value="flat">Düz Döşeme</option>
+                <option value="beam">Kirişli Döşeme</option>
+                <option value="cassette">Kaset Döşeme</option>
+                <option value="ribbed">Nervürlü Döşeme</option>
+                <option value="asmolen">Asmolen Döşeme</option>
+                <option value="other">Diğer</option>
+            </select>
+        </div>
+
         <div class="form-group">
-            <label>Beton Sınıfı (Birim Fiyat)</label>
+            <label for="concreteClass">Beton Sınıfı (Birim Fiyat)</label>
             <select id="concreteClass" class="form-control">
                 @foreach ([
                     'lean_concrete' => 'C16 Grobeton',
@@ -125,7 +271,7 @@
             ></small>
         </div>
         <div class="form-group">
-            <label>Mobil Pompa Hizmeti</label>
+            <label for="pump">Mobil Pompa Hizmeti</label>
             <select id="pump" class="form-control">
                 <option value="no">
                     Gerekmiyor (mikser doğrudan dökecek)
@@ -138,15 +284,17 @@
                 </option>
             </select>
         </div>
-        <button type="button" class="btn-calc" id="calcBtn">Beton Hacmini ve Bütçeyi Çıkar →</button>
+        <input type="hidden" id="formworkSystem" value="">
+<input type="hidden" id="formworkSystemCompat" value="1">
+<button type="button" class="btn-calc" id="calcBtn">Beton Hacmini ve Bütçeyi Çıkar →</button>
     </div>
 
-    <div class="result-box" id="resBox">
+    <div class="result-box" id="resBox" role="status" aria-live="polite" tabindex="-1">
         <div style="font-size: 12px; color: #a1a1aa; font-weight: 700; letter-spacing: 1px;">TAHMİNİ BÜTÇE ARALIĞI</div>
         <div class="result-price" id="resPrice">0 TL</div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; text-align: left;">
+        <div class="beton-result-grid">
             <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
-                <span style="display: block; font-size: 12px; color: #a1a1aa;">Sipariş Hacmi (%5 fire dahil)</span>
+                <span id="resOrderLabel" style="display:block;font-size:12px;color:#a1a1aa;">Sipariş Hacmi (fire dahil)</span>
                 <strong id="resVol" style="display: block; font-size: 18px; color: #fff; font-weight: 800;">0 m³</strong>
                 <small id="resNetVol" style="display:block;margin-top:4px;color:#a1a1aa;font-size:11px;">Net hacim: 0 m³</small>
             </div>
@@ -168,7 +316,7 @@
                 style="font-size:12px;color:#d1d5db;margin-bottom:14px;"
             ></div>
 
-            <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:9px;">
+            <div class="beton-material-grid">
                 <div style="padding:12px;border-radius:10px;background:rgba(255,255,255,.04);">
                     <span style="display:block;font-size:10px;color:#9ca3af;">Çimento</span>
                     <strong id="materialCement" style="font-size:14px;">—</strong>
@@ -211,24 +359,270 @@
         </div>
     </div>
     
-    <div class="budget-confirm-box" id="bConf"><div style="font-size: 18px; font-weight: 900;">Kaba İnşaat için teklif ister misiniz?</div><div class="budget-confirm-actions"><button class="budget-btn budget-yes" id="bYes">✓ Evet, betonarme teklifi istiyorum.</button><button class="budget-btn" id="bNo">Sadece metraja baktım.</button></div></div>
-    
+    <div style="margin:18px 0 0;text-align:center;">
+        <a
+            href="/araclar/kalip-plywood-maliyeti?source=beton-hesaplayici"
+            style="
+                display:inline-flex;
+                align-items:center;
+                justify-content:center;
+                min-height:46px;
+                padding:0 18px;
+                border:1px solid var(--line);
+                border-radius:12px;
+                background:var(--surface);
+                color:var(--text);
+                font-weight:800;
+                text-decoration:none;
+            "
+        >
+            Kalıp maliyetini de hesapla →
+        </a>
+    </div>
+    <div class="budget-confirm-box" id="bConf" aria-live="polite">
+        <h3>Projeniz için neye ihtiyacınız var?</h3>
+
+        <div class="budget-confirm-actions">
+            <button type="button" class="budget-btn budget-yes" id="bYes">
+                Kaba İnşaat Teklifi Al → Kainta
+            </button>
+
+            <button type="button" class="budget-btn" id="bSupplierQuote">
+                Sadece Hazır Beton Fiyatı Al → Tedarikçiler
+            </button>
+        </div>
+
+        <button type="button" class="beton-exit" id="bNo">
+            Şimdilik sadece hesap yaptım
+        </button>
+
+        <div class="supplier-slot">
+            <small>TEDARİKÇİ ALANI</small>
+            <strong>Türkiye genelinde hazır beton tedarik ediyor musunuz?</strong>
+            <p>
+                Her sınıf hazır beton, grobeton, pompalı veya pompasız ve
+                proje bazlı beton sipariş taleplerini WORKSİTEM kullanıcılarından alın.
+            </p>
+            <!-- BETON_SUPPLIER_APPLICATION_V1 -->
+
+<details
+    id="supplierApplication"
+    style="
+        margin-top:16px;
+        border-top:1px solid var(--line);
+        padding-top:14px;
+    "
+>
+    <summary
+        style="
+            cursor:pointer;
+            font-weight:900;
+            text-decoration:underline;
+            list-style:none;
+        "
+    >
+        Bu alanda yer alın →
+    </summary>
+
+    <div style="padding-top:18px;">
+
+        <h4 style="margin:0 0 6px;">
+            Hazır Beton Tedarikçi / İş Ortaklığı Başvurusu
+        </h4>
+
+        <p style="margin:0 0 18px;color:var(--muted);font-size:13px;line-height:1.6;">
+            Hizmet verdiğiniz bölgeleri ve beton tedarik kapasitenizi iletin.
+            Uygun taleplerde WORKSİTEM üzerinden sizinle iletişime geçelim.
+        </p>
+
+        <form action="{{ route('lead.store') }}" method="POST">
+            @csrf
+
+            <input
+                type="hidden"
+                name="source"
+                value="worksitem_beton_tedarikci_basvuru"
+            >
+
+            <input
+                type="hidden"
+                name="source_tool"
+                value="beton-hesaplayici"
+            >
+
+            <input
+                type="hidden"
+                name="project_type"
+                value="Hazır Beton Tedarikçi / İş Ortaklığı"
+            >
+
+            <input
+                type="hidden"
+                name="calculated_service"
+                value="Hazır Beton Tedarikçi Başvurusu"
+            >
+
+            <div class="form-group">
+                <label for="supplierName">
+                    Firma / Yetkili Adı
+                </label>
+
+                <input
+                    id="supplierName"
+                    name="name"
+                    class="form-control"
+                    required
+                    maxlength="150"
+                    placeholder="Firma adı veya yetkili kişi"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="supplierPhone">
+                    Telefon
+                </label>
+
+                <input
+                    id="supplierPhone"
+                    name="phone"
+                    type="tel"
+                    class="form-control"
+                    required
+                    inputmode="tel"
+                    placeholder="532 123 45 67"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="supplierLocation">
+                    Hizmet Verdiğiniz İl / İlçeler
+                </label>
+
+                <input
+                    id="supplierLocation"
+                    name="location"
+                    class="form-control"
+                    required
+                    maxlength="255"
+                    placeholder="Örn. Adana, Mersin, Tarsus"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="supplierNotes">
+                    Tedarik Bilgileri
+                </label>
+
+                <textarea
+                    id="supplierNotes"
+                    name="notes"
+                    class="form-control"
+                    maxlength="3000"
+                    style="min-height:110px;height:auto;"
+                    placeholder="Beton sınıfları, santral/bölgeler, mobil pompa hizmeti, minimum sipariş veya diğer bilgiler"
+                ></textarea>
+            </div>
+
+            @include('components.supplier-consent-fields')
+
+            <button
+                type="submit"
+                class="btn-submit"
+                style="margin-top:16px;"
+            >
+                Tedarikçi başvurusunu gönder →
+            </button>
+
+            <p style="
+                margin:14px 0 0;
+                color:var(--muted);
+                font-size:12px;
+                line-height:1.5;
+            ">
+                Dilerseniz
+                <a
+                    href="mailto:info@worksitem.com?subject=WORKSITEM%20Tedarikçi%20Başvurusu"
+                    style="font-weight:800;"
+                >
+                    info@worksitem.com
+                </a>
+                adresinden de ulaşabilirsiniz.
+            </p>
+
+        </form>
+
+    </div>
+</details>
+        </div>
+    </div>
     <div class="lead-box" id="leadForm">
         <h3>Profesyonel Kaba İnşaat Teklifi</h3>
+
+        <p>
+            2026 yapı maliyet verileri, güncel piyasa koşulları ve proje bilgilerinize göre
+            oluşturulmuş yaklaşık ön bütçedir. Kesin teklif değildir; proje, malzeme seçimi
+            ve saha koşullarına göre değişebilir.
+        </p>
+
         <form action="{{ route('lead.store') }}" method="POST">
-            @csrf <input type="hidden" name="calculated_service" value="Hazır Beton Hesabı">
-<input type="hidden" name="source" value="worksitem_tools_beton_hesaplayici">
-<input type="hidden" name="project_type" value="Beton">
-<input type="hidden" name="budget_confirmed" value="1">
-<input type="hidden" name="estimated_cost" id="betonEstimatedCost">
-<input type="hidden" name="estimated_min" id="betonEstimatedMin">
-<input type="hidden" name="estimated_max" id="betonEstimatedMax">
-<input type="hidden" name="project_data" id="betonProjectData">
-<input type="hidden" name="notes" value="WORKSITEM Beton Hesaplayıcı üzerinden Kainta teklif talebi.">
-            <input type="text" name="name" class="form-control" required placeholder="Adınız Soyadınız" style="margin-bottom:15px;">
-            <input type="tel" name="phone" class="form-control" required placeholder="Telefon Numaranız" style="margin-bottom:15px;">
-            <input type="text" name="location" class="form-control" required placeholder="Şehir/İlçe" style="margin-bottom:15px;">
-            <button type="submit" class="btn-submit">Teklif Al →</button>
+            @csrf
+
+            <input type="hidden" name="calculated_service" value="Hazır Beton Hesabı">
+            <input type="hidden" name="source" value="worksitem_beton_kainta_teklif">
+            <input type="hidden" name="source_tool" value="beton-hesaplayici">
+            <input type="hidden" name="project_type" value="Beton">
+            <input type="hidden" name="budget_confirmed" value="1">
+
+            <input type="hidden" name="estimated_cost" id="betonEstimatedCost">
+            <input type="hidden" name="estimated_min" id="betonEstimatedMin">
+            <input type="hidden" name="estimated_max" id="betonEstimatedMax">
+            <input type="hidden" name="project_data" id="betonProjectData">
+
+            <label class="est-field" for="betonTimeline">
+                Projeye ne zaman başlamayı planlıyorsunuz?
+            </label>
+
+            <select id="betonTimeline" name="timeline" class="form-control" required style="margin-bottom:15px;">
+                <option value="">Başlangıç zamanı seçin</option>
+                <option value="now">Hemen / 1 ay içinde</option>
+                <option value="soon">1–3 ay içinde</option>
+                <option value="later">3–6 ay içinde</option>
+                <option value="research">Şimdilik araştırıyorum</option>
+            </select>
+
+            <label class="est-field" for="betonLeadName">Ad Soyad / Firma</label>
+            <input id="betonLeadName" name="name" class="form-control" required
+                   maxlength="150" placeholder="Ad Soyad / Firma"
+                   style="margin-bottom:15px;">
+
+            <label class="est-field" for="betonLeadPhone">Telefon</label>
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:15px;">
+                <span aria-hidden="true" style="white-space:nowrap;font-weight:700;">🇹🇷 +90</span>
+                <input type="tel" id="betonLeadPhone" name="phone"
+                       class="form-control" required inputmode="tel"
+                       placeholder="532 123 45 67">
+            </div>
+
+            <label class="est-field" for="betonLeadLocation">Proje konumu</label>
+            <input id="betonLeadLocation" name="location"
+                   class="form-control" required
+                   placeholder="Örn. İstanbul / Ümraniye"
+                   style="margin-bottom:15px;">
+
+            <label class="est-field" for="betonLeadNotes">
+                Açık adres ve proje notu
+            </label>
+
+            <textarea id="betonLeadNotes" name="notes"
+                      class="form-control" maxlength="3000"
+                      placeholder="Açık adres ve proje hakkında ek bilgi"
+                      style="margin-bottom:18px;min-height:100px;height:auto;padding:12px 15px;"></textarea>
+
+            @include('components.lead-consent-fields')
+
+            <button type="submit" class="btn-submit">
+                Net teklif talebini gönder →
+            </button>
         </form>
     </div>
 </div>
@@ -260,7 +654,7 @@
             Beton ihtiyacı, betonarme elemanın geometrik hacmi hesaplanarak bulunur.
             Ölçüler metre cinsine çevrilir ve sonuç metreküp (m³) olarak ifade edilir.
             WORKSİTEM net geometrik hacmi hesapladıktan sonra sipariş planlaması için
-            ayrıca %5 fire payı ekleyerek yaklaşık sipariş hacmini gösterir.
+            varsayılan %5 fire oranını kullanır; bu oran kullanıcı tarafından proje koşullarına göre değiştirilebilir.
         </p>
 
         <div
@@ -538,12 +932,13 @@
         </p>
 
         <h3 style="font-size:18px;margin:0 0 8px;">
-            %5 fire payı nasıl hesaplanıyor?
+            Fire payı nasıl hesaplanıyor?
         </h3>
 
         <p style="color:var(--muted);margin:0 0 20px;">
-            WORKSİTEM bu araçta ön planlama amacıyla net geometrik hacme
-            <strong style="color:var(--text);">%5 ilave pay</strong> uygular.
+            WORKSİTEM bu araçta ön planlama için varsayılan olarak
+            <strong style="color:var(--text);">%5 fire oranı</strong> kullanır.
+            Kullanıcı bu oranı proje ve saha koşullarına göre değiştirebilir.
             Örneğin net hacim 20 m³ ise hesaplayıcı
             <strong style="color:var(--text);">20 × 1,05 = 21 m³</strong>
             yaklaşık sipariş hacmi gösterir.
@@ -741,7 +1136,7 @@
                 "
             >
                 <summary style="font-weight:800;cursor:pointer;">
-                    Beton hesabında neden %5 fire ekleniyor?
+                    Beton hesabında fire oranı nasıl kullanılıyor?
                 </summary>
 
                 <p style="color:var(--muted);margin:12px 0 0;">
@@ -1074,7 +1469,7 @@ function updateConcreteSource() {
     const date = record.source_date || 'Tarih belirtilmedi';
     const vat = record.vat_included ? 'KDV dahil' : 'KDV hariç';
     const review = record.review_status === 'approved'
-        ? 'Mühendis onaylı'
+        ? 'Yayın onaylı'
         : 'Mühendis kontrolü bekliyor';
 
     target.textContent =
@@ -1153,9 +1548,11 @@ function renderGeometryFields() {
     const fields = GEOMETRY_FIELDS[type] || [];
 
     target.innerHTML = fields.map(function(field) {
+        const inputId = 'geometry-' + type + '-' + field[0];
+
         return '<div class="form-group">' +
-            '<label>' + field[1] + '</label>' +
-            '<input type="number" class="form-control geometry-input" ' +
+            '<label for="' + inputId + '">' + field[1] + '</label>' +
+            '<input id="' + inputId + '" type="number" class="form-control geometry-input" ' +
             'data-field="' + field[0] + '" value="' + field[2] + '" step="any" min="0">' +
             '</div>';
     }).join("");
@@ -1252,8 +1649,108 @@ document
 renderGeometryFields();
 
 
+
+/* BETON_PRO_MODE_FIX_V2 */
+let betonCalculationMode = 'geometry';
+
+const modeGeometryBtn = document.getElementById('modeGeometry');
+const modeVolumeBtn = document.getElementById('modeVolume');
+const directVolumeBox = document.getElementById('directVolumeBox');
+const geometryFieldsBox = document.getElementById('geometryFields');
+const geometryHelpBox = document.getElementById('geometryHelp');
+const slabSystemBox = document.getElementById('slabSystemBox');
+
+function geometryHelpSvg(type) {
+    if (type === 'column_rect' || type === 'column_round') {
+        return '<svg viewBox="0 0 90 60" aria-hidden="true">'+
+            '<rect x="34" y="7" width="22" height="46" rx="2" fill="none" stroke="currentColor" stroke-width="2"/>'+
+            '<path d="M28 53h34M27 7h36" stroke="currentColor" stroke-width="2"/>'+
+            '</svg>';
+    }
+
+    if (type === 'beam') {
+        return '<svg viewBox="0 0 90 60" aria-hidden="true">'+
+            '<rect x="8" y="22" width="74" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="2"/>'+
+            '<path d="M8 17h74M8 14v6M82 14v6" stroke="currentColor" stroke-width="2"/>'+
+            '</svg>';
+    }
+
+    if (type === 'stair') {
+        return '<svg viewBox="0 0 90 60" aria-hidden="true">'+
+            '<path d="M10 50h18V40h16V30h16V20h20" fill="none" stroke="currentColor" stroke-width="3"/>'+
+            '</svg>';
+    }
+
+    if (type === 'pile') {
+        return '<svg viewBox="0 0 90 60" aria-hidden="true">'+
+            '<ellipse cx="45" cy="10" rx="15" ry="6" fill="none" stroke="currentColor" stroke-width="2"/>'+
+            '<path d="M30 10v38M60 10v38M30 48c5 7 25 7 30 0" fill="none" stroke="currentColor" stroke-width="2"/>'+
+            '</svg>';
+    }
+
+    return '<svg viewBox="0 0 90 60" aria-hidden="true">'+
+        '<rect x="10" y="22" width="65" height="25" rx="3" fill="none" stroke="currentColor" stroke-width="2"/>'+
+        '<path d="M10 22L24 12h58L75 22M75 22l7-10v25l-7 10" fill="none" stroke="currentColor" stroke-width="2"/>'+
+        '</svg>';
+}
+
+function updateGeometryHelp() {
+    const type = document.getElementById('geometryType').value;
+
+    let text = 'Ölçüleri girin; WORKSİTEM net beton hacmini hesaplar.';
+
+    if (betonCalculationMode === 'volume') {
+        text = 'Net beton hacmini doğrudan m³ olarak girin. En, boy veya yükseklik girmeniz gerekmez.';
+    }
+
+    geometryHelpBox.innerHTML =
+        geometryHelpSvg(type) +
+        '<p>' + text + '</p>';
+
+    slabSystemBox.hidden =
+        !(type === 'slab' || type === 'raft');
+}
+
+function setBetonCalculationMode(mode) {
+    betonCalculationMode = mode;
+
+    const direct = mode === 'volume';
+
+    geometryFieldsBox.hidden = direct;
+    directVolumeBox.hidden = !direct;
+
+    modeGeometryBtn.classList.toggle('is-active', !direct);
+    modeVolumeBtn.classList.toggle('is-active', direct);
+
+    modeGeometryBtn.setAttribute('aria-pressed', direct ? 'false' : 'true');
+    modeVolumeBtn.setAttribute('aria-pressed', direct ? 'true' : 'false');
+
+    updateGeometryHelp();
+
+    if (direct) {
+        setTimeout(() => {
+            document.getElementById('knownVolume').focus();
+        }, 50);
+    }
+}
+
+modeGeometryBtn.addEventListener('click', function () {
+    setBetonCalculationMode('geometry');
+});
+
+modeVolumeBtn.addEventListener('click', function () {
+    setBetonCalculationMode('volume');
+});
+
+document.getElementById('geometryType')
+    .addEventListener('change', updateGeometryHelp);
+
+setBetonCalculationMode('geometry');
+
 document.getElementById('calcBtn').onclick = () => {
-    const volume = calculateGeometryVolume();
+    const volume = betonCalculationMode === 'volume'
+        ? Number(document.getElementById('knownVolume').value)
+        : calculateGeometryVolume();
 
     const role = document.getElementById('concreteClass').value;
     const concrete = concretePrices[role] || null;
@@ -1285,7 +1782,8 @@ document.getElementById('calcBtn').onclick = () => {
         Number.isFinite(pumpPrice) &&
         pumpPrice > 0;
 
-    const volumeWithWaste = volume * 1.05;
+    const wastePercent = Math.max(0, Math.min(30, Number(document.getElementById('wastePercent').value) || 0));
+    const volumeWithWaste = volume * (1 + (wastePercent / 100));
 
     const pumpCost =
         pumpRequested && hasPumpPrice
@@ -1372,7 +1870,11 @@ document.getElementById('calcBtn').onclick = () => {
             net_volume_m3: Number(volume.toFixed(2)),
             order_volume_m3: Number(volumeWithWaste.toFixed(2)),
             mixer_count: mixers,
-            pump_requested: pumpRequested
+            pump_requested: pumpRequested,
+            calculation_mode: betonCalculationMode,
+            waste_percent: wastePercent,
+            slab_system: document.getElementById('slabSystem').value,
+            formwork_system: document.getElementById('formworkSystem').value
         });
     }
 
@@ -1391,11 +1893,16 @@ document.getElementById('calcBtn').onclick = () => {
             ? 'Güncel fiyat verisi bekleniyor'
             : money.format(total * 0.90) + ' TL – ' + money.format(total * 1.10) + ' TL';
 
+    document.getElementById('resOrderLabel').innerText =
+        'Sipariş Hacmi (%' +
+        wastePercent.toLocaleString('tr-TR') +
+        ' fire dahil)';
+
     document.getElementById('resVol').innerText =
         volumeWithWaste.toFixed(1) + ' m³';
 
     document.getElementById('resNetVol').innerText =
-        'Net hacim: ' + volume.toFixed(2) + ' m³';
+        'Net hacim: ' + volume.toFixed(2) + ' m³ · Fire: %' + wastePercent.toLocaleString('tr-TR');
 
     document.getElementById('resMixer').innerText =
         mixers + ' Sefer';
@@ -1426,5 +1933,184 @@ document.getElementById('bNo').onclick = () => {
 };
 </script>
 <x-site.contech-footer />
-    <script src="/js/tool-events.js" defer></script>
+    <script src="/js/tool-events.js" defer>
+/* BETON_REVENUE_FUNNEL_V2 */
+function setBetonLeadMode(mode) {
+    const box = document.getElementById('leadForm');
+    const form = box.querySelector('form');
+
+    const setField = (name,value) => {
+        const el=form.querySelector('[name="'+name+'"]');
+        if(el) el.value=value;
+    };
+
+    if(mode === 'supplier'){
+        setField('source','worksitem_beton_tedarikci_teklif');
+        setField('source_tool','beton-hesaplayici');
+        setField('project_type','Hazır Beton Tedarik Talebi');
+        setField('calculated_service','Hazır Beton Fiyat Talebi');
+
+        box.querySelector('h3').textContent='Hazır Beton Fiyat Talebi';
+        box.querySelector('p').textContent=
+            'Beton sınıfı, miktar ve proje konumunuza göre tedarikçilerden fiyat talebi oluşturun.';
+        box.querySelector('.btn-submit').textContent='Beton fiyat talebini gönder →';
+
+        document.getElementById('bConf').style.display='none';
+        box.style.display='block';
+
+        const first=document.getElementById('betonTimeline');
+        if(first) first.focus();
+    }else{
+        setField('source','worksitem_beton_kainta_teklif');
+        setField('source_tool','beton-hesaplayici');
+        setField('project_type','Beton');
+        setField('calculated_service','Kaba İnşaat / Betonarme Teklifi');
+
+        box.querySelector('h3').textContent='Profesyonel Kaba İnşaat Teklifi';
+        box.querySelector('.btn-submit').textContent='Net teklif talebini gönder →';
+    }
+}
+
+document.getElementById('bYes').addEventListener('click',function(){
+    setBetonLeadMode('kainta');
+});
+
+document.getElementById('bSupplierQuote').addEventListener('click',function(){
+    setBetonLeadMode('supplier');
+});
+</script>
 </body></html>
+
+<style>
+/* BETON_REVENUE_PRIORITY */
+#bYes{
+    background:var(--accent) !important;
+    color:#1b1300 !important;
+    border-color:var(--accent) !important;
+}
+#bYes:hover{
+    filter:brightness(.96);
+}
+#bSupplierQuote{
+    background:var(--surface) !important;
+    color:var(--text) !important;
+}
+
+/* BETON_PRO_MODE_V1 */
+.calc-mode-switch{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-bottom:20px;
+}
+.calc-mode-btn{
+    min-height:48px;
+    border:1px solid var(--line);
+    border-radius:12px;
+    background:var(--surface);
+    color:var(--text);
+    font-weight:800;
+    cursor:pointer;
+}
+.calc-mode-btn.is-active{
+    border-color:var(--accent);
+    background:rgba(255,184,0,.12);
+}
+.geometry-help{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    padding:12px 14px;
+    margin-bottom:18px;
+    border:1px solid var(--line);
+    border-radius:12px;
+    background:var(--surface-2);
+}
+.geometry-help svg{
+    width:76px;
+    height:56px;
+    flex:0 0 auto;
+}
+.geometry-help p{
+    margin:0;
+    font-size:13px;
+    color:var(--muted);
+}
+.pro-meta{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+}
+@media(max-width:640px){
+    .calc-mode-switch,
+    .pro-meta{grid-template-columns:1fr;}
+}</style>
+
+<style>
+/* BETON_FORM_LOGIC_V3 */
+#geometryFields[hidden],
+#directVolumeBox[hidden],
+#slabSystemBox[hidden],
+#formworkSystemBox[hidden] {
+    display:none !important;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const geoFields = document.getElementById('geometryFields');
+    const directBox = document.getElementById('directVolumeBox');
+    const geoType = document.getElementById('geometryType');
+    const slabBox = document.getElementById('slabSystemBox');
+    const formwork = document.getElementById('formworkSystem');
+
+    if (formwork) {
+        const group = formwork.closest('.form-group');
+        if (group) {
+            group.id = 'formworkSystemBox';
+            group.hidden = true;
+        }
+    }
+
+    function refreshBetonForm() {
+        const direct =
+            typeof betonCalculationMode !== 'undefined' &&
+            betonCalculationMode === 'volume';
+
+        if (geoFields) geoFields.hidden = direct;
+        if (directBox) directBox.hidden = !direct;
+
+        if (slabBox && geoType) {
+            slabBox.hidden = direct || geoType.value !== 'slab';
+        }
+    }
+
+    document.getElementById('modeGeometry')
+        ?.addEventListener('click', function () {
+            setTimeout(refreshBetonForm, 0);
+        });
+
+    document.getElementById('modeVolume')
+        ?.addEventListener('click', function () {
+            setTimeout(refreshBetonForm, 0);
+        });
+
+    geoType?.addEventListener('change', refreshBetonForm);
+
+    refreshBetonForm();
+});
+</script>
+
+<style>
+/* BETON_MOBILE_PRICE_FIX_V1 */
+@media(max-width:640px){
+    .result-price{
+        font-size:clamp(26px,7.5vw,34px) !important;
+        line-height:1.15 !important;
+        letter-spacing:-1px !important;
+        overflow-wrap:normal !important;
+        word-break:normal !important;
+    }
+}
+</style>

@@ -1855,5 +1855,6 @@ initTrPhoneField();
 syncLocationFields();
 })();
 </script>
+@include('components.collaboration-cta')
 </body>
 </html>

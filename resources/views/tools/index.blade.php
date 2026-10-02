@@ -1086,6 +1086,63 @@ echo json_encode(
     document.documentElement.classList.toggle("dark",theme==="dark");
 })();
 </script>
+
+<style>
+/* WORKSITEM_QA_CARD_FINAL */
+
+.qa-status-badge{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-height:24px;
+    padding:5px 9px;
+    border-radius:999px;
+    font-size:9px;
+    font-weight:900;
+    line-height:1;
+    letter-spacing:.35px;
+    text-transform:uppercase;
+}
+
+.qa-status-badge.review{
+    background:#fff3cd;
+    color:#8a5a00;
+    border:1px solid #ffe29a;
+}
+
+.qa-status-badge.active{
+    background:#dcfce7;
+    color:#166534;
+    border:1px solid #bbf7d0;
+}
+
+.tool-card.qa-review{
+    opacity:.72;
+    cursor:not-allowed;
+}
+
+.tool-card.qa-review:hover{
+    transform:none !important;
+    box-shadow:none !important;
+}
+
+.tool-card.qa-review .tool-action{
+    color:#8a5a00;
+}
+
+[data-theme="dark"] .qa-status-badge.active{
+    background:rgba(22,101,52,.28);
+    color:#86efac;
+    border-color:rgba(134,239,172,.25);
+}
+
+[data-theme="dark"] .qa-status-badge.review{
+    background:rgba(146,94,0,.25);
+    color:#ffd166;
+    border-color:rgba(255,209,102,.25);
+}
+</style>
+
 </head>
 
 <body data-tool-slug="araclar">
@@ -1737,14 +1794,34 @@ usort($allTools, function ($a, $b) {
             id="toolsGrid"
         >
 
+            <?php
+                $qaConfig = config('worksitem_tools.tool_status', []);
+                $qaDefault = $qaConfig['default'] ?? 'review';
+                $qaOverrides = $qaConfig['overrides'] ?? [];
+            ?>
+
             <?php foreach ($allTools as $tool) { ?>
+
+                <?php
+                    $qaStatus = $qaOverrides[$tool['slug']] ?? $qaDefault;
+                    $qaActive = $qaStatus === 'active';
+                    $qaStaging = request()->getHost() === 'app.worksitem.com';
+                    $qaClickable = $qaActive || $qaStaging;
+                ?>
 
                 <a
                     href="/araclar/{{ $tool['slug'] }}"
-                    class="tool-card {{ $tool['is_premium'] ? 'is-premium' : '' }}"
+                    class="tool-card {{ $tool['is_premium'] ? 'is-premium' : '' }} {{ $qaActive ? 'qa-active' : 'qa-review' }}"
                     data-title="{{ $tool['title'] }}"
                     data-desc="{{ $tool['desc'] }}"
                     data-cat="{{ $tool['cat'] }}"
+                    data-qa-status="{{ $qaStatus }}"
+                    @if(!$qaClickable)
+                        aria-disabled="true"
+                        tabindex="-1"
+                        title="Bu araç kalite kontrolünden geçiyor"
+                        onclick="event.preventDefault(); return false;"
+                    @endif
                 >
 
                     <div class="tool-top">
@@ -1753,35 +1830,27 @@ usort($allTools, function ($a, $b) {
                             {{ $tool['icon'] }}
                         </div>
 
-                        <?php if (!empty($tool['is_premium'])) { ?>
-
-                            <span class="premium-badge">
-                                Öne Çıkan
-                            </span>
-
-                        <?php } ?>
+                        <span class="qa-status-badge {{ $qaActive ? 'active' : 'review' }}">
+                            {{ $qaActive ? 'Aktif' : 'İncelemede' }}
+                        </span>
 
                     </div>
-
 
                     <div class="tool-title">
                         {{ $tool['title'] }}
                     </div>
 
-
                     <div class="tool-desc">
                         {{ $tool['desc'] }}
                     </div>
 
-
                     <div class="tool-action">
-                        Hesaplamayı aç →
+                        {{ $qaActive ? 'Hesaplamayı aç →' : ($qaStaging ? 'QA için aç →' : 'İncelemede') }}
                     </div>
 
                 </a>
 
             <?php } ?>
-
 
             <div
                 id="noResults"
@@ -1798,6 +1867,8 @@ usort($allTools, function ($a, $b) {
 
 </section>
 
+
+@include('components.collaboration-cta')
 
 {{-- =========================================================
      SEO / SEMANTIC CONTENT

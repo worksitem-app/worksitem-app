@@ -15,6 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         // Global middleware - her istekte calisir
         $middleware->append(\App\Http\Middleware\StagingTeamAccess::class);
+        $middleware->append(\App\Http\Middleware\ToolQaGate::class);
         $middleware->append(\App\Http\Middleware\SecurityHeaders::class);
         $middleware->append(\App\Http\Middleware\ForceHttps::class);
         $middleware->append(\App\Http\Middleware\BlockSuspiciousRequests::class);

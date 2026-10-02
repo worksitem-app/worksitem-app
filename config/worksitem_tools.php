@@ -1,6 +1,14 @@
 <?php
 
 return array (
+  'tool_status' =>
+  array (
+    'default' => 'review',
+    'overrides' =>
+    array (
+      'beton-hesaplayici' => 'active',
+    ),
+  ),
   'categories' => 
   array (
     'yatirim' => 
