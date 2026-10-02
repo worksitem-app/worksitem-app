@@ -60,3 +60,6 @@ price_stage_*
 .env.backup*
 
 /.env.bak*
+# Editor/IDE save files
+*.save
+*.save.*
