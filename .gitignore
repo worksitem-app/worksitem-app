@@ -63,3 +63,6 @@ price_stage_*
 # Editor/IDE save files
 *.save
 *.save.*
+
+# Sprint 2 sonrası: .before-* dosyaları
+*.before-*

@@ -55,97 +55,7 @@
         .lead-box { display: none; background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius); padding: 30px; margin-top: 15px; }
         .btn-calc, .btn-submit { background: var(--button-bg); color: var(--button-text); width: 100%; height: 50px; border:none; border-radius:12px; font-weight:800; cursor:pointer;}
         .btn-submit { background: var(--accent); color: #000; }
-    
-/* BETON_UX_P0P1 */
-.result-price{
-    font-size:clamp(30px,6vw,36px) !important;
-    line-height:1.12 !important;
-}
-
-.result-label,
-.result-kicker{
-    font-size:13px !important;
-    line-height:1.4 !important;
-    letter-spacing:.04em;
-}
-
-#priceSource,
-#resNetVol{
-    font-size:13px !important;
-    line-height:1.5 !important;
-}
-
-#materialCementBag{
-    font-size:12px !important;
-    line-height:1.5 !important;
-}
-
-#materialBreakdown{
-    box-shadow:none !important;
-}
-
-.budget-no{
-    opacity:1 !important;
-    font-weight:700 !important;
-    border:1px solid var(--line) !important;
-    background:var(--surface) !important;
-    color:var(--text) !important;
-    cursor:pointer !important;
-}
-
-.budget-btn{
-    min-height:48px;
-}
-
-.result-box{
-    scroll-margin-top:90px;
-}
-
-.result-box.is-visible{
-    animation:betonResultIn .24s ease-out;
-}
-
-.result-box:focus{
-    outline:2px solid currentColor;
-    outline-offset:4px;
-}
-
-@keyframes betonResultIn{
-    from{
-        opacity:0;
-        transform:translateY(8px);
-    }
-    to{
-        opacity:1;
-        transform:translateY(0);
-    }
-}
-
-@media (max-width:640px){
-    .form-grid,
-    .budget-confirm-actions{
-        grid-template-columns:1fr !important;
-    }
-
-    .budget-confirm-actions{
-        gap:10px !important;
-    }
-
-    .budget-btn{
-        width:100% !important;
-        min-height:50px;
-    }
-
-    .result-price{
-        font-size:30px !important;
-    }
-
-    #priceSource,
-    #resNetVol{
-        font-size:13px !important;
-    }
-}
-</style>
+    </style>
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
     <meta property="og:image" content="https://worksitem.com/brand/og-image.png">
     <meta property="og:image:width" content="1200">
@@ -231,7 +141,7 @@
         <button type="button" class="btn-calc" id="calcBtn">Beton Hacmini ve Bütçeyi Çıkar →</button>
     </div>
 
-    <div class="result-box" id="resBox" role="status" aria-live="polite" aria-atomic="true">
+    <div class="result-box" id="resBox">
         <div style="font-size: 12px; color: #a1a1aa; font-weight: 700; letter-spacing: 1px;">TAHMİNİ BÜTÇE ARALIĞI</div>
         <div class="result-price" id="resPrice">0 TL</div>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; text-align: left;">
@@ -296,138 +206,29 @@
         </div>
 
         <div class="ai-insight">
-            <div style="font-size: 24px;" aria-hidden="true">🤖</div>
+            <div style="font-size: 24px;">🤖</div>
             <div class="ai-insight-text"><strong id="aiTitle">Beton Sınıfı Notu</strong><p id="aiText"></p></div>
         </div>
     </div>
     
-    <div class="budget-confirm-box" id="bConf"><div style="font-size: 18px; font-weight: 900;">Kaba İnşaat için teklif ister misiniz?</div><div class="budget-confirm-actions"><button class="budget-btn budget-yes" id="bYes">✓ Evet, betonarme teklifi istiyorum.</button><button class="budget-btn budget-no" id="bNo">Sadece metraja baktım.</button></div></div>
+    <div class="budget-confirm-box" id="bConf"><div style="font-size: 18px; font-weight: 900;">Kaba İnşaat için teklif ister misiniz?</div><div class="budget-confirm-actions"><button class="budget-btn budget-yes" id="bYes">✓ Evet, betonarme teklifi istiyorum.</button><button class="budget-btn" id="bNo">Sadece metraja baktım.</button></div></div>
     
     <div class="lead-box" id="leadForm">
         <h3>Profesyonel Kaba İnşaat Teklifi</h3>
-
-        <p style="font-size:13px;line-height:1.6;color:var(--muted);margin:0 0 20px;">
-            2026 yapı maliyet verileri, güncel piyasa koşulları ve proje bilgilerinize göre
-            oluşturulmuş yaklaşık ön bütçedir. Kesin teklif değildir; proje, malzeme seçimi
-            ve saha koşullarına göre değişebilir.
-        </p>
-
         <form action="{{ route('lead.store') }}" method="POST">
-            @csrf
-
-            <input type="hidden" name="calculated_service" value="Hazır Beton Hesabı">
-            <input type="hidden" name="source" value="worksitem_tools_beton_hesaplayici">
-            <input type="hidden" name="source_tool" value="beton-hesaplayici">
-            <input type="hidden" name="project_type" value="Beton">
-            <input type="hidden" name="budget_confirmed" value="1">
-
-            <input type="hidden" name="estimated_cost" id="betonEstimatedCost">
-            <input type="hidden" name="estimated_min" id="betonEstimatedMin">
-            <input type="hidden" name="estimated_max" id="betonEstimatedMax">
-            <input type="hidden" name="project_data" id="betonProjectData">
-
-            <label class="est-field" for="betonTimeline">
-                Projeye ne zaman başlamayı planlıyorsunuz?
-            </label>
-
-            <select
-                id="betonTimeline"
-                name="timeline"
-                class="form-control"
-                required
-                style="margin-bottom:15px;"
-            >
-                <option value="">Başlangıç zamanı seçin</option>
-                <option value="now" @selected(old('timeline') === 'now')>
-                    Hemen / 1 ay içinde
-                </option>
-                <option value="soon" @selected(old('timeline') === 'soon')>
-                    1–3 ay içinde
-                </option>
-                <option value="later" @selected(old('timeline') === 'later')>
-                    3–6 ay içinde
-                </option>
-                <option value="research" @selected(old('timeline') === 'research')>
-                    Şimdilik araştırıyorum
-                </option>
-            </select>
-
-            <label class="est-field" for="betonLeadName">
-                Ad Soyad / Firma
-            </label>
-
-            <input
-                type="text"
-                id="betonLeadName"
-                name="name"
-                class="form-control"
-                required
-                maxlength="150"
-                autocomplete="name"
-                placeholder="Ad Soyad / Firma"
-                value="{{ old('name') }}"
-                style="margin-bottom:15px;"
-            >
-
-            <label class="est-field" for="betonLeadPhone">
-                Telefon
-            </label>
-
-            <div style="display:flex;align-items:center;gap:10px;margin-bottom:15px;">
-                <span style="white-space:nowrap;font-weight:700;">
-                    🇹🇷 +90
-                </span>
-
-                <input
-                    type="tel"
-                    id="betonLeadPhone"
-                    name="phone"
-                    class="form-control"
-                    required
-                    minlength="10"
-                    maxlength="18"
-                    autocomplete="tel-national"
-                    inputmode="tel"
-                    placeholder="532 123 45 67"
-                    value="{{ old('phone') }}"
-                    style="margin:0;"
-                >
-            </div>
-
-            <label class="est-field" for="betonLeadLocation">
-                Proje konumu (şehir / ilçe)
-            </label>
-
-            <input
-                type="text"
-                id="betonLeadLocation"
-                name="location"
-                class="form-control"
-                required
-                maxlength="255"
-                placeholder="Örn. İstanbul / Ümraniye"
-                value="{{ old('location') }}"
-                style="margin-bottom:15px;"
-            >
-
-            <label class="est-field" for="betonLeadNotes">
-                Açık adres ve proje notu
-            </label>
-
-            <textarea
-                id="betonLeadNotes"
-                name="notes"
-                class="form-control"
-                maxlength="3000"
-                placeholder="Açık adres ve proje hakkında ek bilgi"
-                style="margin-bottom:18px;min-height:100px;"
-            >{{ old('notes') }}</textarea>
-
-            @include('components.lead-consent-fields')
-
-            <button type="submit" class="btn-submit">
-                Net teklif talebini gönder →
-            </button>
+            @csrf <input type="hidden" name="calculated_service" value="Hazır Beton Hesabı">
+<input type="hidden" name="source" value="worksitem_tools_beton_hesaplayici">
+<input type="hidden" name="project_type" value="Beton">
+<input type="hidden" name="budget_confirmed" value="1">
+<input type="hidden" name="estimated_cost" id="betonEstimatedCost">
+<input type="hidden" name="estimated_min" id="betonEstimatedMin">
+<input type="hidden" name="estimated_max" id="betonEstimatedMax">
+<input type="hidden" name="project_data" id="betonProjectData">
+<input type="hidden" name="notes" value="WORKSITEM Beton Hesaplayıcı üzerinden Kainta teklif talebi.">
+            <input type="text" name="name" class="form-control" required placeholder="Adınız Soyadınız" style="margin-bottom:15px;">
+            <input type="tel" name="phone" class="form-control" required placeholder="Telefon Numaranız" style="margin-bottom:15px;">
+            <input type="text" name="location" class="form-control" required placeholder="Şehir/İlçe" style="margin-bottom:15px;">
+            <button type="submit" class="btn-submit">Teklif Al →</button>
         </form>
     </div>
 </div>
@@ -1498,7 +1299,7 @@ document.getElementById('calcBtn').onclick = () => {
     const mixers = Math.ceil(volumeWithWaste / 8);
     // KAINTA_BETON_LEAD_SYNC
     const betonLeadForm =
-        document.querySelector('#leadForm form');
+        document.querySelector('form[action*="/maliyet-hesapla/lead"]');
 
     if (betonLeadForm) {
         const setLeadField = (name, value) => {
@@ -1609,114 +1410,10 @@ document.getElementById('calcBtn').onclick = () => {
             'Beton sınıfı statik proje, çevresel etki sınıfı ve teknik şartnameye göre yetkili mühendis tarafından belirlenmelidir.';
     }
 
-    const resultBox = document.getElementById('resBox');
-
-    resultBox.style.display = 'block';
-    resultBox.classList.remove('is-visible');
-    resultBox.setAttribute('tabindex', '-1');
-
-    requestAnimationFrame(() => {
-        resultBox.classList.add('is-visible');
-
-        resultBox.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start'
-        });
-
-        resultBox.focus({
-            preventScroll: true
-        });
-    });
+    document.getElementById('resBox').style.display = 'block';
     document.getElementById('bConf').style.display = 'block';
     document.getElementById('leadForm').style.display = 'none';
 };
-
-
-/* BETON_DYNAMIC_FIELD_A11Y */
-function enhanceBetonFieldAccessibility() {
-    let sequence = 0;
-
-    document.querySelectorAll(
-        '.form-grid label:not([for]), #leadForm label:not([for])'
-    ).forEach((label) => {
-
-        let control =
-            label.querySelector('input, select, textarea');
-
-        if (!control) {
-            const next = label.nextElementSibling;
-
-            if (
-                next &&
-                next.matches &&
-                next.matches('input, select, textarea')
-            ) {
-                control = next;
-            } else if (next && next.querySelector) {
-                control =
-                    next.querySelector(
-                        'input, select, textarea'
-                    );
-            }
-        }
-
-        if (!control && label.parentElement) {
-            const controls =
-                label.parentElement.querySelectorAll(
-                    'input, select, textarea'
-                );
-
-            if (controls.length === 1) {
-                control = controls[0];
-            }
-        }
-
-        if (!control) {
-            return;
-        }
-
-        if (!control.id) {
-            sequence++;
-
-            control.id =
-                'beton-dynamic-field-' + sequence;
-        }
-
-        label.htmlFor = control.id;
-
-        if (
-            control.tagName === 'INPUT' &&
-            control.type !== 'hidden' &&
-            !control.placeholder
-        ) {
-            const text =
-                label.textContent
-                    .replace(/\s+/g, ' ')
-                    .trim()
-                    .replace(/\*$/, '');
-
-            if (text) {
-                control.placeholder =
-                    text + ' girin';
-            }
-        }
-    });
-}
-
-enhanceBetonFieldAccessibility();
-
-const betonFieldObserver =
-    new MutationObserver(
-        enhanceBetonFieldAccessibility
-    );
-
-betonFieldObserver.observe(
-    document.body,
-    {
-        childList:true,
-        subtree:true
-    }
-);
 
 document.getElementById('bYes').onclick = () => {
     document.getElementById('bConf').style.display = 'none';
