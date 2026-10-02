@@ -1,0 +1,17 @@
+<?php
+
+namespace App\Filament\Resources\MaterialPriceResource\Pages;
+
+use App\Filament\Resources\MaterialPriceResource;
+use Filament\Actions;
+use Filament\Resources\Pages\ListRecords;
+
+class ListMaterialPrices extends ListRecords
+{
+    protected static string $resource = MaterialPriceResource::class;
+
+    protected function getHeaderActions(): array
+    {
+        return [];
+    }
+}
