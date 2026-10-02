@@ -66,3 +66,6 @@ price_stage_*
 
 # Sprint 2 sonrası: .before-* dosyaları
 *.before-*
+
+# Sprint 2 temizliği
+*.bak-*
