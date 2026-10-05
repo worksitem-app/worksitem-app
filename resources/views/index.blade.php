@@ -191,11 +191,7 @@ html[data-theme=dark] body .wks-brand img,html[data-theme=dark] body .wks-foot-l
 </head>
 <body data-tool-slug="homepage">
 <a class="skip-link" href="#ana-icerik">Ana içeriğe geç</a>
-<x-site.contech-header>
-    <x-slot:actions>
-        <button type="button" id="homeThemeToggle" class="theme-toggle" aria-label="Koyu temaya geç" aria-pressed="false" hidden><span id="homeThemeIcon" aria-hidden="true">☾</span></button>
-    </x-slot:actions>
-</x-site.contech-header>
+<x-site.contech-header />
 <div class="container home-toolbar">
  <nav aria-label="Anasayfa bölümleri"><a href="#proje-hesaplayici">Hesaplayıcı</a><a href="#fiyatlama">Hesap yöntemi</a><a href="#sss">Sık sorulanlar</a></nav>
 </div>
@@ -516,34 +512,6 @@ Seçtiğiniz yapı türü ve toplam alana göre yaklaşık ön bütçe güvenli 
 
 <script>
 (function(){
-const themeButton=document.getElementById('homeThemeToggle');
-const themeMedia=window.matchMedia('(prefers-color-scheme: dark)');
-function readTheme(){try{return localStorage.getItem('worksitem-theme');}catch(error){return null;}}
-function applyTheme(theme){
- document.documentElement.dataset.theme=theme;
- document.querySelector('meta[name="theme-color"]').content=theme==='dark'?'#10151d':'#ffffff';
- themeButton.setAttribute('aria-pressed',String(theme==='dark'));
- themeButton.setAttribute('title',theme==='dark'?'Açık temaya geç':'Koyu temaya geç');
- document.getElementById('homeThemeIcon').textContent=theme==='dark'?'☀':'☾';
-
-}
-themeButton.hidden=false;
-applyTheme(document.documentElement.dataset.theme||'light');
-themeButton.addEventListener('click',()=>{
- const theme=document.documentElement.dataset.theme==='dark'?'light':'dark';
- try{localStorage.setItem('worksitem-theme',theme);}catch(error){}
- applyTheme(theme);
-});
-themeMedia.addEventListener('change',event=>{
- const saved=readTheme();
- if(saved!=='light'&&saved!=='dark')applyTheme(event.matches?'dark':'light');
-});
-window.addEventListener('storage',event=>{
- if(event.key==='worksitem-theme'||event.key===null){
-  const saved=readTheme();
-  applyTheme(saved==='light'||saved==='dark'?saved:themeMedia.matches?'dark':'light');
- }
-});
 const menuBtn=document.querySelector('.wks-menu');
 const mobileNav=document.querySelector('.wks-nav');
 
