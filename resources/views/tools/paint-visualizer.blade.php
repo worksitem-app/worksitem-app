@@ -5,8 +5,8 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profesyonel Duvar Renk Paleti & RAL Kataloğu | WORKSİTEM</title>
-    <meta name="description" content="Jotun, Filli Boya, Dyo, Polisan, Marshall ve RAL K7 Classic renklerini inceleyin, seçtiğiniz duvar renklerini oda fotoğrafınızda simüle edin.">
+    <title>Duvar Rengi Görselleştirici | Renkleri Fotoğrafınızda Deneyin | WORKSİTEM</title>
+    <meta name="description" content="Doğrulanmış renk kataloglarındaki renkleri inceleyin ve seçtiğiniz tonları oda veya cephe fotoğrafınız üzerinde yaklaşık olarak görselleştirin.">
     <link rel="canonical" href="https://worksitem.com/araclar/duvar-rengi-gorsellestirici">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
@@ -48,7 +48,7 @@
 
         /* Filter Section */
         .filter-section { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 25px; margin-bottom: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-        
+
         .filter-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 18px; }
         .filter-label { font-size: 0.875rem; font-weight: 800; color: var(--text-muted); min-width: 110px; text-transform: uppercase; letter-spacing: 0.5px; }
 
@@ -128,16 +128,121 @@
     <link rel="manifest" href="/site.webmanifest">
     <meta name="theme-color" content="#ffffff">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+
+<style id="paint-catalog-db-ui">
+.sponsor-inline{
+    margin-left:5px;
+    font-size:10px;
+    font-weight:800;
+    opacity:.75;
+}
+
+.sponsor-badge{
+    display:inline-flex;
+    width:max-content;
+    margin-top:4px;
+    padding:4px 8px;
+    border-radius:999px;
+    background:#fff4d6;
+    color:#8a5a00;
+    font-size:10px;
+    font-weight:800;
+}
+
+.catalog-empty{
+    grid-column:1/-1;
+    padding:28px 18px;
+    border:1px dashed var(--border);
+    border-radius:12px;
+    background:var(--bg);
+    text-align:center;
+    color:var(--text-muted);
+    line-height:1.6;
+}
+
+.catalog-actions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin:-16px 0 24px;
+}
+
+.catalog-action-link{
+    display:inline-flex;
+    align-items:center;
+    min-height:42px;
+    padding:0 14px;
+    border:1px solid var(--border);
+    border-radius:10px;
+    background:var(--surface);
+    color:var(--text-main);
+    font-size:13px;
+    font-weight:800;
+    text-decoration:none;
+}
+
+.catalog-action-link:hover{
+    border-color:var(--primary);
+}
+</style>
+
+<style id="visualizer-safe-mvp-v2">
+.visualizer-safety-note{
+    margin:0 0 14px;
+    padding:12px 14px;
+    border:1px solid #fde68a;
+    border-radius:10px;
+    background:#fffbeb;
+    color:#78350f;
+    font-size:13px;
+    line-height:1.55;
+}
+[data-theme="dark"] .visualizer-safety-note{
+    background:rgba(120,53,15,.18);
+    border-color:rgba(253,230,138,.25);
+    color:#fde68a;
+}
+</style>
+
+<style id="visualizer-hidden-fix">
+#smartToleranceSetting[hidden]{
+    display:none !important;
+}
+</style>
+
+@if(request()->boolean('embed'))
+<style id="visualizer-embed-mode">
+body{
+    padding-bottom:0 !important;
+}
+
+.container{
+    max-width:none !important;
+    margin:0 auto !important;
+    padding:14px !important;
+}
+
+.page-header{
+    display:none !important;
+}
+
+.lead-banner{
+    display:none !important;
+}
+</style>
+@endif
 </head>
 <body data-tool-slug="paint-visualizer">
 
-    <x-site.contech-header />
+    @unless(request()->boolean('embed'))
+        <x-site.contech-header />
+    @endunless
 
     <div class="container">
-        
+
         <div class="page-header">
-            <h1>Türkiye Markaları & RAL Duvar Renk Paleti</h1>
-            <p>Jotun, Filli Boya, Dyo, Polisan, Marshall ve resmi RAL K7 Classic kataloğundaki renkleri inceleyin, oda fotoğraflarınızda anında simüle edin.</p>
+            <h1>Duvar Rengi Görselleştirici</h1>
+            <p>Doğrulanmış renk kataloglarını inceleyin ve seçtiğiniz tonları oda veya cephe fotoğrafınız üzerinde yaklaşık olarak önizleyin.</p>
             <button class="quick-action-btn" onclick="scrollToVisualizer()">
                 📷 Fotoğraf Görselleştirme ▾
             </button>
@@ -145,38 +250,69 @@
 
         <!-- FILTERS & SWATCHES -->
         <div class="filter-section">
-            
+
             <!-- Brand Selection -->
             <div class="filter-row">
                 <span class="filter-label">Üretici / Standart:</span>
                 <div class="pill-group" id="brandPills">
-                    <span class="pill active" onclick="setBrand('RAL Kataloğu', this)">RAL Kataloğu</span>
-                    <span class="pill" onclick="setBrand('Jotun', this)">Jotun Türkiye</span>
-                    <span class="pill" onclick="setBrand('Filli Boya', this)">Filli Boya</span>
-                    <span class="pill" onclick="setBrand('Dyo', this)">Dyo</span>
-                    <span class="pill" onclick="setBrand('Polisan', this)">Polisan</span>
-                    <span class="pill" onclick="setBrand('Marshall', this)">Marshall</span>
-                    <span class="pill" onclick="setBrand('Tüm', this)">Tüm Listeyi Göster</span>
-                </div>
+    <span
+        class="pill active"
+        data-brand="Tüm"
+        onclick="setBrand(this.dataset.brand, this)"
+    >
+        Tüm Renkler
+    </span>
+
+    @foreach(($paintColorBrands ?? collect()) as $brand)
+        <span
+            class="pill"
+            data-brand="{{ $brand->name }}"
+            onclick="setBrand(this.dataset.brand, this)"
+        >
+            {{ $brand->name }}
+            @if($brand->is_sponsored)
+                <small class="sponsor-inline">✦ Sponsorlu</small>
+            @endif
+        </span>
+    @endforeach
+</div>
             </div>
 
             <!-- Category Selection -->
             <div class="filter-row">
                 <span class="filter-label">Renk Grubu:</span>
                 <div class="pill-group" id="categoryPills">
-                    <span class="pill active" onclick="setCategory('Tüm', this)">Tüm Renkler</span>
-                    <span class="pill" onclick="setCategory('Beyazlar ve Açık Tonlar', this)">Beyazlar ve Açık Tonlar</span>
-                    <span class="pill" onclick="setCategory('Griler ve Antrasit', this)">Griler ve Antrasit</span>
-                    <span class="pill" onclick="setCategory('Bejler ve Kum Tonları', this)">Bejler ve Kum Tonları</span>
-                    <span class="pill" onclick="setCategory('Yeşil ve Doğa', this)">Yeşil ve Doğa</span>
-                    <span class="pill" onclick="setCategory('Mavi ve Pastel', this)">Mavi ve Pastel</span>
-                </div>
+    <span
+        class="pill active"
+        data-category="Tüm"
+        onclick="setCategory(this.dataset.category, this)"
+    >
+        Tüm Renkler
+    </span>
+
+    @foreach(
+        ($paintColorCatalog ?? collect())
+            ->pluck('category')
+            ->filter()
+            ->unique()
+            ->values()
+        as $category
+    )
+        <span
+            class="pill"
+            data-category="{{ $category }}"
+            onclick="setCategory(this.dataset.category, this)"
+        >
+            {{ $category }}
+        </span>
+    @endforeach
+</div>
             </div>
 
             <!-- Search Bar -->
             <div class="search-box">
                 <span class="search-icon">🔍</span>
-                <input type="text" id="searchInput" class="search-input" placeholder="Renk adı veya RAL kodu ara (Örn: RAL 7016, Meltem Beji, Egghvit)..." oninput="renderSwatches()">
+                <input type="text" id="searchInput" class="search-input" placeholder="Renk adı veya kodu ara..." oninput="renderSwatches()">
             </div>
 
             <!-- Color Swatches Grid -->
@@ -187,13 +323,13 @@
         </div>
 
         <!-- SELECTED COLOR BANNER -->
-        <div class="selected-banner">
+        <div class="selected-banner" id="selectedBanner" hidden>
             <div class="selected-info">
                 <div class="selected-preview" id="bannerPreview" style="background-color: #383E42;"></div>
                 <div class="selected-details">
-                    <span class="selected-brand-tag" id="bannerBrand">RAL KATALOĞU</span>
-                    <span class="selected-name" id="bannerName">RAL 7016 Antrasit Gri</span>
-                    <span class="selected-hex" id="bannerHex">#383E42</span>
+                    <span class="selected-brand-tag" id="bannerBrand">RENK KATALOĞU</span><span class="sponsor-badge" id="bannerSponsor" hidden></span>
+                    <span class="selected-name" id="bannerName">Renk seçin</span>
+                    <span class="selected-hex" id="bannerHex">—</span>
                 </div>
             </div>
             <button class="icon-btn" title="Tam Ekran Görüntüle" onclick="toggleFullScreenColor()">
@@ -201,7 +337,31 @@
             </button>
         </div>
 
-        <!-- VISUALIZER CARD -->
+
+<div class="catalog-actions" id="catalogActions" hidden>
+    <a
+        href="#"
+        id="catalogProductLink"
+        class="catalog-action-link"
+        target="_blank"
+        rel="noopener noreferrer"
+        hidden
+    >
+        Ürünü incele →
+    </a>
+
+    <a
+        href="#"
+        id="catalogDealerLink"
+        class="catalog-action-link"
+        target="_blank"
+        rel="noopener noreferrer"
+        hidden
+    >
+        Bayi bul →
+    </a>
+</div>
+<!-- VISUALIZER CARD -->
         <div class="visualizer-card" id="visualizerSection">
             <h2 class="visualizer-title">
                 <span>Fotoğraf Üzerinde Görselleştirme</span>
@@ -212,13 +372,13 @@
                 <button class="tool-btn btn-primary" onclick="triggerUpload()">
                     📤 Fotoğraf Yükle
                 </button>
-                <button class="tool-btn active" id="btnModeAI" onclick="setMode('ai')">
-                    🎨 Akıllı Duvar Boya <span class="badge-ai">AI Mask</span>
+                <button class="tool-btn" id="btnModeAI" onclick="setMode('ai')">
+                    🧪 Akıllı Alan Seçimi <span class="badge-ai">Deneysel</span>
                 </button>
                 <button class="tool-btn" id="btnModeRect" onclick="setMode('rect')">
                     ⬛ Dikdörtgen
                 </button>
-                <button class="tool-btn" id="btnModeBrush" onclick="setMode('brush')">
+                <button class="tool-btn active" id="btnModeBrush" onclick="setMode('brush')">
                     🖌️ Fırça
                 </button>
                 <button class="tool-btn" id="btnModeEraser" onclick="setMode('eraser')">
@@ -235,13 +395,33 @@
                 </button>
             </div>
 
+            <div class="visualizer-safety-note">
+                <strong>Önerilen yöntem:</strong>
+                Boyanacak yüzeyi Fırça ile işaretleyin ve Silgi ile kenarları düzeltin.
+                Akıllı Alan Seçimi deneysel bir yardımcıdır; bazı fotoğraflarda
+                tavan, zemin veya diğer benzer yüzeylere taşabilir.
+            </div>
             <!-- SETTINGS BAR -->
             <div class="settings-bar">
-                <div class="setting-item">
+                <div class="setting-item" id="smartToleranceSetting" hidden>
                     <span>Hassasiyet (Tolerans):</span>
-                    <input type="range" id="toleranceSlider" class="range-slider" min="1" max="30" value="9" onchange="document.getElementById('toleranceVal').innerText = this.value">
-                    <span id="toleranceVal">9</span>
+                    <input type="range" id="toleranceSlider" class="range-slider" min="1" max="20" value="6" onchange="document.getElementById('toleranceVal').innerText = this.value">
+                    <span id="toleranceVal">6</span>
                 </div>
+                <div class="setting-item">
+                    <span>Fırça Boyutu:</span>
+                    <input
+                        type="range"
+                        id="brushSizeSlider"
+                        class="range-slider"
+                        min="8"
+                        max="80"
+                        value="28"
+                        oninput="document.getElementById('brushSizeVal').innerText = this.value"
+                    >
+                    <span id="brushSizeVal">28</span>
+                </div>
+
                 <div class="setting-item">
                     <span>Renk Yoğunluğu:</span>
                     <div class="pill-group">
@@ -269,7 +449,7 @@
             <div class="lead-banner" id="leadBanner" style="display: none;">
                 <div class="lead-text">
                     <h4>Bu Rengi Odanızda Çok Beğendiniz Mi?</h4>
-                    <p>Seçtiğiniz bu tonun malzeme ihtiyacını ve usta işçilik bütçesini 2026 ÇŞB rayiçleriyle anında hesaplayın.</p>
+                    <p>Seçtiğiniz bu tonun malzeme ihtiyacını ve usta işçilik bütçesini güncel piyasa ve saha referanslarıyla hesaplayın.</p>
                 </div>
                 <a href="/araclar/boya-hesaplayici" class="lead-btn">Boya Maliyetini Hesapla →</a>
             </div>
@@ -281,69 +461,11 @@
     <input type="file" id="imageUploader" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
 
     <script>
-                // --- MERKEZİ ÇŞB FİYAT MOTORU & KAİNTA ÇARPANI ---
-        const CSB_PRICES = {!! isset($SYSTEM_PRICES) ? $SYSTEM_PRICES : '{}' !!};
-        const KAINTA_MULTIPLIER = {!! isset($KAINTA_MULTIPLIER) ? $KAINTA_MULTIPLIER : 1.40 !!};
-
-        function getDbPrice(key, fallback) {
-            let baseCsbPrice = CSB_PRICES[key] !== undefined ? parseFloat(CSB_PRICES[key]) : fallback;
-            // ÇŞB Ham Fiyatı x 1.40 Kainta Çarpanı
-            return baseCsbPrice * KAINTA_MULTIPLIER; 
-        }
-        
-        function getRawCsbPrice(key, fallback) {
-            // Sadece ham ÇŞB maliyeti görmek istenirse (İhale modülü vb. için çarpanı yoksay)
-            return CSB_PRICES[key] !== undefined ? parseFloat(CSB_PRICES[key]) : fallback;
-        }
-        // ------------------------------------------------
-        // OFFICIAL TURKISH BRANDS & RAL K7 CLASSIC DATABASE
-        const COLOR_DATABASE = [
-            // RAL Classic Standards
-            { brand: 'RAL Kataloğu', category: 'Griler ve Antrasit', name: 'RAL 7016 Antrasit Gri', hex: '#383E42' },
-            { brand: 'RAL Kataloğu', category: 'Beyazlar ve Açık Tonlar', name: 'RAL 9010 Saf Beyaz', hex: '#F7F5EC' },
-            { brand: 'RAL Kataloğu', category: 'Beyazlar ve Açık Tonlar', name: 'RAL 9016 Trafik Beyazı', hex: '#F6F6F6' },
-            { brand: 'RAL Kataloğu', category: 'Beyazlar ve Açık Tonlar', name: 'RAL 1013 İstiridye Beyazı', hex: '#EBE5CE' },
-            { brand: 'RAL Kataloğu', category: 'Griler ve Antrasit', name: 'RAL 7035 Işık Grisi', hex: '#D7D7D7' },
-            { brand: 'RAL Kataloğu', category: 'Griler ve Antrasit', name: 'RAL 7040 Pencere Grisi', hex: '#9DA3A6' },
-            { brand: 'RAL Kataloğu', category: 'Griler ve Antrasit', name: 'RAL 7012 Bazalt Grisi', hex: '#596067' },
-
-            // Jotun Türkiye
-            { brand: 'Jotun', category: 'Beyazlar ve Açık Tonlar', name: 'JOT 1001 Egghvit (Yumurta Kabuğu)', hex: '#F1EBE0' },
-            { brand: 'Jotun', category: 'Beyazlar ve Açık Tonlar', name: 'JOT 1453 Bomull (Pamuk Beyazı)', hex: '#F3EFE3' },
-            { brand: 'Jotun', category: 'Beyazlar ve Açık Tonlar', name: 'JOT 9918 Klassisk Hvit', hex: '#F3F3EF' },
-            { brand: 'Jotun', category: 'Bejler ve Kum Tonları', name: 'JOT 10341 Kalk (Kireç Beji)', hex: '#D3CBBF' },
-            { brand: 'Jotun', category: 'Yeşil ve Doğa', name: 'JOT 8493 Green Tea', hex: '#9CA998' },
-            { brand: 'Jotun', category: 'Mavi ve Pastel', name: 'JOT 5030 St. Pauls Blue', hex: '#5B6B73' },
-
-            // Filli Boya
-            { brand: 'Filli Boya', category: 'Griler ve Antrasit', name: 'FIL Andezit 15', hex: '#A3A7AC' },
-            { brand: 'Filli Boya', category: 'Bejler ve Kum Tonları', name: 'FIL Meltem Beji', hex: '#DFD5C6' },
-            { brand: 'Filli Boya', category: 'Bejler ve Kum Tonları', name: 'FIL Kumsal', hex: '#E6DBC9' },
-            { brand: 'Filli Boya', category: 'Beyazlar ve Açık Tonlar', name: 'FIL Apaydın', hex: '#EFE7D3' },
-            { brand: 'Filli Boya', category: 'Mavi ve Pastel', name: 'FIL Okyanus Düşü', hex: '#5B7C99' },
-
-            // Dyo
-            { brand: 'Dyo', category: 'Beyazlar ve Açık Tonlar', name: 'DYO Buz Beyazı', hex: '#F4F4EE' },
-            { brand: 'Dyo', category: 'Griler ve Antrasit', name: 'DYO Gözdağı', hex: '#8E979B' },
-            { brand: 'Dyo', category: 'Bejler ve Kum Tonları', name: 'DYO Aura', hex: '#D8CEB9' },
-            { brand: 'Dyo', category: 'Griler ve Antrasit', name: 'DYO Krom', hex: '#A5A8AC' },
-
-            // Polisan
-            { brand: 'Polisan', category: 'Griler ve Antrasit', name: 'POL Marjinal Gri', hex: '#B5B8B8' },
-            { brand: 'Polisan', category: 'Bejler ve Kum Tonları', name: 'POL Kumsal Beji', hex: '#E1D4C1' },
-            { brand: 'Polisan', category: 'Bejler ve Kum Tonları', name: 'POL Şampanya', hex: '#ECE1D0' },
-            { brand: 'Polisan', category: 'Beyazlar ve Açık Tonlar', name: 'POL Sakız Beyazı', hex: '#F4F3EA' },
-
-            // Marshall Türkiye
-            { brand: 'Marshall', category: 'Griler ve Antrasit', name: 'MAR Tütsü', hex: '#D8D3C8' },
-            { brand: 'Marshall', category: 'Griler ve Antrasit', name: 'MAR Çakıl Taşı', hex: '#A39F97' },
-            { brand: 'Marshall', category: 'Bejler ve Kum Tonları', name: 'MAR Damla Sakızı', hex: '#EAE4D5' },
-            { brand: 'Marshall', category: 'Yeşil ve Doğa', name: 'MAR Isırgan Otualtı', hex: '#A8B29C' }
-        ];
-
-        let currentBrand = 'RAL Kataloğu';
+        // DB tabanlı, kullanım hakkı doğrulanmış renk kataloğu
+        const COLOR_DATABASE = @json($paintColorCatalog ?? collect());
+let currentBrand = 'RAL Kataloğu';
         let currentCategory = 'Tüm';
-        let selectedColor = COLOR_DATABASE[0];
+        let selectedColor = COLOR_DATABASE.length ? COLOR_DATABASE[0] : null;
 
         // Canvas Elements
         let mainCanvas = document.getElementById('mainCanvas');
@@ -352,15 +474,20 @@
         let ctxMask = maskCanvas.getContext('2d');
         let loadedImg = null;
 
-        let activeTool = 'ai';
+        let activeTool = 'brush';
         let currentOpacity = 0.75;
         let isDrawing = false;
         let startX = 0, startY = 0;
+        let lastX = 0, lastY = 0;
         let undoStack = [];
 
         document.addEventListener('DOMContentLoaded', () => {
             renderSwatches();
-            selectColor(COLOR_DATABASE[0]);
+
+            if (selectedColor) {
+                selectColor(selectedColor);
+            }
+
             setupDragAndDrop();
         });
 
@@ -378,43 +505,200 @@
             renderSwatches();
         }
 
+        function normalizeHex(value) {
+            const hex = String(value || '').trim();
+
+            return /^#[0-9a-fA-F]{6}$/.test(hex)
+                ? hex.toUpperCase()
+                : null;
+        }
+
+        function safeExternalUrl(value) {
+            if (!value) return null;
+
+            try {
+                const url = new URL(value, window.location.origin);
+
+                return ['http:', 'https:'].includes(url.protocol)
+                    ? url.href
+                    : null;
+            } catch (e) {
+                return null;
+            }
+        }
+
         function renderSwatches() {
-            const query = document.getElementById('searchInput').value.toLowerCase();
+            const input = document.getElementById('searchInput');
+            const query = (input?.value || '').toLowerCase();
             const grid = document.getElementById('swatchGrid');
+
             grid.innerHTML = '';
 
+            if (!COLOR_DATABASE.length) {
+                const empty = document.createElement('div');
+
+                empty.className = 'catalog-empty';
+                empty.textContent =
+                    'Doğrulanmış renk kataloğu henüz eklenmedi. ' +
+                    'Yeni kataloglar kullanım hakkı doğrulandıktan sonra yayınlanacaktır.';
+
+                grid.appendChild(empty);
+                return;
+            }
+
             const filtered = COLOR_DATABASE.filter(c => {
-                const matchBrand = (currentBrand === 'Tüm' || c.brand === currentBrand);
-                const matchCat = (currentCategory === 'Tüm' || c.category === currentCategory);
-                const matchSearch = c.name.toLowerCase().includes(query) || c.hex.toLowerCase().includes(query);
+                const name = String(c.name || '').toLowerCase();
+                const brand = String(c.brand || '').toLowerCase();
+                const code = String(c.code || '').toLowerCase();
+                const hex = String(c.hex || '').toLowerCase();
+
+                const matchBrand =
+                    currentBrand === 'Tüm' ||
+                    c.brand === currentBrand;
+
+                const matchCat =
+                    currentCategory === 'Tüm' ||
+                    c.category === currentCategory;
+
+                const matchSearch =
+                    !query ||
+                    name.includes(query) ||
+                    brand.includes(query) ||
+                    code.includes(query) ||
+                    hex.includes(query);
+
                 return matchBrand && matchCat && matchSearch;
             });
 
+            if (!filtered.length) {
+                const empty = document.createElement('div');
+
+                empty.className = 'catalog-empty';
+                empty.textContent = 'Bu filtreye uygun renk bulunamadı.';
+
+                grid.appendChild(empty);
+                return;
+            }
+
             filtered.forEach(c => {
+                const hex = normalizeHex(c.hex);
+
+                if (!hex) return;
+
                 const card = document.createElement('div');
-                card.className = `swatch-card ${selectedColor.hex === c.hex ? 'active' : ''}`;
+                const colorBox = document.createElement('div');
+                const brand = document.createElement('div');
+                const title = document.createElement('div');
+
+                card.className =
+                    'swatch-card ' +
+                    (
+                        selectedColor &&
+                        normalizeHex(selectedColor.hex) === hex
+                            ? 'active'
+                            : ''
+                    );
+
                 card.onclick = () => selectColor(c);
-                card.innerHTML = `
-                    <div class="swatch-color" style="background-color: ${c.hex};"></div>
-                    <div class="swatch-brand">${c.brand}</div>
-                    <div class="swatch-title">${c.name}</div>
-                `;
+
+                colorBox.className = 'swatch-color';
+                colorBox.style.backgroundColor = hex;
+
+                brand.className = 'swatch-brand';
+                brand.textContent =
+                    String(c.brand || 'Renk kataloğu') +
+                    (Number(c.is_sponsored) === 1 ? ' · Sponsorlu' : '');
+
+                title.className = 'swatch-title';
+                title.textContent =
+                    [c.code, c.name]
+                        .filter(Boolean)
+                        .join(' · ');
+
+                card.appendChild(colorBox);
+                card.appendChild(brand);
+                card.appendChild(title);
+
                 grid.appendChild(card);
             });
         }
 
         function selectColor(color) {
-            selectedColor = color;
-            document.getElementById('bannerPreview').style.backgroundColor = color.hex;
-            document.getElementById('bannerBrand').innerText = color.brand;
-            document.getElementById('bannerName').innerText = color.name;
-            document.getElementById('bannerHex').innerText = color.hex;
+            if (!color) return;
 
-            document.querySelectorAll('.swatch-card').forEach(card => card.classList.remove('active'));
+            const hex = normalizeHex(color.hex);
+
+            if (!hex) return;
+
+            selectedColor = {
+                ...color,
+                hex: hex
+            };
+
+            document.getElementById('selectedBanner').hidden = false;
+
+            document.getElementById('bannerPreview').style.backgroundColor = hex;
+            document.getElementById('bannerBrand').innerText =
+                color.brand || 'Renk kataloğu';
+
+            document.getElementById('bannerName').innerText =
+                [color.code, color.name]
+                    .filter(Boolean)
+                    .join(' · ');
+
+            document.getElementById('bannerHex').innerText = hex;
+
+            const sponsor = document.getElementById('bannerSponsor');
+
+            if (Number(color.is_sponsored) === 1) {
+                sponsor.hidden = false;
+                sponsor.innerText =
+                    color.sponsor_label || 'Sponsorlu katalog';
+            } else {
+                sponsor.hidden = true;
+                sponsor.innerText = '';
+            }
+
+            const actions = document.getElementById('catalogActions');
+            const product = document.getElementById('catalogProductLink');
+            const dealer = document.getElementById('catalogDealerLink');
+
+            const productUrl = safeExternalUrl(
+                color.product_url ||
+                color.brand_product_url
+            );
+
+            const dealerUrl = safeExternalUrl(
+                color.dealer_url ||
+                color.brand_dealer_url
+            );
+
+            product.hidden = !productUrl;
+            dealer.hidden = !dealerUrl;
+
+            if (productUrl) {
+                product.href = productUrl;
+            }
+
+            if (dealerUrl) {
+                dealer.href = dealerUrl;
+            }
+
+            const rel = Number(color.is_sponsored) === 1
+                ? 'noopener noreferrer sponsored'
+                : 'noopener noreferrer';
+
+            product.rel = rel;
+            dealer.rel = rel;
+
+            actions.hidden = !(productUrl || dealerUrl);
+
             renderSwatches();
         }
 
         function toggleFullScreenColor() {
+            if (!selectedColor) return;
+
             const div = document.createElement('div');
             div.style.position = 'fixed';
             div.style.top = '0'; div.style.left = '0'; div.style.width = '100vw'; div.style.height = '100vh';
@@ -495,11 +779,32 @@
 
         function setMode(mode) {
             activeTool = mode;
-            document.querySelectorAll('.toolbar .tool-btn').forEach(b => b.classList.remove('active'));
-            if(mode === 'ai') document.getElementById('btnModeAI').classList.add('active');
-            if(mode === 'rect') document.getElementById('btnModeRect').classList.add('active');
-            if(mode === 'brush') document.getElementById('btnModeBrush').classList.add('active');
-            if(mode === 'eraser') document.getElementById('btnModeEraser').classList.add('active');
+
+            document.querySelectorAll('.toolbar .tool-btn')
+                .forEach(b => b.classList.remove('active'));
+
+            if(mode === 'ai') {
+                document.getElementById('btnModeAI').classList.add('active');
+            }
+
+            if(mode === 'rect') {
+                document.getElementById('btnModeRect').classList.add('active');
+            }
+
+            if(mode === 'brush') {
+                document.getElementById('btnModeBrush').classList.add('active');
+            }
+
+            if(mode === 'eraser') {
+                document.getElementById('btnModeEraser').classList.add('active');
+            }
+
+            const tolerance =
+                document.getElementById('smartToleranceSetting');
+
+            if (tolerance) {
+                tolerance.hidden = mode !== 'ai';
+            }
         }
 
         function setIntensity(val, el) {
@@ -511,45 +816,165 @@
 
         function attachCanvasEvents() {
             maskCanvas.style.pointerEvents = 'auto';
-            maskCanvas.onmousedown = onMouseDown;
-            maskCanvas.onmousemove = onMouseMove;
-            maskCanvas.onmouseup = onMouseUp;
+            maskCanvas.style.touchAction = 'none';
+
+            maskCanvas.onpointerdown = onMouseDown;
+            maskCanvas.onpointermove = onMouseMove;
+            maskCanvas.onpointerup = onMouseUp;
+            maskCanvas.onpointercancel = onMouseUp;
+            maskCanvas.onpointerleave = onMouseUp;
         }
 
-        function onMouseDown(e) {
+
+        function getCanvasPoint(e) {
             const rect = maskCanvas.getBoundingClientRect();
-            startX = e.clientX - rect.left;
-            startY = e.clientY - rect.top;
+
+            const scaleX = maskCanvas.width / rect.width;
+            const scaleY = maskCanvas.height / rect.height;
+
+            return {
+                x: Math.max(
+                    0,
+                    Math.min(
+                        maskCanvas.width - 1,
+                        Math.round((e.clientX - rect.left) * scaleX)
+                    )
+                ),
+                y: Math.max(
+                    0,
+                    Math.min(
+                        maskCanvas.height - 1,
+                        Math.round((e.clientY - rect.top) * scaleY)
+                    )
+                )
+            };
+        }
+        function getBrushDiameter() {
+            return parseInt(
+                document.getElementById('brushSizeSlider')?.value || '28',
+                10
+            );
+        }
+
+        function drawBrushDot(x, y, erase = false) {
+            const diameter = getBrushDiameter();
+            const radius = diameter / 2;
+
+            ctxMask.save();
+            ctxMask.globalCompositeOperation =
+                erase ? 'destination-out' : 'source-over';
+
+            ctxMask.fillStyle =
+                erase ? '#000000' : selectedColor.hex;
+
+            ctxMask.beginPath();
+            ctxMask.arc(x, y, radius, 0, Math.PI * 2);
+            ctxMask.fill();
+            ctxMask.restore();
+        }
+
+        function drawBrushLine(x1, y1, x2, y2, erase = false) {
+            const diameter = getBrushDiameter();
+
+            ctxMask.save();
+            ctxMask.globalCompositeOperation =
+                erase ? 'destination-out' : 'source-over';
+
+            ctxMask.strokeStyle =
+                erase ? '#000000' : selectedColor.hex;
+
+            ctxMask.lineWidth = diameter;
+            ctxMask.lineCap = 'round';
+            ctxMask.lineJoin = 'round';
+
+            ctxMask.beginPath();
+            ctxMask.moveTo(x1, y1);
+            ctxMask.lineTo(x2, y2);
+            ctxMask.stroke();
+
+            ctxMask.restore();
+        }
+        function onMouseDown(e) {
+            if (!selectedColor) return;
+
+            if (e.cancelable) {
+                e.preventDefault();
+            }
+
+            const point = getCanvasPoint(e);
+
+            startX = point.x;
+            startY = point.y;
+            lastX = point.x;
+            lastY = point.y;
             isDrawing = true;
 
             if (activeTool === 'ai') {
-                smartAIWallFill(Math.round(startX), Math.round(startY));
+                smartAIWallFill(
+                    Math.round(startX),
+                    Math.round(startY)
+                );
+
                 saveUndoState();
+                isDrawing = false;
+                return;
+            }
+
+            if (activeTool === 'brush') {
+                drawBrushDot(point.x, point.y, false);
+            }
+
+            if (activeTool === 'eraser') {
+                drawBrushDot(point.x, point.y, true);
             }
         }
 
         function onMouseMove(e) {
-            if(!isDrawing) return;
-            const rect = maskCanvas.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
+            if (!selectedColor) return;
+            if (!isDrawing) return;
+
+            if (e.cancelable) {
+                e.preventDefault();
+            }
+
+            const point = getCanvasPoint(e);
+            const x = point.x;
+            const y = point.y;
 
             if (activeTool === 'brush') {
-                ctxMask.fillStyle = selectedColor.hex;
-                ctxMask.beginPath();
-                ctxMask.arc(x, y, 15, 0, Math.PI * 2);
-                ctxMask.fill();
-            } else if (activeTool === 'eraser') {
-                ctxMask.clearRect(x - 15, y - 15, 30, 30);
+                drawBrushLine(
+                    lastX,
+                    lastY,
+                    x,
+                    y,
+                    false
+                );
+
+                lastX = x;
+                lastY = y;
+            }
+
+            if (activeTool === 'eraser') {
+                drawBrushLine(
+                    lastX,
+                    lastY,
+                    x,
+                    y,
+                    true
+                );
+
+                lastX = x;
+                lastY = y;
             }
         }
 
         function onMouseUp(e) {
+            if (!selectedColor) return;
             if(!isDrawing) return;
             isDrawing = false;
-            const rect = maskCanvas.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
+            const point = getCanvasPoint(e);
+            const x = point.x;
+            const y = point.y;
 
             if (activeTool === 'rect') {
                 ctxMask.fillStyle = selectedColor.hex;
@@ -561,12 +986,13 @@
         }
 
         function smartAIWallFill(startX, startY) {
+            if (!selectedColor) return;
             const w = mainCanvas.width;
             const h = mainCanvas.height;
             const imgData = ctxMain.getImageData(0, 0, w, h);
             const maskData = ctxMask.getImageData(0, 0, w, h);
-            
-            const tol = parseInt(document.getElementById('toleranceSlider').value) * 5;
+
+            const tol = parseInt(document.getElementById('toleranceSlider').value) * 3;
             const targetRGB = getPixelRGB(imgData, startX, startY);
             const fillColor = hexToRgb(selectedColor.hex);
 
@@ -647,7 +1073,7 @@
         }
 
         function saveResult() {
-            if(!loadedImg) return;
+            if(!loadedImg || !selectedColor) return;
             const tempCanvas = document.createElement('canvas');
             tempCanvas.width = mainCanvas.width;
             tempCanvas.height = mainCanvas.height;
@@ -664,7 +1090,9 @@
             link.click();
         }
     </script>
-    <x-site.contech-footer />
+    @unless(request()->boolean('embed'))
+        <x-site.contech-footer />
+    @endunless
     <script src="/js/tool-events.js" defer></script>
 </body>
 </html>

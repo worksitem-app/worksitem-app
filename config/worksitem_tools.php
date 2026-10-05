@@ -7,6 +7,8 @@ return array (
     'overrides' =>
     array (
       'beton-hesaplayici' => 'active',
+      'boya-hesaplayici' => 'active',
+      'duvar-rengi-gorsellestirici' => 'active',
     ),
   ),
   'categories' => 

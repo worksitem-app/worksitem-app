@@ -18,8 +18,94 @@ class ToolController extends Controller
     }
 
     public function index() { return view('tools.index'); }
-    public function paintCalculator() { return view('tools.paint-calculator'); }
-    public function paintVisualizer() { return view('tools.paint-visualizer'); }
+    public function paintCalculator(
+        \App\Services\Pricing\PricingSettingsService $settings,
+        \App\Services\ToolPriceService $toolPrices
+    ) {
+        return view('tools.paint-calculator', [
+            'paintSettings' => [
+                'labor_standard_m2' =>
+                    $settings->requireDecimal('paint_labor_standard_m2'),
+                'labor_large_threshold' =>
+                    $settings->requireDecimal('paint_labor_large_threshold'),
+                'labor_large_min_m2' =>
+                    $settings->requireDecimal('paint_labor_large_min_m2'),
+                'labor_large_base_m2' =>
+                    $settings->requireDecimal('paint_labor_large_base_m2'),
+                'labor_large_max_m2' =>
+                    $settings->requireDecimal('paint_labor_large_max_m2'),
+                'budget_tolerance' =>
+                    $settings->requireDecimal('paint_budget_tolerance'),
+            ],
+            'paintPrices' =>
+                $toolPrices->forTool('boya-hesaplayici'),
+        ]);
+    }
+    public function paintVisualizer()
+    {
+        $brands = \Illuminate\Support\Facades\DB::table('paint_color_brands')
+            ->where('is_active', 1)
+            ->where('rights_status', '!=', 'unverified')
+            ->orderByDesc('is_sponsored')
+            ->orderBy('sort_order')
+            ->orderBy('name')
+            ->get([
+                'id',
+                'name',
+                'slug',
+                'is_sponsored',
+                'sponsor_label',
+                'logo_path',
+                'website_url',
+                'product_url',
+                'dealer_url',
+                'catalog_source',
+                'catalog_version',
+                'rights_status',
+            ]);
+
+        $colors = collect();
+
+        if ($brands->isNotEmpty()) {
+            $colors = \Illuminate\Support\Facades\DB::table('paint_colors as c')
+                ->join('paint_color_brands as b', 'b.id', '=', 'c.brand_id')
+                ->where('c.is_active', 1)
+                ->where('b.is_active', 1)
+                ->where('b.rights_status', '!=', 'unverified')
+                ->orderByDesc('b.is_sponsored')
+                ->orderBy('b.sort_order')
+                ->orderBy('c.sort_order')
+                ->orderBy('c.name')
+                ->get([
+                    'c.id',
+                    'c.brand_id',
+                    'c.series',
+                    'c.code',
+                    'c.name',
+                    'c.hex',
+                    'c.rgb_r',
+                    'c.rgb_g',
+                    'c.rgb_b',
+                    'c.lab_l',
+                    'c.lab_a',
+                    'c.lab_b',
+                    'c.category',
+                    'c.product_url',
+                    'c.dealer_url',
+                    'b.name as brand',
+                    'b.slug as brand_slug',
+                    'b.is_sponsored',
+                    'b.sponsor_label',
+                    'b.product_url as brand_product_url',
+                    'b.dealer_url as brand_dealer_url',
+                ]);
+        }
+
+        return view('tools.paint-visualizer', [
+            'paintColorBrands' => $brands,
+            'paintColorCatalog' => $colors,
+        ]);
+    }
     public function tileCalculator() { return view('tools.tile-calculator'); }
     public function documentBuilder() { return view('tools.document-builder'); }
     public function drywallCalculator() { return view('tools.drywall-calculator'); }
