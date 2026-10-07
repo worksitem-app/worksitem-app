@@ -6,6 +6,7 @@ return array (
     'default' => 'review',
     'overrides' =>
     array (
+      'seramik-maliyet-hesaplayici' => 'active',
       'beton-hesaplayici' => 'active',
       'boya-hesaplayici' => 'active',
       'duvar-rengi-gorsellestirici' => 'active',
@@ -248,11 +249,6 @@ return array (
     array (
       'title' => 'Kara Sıva Hesaplama',
       'cat' => 'kaba',
-    ),
-    'karo-hesaplayici' => 
-    array (
-      'title' => 'Karo Hesaplayıcı',
-      'cat' => 'ince',
     ),
     'karot-dayanim' => 
     array (

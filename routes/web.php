@@ -2,6 +2,7 @@
 
 // B2B Seramik Aracı Rotası
 Route::get('/araclar/seramik-maliyet-hesaplayici', [\App\Http\Controllers\ToolController::class, 'tileCalculator'])->name('tools.tile_calculator');
+Route::post('/hesaplama/seramik-maliyeti', [\App\Http\Controllers\Pricing\TileEstimateController::class, 'calculate'])->name('pricing.tile.calculate');
 
 
 // ADMIN: AI PDF FİYAT GÜNCELLEME
@@ -156,7 +157,7 @@ Route::get('/ai-tasarim/{any}', function ($any) {
 Route::prefix('araclar')->group(function () {
     Route::get('/', [\App\Http\Controllers\ToolController::class, 'index'])->name('tools.index');
     Route::get('/boya-hesaplayici', [\App\Http\Controllers\ToolController::class, 'paintCalculator'])->name('tools.paint');
-    Route::get('/karo-hesaplayici', [\App\Http\Controllers\ToolController::class, 'tileCalculator'])->name('tools.tile');
+    Route::redirect('/karo-hesaplayici', '/araclar/seramik-maliyet-hesaplayici', 301)->name('tools.tile');
     Route::get('/alcipan-hesaplayici', [\App\Http\Controllers\ToolController::class, 'drywallCalculator'])->name('tools.drywall');
     Route::get('/sap-hesaplayici', [\App\Http\Controllers\ToolController::class, 'screedCalculator'])->name('tools.screed');
     Route::get('/oda-planlayici', [\App\Http\Controllers\ToolController::class, 'roomPlanner'])->name('tools.room');
@@ -308,7 +309,6 @@ Route::get('/araclar/otomatik-kesif-fiyatlandirma', [\App\Http\Controllers\ConTe
 Route::post('/araclar/otomatik-kesif-fiyatlandirma/hesapla', [\App\Http\Controllers\ConTech\AutoBoqController::class, 'calculate'])->name('tools.auto_boq.calc');
 
 // 🤖 AI KARO OPTİMİZASYON (B2B Kesin Override)
-Route::get('/araclar/karo-hesaplayici', function() { return view('tools.karo-calculator'); })->name('tools.karo_calculator_ai');
 
 // 🪵 B2B PARKE HESAPLAYICI (Kesin Override)
 Route::get('/araclar/parke-maliyet-hesaplayici', function() { return view('tools.parquet-calculator'); })->name('tools.parquet_calculator');
@@ -707,7 +707,7 @@ Route::redirect(
 // Seramik / karo
 Route::redirect(
     '/araclar/karo-calculator',
-    '/araclar/karo-hesaplayici',
+    '/araclar/seramik-maliyet-hesaplayici',
     301
 );
 

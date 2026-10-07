@@ -106,7 +106,76 @@ class ToolController extends Controller
             'paintColorCatalog' => $colors,
         ]);
     }
-    public function tileCalculator() { return view('tools.tile-calculator'); }
+    public function tileCalculator(
+        \App\Services\ToolPriceService $toolPrices
+    ) {
+        $marketKeys = [
+            'tile_ceramic_wall_30x60_m2',
+            'tile_ceramic_floor_60x60_m2',
+            'tile_porcelain_matt_60x60_m2',
+            'tile_porcelain_matt_60x120_m2',
+        ];
+
+        $analyzer = app(\App\Services\Pricing\MaterialBenchmarkAnalyzer::class);
+        $tileMarket = [];
+
+        foreach ($marketKeys as $key) {
+            $rows = \App\Models\MaterialPriceObservation::query()
+                ->where('material_key', $key)
+                ->where('observed_at', '>=', now()->subDays(7))
+                ->orderByDesc('observed_at')
+                ->get()
+                ->unique('source_name')
+                ->values();
+
+            if ($rows->isEmpty()) {
+                continue;
+            }
+
+            $analysis = $analyzer->analyze($key, 7);
+
+            $tileMarket[$key] = [
+                'status' => $analysis['status'] ?? 'unknown',
+                'min' => round((float) $rows->min('price'), 2),
+                'max' => round((float) $rows->max('price'), 2),
+                'sources' => $rows->pluck('source_name')->filter()->unique()->values()->all(),
+                'last_checked' => optional($rows->first()->observed_at)
+                    ? \Illuminate\Support\Carbon::parse($rows->first()->observed_at)
+                        ->timezone('Europe/Istanbul')->format('d.m.Y H:i')
+                    : null,
+                'benchmark' => $analysis['benchmark']['benchmark_price'] ?? null,
+            ];
+        }
+
+        $tileSettings = \Illuminate\Support\Facades\DB::table('pricing_settings')
+            ->whereIn('key', [
+                'tile_labor_standard_m2',
+                'tile_large_threshold',
+                'tile_large_official_multiplier',
+            ])
+            ->pluck('value', 'key')
+            ->all();
+
+        $tileAccessoryPrices = \Illuminate\Support\Facades\DB::table('unit_prices')
+            ->whereIn('key', [
+                'tile_adhesive_standard_25kg',
+                'tile_grout_5kg',
+                'tile_profile_outside_aluminum_8mm_270cm',
+                'tile_profile_outside_aluminum_10mm_270cm',
+                'tile_profile_outside_aluminum_12mm_270cm',
+            ])
+            ->where('is_active', 1)
+            ->where('review_status', 'approved')
+            ->pluck('price', 'key')
+            ->all();
+        return view('tools.tile-calculator', [
+            'tilePrices' => $toolPrices->forTool('seramik-maliyet-hesaplayici'),
+            'tileMarket' => $tileMarket,
+            'tileSettings' => $tileSettings,
+            'tilePackaging' => config('tile_packaging', []),
+            'tileAccessoryPrices' => $tileAccessoryPrices,
+        ]);
+    }
     public function documentBuilder() { return view('tools.document-builder'); }
     public function drywallCalculator() { return view('tools.drywall-calculator'); }
     public function screedCalculator() { return view('tools.screed-calculator'); }

@@ -82,6 +82,23 @@ class LeadController extends Controller
             'calculation_id' => ['nullable', 'uuid'],
         ]);
 
+        /* SERAMIK_ZERO_TRUST_GUARD */
+        if (
+            ($validated['source_tool'] ?? null)
+                === 'seramik-maliyet-hesaplayici'
+            && empty($validated['calculation_id'])
+            && (
+                (float) ($validated['estimated_cost'] ?? 0) > 0
+                || (float) ($validated['estimated_min'] ?? 0) > 0
+                || (float) ($validated['estimated_max'] ?? 0) > 0
+            )
+        ) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'calculation_id' =>
+                    'Seramik fiyatı doğrulanamadı. Lütfen metrajı yeniden hesaplayın.',
+            ]);
+        }
+
         /*
          * Zero-Trust fiyat doğrulaması:
          *
@@ -298,6 +315,379 @@ class LeadController extends Controller
 
                     'calculated_at' =>
                         $snapshot['created_at'] ?? null,
+                ];
+
+                $validated['project_data'] =
+                    $projectData;
+
+            } elseif (
+                is_array($snapshot)
+                && ($snapshot['calculation_type'] ?? null)
+                    === 'tile_market_estimate'
+                && isset($snapshot['estimate'])
+                && is_array($snapshot['estimate'])
+            ) {
+                /*
+                 * Seramik V4 Zero-Trust
+                 *
+                 * Browser tarafından gönderilen alan, adet ve fiyatlar
+                 * doğruluk kaynağı değildir.
+                 * Tek doğruluk kaynağı session-bound server snapshot'tır.
+                 */
+                $estimate = $snapshot['estimate'];
+
+                $requiredTileKeys = [
+                    'material',
+                    'mode',
+                    'tile_size',
+                    'area',
+                    'waste_rate',
+                    'grout_mm',
+                    'theoretical_tiles',
+                    'layout_tiles',
+                    'base_tiles',
+                    'recommended_tiles',
+                    'gross_area',
+                    'market_key',
+                    'benchmark_status',
+                    'benchmark_confidence',
+                    'unit',
+                    'currency',
+                    'vat_status',
+                    'unit_price',
+                    'estimated_cost',
+                    'estimated_min',
+                    'estimated_max',
+                    'price_version',
+                ];
+
+                foreach (
+                    $requiredTileKeys
+                    as $requiredKey
+                ) {
+                    if (
+                        !array_key_exists(
+                            $requiredKey,
+                            $estimate
+                        )
+                    ) {
+                        throw \Illuminate\Validation\ValidationException::withMessages([
+                            'calculation_id' =>
+                                'Seramik hesaplama kaydı eksik veya geçersiz. Lütfen metrajı yeniden hesaplayın.',
+                        ]);
+                    }
+                }
+
+                $trustedMaterial = trim(
+                    (string) $estimate['material']
+                );
+
+                $trustedMode = trim(
+                    (string) $estimate['mode']
+                );
+
+                $trustedTileSize = trim(
+                    (string) $estimate['tile_size']
+                );
+
+                $trustedArea =
+                    (float) $estimate['area'];
+
+                $trustedWasteRate =
+                    (float) $estimate['waste_rate'];
+
+                $trustedGroutMm =
+                    (float) $estimate['grout_mm'];
+
+                $trustedTheoreticalTiles =
+                    (int) $estimate['theoretical_tiles'];
+
+                $trustedLayoutTiles =
+                    (int) $estimate['layout_tiles'];
+
+                $trustedBaseTiles =
+                    (int) $estimate['base_tiles'];
+
+                $trustedRecommendedTiles =
+                    (int) $estimate['recommended_tiles'];
+
+                $trustedGrossArea =
+                    (float) $estimate['gross_area'];
+
+                $trustedMarketKey = trim(
+                    (string) $estimate['market_key']
+                );
+
+                $trustedBenchmarkStatus = trim(
+                    (string) $estimate['benchmark_status']
+                );
+
+                $trustedBenchmarkConfidence =
+                    (float) $estimate[
+                        'benchmark_confidence'
+                    ];
+
+                $trustedUnit = trim(
+                    (string) $estimate['unit']
+                );
+
+                $trustedCurrency = strtoupper(
+                    trim(
+                        (string) $estimate['currency']
+                    )
+                );
+
+                $trustedVatStatus = trim(
+                    (string) $estimate['vat_status']
+                );
+
+                $trustedUnitPrice =
+                    (float) $estimate['unit_price'];
+
+                $trustedCost =
+                    (float) $estimate['estimated_cost'];
+
+                $trustedMin =
+                    (float) $estimate['estimated_min'];
+
+                $trustedMax =
+                    (float) $estimate['estimated_max'];
+
+                $trustedPriceVersion = trim(
+                    (string) $estimate['price_version']
+                );
+
+                if (
+                    !in_array(
+                        $trustedMaterial,
+                        [
+                            'ceramic',
+                            'porcelain_matt',
+                            'porcelain_glazed',
+                            'porcelain_polished',
+                        ],
+                        true
+                    )
+                    || !in_array(
+                        $trustedMode,
+                        ['quick', 'detailed'],
+                        true
+                    )
+                    || $trustedTileSize === ''
+                    || $trustedArea <= 0
+                    || $trustedWasteRate < 0
+                    || $trustedWasteRate > 30
+                    || $trustedGroutMm < 0
+                    || $trustedGroutMm > 50
+                    || $trustedTheoreticalTiles <= 0
+                    || $trustedLayoutTiles <= 0
+                    || $trustedBaseTiles <= 0
+                    || $trustedRecommendedTiles <= 0
+                    || $trustedGrossArea <= 0
+                    || $trustedMarketKey === ''
+                    || $trustedBenchmarkStatus !== 'ready'
+                    || $trustedBenchmarkConfidence <= 0
+                    || !in_array(
+                        $trustedUnit,
+                        ['TL/m²', 'TL/m2'],
+                        true
+                    )
+                    || $trustedCurrency !== 'TRY'
+                    || $trustedVatStatus !== 'included'
+                    || $trustedUnitPrice <= 0
+                    || $trustedCost <= 0
+                    || $trustedMin <= 0
+                    || $trustedMax <= 0
+                    || $trustedMin > $trustedCost
+                    || $trustedMax < $trustedCost
+                    || $trustedPriceVersion === ''
+                ) {
+                    throw \Illuminate\Validation\ValidationException::withMessages([
+                        'calculation_id' =>
+                            'Seramik fiyat doğrulaması başarısız. Lütfen metrajı yeniden hesaplayın.',
+                    ]);
+                }
+
+                /*
+                 * Browser-controlled lead değerlerini
+                 * server snapshot ile ez.
+                 */
+                $validated['area'] =
+                    $trustedArea;
+
+                $validated['calculated_area'] =
+                    (string) $trustedArea;
+
+                $validated['estimated_cost'] =
+                    $trustedCost;
+
+                $validated['estimated_min'] =
+                    $trustedMin;
+
+                $validated['estimated_max'] =
+                    $trustedMax;
+
+                $validated['price_version'] =
+                    $trustedPriceVersion;
+
+                /*
+                 * Browser project_data yalnız yardımcı bilgi olabilir.
+                 * Fiyat/metraj sözleşmesindeki kritik alanlar server
+                 * snapshot değerleriyle yeniden yazılır.
+                 */
+                $projectData =
+                    $validated['project_data'] ?? [];
+
+                if (is_string($projectData)) {
+                    $decodedProjectData =
+                        json_decode(
+                            $projectData,
+                            true
+                        );
+
+                    $projectData =
+                        is_array($decodedProjectData)
+                            ? $decodedProjectData
+                            : [];
+                }
+
+                if (!is_array($projectData)) {
+                    $projectData = [];
+                }
+
+                $projectData['area'] =
+                    $trustedArea;
+
+                $projectData['tile_size'] =
+                    $trustedTileSize;
+
+                $projectData['waste_rate'] =
+                    $trustedWasteRate;
+
+                $projectData['theoretical_tiles'] =
+                    $trustedTheoreticalTiles;
+
+                $projectData['layout_tiles'] =
+                    $trustedLayoutTiles;
+
+                $projectData['base_tiles'] =
+                    $trustedBaseTiles;
+
+                $projectData['recommended_tiles'] =
+                    $trustedRecommendedTiles;
+
+                $projectData['gross_area'] =
+                    $trustedGrossArea;
+
+                $projectData['tile_material_budget'] =
+                    $trustedCost;
+
+                $projectData['estimated_cost'] =
+                    $trustedCost;
+
+                $projectData['estimated_min'] =
+                    $trustedMin;
+
+                $projectData['estimated_max'] =
+                    $trustedMax;
+
+                $projectData['budget_scope'] =
+                    'tile_only';
+
+                $projectData['calculation_mode'] =
+                    'tile_market_estimate';
+
+                $projectData['result_version'] =
+                    'v4-a3b';
+
+                $projectData['trusted_calculation'] = [
+                    'calculation_id' =>
+                        (string)
+                        $validated['calculation_id'],
+
+                    'calculation_type' =>
+                        'tile_market_estimate',
+
+                    'material' =>
+                        $trustedMaterial,
+
+                    'mode' =>
+                        $trustedMode,
+
+                    'tile_size' =>
+                        $trustedTileSize,
+
+                    'area' =>
+                        $trustedArea,
+
+                    'waste_rate' =>
+                        $trustedWasteRate,
+
+                    'grout_mm' =>
+                        $trustedGroutMm,
+
+                    'theoretical_tiles' =>
+                        $trustedTheoreticalTiles,
+
+                    'layout_tiles' =>
+                        $trustedLayoutTiles,
+
+                    'base_tiles' =>
+                        $trustedBaseTiles,
+
+                    'recommended_tiles' =>
+                        $trustedRecommendedTiles,
+
+                    'gross_area' =>
+                        $trustedGrossArea,
+
+                    'market_key' =>
+                        $trustedMarketKey,
+
+                    'benchmark_status' =>
+                        $trustedBenchmarkStatus,
+
+                    'benchmark_confidence' =>
+                        $trustedBenchmarkConfidence,
+
+                    'unit' =>
+                        $trustedUnit,
+
+                    'currency' =>
+                        $trustedCurrency,
+
+                    'vat_status' =>
+                        $trustedVatStatus,
+
+                    'unit_price' =>
+                        $trustedUnitPrice,
+
+                    'total' =>
+                        $trustedCost,
+
+                    'estimate_low' =>
+                        $trustedMin,
+
+                    'estimate_high' =>
+                        $trustedMax,
+
+                    'price_sources' =>
+                        $estimate[
+                            'price_sources'
+                        ] ?? [],
+
+                    'price_checked_at' =>
+                        $estimate[
+                            'price_checked_at'
+                        ] ?? null,
+
+                    'price_version' =>
+                        $trustedPriceVersion,
+
+                    'calculated_at' =>
+                        $snapshot[
+                            'created_at'
+                        ] ?? null,
                 ];
 
                 $validated['project_data'] =

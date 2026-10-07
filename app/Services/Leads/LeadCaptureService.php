@@ -364,6 +364,172 @@ class LeadCaptureService
             ];
         }
         /*
+         * Seramik V4 Zero-Trust.
+         * LeadController snapshot'ı doğruladıktan sonra bu alan
+         * yalnız server tarafından oluşturulan trusted_calculation'dan gelir.
+         */
+        if (
+            is_array($trusted)
+            && ($trusted['calculation_type'] ?? null)
+                === 'tile_market_estimate'
+        ) {
+            return [
+                'trust_level' =>
+                    'server_verified',
+
+                'calculation_id' =>
+                    $trusted['calculation_id']
+                    ?? null,
+
+                'calculation_type' =>
+                    $trusted['calculation_type']
+                    ?? null,
+
+                'material' =>
+                    $trusted['material']
+                    ?? null,
+
+                'mode' =>
+                    $trusted['mode']
+                    ?? null,
+
+                'tile_size' =>
+                    $trusted['tile_size']
+                    ?? null,
+
+                'area' =>
+                    $this->nullableNumber(
+                        $trusted['area']
+                        ?? null
+                    ),
+
+                'waste_rate' =>
+                    $this->nullableNumber(
+                        $trusted['waste_rate']
+                        ?? null
+                    ),
+
+                'grout_mm' =>
+                    $this->nullableNumber(
+                        $trusted['grout_mm']
+                        ?? null
+                    ),
+
+                'theoretical_tiles' =>
+                    $this->nullableNumber(
+                        $trusted[
+                            'theoretical_tiles'
+                        ] ?? null
+                    ),
+
+                'layout_tiles' =>
+                    $this->nullableNumber(
+                        $trusted[
+                            'layout_tiles'
+                        ] ?? null
+                    ),
+
+                'base_tiles' =>
+                    $this->nullableNumber(
+                        $trusted[
+                            'base_tiles'
+                        ] ?? null
+                    ),
+
+                'recommended_tiles' =>
+                    $this->nullableNumber(
+                        $trusted[
+                            'recommended_tiles'
+                        ] ?? null
+                    ),
+
+                'gross_area' =>
+                    $this->nullableNumber(
+                        $trusted[
+                            'gross_area'
+                        ] ?? null
+                    ),
+
+                'market_key' =>
+                    $trusted['market_key']
+                    ?? null,
+
+                'benchmark_status' =>
+                    $trusted[
+                        'benchmark_status'
+                    ] ?? null,
+
+                'benchmark_confidence' =>
+                    $this->nullableNumber(
+                        $trusted[
+                            'benchmark_confidence'
+                        ] ?? null
+                    ),
+
+                'unit' =>
+                    $trusted['unit']
+                    ?? null,
+
+                'currency' =>
+                    $trusted['currency']
+                    ?? null,
+
+                'vat_status' =>
+                    $trusted['vat_status']
+                    ?? null,
+
+                'unit_price' =>
+                    $this->nullableNumber(
+                        $trusted['unit_price']
+                        ?? null
+                    ),
+
+                'total' =>
+                    $this->nullableNumber(
+                        $trusted['total']
+                        ?? null
+                    ),
+
+                'estimate_low' =>
+                    $this->nullableNumber(
+                        $trusted[
+                            'estimate_low'
+                        ] ?? null
+                    ),
+
+                'estimate_high' =>
+                    $this->nullableNumber(
+                        $trusted[
+                            'estimate_high'
+                        ] ?? null
+                    ),
+
+                'price_sources' =>
+                    $trusted[
+                        'price_sources'
+                    ] ?? [],
+
+                'price_checked_at' =>
+                    $trusted[
+                        'price_checked_at'
+                    ] ?? null,
+
+                'price_version' =>
+                    $trusted[
+                        'price_version'
+                    ] ?? null,
+
+                'calculated_at' =>
+                    $trusted[
+                        'calculated_at'
+                    ] ?? null,
+
+                'captured_at' =>
+                    now()->toIso8601String(),
+            ];
+        }
+
+        /*
          * Legacy hesaplar P0.5D/P0.5E tamamlanana kadar korunur,
          * ancak güven seviyesi açıkça işaretlenir.
          */
