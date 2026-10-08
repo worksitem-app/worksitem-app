@@ -49,5 +49,6 @@
         <p>Proje bilgileriniz Kainta İnşaat mühendislerine iletilmiştir. Ön değerlendirme yapıldıktan sonra detaylı teklif için sizinle iletişime geçeceğiz.</p>
         <a href="/araclar" class="btn">← Araçlara Dön</a>
     </div>
+<script src="/js/p1-product-events.js" defer></script>
 </body>
 </html>

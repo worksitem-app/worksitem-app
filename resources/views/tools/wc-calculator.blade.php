@@ -317,5 +317,16 @@ document.getElementById('btnNo').addEventListener('click', function() {
 
     <x-site.contech-footer />
     <script src="/js/tool-events.js" defer></script>
+<script src="/js/p1-product-events.js" defer></script>
+
+<!-- P1_SERAMIK_INTERNAL_LINK -->
+<div style="max-width:1120px;margin:24px auto;padding:0 20px;text-align:center">
+    <a
+        href="/araclar/seramik-maliyet-hesaplayici"
+        data-ws-internal-link
+        data-ws-target-tool="seramik_v4"
+        style="font-weight:800;text-decoration:underline;text-underline-offset:4px"
+    >WC için fayans ve seramik ihtiyacını hesapla →</a>
+</div>
 </body>
 </html>

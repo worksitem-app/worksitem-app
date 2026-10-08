@@ -752,24 +752,45 @@ const PACKAGE_GUIDE=@json($tilePackaging ?? []);
 const ACCESSORY_PRICES=@json($tileAccessoryPrices ?? []);
 let mode='quick';
 let surfaceCounter=0;
+let autoDetailedFromMixed=false;
 
 const $=id=>document.getElementById(id);
 const money=n=>new Intl.NumberFormat('tr-TR',{maximumFractionDigits:0}).format(n)+' TL';
 const money2=n=>new Intl.NumberFormat('tr-TR',{minimumFractionDigits:2,maximumFractionDigits:2}).format(n)+' TL';
 
 document.querySelectorAll('.mode-btn').forEach(btn=>{
-    btn.addEventListener('click',()=>{
+    btn.addEventListener('click',(event)=>{
+        if(event.isTrusted){
+            autoDetailedFromMixed=false;
+        }
+
         mode=btn.dataset.mode;
         document.querySelectorAll('.mode-btn').forEach(b=>b.classList.toggle('active',b===btn));
         $('quickPanel').classList.toggle('hidden',mode!=='quick');
         $('detailedPanel').classList.toggle('hidden',mode!=='detailed');
-        if(mode==='detailed' && !document.querySelector('.surface-row')) addSurface();
+
+        if(mode==='detailed' && !document.querySelector('.surface-row')){
+            addSurface();
+        }
     });
 });
 
 $('surfaceType').addEventListener('change',()=>{
-    if($('surfaceType').value==='mixed' && mode==='quick'){
+    const surfaceType=$('surfaceType').value;
+
+    if(surfaceType==='mixed' && mode==='quick'){
+        autoDetailedFromMixed=true;
         document.querySelector('[data-mode="detailed"]').click();
+        return;
+    }
+
+    if(
+        surfaceType!=='mixed' &&
+        mode==='detailed' &&
+        autoDetailedFromMixed
+    ){
+        autoDetailedFromMixed=false;
+        document.querySelector('[data-mode="quick"]').click();
     }
 });
 
@@ -1901,5 +1922,6 @@ $('calculateBtn').addEventListener('click',async ()=>{
     $('resultBox').scrollIntoView({behavior:'smooth',block:'start'});
 });
 </script>
+<script src="/js/p1-product-events.js" defer></script>
 </body>
 </html>

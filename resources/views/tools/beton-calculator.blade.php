@@ -1979,6 +1979,7 @@ document.getElementById('bSupplierQuote').addEventListener('click',function(){
     setBetonLeadMode('supplier');
 });
 </script>
+<script src="/js/p1-product-events.js" defer></script>
 </body></html>
 
 <style>

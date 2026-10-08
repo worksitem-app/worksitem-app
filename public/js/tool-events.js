@@ -175,6 +175,16 @@ document.addEventListener('click', function(e) {
 
     if (isCalc) {
         const toolSlug = document.body.dataset.toolSlug || 'unknown';
+
+        /* P1_PROTECTED_CALCULATORS */
+        if ([
+            'tile-calculator',
+            'seramik-maliyet-hesaplayici',
+            'beton-calculator',
+            'beton-hesaplayici',
+            'paint-calculator',
+            'boya-hesaplayici'
+        ].includes(toolSlug)) return;
         if (window.WorksitemEvents) {
             window.WorksitemEvents.trackCalculatorStart(toolSlug, {
                 button_text: text.substring(0, 50),
@@ -197,6 +207,16 @@ document.addEventListener('click', function(e) {
 
     if (isCalc) {
         const toolSlug = document.body.dataset.toolSlug || 'unknown';
+
+        /* P1_PROTECTED_CALCULATORS */
+        if ([
+            'tile-calculator',
+            'seramik-maliyet-hesaplayici',
+            'beton-calculator',
+            'beton-hesaplayici',
+            'paint-calculator',
+            'boya-hesaplayici'
+        ].includes(toolSlug)) return;
 
         // Start event (mevcut)
         if (window.WorksitemEvents) {
