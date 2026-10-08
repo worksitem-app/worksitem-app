@@ -25,7 +25,7 @@ class PozPublicController extends Controller
             });
         }
 
-        $pozs = $query->orderBy('poz_no')->paginate(50);
+        $pozs = $query->orderBy('poz_no')->paginate(50)->withQueryString();
 
         $institutions = TenderPoz::query()
             ->where('is_active', true)

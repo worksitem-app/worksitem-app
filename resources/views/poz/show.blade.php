@@ -1,9 +1,7 @@
 @extends('poz._layout')
 
 @section('title', $poz->poz_no . ' — ' . \Illuminate\Support\Str::limit($poz->description, 55) . ' | WORKSİTEM')
-
-@section('description', $poz->meta_description ?: ($poz->poz_no . ' pozunun 2026 birim fiyatı ' . $priceFormatted . ' TL/' . $poz->unit . '. Kaynak: ' . $poz->institution . '.'))
-
+@section('description', $poz->meta_description ?: ($poz->poz_no . ' pozunun birim fiyatı ' . $priceFormatted . ' TL/' . $poz->unit . '. Kaynak: ' . $poz->institution . '.'))
 @section('canonical', url('/poz/' . $poz->poz_no))
 
 @section('breadcrumb')
@@ -12,79 +10,167 @@
 @endsection
 
 @if($poz->meta_keywords)
-<meta name="keywords" content="{{ $poz->meta_keywords }}">
+@section('keywords', $poz->meta_keywords)
 @endif
 
+@push('head')
 <script type="application/ld+json">{!! json_encode($productSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}</script>
-
 @if($hasFaq)
 <script type="application/ld+json">{!! json_encode($faqSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}</script>
 @endif
-
 <script type="application/ld+json">{!! json_encode($breadcrumbSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}</script>
+@endpush
 
-<div class="hero">
-  <h1>{{ $poz->poz_no }} <span>{{ $poz->description }}</span></h1>
-</div>
+@section('content')
 
-<div class="direct-answer">
-  <p><strong>{{ $poz->poz_no }} pozunun 2026 birim fiyatı: <span class="price-badge">{{ $priceFormatted }} TL/{{ $poz->unit }}</span></strong></p>
-  <p style="margin-top:8px;color:#78350f;font-size:14px">Kaynak: {{ $poz->institution }}{{ $yearText }}</p>
-</div>
+<section class="poz-detail-hero">
+  <div class="poz-kicker">Resmî poz · birim fiyat referansı</div>
 
-<div class="card">
-  <h2>Poz Detayları</h2>
-  <table class="data-table">
-    <tr><th>Poz No</th><td><code>{{ $poz->poz_no }}</code></td></tr>
-    <tr><th>Açıklama</th><td>{{ $poz->description }}</td></tr>
-    <tr><th>Birim</th><td>{{ $poz->unit }}</td></tr>
-    <tr><th>Birim Fiyat</th><td><span class="price-badge">{{ $priceFormatted }} TL</span></td></tr>
-    <tr><th>Kurum</th><td>{{ $poz->institution }}</td></tr>
-  </table>
-</div>
+  <h1 class="poz-title">
+    <span class="poz-title-code">{{ $poz->poz_no }}</span>
+    — {{ $poz->description }}
+  </h1>
 
-@if($poz->long_description)
-<div class="card">
-  <h2>Detaylı Açıklama</h2>
-  <div class="long-description" style="line-height:1.8;color:var(--text)">
-    {!! nl2br(e($poz->long_description)) !!}
+  <p class="poz-lead">
+    {{ $poz->institution }} kaynağındaki bu pozun tanımını, birimini, güncel kayıtlı birim fiyatını ve WORKSİTEM üzerindeki ilgili pozları tek ekranda inceleyin.
+  </p>
+
+  <div class="poz-badges" aria-label="Poz özet bilgileri">
+    <span class="poz-badge">Poz <strong>{{ $poz->poz_no }}</strong></span>
+    <span class="poz-badge">Birim <strong>{{ $poz->unit }}</strong></span>
+    <span class="poz-badge">Kurum <strong>{{ $poz->institution }}</strong></span>
+    @if($poz->year)
+      <span class="poz-badge">Yıl <strong>{{ $poz->year }}</strong></span>
+    @endif
   </div>
-</div>
-@endif
 
-<div class="cta-box">
-  <h2>Bu Poz ile Maliyet Hesapla</h2>
-  <p>{{ $poz->description }} işini projenize ekleyerek toplam maliyeti öğrenin.</p>
-  <a href="/maliyet-hesapla?poz={{ urlencode($poz->poz_no) }}" class="btn btn-primary">Ücretsiz Hesapla →</a>
-</div>
-
-<div class="trust-bar">
-  <div class="trust-item"><span class="trust-icon">✓</span><span>Kainta İnşaat saha deneyimi</span></div>
-  <div class="trust-item"><span class="trust-icon">✓</span><span>2026 resmî rayiç bedeli</span></div>
-  <div class="trust-item"><span class="trust-icon">✓</span><span>Ücretsiz keşif imkânı</span></div>
-</div>
-
-
-@if(!empty($popular) && $popular->isNotEmpty())
-<section style="margin-top:32px">
-  <h2>Popüler Pozlar</h2>
-  <ul class="related-list">
-    @foreach($popular as $p)
-    <li>
-      <a href="{{ route('poz.show', $p->poz_no) }}">
-        <span class="poz-code">{{ $p->poz_no }}</span>
-        {{ \Illuminate\Support\Str::limit($p->description, 60) }}
-        <strong style="color:var(--green);margin-left:auto;">
-          {{ number_format((float)$p->unit_price, 2, ',', '.') }} TL/{{ $p->unit }}
-        </strong>
-      </a>
-    </li>
-    @endforeach
-  </ul>
+  <div class="poz-actions">
+    <a class="poz-btn poz-btn-primary" href="/maliyet-hesapla?poz={{ urlencode($poz->poz_no) }}">Bu poz ile maliyet hesapla →</a>
+    <a class="poz-btn" href="/pozlar">← Tüm pozlara dön</a>
+  </div>
 </section>
-@endif
-<section style="margin-top:48px">
-  <h2>Sıkça Sorulan Sorular</h2>
+
+<div class="poz-grid">
+  <div>
+    <section class="poz-card" aria-labelledby="pozDetailsTitle">
+      <div class="poz-card-head">
+        <div>
+          <div class="poz-card-kicker">Poz bilgileri</div>
+          <h2 id="pozDetailsTitle">Teknik özet</h2>
+        </div>
+      </div>
+
+      <div class="poz-details">
+        <div class="poz-details-row">
+          <div class="poz-details-label">Poz numarası</div>
+          <div class="poz-details-value"><code>{{ $poz->poz_no }}</code></div>
+        </div>
+
+        <div class="poz-details-row">
+          <div class="poz-details-label">Tanım</div>
+          <div class="poz-details-value">{{ $poz->description }}</div>
+        </div>
+
+        <div class="poz-details-row">
+          <div class="poz-details-label">Birim</div>
+          <div class="poz-details-value">{{ $poz->unit }}</div>
+        </div>
+
+        <div class="poz-details-row">
+          <div class="poz-details-label">Kaynak kurum</div>
+          <div class="poz-details-value">{{ $poz->institution }}</div>
+        </div>
+
+        @if($poz->year)
+        <div class="poz-details-row">
+          <div class="poz-details-label">Kaynak yılı</div>
+          <div class="poz-details-value">{{ $poz->year }}</div>
+        </div>
+        @endif
+
+        <div class="poz-details-row">
+          <div class="poz-details-label">Yüklenici kârı</div>
+          <div class="poz-details-value">{{ $profitText }}</div>
+        </div>
+      </div>
+    </section>
+
+    @if($poz->long_description)
+    <section class="poz-card" aria-labelledby="pozLongDescriptionTitle">
+      <div class="poz-card-head">
+        <div>
+          <div class="poz-card-kicker">Tarif / yapım şartları</div>
+          <h2 id="pozLongDescriptionTitle">{{ $poz->poz_no }} detaylı açıklaması</h2>
+        </div>
+      </div>
+
+      <div class="poz-prose">
+        {!! nl2br(e($poz->long_description)) !!}
+      </div>
+    </section>
+    @endif
+
+
+  </div>
+
+  <aside class="poz-summary" aria-label="Poz fiyat özeti">
+    <section class="poz-card">
+      <div class="poz-price-label">Kayıtlı birim fiyat</div>
+      <div class="poz-price-value">{{ $priceFormatted }} TL</div>
+      <div class="poz-price-unit">1 {{ $poz->unit }} için kayıtlı referans değer</div>
+
+      <div class="poz-summary-list">
+        <div class="poz-summary-row">
+          <span>Poz no</span>
+          <strong>{{ $poz->poz_no }}</strong>
+        </div>
+
+        <div class="poz-summary-row">
+          <span>Kurum</span>
+          <strong>{{ $poz->institution }}</strong>
+        </div>
+
+        @if($poz->year)
+        <div class="poz-summary-row">
+          <span>Yıl</span>
+          <strong>{{ $poz->year }}</strong>
+        </div>
+        @endif
+
+        <div class="poz-summary-row">
+          <span>Birim</span>
+          <strong>{{ $poz->unit }}</strong>
+        </div>
+      </div>
+
+      <div class="poz-note">
+        Bu değer WORKSİTEM veritabanındaki poz kaydının referans birim fiyatıdır. Projeye özel piyasa teklifi değildir; miktar, malzeme, saha ve uygulama koşulları ayrıca değerlendirilmelidir.
+      </div>
+
+      <a class="poz-btn poz-btn-primary" style="width:100%;margin-top:16px" href="/maliyet-hesapla?poz={{ urlencode($poz->poz_no) }}">
+        Maliyet hesabına geç →
+      </a>
+    </section>
+  </aside>
+</div>
+
+<section class="poz-cta">
+  <div>
+    <h2>Bu pozu proje bütçenizde değerlendirin.</h2>
+    <p>Poz referansını kullanarak maliyet hesabına geçin veya projeniz için profesyonel değerlendirme isteyin.</p>
+  </div>
+  <a class="poz-btn poz-btn-primary" href="/maliyet-hesapla?poz={{ urlencode($poz->poz_no) }}">Maliyet hesapla →</a>
+</section>
+
+
+
+<section class="poz-card" style="margin-top:18px" aria-labelledby="pozFaqTitle">
+  <div class="poz-card-head">
+    <div>
+      <div class="poz-card-kicker">Sık sorulan sorular</div>
+      <h2 id="pozFaqTitle">{{ $poz->poz_no }} hakkında</h2>
+    </div>
+  </div>
 
   @if($hasFaq)
     @foreach($faqItems as $faq)
@@ -101,17 +187,19 @@
 
     <details class="faq-item">
       <summary>{{ $poz->poz_no }} birim fiyatı ne kadar?</summary>
-      <p>2026 rayicinde <strong>{{ $priceFormatted }} TL/{{ $poz->unit }}</strong> olarak belirlenmiştir. Kaynak: {{ $poz->institution }}.</p>
+      <p>Kayıtlı birim fiyat <strong>{{ $priceFormatted }} TL/{{ $poz->unit }}</strong>. Kaynak: {{ $poz->institution }}{{ $yearText }}.</p>
     </details>
 
     <details class="faq-item">
-      <summary>{{ $poz->poz_no }} hangi kurumun rayicinde?</summary>
+      <summary>{{ $poz->poz_no }} hangi kurumun kaydında?</summary>
       <p>{{ $poz->institution }}{{ $yearText }}.</p>
     </details>
 
     <details class="faq-item">
-      <summary>Bu poz için kâr dahil mi?</summary>
+      <summary>Bu poz için yüklenici kârı dahil mi?</summary>
       <p>{{ $profitText }}</p>
     </details>
   @endif
 </section>
+
+@endsection
