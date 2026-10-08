@@ -1,97 +1,159 @@
-<footer class="wks-footer" aria-label="Site alt bilgisi">
+<footer class="wks-footer {{ request()->path() === '/' ? 'wks-footer-home' : '' }}" aria-label="Site alt bilgisi">
 
 <style>
+/* =========================================================
+   WORKSITEM FOOTER V2
+   Component design tokens + light/dark integration
+   ========================================================= */
+
 .wks-footer{
-    --wf-bg:#111827;
-    --wf-panel:#182231;
-    --wf-panel-hover:#202c3d;
-    --wf-text:#f8fafc;
-    --wf-muted:#aab4c3;
-    --wf-line:rgba(255,255,255,.11);
+    --wf-bg:#f6f7f9;
+    --wf-panel:#ffffff;
+    --wf-panel-soft:#f0f2f5;
+    --wf-text:#111827;
+    --wf-muted:#5f6b7a;
+    --wf-line:#dce2e9;
+
     --wf-yellow:#f5b400;
-    --wf-yellow-hover:#ffc326;
+    --wf-yellow-hover:#e6a900;
+    --wf-yellow-soft:#fff8df;
+
+    --wf-success:#16a34a;
+
+    --wf-shadow:
+        0 16px 40px rgba(15,23,42,.09);
 
     margin-top:64px!important;
+    border-top:1px solid var(--wf-line)!important;
     background:var(--wf-bg)!important;
     color:var(--wf-text)!important;
-    border-top:0!important;
     font-family:inherit;
 }
 
-.wks-footer *{
+html[data-theme="dark"] .wks-footer{
+    --wf-bg:#111827;
+    --wf-panel:#182231;
+    --wf-panel-soft:#202c3d;
+    --wf-text:#f8fafc;
+    --wf-muted:#aeb8c6;
+    --wf-line:rgba(255,255,255,.12);
+
+    --wf-yellow:#f5b400;
+    --wf-yellow-hover:#ffc326;
+    --wf-yellow-soft:rgba(245,180,0,.10);
+
+    --wf-success:#22c55e;
+
+    --wf-shadow:
+        0 20px 50px rgba(0,0,0,.22);
+}
+
+.wks-footer *,
+.wks-footer *::before,
+.wks-footer *::after{
     box-sizing:border-box;
 }
 
 .wks-foot-inner{
     width:min(calc(100% - 40px),1180px)!important;
-    max-width:none!important;
     margin:0 auto;
     padding:0 0 24px!important;
 }
 
-/* CTA */
+/* =========================================================
+   CTA
+   ========================================================= */
 
 .wks-foot-cta{
     position:relative;
     top:-30px;
+
     display:grid;
     grid-template-columns:minmax(0,1fr) auto;
     align-items:center;
-    gap:32px;
-    padding:30px 32px;
+    gap:30px;
+
+    padding:29px 32px;
+
     overflow:hidden;
+
     border:1px solid rgba(245,180,0,.28);
     border-radius:22px;
+
     background:
-        radial-gradient(circle at 88% 20%,rgba(245,180,0,.16),transparent 32%),
+        radial-gradient(
+            circle at 90% 15%,
+            rgba(245,180,0,.15),
+            transparent 32%
+        ),
         var(--wf-panel);
-    box-shadow:0 20px 50px rgba(0,0,0,.18);
+
+    box-shadow:var(--wf-shadow);
 }
 
 .wks-foot-cta::after{
     content:"";
+
     position:absolute;
+    right:-84px;
+    bottom:-112px;
+
     width:180px;
     height:180px;
-    right:-85px;
-    bottom:-110px;
+
     border-radius:50%;
     background:rgba(245,180,0,.08);
+
     pointer-events:none;
+}
+
+.wks-foot-cta-copy,
+.wks-foot-cta-actions{
+    position:relative;
+    z-index:1;
 }
 
 .wks-foot-eyebrow{
     display:block;
+
     margin-bottom:7px;
+
     color:var(--wf-yellow);
-    font-size:11px;
+
+    font-size:10px;
     line-height:1.4;
     font-weight:900;
+
     letter-spacing:1px;
     text-transform:uppercase;
 }
 
 .wks-foot-cta h2{
-    margin:0!important;
     max-width:650px;
-    color:#fff!important;
-    font-size:clamp(24px,3vw,34px)!important;
-    line-height:1.12!important;
-    letter-spacing:-1px!important;
-    font-weight:900!important;
+
+    margin:0!important;
+
+    color:var(--wf-text)!important;
+
+    font-size:clamp(25px,3vw,35px)!important;
+    line-height:1.1!important;
+    letter-spacing:-1.2px!important;
+
+    font-weight:950!important;
 }
 
 .wks-foot-cta p{
-    max-width:690px;
+    max-width:680px;
+
     margin:10px 0 0!important;
+
     color:var(--wf-muted)!important;
-    font-size:13px;
-    line-height:1.7;
+
+    font-size:13px!important;
+    line-height:1.65!important;
 }
 
 .wks-foot-cta-actions{
-    position:relative;
-    z-index:1;
     display:flex;
     flex-wrap:wrap;
     justify-content:flex-end;
@@ -100,25 +162,37 @@
 
 .wks-foot-btn{
     min-height:48px;
-    margin:0!important;
-    padding:0 18px;
+
     display:inline-flex!important;
     align-items:center;
     justify-content:center;
-    border:1px solid var(--wf-line);
-    border-radius:11px;
-    color:#fff!important;
-    background:rgba(255,255,255,.04);
+
+    margin:0!important;
+    padding:0 18px;
+
+    border:1px solid var(--wf-line)!important;
+    border-radius:11px!important;
+
+    background:var(--wf-panel)!important;
+    color:var(--wf-text)!important;
+
     font-size:12px!important;
-    font-weight:850;
+    font-weight:900!important;
+
     white-space:nowrap;
-    transition:transform .18s ease,background .18s ease,border-color .18s ease;
+    text-decoration:none!important;
+
+    transition:
+        transform .18s ease,
+        border-color .18s ease,
+        background .18s ease;
 }
 
 .wks-foot-btn:hover{
     transform:translateY(-2px);
-    background:var(--wf-panel-hover);
-    border-color:rgba(255,255,255,.22);
+
+    border-color:rgba(245,180,0,.45)!important;
+    background:var(--wf-panel-soft)!important;
 }
 
 .wks-foot-btn-primary{
@@ -131,87 +205,248 @@
     background:var(--wf-yellow-hover)!important;
 }
 
-/* Main grid */
+/* =========================================================
+   GRID
+   ========================================================= */
 
 .wks-foot-grid{
     display:grid!important;
-    grid-template-columns:minmax(250px,1.55fr) repeat(3,minmax(135px,.72fr))!important;
-    gap:42px!important;
-    padding:14px 0 36px;
+
+    grid-template-columns:
+        minmax(280px,1.6fr)
+        minmax(125px,.72fr)
+        minmax(125px,.72fr)
+        minmax(135px,.78fr)
+        minmax(155px,.9fr)!important;
+
+    gap:26px!important;
+
+    padding:8px 0 34px;
 }
 
 .wks-foot-brand{
     min-width:0;
+    padding-right:16px;
 }
 
 .wks-foot-logo{
     display:block;
+
     width:auto!important;
     height:38px!important;
+
     padding:5px 7px!important;
-    background:#fff!important;
+
+    border:1px solid var(--wf-line);
     border-radius:7px!important;
+
+    background:#fff!important;
 }
 
 .wks-foot-text{
     max-width:390px;
+
     margin:16px 0 0!important;
+
     color:var(--wf-muted)!important;
+
     font-size:13px!important;
-    line-height:1.75!important;
+    line-height:1.7!important;
 }
+
+/* =========================================================
+   Proof list — no false button affordance
+   ========================================================= */
 
 .wks-foot-proof{
-    display:flex;
-    flex-wrap:wrap;
-    gap:7px;
-    margin-top:18px;
+    display:grid;
+
+    grid-template-columns:
+        repeat(2,minmax(0,1fr));
+
+    gap:7px 14px;
+
+    margin:17px 0 0;
+    padding:0;
+
+    list-style:none;
 }
 
-.wks-foot-proof span{
-    padding:6px 9px;
-    border:1px solid var(--wf-line);
-    border-radius:999px;
-    color:#cbd5e1;
-    background:rgba(255,255,255,.025);
-    font-size:10px;
+.wks-foot-proof li{
+    position:relative;
+
+    padding-left:19px;
+
+    color:var(--wf-muted);
+
+    font-size:11px;
+    line-height:1.5;
     font-weight:750;
 }
 
-.wks-foot-title{
-    margin:2px 0 15px!important;
-    color:var(--wf-yellow)!important;
-    font-size:11px!important;
-    line-height:1.4;
+.wks-foot-proof li::before{
+    content:"✓";
+
+    position:absolute;
+    left:0;
+    top:0;
+
+    color:var(--wf-yellow);
+
+    font-weight:950;
+}
+
+/* =========================================================
+   Contact
+   ========================================================= */
+
+.wks-foot-contact{
+    margin-top:18px;
+    padding-top:14px;
+
+    border-top:1px solid var(--wf-line);
+}
+
+.wks-foot-contact-label{
+    display:block;
+
+    margin-bottom:6px;
+
+    color:var(--wf-muted);
+
+    font-size:10px;
+    font-weight:850;
+
+    letter-spacing:.65px;
+    text-transform:uppercase;
+}
+
+.wks-footer .wks-foot-contact a{
+    display:inline-flex!important;
+    align-items:center;
+    gap:7px;
+
+    color:var(--wf-text)!important;
+
+    font-size:12px!important;
     font-weight:900!important;
+
+    text-decoration:none!important;
+}
+
+.wks-footer .wks-foot-contact a::before{
+    content:"@";
+
+    color:var(--wf-yellow);
+    font-weight:950;
+}
+
+/* =========================================================
+   Navigation
+   ========================================================= */
+
+.wks-foot-title{
+    margin:2px 0 13px!important;
+
+    color:var(--wf-yellow)!important;
+
+    font-size:10px!important;
+    line-height:1.4;
+
+    font-weight:950!important;
+
     letter-spacing:.9px!important;
     text-transform:uppercase!important;
 }
 
 .wks-foot-links{
     display:grid;
-    gap:2px;
+    gap:1px;
 }
 
 .wks-footer .wks-foot-links a{
-    position:relative;
     display:inline-flex!important;
+    align-items:center;
+
     width:max-content;
     max-width:100%;
-    align-items:center;
-    min-height:34px;
+
+    min-height:31px;
+
     margin:0!important;
-    color:#cbd5e1!important;
-    font-size:13px!important;
-    line-height:1.45;
+
+    color:var(--wf-muted)!important;
+
+    font-size:12px!important;
+    line-height:1.45!important;
+    font-weight:650!important;
+
     text-decoration:none!important;
-    transition:color .18s ease,transform .18s ease;
+
+    transition:
+        color .18s ease,
+        transform .18s ease;
 }
 
 .wks-footer .wks-foot-links a:hover{
-    color:#fff!important;
-    transform:translateX(3px);
+    color:var(--wf-text)!important;
+    transform:translateX(2px);
 }
+
+/* =========================================================
+   Professional application — no competing card
+   ========================================================= */
+
+.wks-foot-pro{
+    min-width:0;
+
+    padding-left:16px;
+
+    border-left:2px solid rgba(245,180,0,.58);
+}
+
+.wks-foot-pro strong{
+    display:block;
+
+    margin:0 0 8px;
+
+    color:var(--wf-text);
+
+    font-size:13px;
+    line-height:1.4;
+}
+
+.wks-foot-pro p{
+    margin:0!important;
+
+    color:var(--wf-muted)!important;
+
+    font-size:11px!important;
+    line-height:1.65!important;
+}
+
+.wks-footer .wks-foot-pro-link{
+    display:inline-flex!important;
+    align-items:center;
+    gap:5px;
+
+    margin:11px 0 0!important;
+
+    color:var(--wf-text)!important;
+
+    font-size:11px!important;
+    font-weight:900!important;
+
+    text-decoration:none!important;
+}
+
+.wks-foot-pro-link-arrow{
+    color:var(--wf-yellow);
+}
+
+/* =========================================================
+   Accessibility
+   ========================================================= */
 
 .wks-footer a:focus-visible{
     outline:3px solid var(--wf-yellow);
@@ -219,60 +454,24 @@
     border-radius:4px;
 }
 
-/* Kainta partner */
-
-.wks-partner{
-    margin-top:4px;
-    padding:17px!important;
-    border:1px solid var(--wf-line)!important;
-    border-radius:14px!important;
-    background:rgba(255,255,255,.035)!important;
-}
-
-.wks-partner-label{
-    display:block;
-    margin-bottom:5px;
-    color:var(--wf-yellow);
-    font-size:10px;
-    font-weight:900;
-    letter-spacing:.7px;
-    text-transform:uppercase;
-}
-
-.wks-partner strong{
-    display:block;
-    color:#fff;
-    font-size:14px!important;
-}
-
-.wks-partner span{
-    display:block;
-    margin-top:6px!important;
-    color:var(--wf-muted)!important;
-    font-size:11px!important;
-    line-height:1.6!important;
-}
-
-.wks-footer .wks-partner a{
-    display:inline-flex!important;
-    align-items:center;
-    margin:11px 0 0!important;
-    color:var(--wf-yellow)!important;
-    font-size:12px!important;
-    font-weight:850;
-}
-
-/* Bottom */
+/* =========================================================
+   Bottom
+   ========================================================= */
 
 .wks-foot-bottom{
-    margin:0!important;
-    padding:20px 0 0!important;
-    border-top:1px solid var(--wf-line)!important;
     display:flex!important;
     align-items:center;
     justify-content:space-between;
+
     gap:20px;
+
+    margin:0!important;
+    padding:19px 0 0!important;
+
+    border-top:1px solid var(--wf-line)!important;
+
     color:var(--wf-muted)!important;
+
     font-size:11px!important;
 }
 
@@ -280,6 +479,7 @@
     display:flex;
     flex-wrap:wrap;
     align-items:center;
+
     gap:8px 16px;
 }
 
@@ -290,39 +490,44 @@
 .wks-foot-status{
     display:inline-flex;
     align-items:center;
+
     gap:6px;
 }
 
 .wks-foot-status::before{
     content:"";
+
     width:6px;
     height:6px;
+
+    flex:0 0 6px;
+
     border-radius:50%;
-    background:#22c55e;
+
+    background:var(--wf-success);
 }
 
-/* Responsive */
+/* =========================================================
+   Responsive
+   ========================================================= */
 
-@media(max-width:980px){
-    .wks-foot-cta{
-        grid-template-columns:1fr;
-        gap:20px;
-    }
-
-    .wks-foot-cta-actions{
-        justify-content:flex-start;
-    }
+@media(max-width:1080px){
 
     .wks-foot-grid{
-        grid-template-columns:1.35fr 1fr 1fr!important;
+        grid-template-columns:
+            minmax(270px,1.4fr)
+            repeat(2,minmax(150px,1fr))!important;
+
+        gap:30px!important;
     }
 
-    .wks-foot-grid > :last-child{
+    .wks-foot-pro{
         grid-column:2 / 4;
     }
 }
 
 @media(max-width:760px){
+
     .wks-footer{
         margin-top:48px!important;
     }
@@ -334,7 +539,13 @@
 
     .wks-foot-cta{
         top:-22px;
+
+        grid-template-columns:1fr;
+
+        gap:20px;
+
         padding:24px 20px;
+
         border-radius:18px;
     }
 
@@ -348,16 +559,21 @@
     }
 
     .wks-foot-grid{
-        grid-template-columns:1fr 1fr!important;
-        gap:30px 24px!important;
-        padding:8px 0 30px;
+        grid-template-columns:
+            repeat(2,minmax(0,1fr))!important;
+
+        gap:28px 22px!important;
+
+        padding:8px 0 29px;
     }
 
     .wks-foot-brand{
         grid-column:1 / -1;
+
+        padding-right:0;
     }
 
-    .wks-foot-grid > :last-child{
+    .wks-foot-pro{
         grid-column:1 / -1;
     }
 
@@ -372,67 +588,104 @@
 }
 
 @media(max-width:480px){
+
     .wks-foot-grid{
         grid-template-columns:1fr!important;
     }
 
     .wks-foot-brand,
-    .wks-foot-grid > :last-child{
+    .wks-foot-pro{
         grid-column:auto;
     }
 
     .wks-foot-proof{
-        display:grid;
-        grid-template-columns:1fr 1fr;
-    }
-
-    .wks-foot-proof span{
-        text-align:center;
+        grid-template-columns:1fr;
     }
 }
 
 @media(prefers-reduced-motion:reduce){
-    .wks-foot-btn,
-    .wks-footer a{
+
+    .wks-footer a,
+    .wks-foot-btn{
         transition:none!important;
+    }
+}
+
+/* Homepage: üst CTA zaten sayfa içinde mevcut */
+.wks-footer-home{
+    margin-top:38px!important;
+}
+
+.wks-footer-home .wks-foot-inner{
+    padding-top:30px!important;
+}
+
+@media(max-width:760px){
+    .wks-footer-home{
+        margin-top:30px!important;
+    }
+
+    .wks-footer-home .wks-foot-inner{
+        padding-top:24px!important;
     }
 }
 </style>
 
 <div class="wks-foot-inner">
 
-    <section class="wks-foot-cta" aria-labelledby="wks-footer-cta-title">
-        <div>
-            <span class="wks-foot-eyebrow">WORKSİTEM · Proje ön bütçesi</span>
+    @if (request()->path() !== '/')
+<section
+        class="wks-foot-cta"
+        aria-labelledby="wks-footer-cta-title"
+    >
+
+        <div class="wks-foot-cta-copy">
+
+            <span class="wks-foot-eyebrow">
+                WORKSİTEM · Proje ön bütçesi
+            </span>
 
             <h2 id="wks-footer-cta-title">
                 Projenizi rakamlara dökün.
             </h2>
 
             <p>
-                İnşaat, tadilat ve kentsel dönüşüm projeleriniz için yaklaşık
-                maliyetinizi hesaplayın; teknik hesaplama ve metraj araçlarına
-                tek noktadan ulaşın.
+                İnşaat, tadilat ve kentsel dönüşüm projeleriniz için
+                yaklaşık maliyetinizi hesaplayın; teknik hesaplama ve
+                metraj araçlarına tek noktadan ulaşın.
             </p>
+
         </div>
 
         <div class="wks-foot-cta-actions">
-            <a class="wks-foot-btn wks-foot-btn-primary"
-               href="/#proje-hesaplayici">
-                Maliyet Hesapla →
+
+            <a
+                class="wks-foot-btn wks-foot-btn-primary"
+                href="/#proje-hesaplayici"
+            >
+                Ön Bütçemi Hesapla →
             </a>
 
-            <a class="wks-foot-btn"
-               href="/araclar">
+            <a
+                class="wks-foot-btn"
+                href="/araclar"
+            >
                 Tüm Araçları Gör
             </a>
+
         </div>
+
     </section>
+@endif
 
     <div class="wks-foot-grid">
 
         <div class="wks-foot-brand">
-            <a href="/" aria-label="WORKSİTEM ana sayfa">
+
+            <a
+                href="/"
+                aria-label="WORKSİTEM ana sayfa"
+            >
                 <img
                     src="/brand/worksitem-logo.png"
                     class="wks-foot-logo"
@@ -449,227 +702,166 @@
                 Sonuçlar ön değerlendirme ve bütçe planlaması amacıyla sunulur.
             </p>
 
-            <div class="wks-foot-proof" aria-label="WORKSİTEM özellikleri">
-                <span>2026 fiyat verileri</span>
-                <span>Ön bütçe</span>
-                <span>Metraj araçları</span>
-                <span>AI ön keşif</span>
+            <ul
+                class="wks-foot-proof"
+                aria-label="WORKSİTEM özellikleri"
+            >
+                <li>2026 fiyat verileri</li>
+                <li>Ön bütçe</li>
+                <li>Teknik hesaplama</li>
+                <li>AI ön keşif</li>
+            </ul>
+
+            <div class="wks-foot-contact">
+
+                <span class="wks-foot-contact-label">
+                    Destek / İletişim
+                </span>
+
+                <a href="mailto:info@worksitem.com">
+                    info@worksitem.com
+                </a>
+
             </div>
+
         </div>
 
-        <nav aria-label="Ürün bağlantıları">
-            <div class="wks-foot-title">Platform</div>
+        <nav aria-label="Platform bağlantıları">
+
+            <div class="wks-foot-title">
+                Platform
+            </div>
 
             <div class="wks-foot-links">
-                <a href="/#proje-hesaplayici">Maliyet Hesapla</a>
-                <a href="/araclar">Tüm Araçlar</a>
-                <a href="/araclar/dijital-metraj">Dijital Metraj</a>
-                <a href="/araclar/otomatik-kesif-fiyatlandirma">AI Ön Keşif</a>
+                <a href="/#proje-hesaplayici">
+                    Maliyet Hesapla
+                </a>
+
+                <a href="/araclar">
+                    Tüm Araçlar
+                </a>
+
+                <a href="/pozlar">
+                    Poz Ara
+                </a>
+
+                <a href="/araclar/cati-maliyet-hesaplayici">
+                    Çatı Maliyeti
+                </a>
+
+                <a href="/araclar/beton-hesaplayici">
+                    Beton Hesaplayıcı
+                </a>
+
+                <a href="/araclar/otomatik-kesif-fiyatlandirma">
+                    AI Ön Keşif
+                </a>
             </div>
+
         </nav>
 
         <nav aria-label="WORKSİTEM bağlantıları">
-            <div class="wks-foot-title">WORKSİTEM</div>
+
+            <div class="wks-foot-title">
+                WORKSİTEM
+            </div>
 
             <div class="wks-foot-links">
-                <a href="/hakkimizda">Hakkımızda</a>
-                <a href="/ekip">Ekip</a>
-                <a href="/#fiyatlama">Hesaplama Yöntemi</a>
-                <a href="/#sss">Sık Sorulanlar</a>
+
+                <a href="/hakkimizda">
+                    Hakkımızda
+                </a>
+
+                <a href="/ekip">
+                    Ekip
+                </a>
+
+                <a href="/#fiyatlama">
+                    Hesaplama Yöntemi
+                </a>
+
+                <a href="/#sss">
+                    Sık Sorulanlar
+                </a>
+
             </div>
+
         </nav>
 
-        <div>
-            <nav aria-label="Yasal bağlantılar">
-                <div class="wks-foot-title">Yasal</div>
+        <nav aria-label="Yasal bağlantılar">
 
-                <div class="wks-foot-links">
-                    <a href="/legal/kvkk-aydinlatma">KVKK Aydınlatma</a>
-                    <a href="/legal/gizlilik-politikasi">Gizlilik Politikası</a>
-                    <a href="/legal/cerez-politikasi">Çerez Politikası</a>
-                    <a href="/legal/kvkk-basvuru">KVKK Başvuru</a>
-                </div>
-            </nav>
-
-            <div class="wks-partner">
-                <span class="wks-partner-label">Profesyonel uygulama</span>
-
-                <strong>Kainta İnşaat</strong>
-
-                <span>
-                    Projeniz ön bütçeye uygunsa profesyonel keşif,
-                    mühendislik ve teklif sürecine geçin.
-                </span>
-
-                <a href="https://kainta.com"
-                   target="_blank"
-                   rel="noopener noreferrer">
-                    Kainta İnşaat →
-                </a>
+            <div class="wks-foot-title">
+                Yasal
             </div>
+
+            <div class="wks-foot-links">
+
+                <a href="/legal/kvkk-aydinlatma">
+                    KVKK Aydınlatma
+                </a>
+
+                <a href="/legal/gizlilik-politikasi">
+                    Gizlilik Politikası
+                </a>
+
+                <a href="/legal/cerez-politikasi">
+                    Çerez Politikası
+                </a>
+
+                <a href="/legal/kvkk-basvuru">
+                    KVKK Başvuru
+                </a>
+
+            </div>
+
+        </nav>
+
+        <div class="wks-foot-pro">
+
+            <div class="wks-foot-title">
+                Profesyonel Uygulama
+            </div>
+
+            <strong>
+                Kainta İnşaat
+            </strong>
+
+            <p>
+                Ön bütçesi uygun projelerde profesyonel keşif,
+                mühendislik ve teklif sürecine geçin.
+            </p>
+
+            <a
+                class="wks-foot-pro-link"
+                href="https://kainta.com"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                Kainta İnşaat
+                <span class="wks-foot-pro-link-arrow">→</span>
+            </a>
+
         </div>
 
     </div>
 
     <div class="wks-foot-bottom">
+
         <div class="wks-foot-bottom-left">
             <span>© {{ date('Y') }} WORKSİTEM</span>
             <span>Türkiye için ConTech karar destek platformu</span>
         </div>
 
         <div class="wks-foot-bottom-right">
+
             <span class="wks-foot-status">
                 İnşaat · Tadilat · Kentsel Dönüşüm
             </span>
+
         </div>
+
     </div>
 
 </div>
+
 </footer>
-
-<style>
-/* WORKSITEM Footer V2 — global light/dark theme integration */
-
-html[data-theme="light"] .wks-footer{
-    --wf-bg:#f6f7f9;
-    --wf-panel:#ffffff;
-    --wf-panel-hover:#f1f3f6;
-    --wf-text:#111827;
-    --wf-muted:#667085;
-    --wf-line:#e2e7ee;
-}
-
-html[data-theme="light"] .wks-footer{
-    background:var(--wf-bg)!important;
-    color:var(--wf-text)!important;
-    border-color:var(--wf-line)!important;
-}
-
-html[data-theme="light"] .wks-footer a{
-    color:var(--wf-muted)!important;
-}
-
-html[data-theme="light"] .wks-footer a:hover{
-    color:var(--wf-text)!important;
-}
-
-html[data-theme="light"] .wks-footer .wks-footer-cta,
-html[data-theme="light"] .wks-footer .wks-partner{
-    background:var(--wf-panel)!important;
-    border-color:var(--wf-line)!important;
-}
-
-html[data-theme="light"] .wks-footer .wks-foot-text,
-html[data-theme="light"] .wks-footer .wks-partner span,
-html[data-theme="light"] .wks-footer .wks-foot-bottom{
-    color:var(--wf-muted)!important;
-    border-color:var(--wf-line)!important;
-}
-
-html[data-theme="light"] .wks-footer .wks-foot-title{
-    color:#9a6800!important;
-}
-
-html[data-theme="dark"] .wks-footer{
-    --wf-bg:#111827;
-    --wf-panel:#182231;
-    --wf-panel-hover:#202c3d;
-    --wf-text:#f8fafc;
-    --wf-muted:#aab4c3;
-    --wf-line:rgba(255,255,255,.11);
-}
-</style>
-
-<style id="worksitem-footer-theme-v1">
-/* WORKSITEM Global Theme V1 */
-
-html[data-theme="light"] .wks-footer{
-    --wf-bg:#f6f7f9;
-    --wf-panel:#ffffff;
-    --wf-panel-hover:#f1f3f6;
-    --wf-text:#111827;
-    --wf-muted:#667085;
-    --wf-line:#e2e7ee;
-
-    background:var(--wf-bg)!important;
-    color:var(--wf-text)!important;
-    border-color:var(--wf-line)!important;
-}
-
-/* Gerçek CTA sınıfı */
-html[data-theme="light"] .wks-footer .wks-foot-cta{
-    background:
-        radial-gradient(circle at 90% 20%,rgba(245,180,0,.13),transparent 34%),
-        var(--wf-panel)!important;
-    border-color:var(--wf-line)!important;
-}
-
-html[data-theme="light"] .wks-footer .wks-foot-cta h2{
-    color:var(--wf-text)!important;
-}
-
-html[data-theme="light"] .wks-footer .wks-foot-cta p{
-    color:var(--wf-muted)!important;
-}
-
-html[data-theme="light"] .wks-footer .wks-foot-btn:not(.wks-foot-btn-primary){
-    color:var(--wf-text)!important;
-    background:var(--wf-panel)!important;
-    border-color:var(--wf-line)!important;
-}
-
-html[data-theme="light"] .wks-footer .wks-foot-btn:not(.wks-foot-btn-primary):hover{
-    background:var(--wf-panel-hover)!important;
-}
-
-html[data-theme="light"] .wks-footer .wks-foot-links a{
-    color:var(--wf-muted)!important;
-}
-
-html[data-theme="light"] .wks-footer .wks-foot-links a:hover{
-    color:var(--wf-text)!important;
-}
-
-html[data-theme="light"] .wks-footer .wks-foot-proof span{
-    color:var(--wf-muted)!important;
-    background:var(--wf-panel)!important;
-    border-color:var(--wf-line)!important;
-}
-
-html[data-theme="light"] .wks-footer .wks-partner{
-    background:var(--wf-panel)!important;
-    border-color:var(--wf-line)!important;
-}
-
-html[data-theme="light"] .wks-footer .wks-partner strong{
-    color:var(--wf-text)!important;
-}
-
-html[data-theme="light"] .wks-footer .wks-foot-text,
-html[data-theme="light"] .wks-footer .wks-partner span,
-html[data-theme="light"] .wks-footer .wks-foot-bottom{
-    color:var(--wf-muted)!important;
-}
-
-html[data-theme="light"] .wks-footer .wks-foot-bottom{
-    border-color:var(--wf-line)!important;
-}
-
-html[data-theme="light"] .wks-footer .wks-foot-title{
-    color:#9a6800!important;
-}
-
-html[data-theme="light"] .wks-footer .wks-foot-logo{
-    background:#fff!important;
-}
-
-/* Dark standardı */
-html[data-theme="dark"] .wks-footer{
-    --wf-bg:#111827;
-    --wf-panel:#182231;
-    --wf-panel-hover:#202c3d;
-    --wf-text:#f8fafc;
-    --wf-muted:#aab4c3;
-    --wf-line:rgba(255,255,255,.11);
-}
-</style>
