@@ -629,6 +629,24 @@ html[data-theme="dark"] .wks-footer{
         padding-top:24px!important;
     }
 }
+
+/* WORKSITEM FOOTER TYPOGRAPHY V2 */
+.wks-footer .wks-foot-title{
+    font-weight:800!important;
+    letter-spacing:1px!important;
+    line-height:1.4!important;
+}
+
+.wks-footer .wks-foot-pro strong{
+    font-weight:800!important;
+    letter-spacing:.05px!important;
+    line-height:1.4!important;
+}
+
+.wks-footer a{
+    line-height:1.55!important;
+}
+
 </style>
 
 <div class="wks-foot-inner">

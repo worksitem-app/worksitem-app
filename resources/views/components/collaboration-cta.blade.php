@@ -84,7 +84,16 @@
                 width:100%;
             }
         }
-    </style>
+
+/* WORKSITEM COLLAB TYPOGRAPHY V2 */
+#wsCollabTitle{
+    font-weight:800!important;
+    letter-spacing:0!important;
+    word-spacing:.06em!important;
+    line-height:1.22!important;
+}
+
+</style>
 
     <div class="ws-collab-box">
 
