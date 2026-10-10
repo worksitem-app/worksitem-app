@@ -1,33 +1,39 @@
 {
   "@context": "https://schema.org",
   "@type": "DataCatalog",
-  "name": "Worksitem — İnşaat ve Tadilat Maliyeti Platformu",
-  "description": "Türkiye'nin en kapsamlı inşaat ve tadilat maliyeti hesaplama platformu. 43.290 resmî poz/rayiç verisi ve güncel piyasa fiyatlarıyla çalışır.",
-  "url": "https://worksitem.com",
+  "@id": "https://worksitem.com/ai-catalog.json#catalog",
+  "name": "WORKSİTEM İnşaat ve Tadilat Veri Kataloğu",
+  "description": "İnşaat ve tadilat projeleri için maliyet, metraj, teknik hesaplama ve poz/birim fiyat kaynaklarını bir araya getiren WORKSİTEM veri kataloğu.",
+  "url": "https://worksitem.com/",
   "inLanguage": "tr-TR",
-  "creator": {
+  "dateModified": "2026-10-09",
+  "publisher": {
     "@type": "Organization",
-    "name": "Kainta İnşaat",
-    "url": "https://worksitem.com"
+    "name": "WORKSİTEM",
+    "url": "https://worksitem.com/"
   },
   "dataset": [
     {
       "@type": "Dataset",
-      "name": "Tender Poz Veritabanı",
-      "description": "43.290 resmî poz/rayiç verisi (ÇŞB, DSİ, Karayolları, diğer kurumlar)",
+      "@id": "https://worksitem.com/pozlar#dataset",
+      "name": "WORKSİTEM Poz ve Birim Fiyat Veritabanı",
+      "description": "İnşaat iş kalemleri için poz numarası, açıklama, birim, kaynak kurum, dönem ve kayıtlı birim fiyat bilgilerinin sunulduğu veri kaynağı.",
       "url": "https://worksitem.com/pozlar",
-      "keywords": ["inşaat", "poz", "rayiç", "maliyet", "2026"],
+      "inLanguage": "tr-TR",
+      "keywords": [
+        "inşaat pozları",
+        "birim fiyat",
+        "rayiç",
+        "inşaat maliyeti"
+      ]
+    },
+    {
+      "@type": "Dataset",
+      "@id": "https://worksitem.com/araclar#catalog",
+      "name": "WORKSİTEM İnşaat Hesaplama Araçları",
+      "description": "İnşaat, tadilat, metraj, maliyet ve teknik hesaplama araçlarının kataloğu.",
+      "url": "https://worksitem.com/araclar",
       "inLanguage": "tr-TR"
     }
-  ],
-  "mainEntity": {
-    "@type": "WebSite",
-    "name": "Worksitem",
-    "url": "https://worksitem.com",
-    "potentialAction": {
-      "@type": "SearchAction",
-      "target": "https://worksitem.com/arama?q={search_term_string}",
-      "query-input": "required name=search_term_string"
-    }
-  }
+  ]
 }

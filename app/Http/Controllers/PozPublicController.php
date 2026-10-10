@@ -85,22 +85,35 @@ class PozPublicController extends Controller
             ];
         }
 
+        /*
+         * Poz kaydı bir e-ticaret ürünü değildir.
+         * View uyumluluğu için değişken adı korunurken semantik yapı
+         * WebPage + DefinedTerm olarak modellenir.
+         */
         $productSchema = [
             '@context' => 'https://schema.org',
-            '@type' => 'Product',
+            '@type' => 'WebPage',
+            '@id' => url('/poz/' . $poz->poz_no) . '#webpage',
+            'url' => url('/poz/' . $poz->poz_no),
             'name' => $poz->poz_no . ' — ' . $poz->description,
-            'sku' => $poz->poz_no,
             'description' => $poz->meta_description ?? $poz->description,
-            'category' => $poz->institution,
-            'offers' => [
-                '@type' => 'Offer',
-                'price' => number_format((float)$poz->unit_price, 2, '.', ''),
-                'priceCurrency' => 'TRY',
-                'unitText' => $poz->unit,
-                'availability' => 'https://schema.org/InStock',
+            'inLanguage' => 'tr-TR',
+            'mainEntity' => [
+                '@type' => 'DefinedTerm',
+                '@id' => url('/poz/' . $poz->poz_no) . '#term',
+                'name' => $poz->poz_no . ' — ' . $poz->description,
+                'termCode' => $poz->poz_no,
+                'description' => $poz->description,
+                'inDefinedTermSet' => [
+                    '@type' => 'DefinedTermSet',
+                    'name' => trim(
+                        ($poz->institution ?: 'Poz listesi')
+                        . ($poz->year ? ' ' . $poz->year : '')
+                    ),
+                    'url' => url('/pozlar'),
+                ],
             ],
         ];
-
         $breadcrumbSchema = [
             '@context' => 'https://schema.org',
             '@type' => 'BreadcrumbList',

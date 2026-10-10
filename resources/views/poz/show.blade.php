@@ -157,9 +157,24 @@
 <section class="poz-cta">
   <div>
     <h2>Bu pozu proje bütçenizde değerlendirin.</h2>
-    <p>Poz referansını kullanarak maliyet hesabına geçin veya projeniz için profesyonel değerlendirme isteyin.</p>
+    <p>Tek bir poz için maliyet hesabına geçin. Birden fazla iş kaleminiz veya keşif listeniz varsa dosyanızı AI ön keşif aracında analiz edin.</p>
   </div>
-  <a class="poz-btn poz-btn-primary" href="/maliyet-hesapla?poz={{ urlencode($poz->poz_no) }}">Maliyet hesapla →</a>
+
+  <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end">
+    <a
+      class="poz-btn poz-btn-primary"
+      href="/maliyet-hesapla?poz={{ urlencode($poz->poz_no) }}"
+    >
+      Maliyet hesapla →
+    </a>
+
+    <a
+      class="poz-btn"
+      href="/araclar/otomatik-kesif-fiyatlandirma"
+    >
+      Keşif dosyanızı yükleyin →
+    </a>
+  </div>
 </section>
 
 

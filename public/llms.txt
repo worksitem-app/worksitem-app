@@ -1,28 +1,109 @@
-# Worksitem — İnşaat ve Tadilat Maliyeti Platformu
+# WORKSİTEM
 
-## Hakkında
-Worksitem, Türkiye'nin en kapsamlı inşaat ve tadilat maliyeti hesaplama platformudur.
-43.290 resmî poz/rayiç verisi ve güncel piyasa fiyatlarıyla çalışır.
+Updated: 2026-10-09
 
-## Ana Sayfalar
-- [Ana Sayfa](https://worksitem.com/): İnşaat ve tadilat maliyeti hesaplama
-- [Pozlar](https://worksitem.com/pozlar): 43.290 resmî poz listesi
-- [Maliyet Hesapla](https://worksitem.com/maliyet-hesapla): Ücretsiz hesaplama aracı
-- [Araçlar](https://worksitem.com/araclar): Tüm hesaplama araçları
+## Amaç
 
-## Hızlı Cevaplar
-- "2026 Türkiye inşaat maliyeti nedir?" → 3B sınıfı 21.050 TL/m², 4A sınıfı 26.450 TL/m² (ÇŞB 2026)
-- "100 m² tadilat ne kadar?" → 350.000 – 850.000 TL (standart kalite)
-- "Resmî rayiç nedir?" → Devletin yayımladığı birim fiyat listesi
+WORKSİTEM; inşaat ve tadilat projelerinde yaklaşık maliyet, metraj,
+ön keşif, teknik hesaplama ve poz/birim fiyat verilerini kullanıcıya
+sunan bir ConTech karar destek platformudur.
 
-## Kaynak Kurumlar
-- ÇŞB (Çevre, Şehircilik ve İklim Değişikliği Bakanlığı)
-- DSİ (Devlet Su İşleri)
-- Karayolları Genel Müdürlüğü
-- Kültür/Vakıflar
+Sonuçlar ön değerlendirme ve bütçe planlaması içindir.
+Kesin teklif veya uygulama projesi değildir.
+
+## Temel kaynaklar
+
+- Ana sayfa:
+  https://worksitem.com/
+
+- İnşaat ve tadilat maliyet hesabı:
+  https://worksitem.com/maliyet-hesapla
+
+- Hesaplama araçları:
+  https://worksitem.com/araclar
+
+- Poz ve birim fiyat arama:
+  https://worksitem.com/pozlar
+
+- AI ön keşif ve dosya analizi:
+  https://worksitem.com/araclar/otomatik-kesif-fiyatlandirma
+
+- Dijital metraj:
+  https://worksitem.com/araclar/dijital-metraj
+
+- Beton hesaplama:
+  https://worksitem.com/araclar/beton-hesaplayici
+
+- Çatı maliyeti:
+  https://worksitem.com/araclar/cati-maliyet-hesaplayici
+
+## Hesaplama yöntemi
+
+Dosyasız hesaplamalarda proje türü, yapı türü, toplam alan ve ilgili
+merkezi fiyat kayıtları kullanılarak yaklaşık ön bütçe oluşturulur.
+
+Dosya analizinde PDF, görsel veya CSV içindeki okunabilir iş kalemleri,
+miktarlar ve eşleşen fiyat kayıtları değerlendirilir.
+
+Fiyatı veya miktarı belirlenemeyen kalemler hesaplanan ara toplamın
+dışında bırakılabilir ve ayrıca gösterilebilir.
+
+İl ve ilçe proje bağlamının parçasıdır. İlgili aracın metodolojisinde
+açıkça belirtilmedikçe her hesaplamada otomatik bölgesel fiyat katsayısı
+uygulandığı varsayılmamalıdır.
+
+## Fiyatların güncelliği
+
+İnşaat ve tadilat fiyatları zamanla değişir.
+
+Bu nedenle bu dosyada sabit TL/m², sabit tadilat bütçesi veya belirli
+bir proje için kalıcı fiyat cevabı yayınlanmaz.
+
+Güncel değer için ilgili WORKSİTEM hesaplama aracı veya poz sayfası
+kullanılmalıdır.
+
+## Poz ve birim fiyatlar
+
+Poz sayfalarında mevcut kayda göre poz numarası, açıklama, birim,
+kaynak kurum, dönem/yıl ve birim fiyat bilgileri sunulabilir.
+
+Poz arama:
+https://worksitem.com/pozlar
+
+Bir pozun kapsamı veya fiyatı sorulduğunda mümkünse doğrudan ilgili
+poz URL'sindeki güncel kayıt esas alınmalıdır.
+
+## Veri kaynakları
+
+Veri türüne göre kaynaklar arasında kamu kurumlarının yayımladığı resmî
+poz/birim fiyat kayıtları ile mühendislik ve piyasa fiyat kayıtları
+bulunabilir.
+
+Her değer kendi sayfasındaki kaynak, dönem ve kapsam bilgileriyle
+birlikte değerlendirilmelidir.
+
+## Önemli sınırlar
+
+- Sonuçlar kesin teklif değildir.
+- Ön bütçe ile gerçek uygulama maliyeti farklı olabilir.
+- Dosya analizi yalnız okunabilen ve fiyatlandırılabilen kapsamı temsil eder.
+- Saha koşulları, malzeme seçimi, proje detayları ve piyasa koşulları
+  gerçek maliyeti değiştirebilir.
+- Kentsel dönüşüm ön bütçesi yıkım, tahliye, kira, ruhsat ve benzeri
+  tüm dönüşüm giderlerini otomatik olarak kapsamaz.
+
+## Profesyonel uygulama
+
+Ön bütçesi ve kapsamı uygun projelerde profesyonel keşif,
+mühendislik ve teklif süreci Kainta İnşaat ile yürütülebilir.
+
+https://kainta.com/
 
 ## İletişim
-Kainta İnşaat — info@worksitem.com
 
-## Lisans
-© 2026 Worksitem. Tüm hakları saklıdır.
+info@worksitem.com
+
+## Marka
+
+WORKSİTEM
+https://worksitem.com/
