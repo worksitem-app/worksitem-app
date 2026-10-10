@@ -1,6 +1,6 @@
 # WORKSİTEM
 
-Updated: 2026-10-09
+Updated: 2026-10-10
 
 ## Amaç
 
@@ -19,23 +19,22 @@ Kesin teklif veya uygulama projesi değildir.
 - İnşaat ve tadilat maliyet hesabı:
   https://worksitem.com/maliyet-hesapla
 
-- Hesaplama araçları:
+- Hesaplama araçları ve güncel kullanım durumları:
   https://worksitem.com/araclar
 
 - Poz ve birim fiyat arama:
   https://worksitem.com/pozlar
 
-- AI ön keşif ve dosya analizi:
-  https://worksitem.com/araclar/otomatik-kesif-fiyatlandirma
+## Araç durumları
 
-- Dijital metraj:
-  https://worksitem.com/araclar/dijital-metraj
+WORKSİTEM araçlarının güncel kullanım durumu /araclar sayfasında
+belirtilir.
 
-- Beton hesaplama:
-  https://worksitem.com/araclar/beton-hesaplayici
+"Aktif" durumundaki araçlar production kullanımına açıktır.
 
-- Çatı maliyeti:
-  https://worksitem.com/araclar/cati-maliyet-hesaplayici
+"İncelemede", "Yakında" veya "Pasif" durumundaki araçlar geçici olarak
+kullanıma kapalı olabilir ve güncel hesaplama sonucu üretmek için
+kaynak kabul edilmemelidir.
 
 ## Hesaplama yöntemi
 
@@ -59,8 +58,8 @@ uygulandığı varsayılmamalıdır.
 Bu nedenle bu dosyada sabit TL/m², sabit tadilat bütçesi veya belirli
 bir proje için kalıcı fiyat cevabı yayınlanmaz.
 
-Güncel değer için ilgili WORKSİTEM hesaplama aracı veya poz sayfası
-kullanılmalıdır.
+Güncel değer için ilgili aktif WORKSİTEM hesaplama aracı veya poz
+sayfası kullanılmalıdır.
 
 ## Poz ve birim fiyatlar
 

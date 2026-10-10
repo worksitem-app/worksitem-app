@@ -154,10 +154,33 @@
   </aside>
 </div>
 
+@php
+  $toolStatusConfig = config('worksitem_tools.tool_status', []);
+  $toolStatusDefault = $toolStatusConfig['default'] ?? 'review';
+  $toolStatusOverrides = $toolStatusConfig['overrides'] ?? [];
+
+  $autoBoqStatus =
+      $toolStatusOverrides['otomatik-kesif-fiyatlandirma']
+      ?? $toolStatusDefault;
+
+  /*
+   * Staging'de CTA QA için görünür.
+   * Production'da yalnız araç active ise kullanıcıya gösterilir.
+   */
+  $showAutoBoqCta =
+      request()->getHost() === 'app.worksitem.com'
+      || $autoBoqStatus === 'active';
+@endphp
+
 <section class="poz-cta">
   <div>
     <h2>Bu pozu proje bütçenizde değerlendirin.</h2>
-    <p>Tek bir poz için maliyet hesabına geçin. Birden fazla iş kaleminiz veya keşif listeniz varsa dosyanızı AI ön keşif aracında analiz edin.</p>
+
+    @if($showAutoBoqCta)
+      <p>Tek bir poz için maliyet hesabına geçin. Birden fazla iş kaleminiz veya keşif listeniz varsa dosyanızı AI ön keşif aracında analiz edin.</p>
+    @else
+      <p>Poz referansını kullanarak yaklaşık proje maliyeti hesabına geçin.</p>
+    @endif
   </div>
 
   <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end">
@@ -168,12 +191,14 @@
       Maliyet hesapla →
     </a>
 
-    <a
-      class="poz-btn"
-      href="/araclar/otomatik-kesif-fiyatlandirma"
-    >
-      Keşif dosyanızı yükleyin →
-    </a>
+    @if($showAutoBoqCta)
+      <a
+        class="poz-btn"
+        href="/araclar/otomatik-kesif-fiyatlandirma"
+      >
+        Keşif dosyanızı yükleyin →
+      </a>
+    @endif
   </div>
 </section>
 

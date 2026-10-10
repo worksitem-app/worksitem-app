@@ -14,18 +14,19 @@ class SitemapController extends Controller
         $xml = '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
         $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n";
 
-        // Statik sayfalar
+        /*
+         * Ana / statik sayfalar.
+         *
+         * Statik sayfalarda her sitemap isteğinde "bugün" lastmod
+         * üretmiyoruz. Yanlış güncellik sinyali vermemek için lastmod
+         * yalnız gerçek veri tarihi bulunan poz kayıtlarında yayınlanır.
+         */
         $staticPages = [
-            // Ana sayfalar
             ['loc' => '/', 'priority' => '1.0', 'changefreq' => 'daily'],
             ['loc' => '/araclar', 'priority' => '0.9', 'changefreq' => 'weekly'],
-            ['loc' => '/araclar/otomatik-kesif-fiyatlandirma', 'priority' => '0.95', 'changefreq' => 'weekly'],
             ['loc' => '/maliyet-hesapla', 'priority' => '0.95', 'changefreq' => 'weekly'],
             ['loc' => '/pozlar', 'priority' => '0.9', 'changefreq' => 'daily'],
-            ['loc' => '/araclar/beton-hesaplayici', 'priority' => '0.8', 'changefreq' => 'monthly'],
-            ['loc' => '/araclar/dijital-metraj', 'priority' => '0.8', 'changefreq' => 'monthly'],
 
-            // KVKK / Legal sayfalar (2026/347 uyumlu)
             ['loc' => '/legal/kvkk-aydinlatma', 'priority' => '0.4', 'changefreq' => 'monthly'],
             ['loc' => '/legal/acik-riza', 'priority' => '0.4', 'changefreq' => 'monthly'],
             ['loc' => '/legal/cerez-politikasi', 'priority' => '0.4', 'changefreq' => 'monthly'],
@@ -33,7 +34,43 @@ class SitemapController extends Controller
             ['loc' => '/legal/kvkk-basvuru', 'priority' => '0.4', 'changefreq' => 'monthly'],
         ];
 
-        $today = date('c');
+        /*
+         * Araç sitemap source-of-truth:
+         * config/worksitem_tools.php -> tool_status
+         *
+         * Yalnız production kullanıma açık "active" araçlar
+         * sitemap'e girer. review / soon / inactive araçlar girmez.
+         */
+        $toolConfig = config('worksitem_tools', []);
+
+        $catalog = $toolConfig['tools'] ?? [];
+        $statusConfig = $toolConfig['tool_status'] ?? [];
+
+        $defaultStatus = $statusConfig['default'] ?? 'review';
+        $overrides = $statusConfig['overrides'] ?? [];
+
+        ksort($catalog);
+
+        foreach ($catalog as $slug => $meta) {
+            /*
+             * Bu slug katalog ekranında da bilinçli olarak gizleniyor.
+             */
+            if ($slug === 'havalandirma-kanali') {
+                continue;
+            }
+
+            $status = $overrides[$slug] ?? $defaultStatus;
+
+            if ($status !== 'active') {
+                continue;
+            }
+
+            $staticPages[] = [
+                'loc' => '/araclar/' . $slug,
+                'priority' => '0.8',
+                'changefreq' => 'monthly',
+            ];
+        }
 
         foreach ($staticPages as $page) {
             $loc = $baseUrl . $page['loc'];
@@ -42,13 +79,16 @@ class SitemapController extends Controller
 
             $xml .= "  <url>\n";
             $xml .= "    <loc>" . htmlspecialchars($loc, ENT_XML1) . "</loc>\n";
-            $xml .= "    <lastmod>{$today}</lastmod>\n";
             $xml .= "    <changefreq>{$changefreq}</changefreq>\n";
             $xml .= "    <priority>{$priority}</priority>\n";
             $xml .= "  </url>\n";
         }
 
-        // Poz sayfaları (43.290 URL)
+        /*
+         * Aktif poz kayıtları.
+         *
+         * lastmod yalnız gerçek updated_at varsa yayınlanır.
+         */
         TenderPoz::query()
             ->where('is_active', true)
             ->select('poz_no', 'updated_at')
@@ -56,11 +96,15 @@ class SitemapController extends Controller
             ->chunk(1000, function ($pozs) use (&$xml, $baseUrl) {
                 foreach ($pozs as $poz) {
                     $loc = $baseUrl . '/poz/' . $poz->poz_no;
-                    $lastmod = $poz->updated_at ? $poz->updated_at->toAtomString() : date('c');
 
                     $xml .= "  <url>\n";
                     $xml .= "    <loc>" . htmlspecialchars($loc, ENT_XML1) . "</loc>\n";
-                    $xml .= "    <lastmod>{$lastmod}</lastmod>\n";
+
+                    if ($poz->updated_at) {
+                        $lastmod = $poz->updated_at->toAtomString();
+                        $xml .= "    <lastmod>{$lastmod}</lastmod>\n";
+                    }
+
                     $xml .= "    <changefreq>monthly</changefreq>\n";
                     $xml .= "    <priority>0.6</priority>\n";
                     $xml .= "  </url>\n";
