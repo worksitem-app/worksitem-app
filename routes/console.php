@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Schedule;
 */
 
 // Zamanlayıcının çalıştığını app:preflight doğrulayabilsin diye kalp atışı
-Schedule::call(fn () => Cache::put(Preflight::HEARTBEAT_KEY, now(), now()->addHour()))
+Schedule::call(fn () => Cache::put(Preflight::HEARTBEAT_KEY, time(), 3600))
     ->name('scheduler-heartbeat')
     ->everyMinute();
 
