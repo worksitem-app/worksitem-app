@@ -69,6 +69,8 @@ return array (
    * Bu sayfalara App\Http\Middleware\EngineeringToolNotice belirgin bir
    * "mühendislik hesabı yerine geçmez" uyarısı ekler (bkz. /legal/kullanim-kosullari).
    */
+  // true: incelemedeki araçlara "noindex, follow" (varsayılan: kapalı — sayfalar SEO için indekslenir)
+  'noindex_review_tools' => (bool) env('WORKSITEM_NOINDEX_REVIEW_TOOLS', false),
   'engineering_tools' => 
   array (
     0 => 'basit-kiris-statigi',

@@ -60,11 +60,13 @@ class ToolQaGate
         $response = $next($request);
 
         /*
-         * SEO: kilitli (review/soon/inactive) araçlar sitemap'te yok; arama motoruna da
-         * "indeksleme ama linkleri izle" diyoruz. Aksi halde Google tam ekran perdeli,
-         * kullanılamayan sayfaları indeksler → hemen çıkma ve düşük CTR sinyali.
+         * SEO stratejisi: incelemedeki araç sayfaları bilinçli olarak yayında ve indekslenebilir
+         * kalır (içerik SEO için var; araç QA'dan geçince açılır). İstenirse
+         * WORKSITEM_NOINDEX_REVIEW_TOOLS=true ile "noindex, follow" gönderilir.
          */
-        $response->headers->set('X-Robots-Tag', 'noindex, follow');
+        if (config('worksitem_tools.noindex_review_tools')) {
+            $response->headers->set('X-Robots-Tag', 'noindex, follow');
+        }
 
         /* Redirect/404 vb. normal Laravel davranışını bozma */
         if (
