@@ -307,7 +307,7 @@
         <div class="poz-list">
             @foreach($pozs as $poz)
             <div class="poz-item">
-                <a href="{{ route('poz.show', $poz->poz_no) }}">
+                <a href="{{ \App\Support\PozUrl::absolute($poz->poz_no) }}">
                     <span class="poz-code">{{ $poz->poz_no }}</span>
 
                     <span>

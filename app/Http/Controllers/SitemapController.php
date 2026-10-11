@@ -95,7 +95,7 @@ class SitemapController extends Controller
             ->orderBy('poz_no')
             ->chunk(1000, function ($pozs) use (&$xml, $baseUrl) {
                 foreach ($pozs as $poz) {
-                    $loc = $baseUrl . '/poz/' . $poz->poz_no;
+                    $loc = \App\Support\PozUrl::absolute($poz->poz_no);
 
                     $xml .= "  <url>\n";
                     $xml .= "    <loc>" . htmlspecialchars($loc, ENT_XML1) . "</loc>\n";

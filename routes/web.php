@@ -923,7 +923,7 @@ Route::get('/sitemap.xml', [\App\Http\Controllers\SitemapController::class, 'ind
 // Tender Poz SEO Sayfaları
 Route::get('/poz/{pozNo}', [\App\Http\Controllers\PozPublicController::class, 'show'])
     ->name('poz.show')
-    ->where('pozNo', '[A-Za-z0-9._-]+');
+    ->where('pozNo', '.+');
 
 Route::get('/pozlar', [\App\Http\Controllers\PozPublicController::class, 'index'])
     ->name('poz.index');

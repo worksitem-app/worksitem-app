@@ -2,7 +2,7 @@
 
 @section('title', $poz->poz_no . ' — ' . \Illuminate\Support\Str::limit($poz->description, 55) . ' | WORKSİTEM')
 @section('description', $poz->meta_description ?: ($poz->poz_no . ' pozunun birim fiyatı ' . $priceFormatted . ' TL/' . $poz->unit . '. Kaynak: ' . $poz->institution . '.'))
-@section('canonical', url('/poz/' . $poz->poz_no))
+@section('canonical', \App\Support\PozUrl::absolute($poz->poz_no))
 
 @section('breadcrumb')
   <a href="/pozlar">Pozlar</a><span>›</span>

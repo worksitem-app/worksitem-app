@@ -93,14 +93,14 @@ class PozPublicController extends Controller
         $productSchema = [
             '@context' => 'https://schema.org',
             '@type' => 'WebPage',
-            '@id' => url('/poz/' . $poz->poz_no) . '#webpage',
-            'url' => url('/poz/' . $poz->poz_no),
+            '@id' => \App\Support\PozUrl::absolute($poz->poz_no) . '#webpage',
+            'url' => \App\Support\PozUrl::absolute($poz->poz_no),
             'name' => $poz->poz_no . ' — ' . $poz->description,
             'description' => $poz->meta_description ?? $poz->description,
             'inLanguage' => 'tr-TR',
             'mainEntity' => [
                 '@type' => 'DefinedTerm',
-                '@id' => url('/poz/' . $poz->poz_no) . '#term',
+                '@id' => \App\Support\PozUrl::absolute($poz->poz_no) . '#term',
                 'name' => $poz->poz_no . ' — ' . $poz->description,
                 'termCode' => $poz->poz_no,
                 'description' => $poz->description,
@@ -120,7 +120,7 @@ class PozPublicController extends Controller
             'itemListElement' => [
                 ['@type' => 'ListItem', 'position' => 1, 'name' => 'Ana Sayfa', 'item' => url('/')],
                 ['@type' => 'ListItem', 'position' => 2, 'name' => 'Pozlar', 'item' => url('/pozlar')],
-                ['@type' => 'ListItem', 'position' => 3, 'name' => $poz->poz_no, 'item' => url('/poz/' . $poz->poz_no)],
+                ['@type' => 'ListItem', 'position' => 3, 'name' => $poz->poz_no, 'item' => \App\Support\PozUrl::absolute($poz->poz_no)],
             ],
         ];
 
