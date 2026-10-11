@@ -8,21 +8,21 @@
     <title>Panel Radyatör Boyu Hesaplama | WORKSİTEM</title>
     <meta name="description" content="Panel radyatör için gerekli petek boyunu hesaplayın ve mekanınızın ısıtma ihtiyacına uygun yaklaşık radyatör ölçüsünü belirleyin.">
     <link rel="canonical" href="https://worksitem.com/araclar/radyator-petek-hesaplayici">
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        :root { --bg: #0b0f17; --card-bg: #151c28; --border: #21262d; --yellow: #ffb700; --text: #f0f6fc; --muted: #8b949e; --cyan: #38bdf8; }
+        :root { --bg: #f5f6f8; --card-bg: #ffffff; --border: #e5e7eb; --yellow: #9a6e00; --text: #101318; --muted: #5b6472; --cyan: #8a6200; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; overflow-x: hidden;}
         .container { max-width: 1200px; margin: 40px auto; padding: 0 4%; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
         @media(max-width: 992px) { .container { grid-template-columns: 1fr; } }
         .form-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 30px; margin-bottom: 20px; }
-        h1 { font-family: 'Bebas Neue'; font-size: 38px; color: #fff; margin-bottom: 10px; }
+        h1 { font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 38px; font-weight: 800; letter-spacing: -0.02em; color: var(--text); margin-bottom: 10px; }
         .form-group { margin-bottom: 20px; }
         .form-group label { display: block; font-size: 13px; font-weight: 700; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; }
-        .form-control { width: 100%; padding: 12px; border-radius: 6px; background: #0d1117; border: 1px solid var(--border); color: white; font-family: inherit; }
+        .form-control { width: 100%; padding: 12px; border-radius: 6px; background: #ffffff; border: 1px solid var(--border); color: var(--text); font-family: inherit; }
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .res-item { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px dashed var(--border); font-size: 14px; }
         .res-item.total { border-bottom: none; font-size: 24px; font-weight: 800; color: var(--cyan); margin-top: 15px; }
-        .ai-box { background: rgba(56, 189, 248, 0.05); border: 1px solid var(--cyan); border-radius: 8px; padding: 20px; margin-top: 20px; }
+        .ai-box { background: rgba(255,184,0,0.05); border: 1px solid var(--cyan); border-radius: 8px; padding: 20px; margin-top: 20px; }
     </style>
     <meta property="og:image" content="https://worksitem.com/brand/og-image.png">
     <meta property="og:image:width" content="1200">
@@ -38,7 +38,7 @@
     <x-site.contech-header />
     <div class="container">
         <div>
-            <h1>♨️ Radyatör Petek Boyu Hesabı</h1>
+            <h1>Radyatör Petek Boyu Hesabı</h1>
             <div class="form-card">
                 <div class="grid-2">
                     <div class="form-group"><label>Oda Alanı (m²)</label><input type="number" id="area" class="form-control" value="20" oninput="calc()"></div>
@@ -63,25 +63,19 @@
         </div>
         <div>
             <div class="form-card" style="border-color:var(--cyan); position:sticky; top:20px;">
-                <div style="font-family:'Bebas Neue'; font-size:24px; color:var(--cyan); margin-bottom:15px;">📊 TERMODİNAMİK ANALİZ</div>
+                <div style="font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size:24px; color:var(--cyan); margin-bottom:15px;">📊 TERMODİNAMİK ANALİZ</div>
                 <div class="res-item"><span>Oda Hacmi</span> <strong id="r_vol">0 m³</strong></div>
                 <div class="res-item"><span>Gereken Isı Enerjisi (Yaklaşık)</span> <strong id="r_kcal">0 Kcal/h</strong></div>
                 <div class="res-item total"><span>ÖNERİLEN PETEK BOYU</span> <span id="r_len">0 Metre</span></div>
                 
                 <div class="ai-box">
-                    <div style="color:var(--cyan); font-family:'Bebas Neue'; font-size:22px; margin-bottom:10px;">🤖 Mühendis Yorumu</div>
+                    <div style="color:var(--cyan); font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size:22px; margin-bottom:10px;">🤖 Mühendis Yorumu</div>
                     <ul id="ai_notes" style="font-size:13px; margin:0; padding-left:15px;"></ul>
                 </div>
             </div>
         </div>
     </div>
 
-        <!-- STANDART KAİNTA LEAD HUNİSİ (CTA) -->
-        <div class="no-print" style="margin-top: 40px; padding: 30px; background: #f0fdf4; border: 2px solid #bbf7d0; border-radius: 16px; text-align: center;">
-            <h3 style="color: #166534; font-size: 20px; font-weight: 800; margin-bottom: 10px;">Hesaplamayı Yaptınız, Şimdi İşi Uzmanına Bırakın</h3>
-            <p style="color: #15803d; font-size: 14px; margin-bottom: 20px;">Kainta İnşaat mühendislerinden projenize özel resmi keşif ve bütçe teklifi alın.</p>
-            <a href="/maliyet-hesapla" style="display: inline-block; background: #166534; color: #fff; padding: 16px 32px; font-size: 16px; font-weight: 800; border-radius: 8px; text-decoration: none; box-shadow: 0 4px 10px rgba(22,101,52,0.3); transition: all 0.2s;">Ön maliyet hesabına geç →</a>
-        </div>
     <script>
                 // --- MERKEZİ ÇŞB FİYAT MOTORU & KAİNTA ÇARPANI ---
         const CSB_PRICES = {!! isset($SYSTEM_PRICES) ? $SYSTEM_PRICES : '{}' !!};

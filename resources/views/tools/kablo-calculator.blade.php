@@ -44,8 +44,8 @@
         .break-item { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); }
         .break-item span { display: block; font-size: 12px; color: #a1a1aa; margin-bottom: 3px; }
         .break-item strong { display: block; font-size: 18px; color: #fff; font-weight: 800; }
-        .break-item.highlight { background: rgba(56, 189, 248, 0.1); border-color: rgba(56, 189, 248, 0.3); }
-        .break-item.highlight strong { color: #38bdf8; }
+        .break-item.highlight { background: rgba(255,184,0,0.1); border-color: rgba(255,184,0,0.3); }
+        .break-item.highlight strong { color: #8a6200; }
         .break-item.warning { background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.3); }
         .break-item.warning strong { color: #f87171; }
 
@@ -59,7 +59,7 @@
         .cross-sell-text { font-size: 12px; color: #a1a1aa; margin-bottom: 15px; }
         .cross-sell-links { display: flex; gap: 10px; }
         .cross-sell-links a { flex: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 10px; border-radius: 8px; font-size: 12px; font-weight: 700; color: #fff; text-align: center; transition: .2s; }
-        .cross-sell-links a:hover { background: rgba(56,189,248,0.1); border-color: #38bdf8; color: #38bdf8; }
+        .cross-sell-links a:hover { background: rgba(255,184,0,0.1); border-color: #8a6200; color: #8a6200; }
 
         .budget-confirm-box { margin-top: 25px; padding: 25px; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; display: none; text-align: center; }
         .budget-confirm-title { font-size: 18px; font-weight: 900; margin-bottom: 8px; letter-spacing: -0.5px;}
@@ -69,11 +69,11 @@
         .budget-no { background: #fff; color: #555; }
         .budget-no:hover { background: #f8f9fb; border-color: #d1d5db; }
         .budget-yes { background: #fff; color: #111; }
-        .budget-yes:hover { border-color: #38bdf8; background: #f0f9ff; box-shadow: 0 0 0 3px rgba(56,189,248,.10); }
+        .budget-yes:hover { border-color: #8a6200; background: #fff8e1; box-shadow: 0 0 0 3px rgba(255,184,0,.10); }
 
-        .qualified-message { display: none; margin-top: 25px; padding: 20px; border-radius: 16px; background: #f0fdf4; border: 1px solid #bbf7d0; text-align: center;}
-        .qualified-message strong { display: block; font-size: 15px; margin-bottom: 5px; color: #166534; }
-        .qualified-message span { display: block; color: #15803d; font-size: 12px; line-height: 1.5; }
+        .qualified-message { display: none; margin-top: 25px; padding: 20px; border-radius: 16px; background: #fff8e1; border: 1px solid #fde68a; text-align: center;}
+        .qualified-message strong { display: block; font-size: 15px; margin-bottom: 5px; color: #101318; }
+        .qualified-message span { display: block; color: #101318; font-size: 12px; line-height: 1.5; }
 
         .lead-box { background: #f8f9fb; border: 1px solid var(--line); border-radius: var(--radius); padding: 30px; margin-top: 15px; display: none; }
         .lead-box.active { display: block; animation: fadeIn 0.5s ease; }
@@ -84,7 +84,7 @@
         .btn-calc { background: var(--text); color: #fff; margin-top: 10px; }
         .btn-calc:hover { background: #000; }
         .btn-submit { background: var(--accent); color: #000; margin-top: 10px; }
-        .btn-submit:hover { background: #e5a400; }
+        .btn-submit:hover { background: #e5a500; }
 
         @media(max-width: 600px) {
             .form-grid, .breakdown-grid, .budget-confirm-actions { grid-template-columns: 1fr; }
@@ -109,7 +109,7 @@
 
 <div class="container">
     <div class="tool-header">
-        <h1>⚡ Kablo Kesiti & Gerilim Düşümü</h1>
+        <h1>Kablo Kesiti & Gerilim Düşümü</h1>
         <p>Çekilen güce, mesafeye ve gerilime göre sistemin ihtiyacı olan en güvenli kablo kesitini (mm²) ve bütçenizi hesaplayın.</p>
     </div>
 

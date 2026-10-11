@@ -64,73 +64,96 @@ class AdminController extends Controller
         return view('admin.poz-import', compact('totalPozCount', 'institutionCounts'));
     }
 
-    public function pozImportUpload(\Illuminate\Http\Request $request)
+    public function pozImportUpload(Request $request)
     {
         $request->validate([
-            'file' => 'required|file|mimes:csv,txt,xlsx,xls',
-            'institution' => 'required|string',
-            'year' => 'required|string'
+            // xlsx/xls fgetcsv ile okunamaz; yalnızca CSV kabul edilir.
+            'file' => 'required|file|mimes:csv,txt|max:20480',
+            'institution' => 'required|string|max:100',
+            'year' => 'required|digits:4',
         ]);
 
-        $file = $request->file('file');
-        $institution = $request->input('institution');
-        $year = $request->input('year');
+        $institution = $request->string('institution')->trim()->toString();
+        $year = (string) $request->input('year');
 
-        $handle = fopen($file->getRealPath(), 'r');
-        if (!$handle) {
+        $handle = fopen($request->file('file')->getRealPath(), 'r');
+        if (! $handle) {
             return back()->with('error', 'Dosya okunamadı.');
         }
 
-        $header = fgetcsv($handle, 2000, ';'); // Semicolon separator deneme
-        if (!$header || count($header) < 3) {
-            rewind($handle);
-            $header = fgetcsv($handle, 2000, ','); // Comma separator deneme
-        }
+        // Ayraç tespiti: ilk satırda hangi ayraç daha çok geçiyorsa o.
+        $firstLine = (string) fgets($handle);
+        $delimiter = substr_count($firstLine, ';') >= substr_count($firstLine, ',') ? ';' : ',';
+        rewind($handle);
+        fgetcsv($handle, 0, $delimiter); // başlık satırını atla
 
-        $batch = [];
         $importedCount = 0;
+        $skipped = 0;
         $now = now();
 
-        while (($row = fgetcsv($handle, 2000, ';')) !== FALSE || ($row = fgetcsv($handle, 2000, ',')) !== FALSE) {
-            if (count($row) < 4) continue;
+        DB::transaction(function () use ($handle, $delimiter, $institution, $year, $now, &$importedCount, &$skipped) {
+            while (($row = fgetcsv($handle, 0, $delimiter)) !== false) {
+                if (count($row) < 4) {
+                    $skipped++;
+                    continue;
+                }
 
-            $pozNo = trim($row[0]);
-            $description = trim($row[1]);
-            $unit = trim($row[2]);
-            
-            // Fiyatı temizle (1.250,50 TL -> 1250.50)
-            $priceStr = str_replace(['TL', '₺', ' ', '.'], '', trim($row[3]));
-            $priceStr = str_replace(',', '.', $priceStr);
-            $unitPrice = floatval($priceStr);
+                $pozNo = trim((string) $row[0]);
+                $description = trim((string) $row[1]);
+                $unitPrice = self::parseTurkishPrice((string) $row[3]);
 
-            if (empty($pozNo) || empty($description)) continue;
+                if ($pozNo === '' || $description === '' || $unitPrice === null) {
+                    $skipped++;
+                    continue;
+                }
 
-            $batch[] = [
-                'year' => $year,
-                'institution' => $institution,
-                'poz_no' => $pozNo,
-                'description' => $description,
-                'unit' => $unit ?: 'm²',
-                'unit_price' => $unitPrice,
-                'created_at' => $now,
-                'updated_at' => $now,
-            ];
+                // Unique index olmadığı için upsert yerine anahtar bazlı updateOrInsert:
+                // aynı kurum + yıl + poz tekrar import edildiğinde güncellenir, çoğalmaz.
+                TenderPoz::query()->updateOrInsert(
+                    ['institution' => $institution, 'year' => $year, 'poz_no' => $pozNo],
+                    [
+                        'description' => $description,
+                        'unit' => trim((string) $row[2]) ?: 'm²',
+                        'unit_price' => $unitPrice,
+                        'updated_at' => $now,
+                        'created_at' => $now,
+                    ]
+                );
 
-            // 500'erli paketler halinde veritabanına toplu yazma (Yüksek Performans)
-            if (count($batch) >= 500) {
-                TenderPoz::upsert($batch, ['poz_no'], ['year', 'institution', 'description', 'unit', 'unit_price', 'updated_at']);
-                $importedCount += count($batch);
-                $batch = [];
+                $importedCount++;
             }
-        }
-
-        if (count($batch) > 0) {
-            TenderPoz::upsert($batch, ['poz_no'], ['year', 'institution', 'description', 'unit', 'unit_price', 'updated_at']);
-            $importedCount += count($batch);
-        }
+        });
 
         fclose($handle);
 
-        return back()->with('success', "Tebrikler! Toplam {$importedCount} adet poz başarıyla içe aktarıldı ve güncellendi.");
+        return back()->with('success', "Toplam {$importedCount} poz içe aktarıldı/güncellendi. Atlanan satır: {$skipped}.");
+    }
+
+    /**
+     * "1.250,50 TL" → 1250.50 | "3.000" → 3000 | "1250.50" → 1250.50 | "1,250.50" → 1250.50
+     */
+    public static function parseTurkishPrice(string $raw): ?float
+    {
+        $s = str_replace(['TL', '₺', ' ', "\u{00A0}"], '', trim($raw));
+        if ($s === '') {
+            return null;
+        }
+
+        $lastComma = strrpos($s, ',');
+        $lastDot = strrpos($s, '.');
+
+        if ($lastComma !== false && ($lastDot === false || $lastComma > $lastDot)) {
+            // Türkçe format: nokta binlik, virgül ondalık → "1.250,50"
+            $s = str_replace('.', '', $s);
+            $s = str_replace(',', '.', $s);
+        } elseif ($lastComma === false && $lastDot !== false && preg_match('/^\d{1,3}(\.\d{3})+$/', $s)) {
+            // Yalnızca binlik noktası → "3.000" / "1.250.000" (Türkçe)
+            $s = str_replace('.', '', $s);
+        } else {
+            // İngilizce format: virgül binlik, nokta ondalık → "1,250.50" / "1250.50"
+            $s = str_replace(',', '', $s);
+        }
+
+        return is_numeric($s) ? round((float) $s, 2) : null;
     }
 }

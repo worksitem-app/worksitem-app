@@ -69,12 +69,12 @@ $csrfToken = csrf_token();
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>İnşaat & Tadilat Maliyet Hesaplama | WORKSİTEM</title>
+<title>Tadilat Maliyeti Hesapla 2026: m², Şehir ve Kaliteye Göre | WORKSİTEM</title>
 <meta name="description" content="İnşaat veya tadilat projenizin yaklaşık bütçesini proje tipi, konum, alan ve kalite seviyesine göre hesaplayın. Yaklaşık 1 dakikada ön bütçenizi görün.">
 <meta name="robots" content="index,follow,max-image-preview:large">
 <link rel="canonical" href="https://worksitem.com/maliyet-hesapla">
 <meta property="og:type" content="website">
-<meta property="og:title" content="İnşaat & Tadilat Maliyet Hesaplama | WORKSİTEM">
+<meta property="og:title" content="Tadilat Maliyeti Hesapla 2026: m², Şehir ve Kaliteye Göre | WORKSİTEM">
 <meta property="og:description" content="İnşaat veya tadilat projenizin yaklaşık bütçesini yaklaşık 1 dakikada öğrenin.">
 <meta property="og:url" content="https://worksitem.com/maliyet-hesapla">
 
@@ -91,7 +91,7 @@ $csrfToken = csrf_token();
     --muted:#6b7280;
     --line:#e4e7eb;
     --accent:#ffb800;
-    --accent-dark:#e5a400;
+    --accent-dark:#e5a500;
     --green:#16a34a;
     --red:#dc2626;
     --shadow:0 20px 60px rgba(15,23,42,.09);
@@ -126,7 +126,7 @@ a{color:inherit;text-decoration:none;}
 .badge{display:inline-flex;align-items:center;gap:7px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:8px 13px;font-size:11px;font-weight:800;color:#555;margin-bottom:14px;box-shadow:0 5px 20px rgba(0,0,0,.04);}
 .badge-dot{width:7px;height:7px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 4px rgba(34,197,94,.12);}
 .hero h1{font-size:clamp(28px,5vw,48px);line-height:1.03;letter-spacing:-1.8px;font-weight:900;margin-bottom:12px;}
-.hero h1 strong{color:#d99500;}
+.hero h1 strong{color:var(--ws-highlight,#9A6E00);}
 .hero p{color:var(--muted);font-size:15px;line-height:1.65;max-width:620px;margin:auto;}
 
 /* CALCULATOR */
@@ -282,10 +282,10 @@ a{color:inherit;text-decoration:none;}
 .lead-submit:hover{background:#222;}
 .lead-note{margin-top:9px;color:#777;font-size:10px;line-height:1.45;text-align:center;}
 .whatsapp{display:flex;align-items:center;justify-content:center;min-height:50px;border-radius:13px;background:#16a34a;color:#fff;font-size:13px;font-weight:900;margin-top:9px;}
-.qualified-message{display:none;margin:0 22px 22px;padding:18px;border-radius:16px;background:#f0fdf4;border:1px solid #bbf7d0;}
+.qualified-message{display:none;margin:0 22px 22px;padding:18px;border-radius:16px;background:#fff8e1;border:1px solid #fde68a;}
 .qualified-message.active{display:block;}
 .qualified-message strong{display:block;font-size:14px;margin-bottom:5px;}
-.qualified-message span{display:block;color:#166534;font-size:11px;line-height:1.5;}
+.qualified-message span{display:block;color:#101318;font-size:11px;line-height:1.5;}
 
 .result-actions{padding:0 22px 28px;display:flex;gap:9px;}
 .secondary{flex:1;min-height:48px;border-radius:12px;border:1px solid var(--line);background:#fff;font-weight:800;font-size:12px;}
@@ -408,14 +408,7 @@ a{color:inherit;text-decoration:none;}
 
 <body data-tool-slug="maliyet-hesapla">
 
-<header class="header">
-    <div class="header-inner">
-        <a href="/" class="brand" aria-label="WORKSİTEM ana sayfa">
-            <img src="/brand/worksitem-logo.png" alt="WORKSİTEM">
-        </a>
-        <div class="header-note">Kainta İnşaat ConTech Maliyet Motoru</div>
-    </div>
-</header>
+<x-site.contech-header />
 
 <main class="main">
 
@@ -588,9 +581,19 @@ a{color:inherit;text-decoration:none;}
                 konsept bir 3D render oluşturmak için yapay zekayı tetikleyin.
             </p>
 
+            @if(config('services.ai_spend_enabled'))
             <button type="button" class="ai-submit-btn" id="btnGenerateRender">
-                Konsept Render Üret (10 sn) →
+                Konsept Render Üret →
             </button>
+            @else
+            <button type="button" class="ai-submit-btn" id="btnGenerateRender" disabled
+                    style="opacity:.55;cursor:not-allowed;">
+                AI Görselleştirme Geçici Olarak Kapalı
+            </button>
+            <div style="margin-top:10px;font-size:13px;color:#a1a1aa;">
+                Maliyet hesaplama ve teklif talebi normal şekilde kullanılabilir.
+            </div>
+            @endif
 
             <div id="aiRenderContainer" style="display:none; margin-top: 20px;">
                 <div id="aiLoader" style="color: #a1a1aa; font-size: 13px; font-weight: 600; text-align: center; margin-bottom: 10px;">
@@ -1322,6 +1325,7 @@ updateProgress();
         style="font-weight:800;text-decoration:underline;text-underline-offset:4px"
     >Seramik ve fayans metrajını ayrıca hesapla →</a>
 </div>
+    <x-site.contech-footer />
 </body>
 </html>
 

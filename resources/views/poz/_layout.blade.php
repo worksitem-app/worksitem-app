@@ -74,7 +74,7 @@
     /* Liste sayfası mevcut class uyumluluğu */
     .hero{padding:20px 0 22px}
     .hero h1{margin:0;font-size:clamp(34px,4.8vw,56px);line-height:1.04;letter-spacing:-2px;font-weight:950}
-    .hero h1 span{color:var(--yellow-dark)}
+    .hero h1 span{color:var(--ws-highlight,#9A6E00)}
     .hero p{margin:14px 0 0;color:var(--muted)}
     .stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:18px 0}
     .stat{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:var(--shadow)}
@@ -166,7 +166,7 @@
       .poz-item{align-items:flex-start;flex-direction:column}
       .poz-item>a{align-items:flex-start}
     }
-
+  
 
     /* POZ PAGINATION */
 .poz-pagination{
@@ -235,3 +235,4 @@ a.poz-page:hover{
   <x-site.contech-footer />
 </body>
 </html>
+

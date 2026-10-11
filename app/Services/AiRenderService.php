@@ -11,8 +11,13 @@ class AiRenderService
      */
     public function generateGuestConceptRender(array $data)
     {
+        if (!config('services.ai_spend_enabled')) {
+            return null;
+        }
+
         // Stabilite için OPENAI_API_KEY kullanıyoruz
-        $apiKey = env('OPENAI_API_KEY');
+        // env() config:cache sonrası null döner → prod'da hep fallback görsel gidiyordu.
+        $apiKey = config('services.openai.api_key');
 
         $type = $data['type'] ?? 'renovation';
         $quality = $data['quality'] ?? 'standard';

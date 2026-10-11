@@ -23,8 +23,8 @@
         h1, h2 { color: #0f172a; }
         h1 { margin-top: 0; font-size: 2rem; }
         h2 { margin-top: 28px; font-size: 1.2rem; }
-        a { color: #2563eb; }
-        .summary { padding: 16px; border-left: 4px solid #2563eb; background: #eff6ff; border-radius: 8px; }
+        a { color: #101318; }
+        .summary { padding: 16px; border-left: 4px solid #101318; background: #fff8e1; border-radius: 8px; }
         .version { color: #64748b; font-size: 0.9rem; }
         .nav-links { margin-top: 32px; padding-top: 24px; border-top: 1px solid #e2e8f0; }
         .nav-links a { margin-right: 16px; font-weight: 600; }
@@ -80,7 +80,7 @@ html[data-theme="dark"] .cookie-manage{
 <main>
     <h1>KVKK Aydınlatma Metni</h1>
 
-    <p class="version">Metin sürümü: 2026-09-v2 · Yürürlük tarihi: 26.09.2026</p>
+    <p class="version">Metin sürümü: 2026-10-v3 · Yürürlük tarihi: 11.10.2026</p>
 
     <p class="summary">
         Bu metin; 6698 sayılı Kişisel Verilerin Korunması Kanunu'nun 10. maddesi kapsamında,
@@ -114,6 +114,9 @@ html[data-theme="dark"] .cookie-manage{
         <li><strong>Proje verileri:</strong> Proje türü, metrekare, bütçe, zamanlama, proje açıklaması</li>
         <li><strong>Teknik veriler:</strong> Form gönderim sayfası, yönlendiren sayfa, kampanya kaynağı, kullanıcı ajanı</li>
         <li><strong>Güvenlik verileri:</strong> Tek yönlü özetlenmiş IP adresi (SHA-256 HMAC)</li>
+        <li><strong>Görsel ve dosya verileri:</strong> AI iç mekan tasarımı için yüklediğiniz oda fotoğrafları;
+            otomatik keşif (Auto-BOQ) için yüklediğiniz proje dosyaları (PDF, görsel, CSV/Excel).
+            Fotoğraflarda yer alabilecek kişi ve eşya görüntüleri de bu kapsamdadır; lütfen kişi içeren fotoğraf yüklemeyin.</li>
     </ul>
 
     <h2>3. İşleme Amaçları</h2>
@@ -125,6 +128,8 @@ html[data-theme="dark"] .cookie-manage{
         <li>Talebinizin ilgili satış veya proje ekibine yönlendirilmesi</li>
         <li>Bilgi güvenliği ve kötüye kullanımın önlenmesi</li>
         <li>Kampanya performansının toplu ve anonim olarak ölçülmesi</li>
+        <li>Taleplerin satış ekibince önceliklendirilmesi (bütçe, alan ve zamanlama bilgilerine göre otomatik puanlama)</li>
+        <li>Yüklediğiniz görsel veya dosyadan yapay zekâ ile tasarım önerisi ya da keşif çıktısı üretilmesi</li>
         <li>Yasal yükümlülüklerin yerine getirilmesi</li>
     </ul>
 
@@ -138,6 +143,13 @@ html[data-theme="dark"] .cookie-manage{
         <li>Bir hakkın tesisi, kullanılması veya korunması için veri işlemenin zorunlu olması</li>
         <li>Temel hak ve özgürlüklerinize zarar vermemek kaydıyla meşru menfaatler</li>
     </ul>
+
+    <p>
+        Taleplerin önceliklendirilmesi için yapılan otomatik puanlama meşru menfaate dayanır
+        ve yalnızca satış ekibimizin iş sırasını belirler. Bu puanlama sonucunda hakkınızda
+        hukuki sonuç doğuran ya da sizi önemli ölçüde etkileyen otomatik bir karar alınmaz;
+        her talep bir çalışanımız tarafından değerlendirilir.
+    </p>
 
     <p>
         <strong>Pazarlama ve ticari elektronik ileti gönderimi</strong> ise ayrıca tarafınızdan
@@ -154,6 +166,8 @@ html[data-theme="dark"] .cookie-manage{
     <ul>
         <li>Yetkili çalışanlarımız ve satış ekibimiz</li>
         <li>Bilişim ve barındırma hizmet sağlayıcılarımız (Hostinger, Google)</li>
+        <li>Yapay zekâ hizmet sağlayıcılarımız (Google Gemini, Replicate, OpenAI): yalnızca ilgili
+            aracı kullandığınızda ve yüklediğiniz görsel/dosya ile proje bilgileriyle sınırlı olarak</li>
         <li>Ödeme ve muhasebe hizmet sağlayıcılarımız (varsa)</li>
         <li>Hukuken yetkili kamu kurum ve kuruluşları</li>
     </ul>
@@ -184,6 +198,7 @@ html[data-theme="dark"] .cookie-manage{
         <li>Müşteri ilişkisi kurulmazsa: <strong>2 yıl</strong></li>
         <li>Müşteri ilişkisi kurulursa: <strong>10 yıl</strong> (TTK ve vergi mevzuatı gereği)</li>
         <li>Yasal zorunluluk yoksa: <strong>veri silinir</strong></li>
+        <li>AI aracına yüklenen oda fotoğrafları: <strong>30 gün</strong> sonra otomatik silinir</li>
     </ul>
 
     <h2>8. KVKK Kapsamındaki Haklarınız</h2>

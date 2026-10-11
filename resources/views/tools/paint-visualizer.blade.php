@@ -8,19 +8,19 @@
     <title>Duvar Rengi Görselleştirici | Renkleri Fotoğrafınızda Deneyin | WORKSİTEM</title>
     <meta name="description" content="Doğrulanmış renk kataloglarındaki renkleri inceleyin ve seçtiğiniz tonları oda veya cephe fotoğrafınız üzerinde yaklaşık olarak görselleştirin.">
     <link rel="canonical" href="https://worksitem.com/araclar/duvar-rengi-gorsellestirici">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #f8fafc;
             --surface: #ffffff;
             --border: #cbd5e1;
-            --primary: #1e3a8a;
-            --primary-hover: #1e40af;
+            --primary: #101318;
+            --primary-hover: #101318;
             --text-main: #0f172a;
             --text-muted: #475569;
             --pill-bg: #f1f5f9;
             --pill-text: #334155;
-            --pill-active-bg: #1e3a8a;
+            --pill-active-bg: #101318;
             --pill-active-text: #ffffff;
             --green: #059669;
             --amber: #d97706;
@@ -30,7 +30,7 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--text-main); line-height: 1.5; padding-bottom: 80px; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text-main); line-height: 1.5; padding-bottom: 80px; }
 
         .navbar { display: flex; justify-content: space-between; align-items: center; padding: 1rem 5%; background: var(--surface); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50; }
         .logo-wrapper { display: flex; align-items: center; gap: 8px; text-decoration: none; }
@@ -43,12 +43,12 @@
         .page-header h1 { font-size: 2.25rem; font-weight: 800; color: var(--text-main); letter-spacing: -0.5px; margin-bottom: 8px; }
         .page-header p { color: var(--text-muted); font-size: 1rem; max-width: 750px; margin: 0 auto; }
 
-        .quick-action-btn { display: inline-flex; align-items: center; gap: 8px; background: #eff6ff; color: var(--primary); border: 1px solid #bfdbfe; font-weight: 700; padding: 10px 22px; border-radius: var(--radius-full); margin-top: 15px; cursor: pointer; transition: var(--transition); }
-        .quick-action-btn:hover { background: #dbeafe; }
+        .quick-action-btn { display: inline-flex; align-items: center; gap: 8px; background: #fff8e1; color: var(--primary); border: 1px solid #fde68a; font-weight: 700; padding: 10px 22px; border-radius: var(--radius-full); margin-top: 15px; cursor: pointer; transition: var(--transition); }
+        .quick-action-btn:hover { background: #fff3c4; }
 
         /* Filter Section */
         .filter-section { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 25px; margin-bottom: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-
+        
         .filter-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 18px; }
         .filter-label { font-size: 0.875rem; font-weight: 800; color: var(--text-muted); min-width: 110px; text-transform: uppercase; letter-spacing: 0.5px; }
 
@@ -90,13 +90,13 @@
         .toolbar { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
         .tool-btn { display: inline-flex; align-items: center; gap: 6px; padding: 10px 18px; border-radius: var(--radius-full); font-size: 0.85rem; font-weight: 700; cursor: pointer; border: 1px solid var(--border); background: var(--surface); color: var(--text-main); transition: var(--transition); }
         .tool-btn:hover { background: var(--bg); }
-        .tool-btn.active { background: #eff6ff; border-color: var(--primary); color: var(--primary); }
+        .tool-btn.active { background: #fff8e1; border-color: var(--primary); color: var(--primary); }
         .tool-btn.btn-primary { background: var(--primary); color: #fff; border-color: var(--primary); }
         .tool-btn.btn-primary:hover { background: var(--primary-hover); }
-        .tool-btn.btn-success { background: var(--green); color: #fff; border-color: var(--green); }
+        .tool-btn.btn-success { background:#101318; color:#fff; border-color: var(--green); }
         .tool-btn.btn-amber { background: var(--amber); color: #fff; border-color: var(--amber); }
         .tool-btn.btn-danger { background: var(--red); color: #fff; border-color: var(--red); }
-        .badge-ai { background: #1e3a8a; color: #fff; font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; text-transform: uppercase; margin-left: 4px; }
+        .badge-ai { background: #101318; color: #fff; font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; text-transform: uppercase; margin-left: 4px; }
 
         /* Settings Bar */
         .settings-bar { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; background: var(--bg); padding: 12px 20px; border-radius: 10px; margin-bottom: 20px; font-size: 0.85rem; font-weight: 700; }
@@ -113,10 +113,10 @@
         .drop-placeholder h3 { font-size: 1.1rem; font-weight: 800; color: var(--text-main); margin: 10px 0 5px 0; }
 
         /* Lead CTA Banner */
-        .lead-banner { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px; padding: 20px; margin-top: 25px; display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
-        .lead-text h4 { font-size: 1.05rem; font-weight: 800; color: #166534; margin-bottom: 4px; }
-        .lead-text p { font-size: 0.85rem; color: #15803d; }
-        .lead-btn { background: var(--green); color: #fff; font-weight: 800; padding: 12px 24px; border-radius: 8px; text-decoration: none; transition: var(--transition); }
+        .lead-banner { background: #fff8e1; border: 1px solid #fde68a; border-radius: 12px; padding: 20px; margin-top: 25px; display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+        .lead-text h4 { font-size: 1.05rem; font-weight: 800; color: #101318; margin-bottom: 4px; }
+        .lead-text p { font-size: 0.85rem; color: #101318; }
+        .lead-btn { background:#101318; color:#fff; font-weight: 800; padding: 12px 24px; border-radius: 8px; text-decoration: none; transition: var(--transition); }
         .lead-btn:hover { background: #047857; }
     </style>
     <meta property="og:image" content="https://worksitem.com/brand/og-image.png">
@@ -239,7 +239,7 @@ body{
     @endunless
 
     <div class="container">
-
+        
         <div class="page-header">
             <h1>Duvar Rengi Görselleştirici</h1>
             <p>Doğrulanmış renk kataloglarını inceleyin ve seçtiğiniz tonları oda veya cephe fotoğrafınız üzerinde yaklaşık olarak önizleyin.</p>
@@ -250,7 +250,7 @@ body{
 
         <!-- FILTERS & SWATCHES -->
         <div class="filter-section">
-
+            
             <!-- Brand Selection -->
             <div class="filter-row">
                 <span class="filter-label">Üretici / Standart:</span>
@@ -337,7 +337,7 @@ body{
             </button>
         </div>
 
-
+        
 <div class="catalog-actions" id="catalogActions" hidden>
     <a
         href="#"
@@ -991,7 +991,7 @@ let currentBrand = 'RAL Kataloğu';
             const h = mainCanvas.height;
             const imgData = ctxMain.getImageData(0, 0, w, h);
             const maskData = ctxMask.getImageData(0, 0, w, h);
-
+            
             const tol = parseInt(document.getElementById('toleranceSlider').value) * 3;
             const targetRGB = getPixelRGB(imgData, startX, startY);
             const fillColor = hexToRgb(selectedColor.hex);

@@ -26,13 +26,13 @@ class AiDesignController extends Controller
     public function startGeneration(Request $request)
     {
         $request->validate([
-            'room_image' => 'required|image|max:5120',
-            'style' => 'required|string',
+            'room_image' => 'required|image|mimes:jpg,jpeg,png,webp|max:5120',
+            'style' => 'required|string|max:50',
             'user_prompt' => 'nullable|string|max:300',
             'room_area' => 'nullable|numeric|min:1|max:10000',
         ]);
 
-        $ipHash = hash('sha256', $request->ip() . '|worksitem_salt');
+        $ipHash = $this->ipHash($request);
         $sessionKey = $request->input('session_key') ?? session()->getId();
 
         $todayCount = AiGeneration::where('ip_hash', $ipHash)
@@ -86,22 +86,21 @@ class AiDesignController extends Controller
 
         return response()->json([
             'success' => true,
-            'generation_id' => $generation->id,
-            'prediction_id' => $result['prediction_id'],
+            'generation_id' => $generation->public_id,
             'remaining_quota' => $remaining,
             'message' => 'Tasarım başlatıldı.',
         ]);
     }
 
-    public function checkStatus($id)
+    public function checkStatus(string $id)
     {
-        $generation = AiGeneration::findOrFail($id);
+        $generation = AiGeneration::findPublicOrFail($id);
 
         if ($generation->status === 'completed' && $generation->output_image) {
             return response()->json([
                 'status' => 'succeeded',
                 'output_url' => $generation->output_image,
-                'generation_id' => $generation->id,
+                'generation_id' => $generation->public_id,
                 'room_area' => $generation->room_area,
                 'can_estimate_cost' => true,
             ]);
@@ -133,7 +132,7 @@ class AiDesignController extends Controller
 
     public function getQuota(Request $request)
     {
-        $ipHash = hash('sha256', $request->ip() . '|worksitem_salt');
+        $ipHash = $this->ipHash($request);
 
         $todayCount = AiGeneration::where('ip_hash', $ipHash)
             ->whereDate('created_at', today())
@@ -147,16 +146,16 @@ class AiDesignController extends Controller
         ]);
     }
 
-    public function estimate(Request $request, $id)
+    public function estimate(Request $request, string $id)
     {
         $request->validate([
             'room_area' => 'required|numeric|min:1|max:10000',
         ]);
 
-        $generation = AiGeneration::findOrFail($id);
+        $generation = AiGeneration::findPublicOrFail($id);
 
         $service = new AiCostEstimationService();
-        $result = $service->estimate($id, (float) $request->room_area);
+        $result = $service->estimate($generation->id, (float) $request->room_area);
 
         $generation->update([
             'room_area' => $request->room_area,
@@ -166,5 +165,14 @@ class AiDesignController extends Controller
         ]);
 
         return response()->json($result);
+    }
+
+    /**
+     * KVKK: IP ham saklanmaz. Salt sabit string yerine APP_KEY'den türetilir
+     * (kaynak kod sızsa bile rainbow-table ile IP geri çözülemez).
+     */
+    private function ipHash(Request $request): string
+    {
+        return hash_hmac('sha256', (string) $request->ip(), (string) config('app.key'));
     }
 }

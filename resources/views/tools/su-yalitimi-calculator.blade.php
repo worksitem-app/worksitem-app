@@ -41,7 +41,7 @@ if (!$systemsJson) {
     --yellow:#ffb800;
     --yellow2:#e3a000;
     --dark:#111318;
-    --blue:#2563eb;
+    --blue:#101318;
     --orange:#c2410c;
     --radius:20px;
     --shadow:0 18px 55px rgba(15,23,42,.08);
@@ -56,7 +56,7 @@ body{
     font-family:Inter,Arial,sans-serif;
     color:var(--text);
     background:
-        radial-gradient(circle at 50% -8%,rgba(37,99,235,.08),transparent 28%),
+        radial-gradient(circle at 50% -8%,rgba(16,19,24,.08),transparent 28%),
         var(--bg);
 }
 
@@ -110,9 +110,9 @@ a{text-decoration:none;color:inherit}
     display:inline-flex;
     padding:7px 12px;
     border-radius:999px;
-    background:#eff6ff;
-    border:1px solid #bfdbfe;
-    color:#1d4ed8;
+    background:#fff8e1;
+    border:1px solid #fde68a;
+    color:#101318;
     font-size:12px;
     font-weight:900;
     margin-bottom:16px;

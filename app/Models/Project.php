@@ -3,18 +3,45 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Project extends Model
 {
-    protected $guarded = [];
+    /**
+     * Mass assignment sınırı: id / public_token / estimated_cost dışarıdan set edilemez.
+     */
+    protected $fillable = [
+        'project_type_id',
+        'name',
+        'city',
+        'district',
+        'land_area',
+        'construction_area',
+        'status',
+        'notes',
+        'estimated_cost',
+    ];
 
-    // Projenin tipine (Villa, Tadilat vb.) olan bağlantısı
+    protected static function booted(): void
+    {
+        static::creating(function (Project $project) {
+            $project->public_token ??= (string) Str::ulid();
+        });
+    }
+
+    /**
+     * Public URL'lerde sıralı ID yerine tahmin edilemez token.
+     */
+    public function getRouteKeyName(): string
+    {
+        return 'public_token';
+    }
+
     public function projectType()
     {
         return $this->belongsTo(ProjectType::class, 'project_type_id');
     }
 
-    // Projenin cevaplarına olan bağlantısı (ileride lazım olacak)
     public function answers()
     {
         return $this->hasMany(ProjectAnswer::class, 'project_id');

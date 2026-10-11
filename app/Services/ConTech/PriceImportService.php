@@ -10,6 +10,10 @@ class PriceImportService
 {
     public function importFromPdf(UploadedFile $file)
     {
+        if (!config('services.ai_spend_enabled')) {
+            throw new \RuntimeException('AI fiyat içe aktarma geçici olarak devre dışı.');
+        }
+
         $apiKey = config('services.gemini.api_key');
         $model = config('services.gemini.boq_model', 'gemini-2.5-flash');
 
@@ -76,34 +80,45 @@ class PriceImportService
             throw new \Exception("PDF'den fiyat listesi çıkarılamadı.");
         }
 
-        // Veritabanına Yazma (Update or Insert)
+        // Veritabanına Yazma (Update or Insert) — tek transaction, kısmi yazma yok
         $updatedCount = 0;
-        foreach ($parsed['prices'] as $item) {
-            if (empty($item['poz_no']) || empty($item['price'])) continue;
+        $year = (int) date('Y');
+        $period = date('Y-m');
+        $sourceFile = $file->getClientOriginalName();
 
-            DB::table('tender_pozs')->updateOrInsert(
-                [
-                    institution => ÇŞİDB/YFK,
-                    year => date(Y),
-                    poz_no => trim($item[poz_no]),
-                    price_type => unit_price,
-                ],
-                [
-                    period => date(Y-m),
-                    description => trim($item[name]),
-                    unit => trim($item[unit]),
-                    unit_price => (float) $item[price],
-                    profit_included => false,
-                    vat_included => false,
-                    is_active => true,
-                    source_file => $file->getClientOriginalName(),
-                    updated_at => now(),
-                    created_at => now(),
-                ]
-            );
+        DB::transaction(function () use ($parsed, $year, $period, $sourceFile, &$updatedCount) {
+            foreach ($parsed['prices'] as $item) {
+                $pozNo = trim((string) ($item['poz_no'] ?? ''));
+                $price = (float) ($item['price'] ?? 0);
 
-            $updatedCount++;
-        }
+                if ($pozNo === '' || $price <= 0) {
+                    continue;
+                }
+
+                DB::table('tender_pozs')->updateOrInsert(
+                    [
+                        'institution' => 'ÇŞİDB/YFK',
+                        'year' => $year,
+                        'poz_no' => $pozNo,
+                        'price_type' => 'unit_price',
+                    ],
+                    [
+                        'period' => $period,
+                        'description' => trim((string) ($item['name'] ?? '')),
+                        'unit' => trim((string) ($item['unit'] ?? '')),
+                        'unit_price' => $price,
+                        'profit_included' => false,
+                        'vat_included' => false,
+                        'is_active' => true,
+                        'source_file' => $sourceFile,
+                        'updated_at' => now(),
+                        'created_at' => now(),
+                    ]
+                );
+
+                $updatedCount++;
+            }
+        });
 
         return [
             'success' => true,

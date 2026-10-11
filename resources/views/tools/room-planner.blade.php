@@ -9,34 +9,34 @@
     <title>AI İç Mimar & Oda Yeniden Tasarım (Generative AI) | WORKSİTEM</title>
     <meta name="description" content="Odanızın mevcut fotoğrafını yükleyin; generative AI ile yapıyı koruyarak farklı iç mimari stillerde yeniden tasarlanmış görünüm oluşturun.">
     <link rel="canonical" href="https://worksitem.com/araclar/oda-planlayici">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        :root { --bg:#0f172a; --surface:#1e293b; --border:#334155; --primary:#3b82f6; --text-main:#f8fafc; --text-muted:#94a3b8; --green:#10b981; --transition:all 0.3s ease;}
+        :root { --bg:#f5f6f8; --surface:#ffffff; --border:#e5e7eb; --primary:#101318; --text-main:#101318; --text-muted:#5b6472; --green:#10b981; --transition:all 0.3s ease;}
         body { font-family:'Inter', sans-serif; background:var(--bg); color:var(--text-main); margin:0; padding-bottom:80px; }
         .navbar { display:flex; justify-content:space-between; align-items:center; padding:1rem 5%; background:var(--surface); border-bottom:1px solid var(--border); position:sticky; top:0; z-index:50;}
         .logo { font-weight:800; font-size:20px; color:#fff; text-decoration:none; display:flex; align-items:center; gap:10px; }
-        .logo-box { background:linear-gradient(135deg, #3b82f6, #8b5cf6); padding:4px 8px; border-radius:6px; font-size:14px; }
+        .logo-box { background:linear-gradient(135deg, #101318, #101318); padding:4px 8px; border-radius:6px; font-size:14px; }
         
         .container { max-width:1200px; margin:40px auto; padding:0 4%; display:grid; grid-template-columns:350px 1fr; gap:30px; }
         @media(max-width:992px) { .container { grid-template-columns:1fr; } }
         
         .panel { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:25px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); height:fit-content; }
         
-        h1 { font-size:1.8rem; font-weight:800; margin-bottom:10px; background: -webkit-linear-gradient(45deg, #60a5fa, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        h1 { font-size:1.8rem; font-weight:800; margin-bottom:10px; background: -webkit-linear-gradient(45deg, #ffb800, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         p.subtitle { color:var(--text-muted); font-size:0.9rem; margin-bottom:25px; line-height:1.5; }
         
         .form-group { margin-bottom:20px; }
         .form-group label { display:block; font-size:0.85rem; font-weight:700; color:var(--text-muted); margin-bottom:8px; text-transform:uppercase; letter-spacing:0.5px; }
-        .form-control { width:100%; padding:14px; border-radius:8px; background:#0f172a; border:1px solid var(--border); color:var(--text-main); font-family:inherit; font-size:1rem; transition:var(--transition);}
-        .form-control:focus { outline:none; border-color:var(--primary); box-shadow:0 0 0 3px rgba(59, 130, 246, 0.3); }
+        .form-control { width:100%; padding:14px; border-radius:8px; background:#ffffff; border:1px solid var(--border); color:var(--text-main); font-family:inherit; font-size:1rem; transition:var(--transition);}
+        .form-control:focus { outline:none; border-color:var(--primary); box-shadow:0 0 0 3px rgba(16,19,24,0.3); }
         
         .upload-box { border:2px dashed var(--border); border-radius:12px; padding:30px 20px; text-align:center; cursor:pointer; transition:var(--transition); background:rgba(15,23,42,0.5); margin-bottom:20px; }
-        .upload-box:hover { border-color:var(--primary); background:rgba(59,130,246,0.1); }
+        .upload-box:hover { border-color:var(--primary); background:rgba(16,19,24,0.1); }
         .upload-icon { font-size:2rem; margin-bottom:10px; }
         .upload-text { font-size:0.9rem; color:var(--text-muted); font-weight:600; }
         
-        .ai-btn { display:flex; align-items:center; justify-content:center; gap:10px; width:100%; background:linear-gradient(45deg, #3b82f6, #8b5cf6); color:#fff; font-weight:800; font-size:1.1rem; padding:16px; border-radius:8px; border:none; cursor:pointer; transition:var(--transition); margin-top:10px; }
-        .ai-btn:hover { transform:translateY(-2px); box-shadow:0 10px 20px -5px rgba(59, 130, 246, 0.5); }
+        .ai-btn { display:flex; align-items:center; justify-content:center; gap:10px; width:100%; background:linear-gradient(45deg, #101318, #101318); color:#fff; font-weight:800; font-size:1.1rem; padding:16px; border-radius:8px; border:none; cursor:pointer; transition:var(--transition); margin-top:10px; }
+        .ai-btn:hover { transform:translateY(-2px); box-shadow:0 10px 20px -5px rgba(16,19,24,0.5); }
         
         .workspace { display:flex; flex-direction:column; gap:20px; }
         .placeholder-view { border:1px dashed var(--border); border-radius:16px; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; height:100%; min-height:500px; color:var(--text-muted); background:rgba(15,23,42,0.3); }
@@ -47,7 +47,7 @@
         .rendered-img { width:100%; border-radius:8px; box-shadow:0 5px 15px rgba(0,0,0,0.5); aspect-ratio:4/3; object-fit:cover; }
 
         .cta-box { background:rgba(16, 185, 129, 0.1); border:1px solid var(--green); border-radius:12px; padding:24px; text-align:center; display:none; margin-top:20px;}
-        .cta-btn { display:inline-block; background:var(--green); color:#fff; font-weight:800; padding:14px 28px; border-radius:8px; text-decoration:none; transition:var(--transition); margin-top:15px; }
+        .cta-btn { display:inline-block; background:#101318; color:#fff; font-weight:800; padding:14px 28px; border-radius:8px; text-decoration:none; transition:var(--transition); margin-top:15px; }
         .cta-btn:hover { background:#059669; }
         
         /* Loader */
@@ -99,10 +99,20 @@
                 </select>
             </div>
             
+            @if(config('services.ai_spend_enabled'))
             <button class="ai-btn" id="generateBtn" onclick="generateAI()">
                 <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                 Yeniden Tasarla
             </button>
+            @else
+            <button class="ai-btn" id="generateBtn" type="button" disabled
+                    style="opacity:.55;cursor:not-allowed;">
+                AI Görselleştirme Geçici Olarak Kapalı
+            </button>
+            <div style="margin-top:12px;color:var(--text-muted);font-size:13px;line-height:1.5;text-align:center;">
+                Bu özellik geçici olarak kullanıma kapalıdır.
+            </div>
+            @endif
         </div>
 
         <!-- SAĞ PANEL: ÇALIŞMA ALANI VE SONUÇLAR -->
@@ -126,20 +136,14 @@
                     <img id="originalImg" src="" class="rendered-img" alt="Orijinal">
                 </div>
                 <div class="img-card" style="border-color:var(--primary); position:relative;">
-                    <div style="position:absolute; top:-10px; right:-10px; background:#a855f7; color:#fff; font-size:12px; font-weight:800; padding:4px 8px; border-radius:6px;">8K RENDER</div>
-                    <h3 style="color:#60a5fa;">Yapay Zeka Tasarımı</h3>
+                    <div style="position:absolute; top:-10px; right:-10px; background:#101318; color:#fff; font-size:12px; font-weight:800; padding:4px 8px; border-radius:6px;">8K RENDER</div>
+                    <h3 style="color:#ffb800;">Yapay Zeka Tasarımı</h3>
                     <img id="aiImg" src="" class="rendered-img" alt="AI Render">
                 </div>
             </div>
 
             </div>
 
-        <!-- STANDART KAİNTA LEAD HUNİSİ (CTA) -->
-        <div class="no-print" style="margin-top: 40px; padding: 30px; background: #f0fdf4; border: 2px solid #bbf7d0; border-radius: 16px; text-align: center;">
-            <h3 style="color: #166534; font-size: 20px; font-weight: 800; margin-bottom: 10px;">Hesaplamayı Yaptınız, Şimdi İşi Uzmanına Bırakın</h3>
-            <p style="color: #15803d; font-size: 14px; margin-bottom: 20px;">Kainta İnşaat mühendislerinden projenize özel resmi keşif ve bütçe teklifi alın.</p>
-            <a href="/maliyet-hesapla" style="display: inline-block; background: #166534; color: #fff; padding: 16px 32px; font-size: 16px; font-weight: 800; border-radius: 8px; text-decoration: none; box-shadow: 0 4px 10px rgba(22,101,52,0.3); transition: all 0.2s;">Ön maliyet hesabına geç →</a>
-        </div>
     </div>
 
     <script>

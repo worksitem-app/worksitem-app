@@ -98,10 +98,10 @@ a{text-decoration:none;color:inherit}
     display:inline-block;
     padding:7px 12px;
     margin-bottom:15px;
-    background:#eff6ff;
-    border:1px solid #bfdbfe;
+    background:#fff8e1;
+    border:1px solid #fde68a;
     border-radius:999px;
-    color:#1d4ed8;
+    color:#101318;
     font-size:12px;
     font-weight:900;
 }

@@ -22,8 +22,8 @@
         .form-control { width: 100%; height: 50px; border: 1px solid var(--line); border-radius: 12px; padding: 0 15px; font-size: 15px; font-family: inherit; }
         .result-box { background: #111; color: #fff; border-radius: var(--radius); padding: 30px; text-align: center; margin-top: 10px; display: none; }
         .result-price { font-size: 38px; font-weight: 900; color: var(--accent); margin: 5px 0 15px; letter-spacing: -1px; }
-        .ai-insight { background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); padding: 15px; border-radius: 12px; margin-top: 15px; text-align: left; display: flex; gap: 12px; }
-        .ai-insight-text strong { color: #60a5fa; font-size: 14px; display: block; margin-bottom: 4px;}
+        .ai-insight { background: rgba(16,19,24,0.1); border: 1px solid rgba(16,19,24,0.3); padding: 15px; border-radius: 12px; margin-top: 15px; text-align: left; display: flex; gap: 12px; }
+        .ai-insight-text strong { color: #ffb800; font-size: 14px; display: block; margin-bottom: 4px;}
         .budget-confirm-box { margin-top: 25px; padding: 25px; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; display: none; text-align: center; }
         .budget-confirm-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top:15px; }
         .budget-btn { min-height: 52px; border-radius: 13px; font-weight: 800; cursor: pointer; border: 1px solid var(--line); background: #fff;}
@@ -47,7 +47,7 @@
 <x-site.contech-header />
 <div class="container">
     <div style="text-align: center; margin-bottom: 30px;">
-        <h1 style="font-size: 28px; font-weight: 900; letter-spacing: -1px; margin-bottom: 10px;">📐 Zemin ve Fayans Motoru</h1>
+        <h1 style="font-size: 28px; font-weight: 900; letter-spacing: -1px; margin-bottom: 10px;">Zemin ve Fayans Motoru</h1>
         <p style="color: var(--muted); font-size: 15px;">Parke, seramik, fayans veya mermer kaplama ihtiyaçlarınızın fire payı dahil malzeme metrajını ve bütçesini çıkarın.</p>
     </div>
     <div class="card">
@@ -81,9 +81,9 @@
                 <span style="display: block; font-size: 12px; color: #a1a1aa;">Net Alan</span>
                 <strong id="resNet" style="display: block; font-size: 18px; color: #fff; font-weight: 800;">0 m²</strong>
             </div>
-            <div style="background: rgba(59, 130, 246, 0.1); padding: 15px; border-radius: 12px; border: 1px solid rgba(59, 130, 246, 0.3);">
+            <div style="background: rgba(16,19,24,0.1); padding: 15px; border-radius: 12px; border: 1px solid rgba(16,19,24,0.3);">
                 <span style="display: block; font-size: 12px; color: #a1a1aa;">Gereken Sipariş (Fire Dahil)</span>
-                <strong id="resGross" style="display: block; font-size: 18px; color: #60a5fa; font-weight: 800;">0 m²</strong>
+                <strong id="resGross" style="display: block; font-size: 18px; color: #ffb800; font-weight: 800;">0 m²</strong>
             </div>
         </div>
         <div class="ai-insight">

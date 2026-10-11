@@ -69,7 +69,7 @@
 
     <!-- AI TARAFINDAN ÜRETİLEN İÇERİK -->
     <div class="ai-content">
-        {!! $aiProposalHtml !!}
+        {!! \App\Support\SafeHtml::clean($aiProposalHtml) !!}
     </div>
 
     <table class="signatures">

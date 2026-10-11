@@ -18,7 +18,7 @@
         label { display: block; font-size: 12px; font-weight: 800; margin-bottom: 5px; }
         input { width: 100%; height: 40px; border: 1px solid var(--line); border-radius: 8px; padding: 0 10px; font-family: inherit; }
         .btn { background: var(--accent); color: #fff; border: none; padding: 15px; width: 100%; border-radius: 12px; font-weight: 800; cursor: pointer; margin-top: 10px; }
-        .btn-word { background: #2563eb; margin-top: 10px; }
+        .btn-word { background: #101318; margin-top: 10px; }
         
         .document-wrapper { background: #fff; padding: 40px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); width: 100%; max-width: 21cm; min-height: 29.7cm; margin: 0 auto; box-sizing: border-box; }
         .doc-header { text-align: center; border-bottom: 2px solid #111; padding-bottom: 20px; margin-bottom: 30px; }

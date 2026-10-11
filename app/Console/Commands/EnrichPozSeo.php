@@ -17,6 +17,11 @@ class EnrichPozSeo extends Command
 
     public function handle(): int
     {
+        if (!config('services.ai_spend_enabled')) {
+            $this->error('AI harcama kilidi aktif. SEO enrichment çalıştırılmadı.');
+            return self::FAILURE;
+        }
+
         $limit = (int) $this->option('limit');
         $idsFile = $this->option('ids-file');
 
@@ -93,9 +98,10 @@ KURALLAR:
   2) Nerede kullanıldığı
   3) Teknik özellikleri
   4) Avantajları
-- meta_description: Tam 155 karakter
+- ÖNEMLİ (Anti-Cannibalization): Bu pozun, serideki diğer benzer pozlardan (farklı kalınlık, çap, ebat, güç vb.) temel farkını ve spesifik kullanım alanını özellikle vurgula. Asla jenerik ve tekrara düşen metinler yazma.
+- meta_description: Tam 155 karakter, benzersiz ve tıkla-gezin (CTR) odaklı olsun.
 - meta_keywords: 8-12 anahtar kelime, virgülle ayrılmış
-- faq: 3-5 soru-cevap
+- faq: 3-5 soru-cevap (Bu poza özel, spesifik ve benzersiz sorular)
 
 SADECE JSON formatında çıktı ver, başka metin YOK:
 {

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Beton Hesaplama (m³): Kaç m³ Beton Gerekir? | WORKSİTEM</title>
-    <meta name="description" content="Beton hacmini m³ olarak hesaplayın. Döşeme, temel, kolon, kiriş, perde ve kazık için net hacim, ayarlanabilir fire oranı, transmikser ve yaklaşık malzeme dağılımını görün.">
+    <meta name="description" content="Kaç m³ beton gerekir? Döşeme, temel, kolon ve kiriş için net hacmi, fireyi ve transmikser sayısını saniyeler içinde hesaplayın. Ücretsiz, üyeliksiz.">
     <link rel="canonical" href="https://worksitem.com/araclar/beton-hesaplayici">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>

@@ -24,15 +24,15 @@
         h1 { margin-top: 0; font-size: 2rem; }
         h2 { margin-top: 28px; font-size: 1.2rem; }
         h3 { margin-top: 20px; font-size: 1rem; }
-        a { color: #2563eb; }
+        a { color: #101318; }
         table { width: 100%; border-collapse: collapse; margin: 16px 0; }
         th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e2e8f0; font-size: 14px; }
         th { background: #f1f5f9; font-weight: 700; }
         .version { color: #64748b; font-size: 0.9rem; }
         .nav-links { margin-top: 32px; padding-top: 24px; border-top: 1px solid #e2e8f0; }
         .nav-links a { margin-right: 16px; font-weight: 600; }
-        .cookie-manage { background: #eff6ff; padding: 16px; border-radius: 8px; border-left: 4px solid #2563eb; margin: 24px 0; }
-        .cookie-manage button { background: #2563eb; color: #fff; padding: 10px 20px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; }
+        .cookie-manage { background: #fff8e1; padding: 16px; border-radius: 8px; border-left: 4px solid #101318; margin: 24px 0; }
+        .cookie-manage button { background: #101318; color: #fff; padding: 10px 20px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; }
     </style>
 <style id="worksitem-legal-theme-v1">
 html[data-theme="light"]{
@@ -84,7 +84,7 @@ html[data-theme="dark"] .cookie-manage{
 <main>
     <h1>Çerez Politikası</h1>
 
-    <p class="version">Metin sürümü: 2026-09-v1 · Yürürlük tarihi: 26.09.2026</p>
+    <p class="version">Metin sürümü: 2026-10-v2 · Yürürlük tarihi: 11.10.2026</p>
 
     <p>
         Bu Çerez Politikası, 6698 sayılı KVKK ve Kişisel Verileri Koruma Kurulu'nun
@@ -154,16 +154,29 @@ html[data-theme="dark"] .cookie-manage{
 
     <p>
         <strong>Önemli:</strong> Bu çerezler yalnızca tarafınızdan onay verildiğinde
-        çalışır. Onay vermemeniz durumunda GA4 çalışmaz (Consent Mode v2).
+        çalışır. Onay vermediğiniz sürece Google Analytics kodu sayfaya hiç yüklenmez.
     </p>
 
     <h3>2.3. Pazarlama Çerezleri (Rıza Gerekli)</h3>
 
     <p>
-        Bu çerezler, size ilgi alanınıza göre reklam göstermek için kullanılır.
-        Şu anda aktif pazarlama çerezi bulunmamaktadır. Gelecekte kullanılması
-        durumunda bu politika güncellenecektir.
+        Bu çerezler, reklam kampanyalarımızın sonuçlarını (ör. bir reklamdan gelen
+        ziyaretçinin talep formunu doldurup doldurmadığını) ölçmek için kullanılır.
+        Yalnızca "Pazarlama çerezleri" seçeneğine onay verdiğinizde yüklenir.
     </p>
+
+    <table>
+        <tr>
+            <th>Çerez</th>
+            <th>Amaç</th>
+            <th>Süre</th>
+        </tr>
+        <tr>
+            <td>_gcl_au</td>
+            <td>Google Ads dönüşüm ölçümü</td>
+            <td>90 gün</td>
+        </tr>
+    </table>
 
     <h2>3. Çerez Tercihlerinizi Nasıl Yönetirsiniz?</h2>
 

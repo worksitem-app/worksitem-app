@@ -9,7 +9,7 @@
     <meta name="robots" content="index,follow">
     <link rel="canonical" href="https://worksitem.com/hakkimizda">
 
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/worksitem-design.css">
 
     <style>
@@ -17,7 +17,7 @@
         .about-lead{max-width:780px;margin-top:24px;font-size:19px;line-height:1.75}
         .about-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
         .about-card{min-height:230px}
-        .about-number{font-family:var(--ws-font-heading);font-size:52px;line-height:1;color:var(--ws-yellow);margin-bottom:18px}
+        .about-number{font-family:var(--ws-font-heading);font-size:44px;font-weight:800;line-height:1;color:#8A6200;margin-bottom:18px}
         .about-card p{line-height:1.75;margin:12px 0 0}
         .about-band{background:var(--ws-surface-2)}
         .about-story{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:64px;align-items:start}
@@ -47,7 +47,7 @@
 
         <h1 class="ws-h1" style="margin-top:18px;max-width:900px;">
             İnşaat kararlarını<br>
-            <span style="color:var(--ws-yellow)">veriye dönüştürüyoruz.</span>
+            <span style="color:var(--ws-highlight,#9A6E00)">veriye dönüştürüyoruz.</span>
         </h1>
 
         <p class="ws-body ws-muted about-lead">

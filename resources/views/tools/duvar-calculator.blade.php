@@ -47,7 +47,7 @@
 <x-site.contech-header />
 <div class="container">
     <div style="text-align: center; margin-bottom: 30px;">
-        <h1 style="font-size: 28px; font-weight: 900; letter-spacing: -1px; margin-bottom: 10px;">🧱 Duvar Örgü ve Sıva Motoru</h1>
+        <h1 style="font-size: 28px; font-weight: 900; letter-spacing: -1px; margin-bottom: 10px;">Duvar Örgü ve Sıva Motoru</h1>
         <p style="color: var(--muted); font-size: 15px;">Tuğla, bims veya gazbeton (Ytong) duvar ihtiyacınız için kullanılacak adet miktarını ve örgü bütçesini çıkarın.</p>
     </div>
     <div class="card">

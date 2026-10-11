@@ -7,7 +7,7 @@
     <meta name="description" content="Worksitem'in 2026-2030 vizyonu: Türkiye'nin inşaat teknolojileri lideri olmak.">
     <meta name="robots" content="index,follow">
     <link rel="canonical" href="https://worksitem.com/vizyon">
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/worksitem-design.css">
 </head>
 <body data-tool-slug="vizyon">
@@ -18,7 +18,7 @@
             <div class="ws-badge ws-badge-yellow">VİZYON 2030</div>
             <h1 class="ws-h1" style="margin-top: 16px;">
                 Türkiye'nin inşaat<br>
-                <span style="color: var(--ws-yellow);">dijital altyapısı.</span>
+                <span style="color: var(--ws-highlight,#9A6E00);">dijital altyapısı.</span>
             </h1>
             <p class="ws-body ws-muted" style="max-width: 720px; margin-top: 24px; font-size: 19px;">
                 2030'a kadar Türkiye'deki her inşaat projesinin, Worksitem altyapısı üzerinden planlandığı bir ekosistem kurmak.

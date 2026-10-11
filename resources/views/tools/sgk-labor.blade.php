@@ -5,36 +5,36 @@
 
     <meta charset="UTF-8">
     <title>SGK Asgari İşçilik & Birim Maliyet Hesaplayıcı | WORKSİTEM</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         body { font-family:'Inter', sans-serif; background:#fdfdfd; color:#111827; margin:0; padding-bottom:60px;}
         .navbar { display: flex; justify-content: space-between; align-items: center; padding: 16px 5%; background: #ffffff; border-bottom: 1px solid #e5e7eb; position: sticky; top: 0; z-index: 50;}
         .logo { font-weight:800; font-size:20px; text-decoration:none; color:#111827; display:flex; align-items:center; gap:8px;}
-        .logo-box { background:#2563eb; color:#fff; padding:4px 8px; border-radius:6px; font-size:14px; }
+        .logo-box { background:#101318; color:#fff; padding:4px 8px; border-radius:6px; font-size:14px; }
         
         .container { max-width:900px; margin:40px auto; padding:30px; background:#fff; border:1px solid #e5e7eb; border-radius:16px; box-shadow:0 4px 6px rgba(0,0,0,0.05); }
-        h1 { font-size:24px; font-weight:800; margin-bottom:10px; color:#1e3a8a;}
+        h1 { font-size:24px; font-weight:800; margin-bottom:10px; color:#101318;}
         .subtitle { color:#6b7280; margin-bottom:30px; line-height:1.5; }
         
         .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:15px; }
         .grid-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:15px; margin-bottom:15px; }
         .form-group label { display:block; font-size:12px; font-weight:700; color:#6b7280; margin-bottom:6px; text-transform:uppercase;}
         input, select { width:100%; padding:12px; border:1px solid #e5e7eb; border-radius:8px; font-family:inherit; font-size:14px; background:#f9fafb;}
-        input:focus, select:focus { outline:none; border-color:#2563eb; background:#fff; }
+        input:focus, select:focus { outline:none; border-color:#101318; background:#fff; }
         
         .section-title { font-size:16px; font-weight:800; color:#111827; margin:30px 0 15px 0; padding-bottom:8px; border-bottom:2px solid #e5e7eb;}
         
-        .result-box { background:#f0fdf4; border:1px solid #bbf7d0; padding:20px; border-radius:12px; margin-top:20px; display:grid; grid-template-columns:1fr 1fr; gap:20px;}
+        .result-box { background:#fff8e1; border:1px solid #fde68a; padding:20px; border-radius:12px; margin-top:20px; display:grid; grid-template-columns:1fr 1fr; gap:20px;}
         .res-col { display:flex; flex-direction:column; gap:8px;}
-        .res-col span { font-size:13px; font-weight:700; color:#166534; text-transform:uppercase; }
+        .res-col span { font-size:13px; font-weight:700; color:#101318; text-transform:uppercase; }
         .res-val { font-size:20px; font-weight:800; color:#14532d; }
         
         .danger-box { background:#fef2f2; border:1px solid #fecdd3; padding:20px; border-radius:12px; margin-top:20px; text-align:center; }
         .danger-box span { font-size:13px; font-weight:700; color:#be123c; text-transform:uppercase; }
         .danger-val { font-size:32px; font-weight:800; color:#9f1239; margin-top:5px; }
 
-        .cta { display:block; width:100%; padding:16px; background:#1e3a8a; color:#fff; text-align:center; font-weight:800; text-decoration:none; border-radius:8px; margin-top:30px; transition:all 0.2s;}
-        .cta:hover { background:#1e40af; transform:translateY(-2px); }
+        .cta { display:block; width:100%; padding:16px; background:#101318; color:#fff; text-align:center; font-weight:800; text-decoration:none; border-radius:8px; margin-top:30px; transition:all 0.2s;}
+        .cta:hover { background:#101318; transform:translateY(-2px); }
         
         table { width:100%; border-collapse:collapse; margin-top:15px; font-size:13px; }
         th, td { border:1px solid #e5e7eb; padding:10px; text-align:left; }
@@ -46,7 +46,7 @@
     <nav class="navbar"><a href="/araclar" class="logo"><span class="logo-box">◀</span> WORKSİTEM Hukuk & Mevzuat</a></nav>
 
     <div class="container">
-        <h1>🏛️ SGK İlişiksizlik Belgesi ve Asgari İşçilik</h1>
+        <h1>SGK İlişiksizlik Belgesi ve Asgari İşçilik</h1>
         <p class="subtitle">Resmi Gazete yapı yaklaşık birim maliyetleri üzerinden, iskan ruhsatı alabilmeniz için ödemeniz gereken eksik prim (Fark SPEK) tutarını hesaplayın.</p>
         
         <div class="section-title">1. YAPI BİLGİLERİ VE RAYİÇ BEDEL</div>
@@ -135,12 +135,6 @@
         <a href="/maliyet-hesapla?service=iskan-ve-sgk" class="cta">Kainta İnşaat SGK Danışmanlığı ve İskan Takibi İçin Başvur →</a>
     </div>
 
-        <!-- STANDART KAİNTA LEAD HUNİSİ (CTA) -->
-        <div class="no-print" style="margin-top: 40px; padding: 30px; background: #f0fdf4; border: 2px solid #bbf7d0; border-radius: 16px; text-align: center;">
-            <h3 style="color: #166534; font-size: 20px; font-weight: 800; margin-bottom: 10px;">Hesaplamayı Yaptınız, Şimdi İşi Uzmanına Bırakın</h3>
-            <p style="color: #15803d; font-size: 14px; margin-bottom: 20px;">Kainta İnşaat mühendislerinden projenize özel resmi keşif ve bütçe teklifi alın.</p>
-            <a href="/maliyet-hesapla" style="display: inline-block; background: #166534; color: #fff; padding: 16px 32px; font-size: 16px; font-weight: 800; border-radius: 8px; text-decoration: none; box-shadow: 0 4px 10px rgba(22,101,52,0.3); transition: all 0.2s;">Ön maliyet hesabına geç →</a>
-        </div>
     <script>
                 // --- MERKEZİ ÇŞB FİYAT MOTORU & KAİNTA ÇARPANI ---
         const CSB_PRICES = {!! isset($SYSTEM_PRICES) ? $SYSTEM_PRICES : '{}' !!};
@@ -198,9 +192,9 @@
             document.getElementById('r_penalty').innerText = new Intl.NumberFormat('tr-TR').format(Math.round(penalty)) + ' ₺';
             
             if(penalty === 0) {
-                document.getElementById('dangerBox').style.background = '#f0fdf4';
-                document.getElementById('dangerBox').style.borderColor = '#bbf7d0';
-                document.querySelector('.danger-box span').style.color = '#166534';
+                document.getElementById('dangerBox').style.background = '#fff8e1';
+                document.getElementById('dangerBox').style.borderColor = '#fde68a';
+                document.querySelector('.danger-box span').style.color = '#101318';
                 document.getElementById('r_penalty').style.color = '#14532d';
                 document.querySelector('.danger-box span').innerText = 'EKSİK BİLDİRİM YOK (İLİŞİKSİZLİK BELGESİ ALINABİLİR)';
             } else {

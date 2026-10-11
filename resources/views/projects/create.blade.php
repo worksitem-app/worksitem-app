@@ -8,13 +8,13 @@
     
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <style>
         :root { 
             --bg: #f8fafc; --card-bg: #ffffff; --input-bg: #f1f5f9; --border: #e2e8f0; 
-            --yellow: #ffb700; --yellow-hover: #e0a200; --text-dark: #0f172a; 
-            --text-muted: #64748b; --green: #10b981; --cyan: #0284c7; 
+            --yellow: #ffb800; --yellow-hover: #e0a200; --text-dark: #0f172a; 
+            --text-muted: #64748b; --green: #10b981; --cyan: #8a6200; 
             --glass: rgba(255, 255, 255, 0.85);
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -32,15 +32,15 @@
         @media(max-width: 1024px) { .hero-left { text-align: center; } }
         
         .badge-ai { display: inline-flex; align-items: center; gap: 8px; background: #fffbeb; border: 1px solid #fde68a; color: #d97706; font-size: 12px; font-weight: 800; padding: 8px 18px; border-radius: 30px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(217, 119, 6, 0.1); }
-        .hero-title { font-family: 'Bebas Neue', cursive; font-size: clamp(40px, 6vw, 85px); line-height: 0.95; letter-spacing: 1px; color: var(--text-dark); text-transform: uppercase; margin-bottom: 20px; }
-        .hero-title span { background: linear-gradient(90deg, #d97706, #ffb700); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: block; }
+        .hero-title { font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: clamp(40px, 6vw, 85px); line-height: 0.95; letter-spacing: 1px; color: var(--text-dark); text-transform: uppercase; margin-bottom: 20px; }
+        .hero-title span { background: linear-gradient(90deg, #d97706, #ffb800); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: block; }
         .hero-sub { color: var(--text-muted); font-size: clamp(15px, 1.8vw, 17px); max-width: 650px; margin-bottom: 40px; font-weight: 500; line-height: 1.7; }
         @media(max-width: 1024px) { .hero-sub { margin-left: auto; margin-right: auto; } }
 
         .hero-ctas { display: flex; gap: 15px; flex-wrap: wrap; }
         @media(max-width: 1024px) { .hero-ctas { justify-content: center; } }
-        .btn-main { display: inline-flex; align-items: center; justify-content: center; gap: 10px; background: var(--yellow); color: #000; font-family: 'Bebas Neue', cursive; font-size: 24px; letter-spacing: 1px; padding: 18px 40px; border-radius: 12px; text-decoration: none; transition: all 0.3s; box-shadow: 0 10px 30px rgba(255, 183, 0, 0.3); font-weight: bold; border: none; cursor: pointer; }
-        .btn-second { display: inline-flex; align-items: center; justify-content: center; gap: 10px; background: #ffffff; border: 2px solid var(--border); color: var(--text-dark); font-family: 'Bebas Neue', cursive; font-size: 20px; letter-spacing: 1px; padding: 18px 35px; border-radius: 12px; text-decoration: none; transition: all 0.3s; font-weight: bold; cursor: pointer; }
+        .btn-main { display: inline-flex; align-items: center; justify-content: center; gap: 10px; background: var(--yellow); color: #000; font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 24px; letter-spacing: 1px; padding: 18px 40px; border-radius: 12px; text-decoration: none; transition: all 0.3s; box-shadow: 0 10px 30px rgba(255, 183, 0, 0.3); font-weight: bold; border: none; cursor: pointer; }
+        .btn-second { display: inline-flex; align-items: center; justify-content: center; gap: 10px; background: #ffffff; border: 2px solid var(--border); color: var(--text-dark); font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 20px; letter-spacing: 1px; padding: 18px 35px; border-radius: 12px; text-decoration: none; transition: all 0.3s; font-weight: bold; cursor: pointer; }
         .btn-main:hover { transform: translateY(-4px); box-shadow: 0 15px 35px rgba(255, 183, 0, 0.4); }
         .btn-second:hover { border-color: var(--text-dark); transform: translateY(-4px); }
 
@@ -80,7 +80,7 @@
         @media(max-width: 1100px) { .dashboard-container { grid-template-columns: 1fr; } }
         
         .left-panel { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 40px; height: fit-content; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.08); position: relative; overflow: hidden; }
-        .main-panel-title { font-family: 'Bebas Neue'; font-size: 32px; color: var(--text-dark); letter-spacing: 1px; margin-bottom: 20px; border-bottom: 2px solid var(--border); padding-bottom: 12px; display: flex; align-items: center; gap: 10px; }
+        .main-panel-title { font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 32px; color: var(--text-dark); letter-spacing: 1px; margin-bottom: 20px; border-bottom: 2px solid var(--border); padding-bottom: 12px; display: flex; align-items: center; gap: 10px; }
         
         .form-tabs { display: flex; gap: 10px; margin-bottom: 25px; background: var(--input-bg); padding: 8px; border-radius: 12px; }
         .form-tab-btn { flex: 1; padding: 14px 5px; background: transparent; border: none; border-radius: 8px; font-weight: 800; font-size: 13px; color: var(--text-muted); cursor: pointer; transition: 0.3s; text-transform: uppercase; letter-spacing: 0.5px; text-align: center; }
@@ -90,7 +90,7 @@
         .form-section.active { display: block; animation: fadeIn 0.5s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .section-sub-header { font-family: 'Bebas Neue'; font-size: 20px; color: #d97706; letter-spacing: 1px; margin-top: 30px; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+        .section-sub-header { font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 20px; color: #d97706; letter-spacing: 1px; margin-top: 30px; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
         
         .form-group { margin-bottom: 20px; }
         .form-label { display: block; font-size: 12px; font-weight: 800; color: var(--text-dark); text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px; }
@@ -115,7 +115,7 @@
         .upload-card { background: var(--input-bg); border: 1.5px dashed #cbd5e1; border-radius: 12px; padding: 20px 10px; text-align: center; cursor: pointer; transition: all 0.3s; }
         .upload-card:hover { border-color: var(--yellow); background: #fffbe3; transform: translateY(-2px); }
         .upload-card.full-width { grid-column: span 2; }
-        .upload-card.has-file { border-color: var(--green); background: #f0fdf4; border-style: solid; }
+        .upload-card.has-file { border-color: var(--green); background: #fff8e1; border-style: solid; }
         .upload-card .icon { font-size: 24px; margin-bottom: 6px; display: block; }
         .upload-card .title { font-size: 12px; font-weight: 800; color: var(--text-dark); margin-bottom: 4px; }
         .upload-card .subtitle { font-size: 10px; color: var(--text-muted); font-weight: 600; }
@@ -128,9 +128,9 @@
         .extra-main-row input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--yellow); cursor: pointer; margin-right: 12px; }
         .extra-label { font-size: 13px; font-weight: 800; color: var(--text-dark); cursor: pointer; flex: 1; }
 
-        .csb-info-box { background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 10px; padding: 14px; margin-top: 12px; font-size: 12px; }
+        .csb-info-box { background: #fff8e1; border: 1px solid #fde68a; border-radius: 10px; padding: 14px; margin-top: 12px; font-size: 12px; }
         .csb-info-title { color: var(--cyan); font-weight: 800; display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; }
-        .csb-info-details { display: none; margin-top: 12px; color: var(--text-muted); border-top: 1px dashed #bae6fd; padding-top: 12px; line-height: 1.6; }
+        .csb-info-details { display: none; margin-top: 12px; color: var(--text-muted); border-top: 1px dashed #fde68a; padding-top: 12px; line-height: 1.6; }
         .csb-info-details strong { color: var(--text-dark); }
         .csb-info-details ul { padding-left: 15px; margin-top: 5px; }
         .csb-info-details li { margin-bottom: 6px; }
@@ -142,19 +142,19 @@
         .metraj-table tr:hover { background: #f8fafc; }
         .metraj-result-box { display: none; margin-top: 20px; animation: fadeIn 0.4s ease; border: 2px solid var(--border); border-radius: 12px; overflow: hidden; }
         
-        .btn-submit { width: 100%; background: var(--yellow); color: #000; font-family: 'Bebas Neue'; font-size: 26px; letter-spacing: 1.5px; padding: 20px; border: none; border-radius: 12px; cursor: pointer; margin-top: 25px; transition: all 0.3s; font-weight: bold; box-shadow: 0 10px 25px rgba(255, 183, 0, 0.3); }
+        .btn-submit { width: 100%; background: var(--yellow); color: #000; font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 26px; letter-spacing: 1.5px; padding: 20px; border: none; border-radius: 12px; cursor: pointer; margin-top: 25px; transition: all 0.3s; font-weight: bold; box-shadow: 0 10px 25px rgba(255, 183, 0, 0.3); }
         .btn-submit:hover { background: var(--yellow-hover); transform: translateY(-3px); box-shadow: 0 15px 35px rgba(255, 183, 0, 0.4); }
 
-        .liveTadilatResultBox { display:none; margin-top:30px; background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 2px solid var(--green); border-radius: 16px; padding: 25px; text-align: center; animation: fadeIn 0.5s ease; box-shadow: 0 10px 30px rgba(16, 185, 129, 0.15); }
+        .liveTadilatResultBox { display:none; margin-top:30px; background: linear-gradient(135deg, #fff8e1 0%, #dcfce7 100%); border: 2px solid var(--green); border-radius: 16px; padding: 25px; text-align: center; animation: fadeIn 0.5s ease; box-shadow: 0 10px 30px rgba(16, 185, 129, 0.15); }
 
         /* SAĞ PANEL: İŞ MODELİ AÇIKLAMALARI VE TİCARİ HUNİ */
         .right-panel { background: var(--card-bg); border: 1px solid var(--border); border-radius: 20px; padding: 40px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.08); display: flex; flex-direction: column; }
-        .funnel-header { font-family: 'Bebas Neue'; font-size: 36px; color: var(--text-dark); margin-bottom: 10px; letter-spacing: 1px; }
+        .funnel-header { font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 36px; color: var(--text-dark); margin-bottom: 10px; letter-spacing: 1px; }
         .funnel-sub { font-size: 14px; color: var(--text-muted); line-height: 1.6; margin-bottom: 30px; padding-bottom: 30px; border-bottom: 1px solid var(--border); }
         
         .process-list { display: flex; flex-direction: column; gap: 20px; }
         .process-item { display: flex; gap: 20px; align-items: flex-start; }
-        .process-num { font-family: 'Bebas Neue'; font-size: 36px; color: var(--border); line-height: 1; }
+        .process-num { font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 36px; color: var(--border); line-height: 1; }
         .process-content strong { display: block; font-size: 16px; color: var(--text-dark); font-weight: 800; margin-bottom: 5px; }
         .process-content p { font-size: 13px; color: var(--text-muted); line-height: 1.5; margin: 0; }
         
@@ -177,7 +177,7 @@
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.8); z-index: 9999; display: none; align-items: center; justify-content: center; backdrop-filter: blur(8px); }
         .modal-overlay.active { display: flex; animation: fadeIn 0.3s ease; }
         .modal-box { background: #ffffff; border: 1px solid var(--border); border-radius: 16px; width: 90%; max-width: 600px; padding: 40px; max-height: 85vh; overflow-y: auto; box-shadow: 0 25px 50px rgba(0,0,0,0.3); }
-        .modal-title { font-family: 'Bebas Neue'; font-size: 32px; color: var(--text-dark); margin-bottom: 20px; }
+        .modal-title { font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 32px; color: var(--text-dark); margin-bottom: 20px; }
         .modal-close-btn { background: var(--yellow); color: #000; font-weight: 800; border: none; padding: 12px 30px; border-radius: 8px; cursor: pointer; margin-top: 30px; font-size: 14px; letter-spacing: 1px; }
     </style>
 </head>
@@ -203,7 +203,7 @@
         </div>
 
         <div class="hero-right-cloud-box">
-            <div style="font-family:'Bebas Neue'; font-size:24px; margin-bottom:20px; color:var(--text-dark); text-align:center;">NELER YAPABİLİRSİNİZ?</div>
+            <div style="font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size:24px; margin-bottom:20px; color:var(--text-dark); text-align:center;">NELER YAPABİLİRSİNİZ?</div>
             <div class="clouds-grid-2x2">
                 <div class="cloud-mini-card" onclick="switchTab('insaat')"><span class="c-icon">🏡</span><div class="c-title">Villa İnşaatı</div><div class="c-sub">Villa projenizin yaklaşık yapım maliyetini hesaplayın.</div></div>
                 <div class="cloud-mini-card" onclick="switchTab('tadilat')"><span class="c-icon">🏠</span><div class="c-title">Ev Tadilatı</div><div class="c-sub">Tadilat kapsamınızı belirleyerek yaklaşık maliyet oluşturun.</div></div>
@@ -510,7 +510,7 @@
         <div style="background:var(--card-bg); border:1px solid var(--border); border-radius:16px; width:90%; max-width:450px; padding:30px; position:relative; box-shadow:0 25px 50px rgba(0,0,0,0.5);">
             <button type="button" onclick="document.getElementById('leadModalIndex').style.display='none'" style="position:absolute; right:20px; top:20px; background:none; border:none; color:var(--muted); font-size:24px; cursor:pointer;">&times;</button>
             
-            <div style="font-family:'Bebas Neue'; font-size:28px; color:var(--yellow); margin-bottom:10px; letter-spacing:1px;">PROFESYONEL KEŞİF TALEBİ</div>
+            <div style="font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size:28px; color:var(--yellow); margin-bottom:10px; letter-spacing:1px;">PROFESYONEL KEŞİF TALEBİ</div>
             <p style="font-size:13px; color:var(--muted); margin-bottom:25px; line-height:1.5;">Uzman ekibimizin projenizi incelemesi ve size özel çözümler sunması için iletişim bilgilerinizi bırakın.</p>
             
             <form action="{{ route('leads.store') }}" method="POST">
@@ -539,7 +539,7 @@
                     <textarea name="notes" rows="3" placeholder="Projeniz hakkında kısa bilgi..." style="width:100%; padding:14px; border-radius:8px; background:var(--input-bg); border:1px solid var(--border); color:white; font-family:inherit; resize:vertical;"></textarea>
                 </div>
                 
-                <button type="submit" style="width:100%; background:var(--green); color:white; font-family:'Bebas Neue'; font-size:22px; letter-spacing:1px; padding:16px; border:none; border-radius:8px; cursor:pointer; transition:0.3s;">ÜCRETSİZ KEŞİF İSTE →</button>
+                <button type="submit" style="width:100%; background:var(--green); color:white; font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size:22px; letter-spacing:1px; padding:16px; border:none; border-radius:8px; cursor:pointer; transition:0.3s;">ÜCRETSİZ KEŞİF İSTE →</button>
             </form>
         </div>
     </div>
@@ -560,48 +560,48 @@
     <!-- 40+ CONTECH HESAPLAMA ARAÇLARI MERKEZİ -->
 <div style="max-width:1200px; margin:60px auto; padding:0 20px;">
     <div style="text-align:center; margin-bottom:40px;">
-        <span style="background:#eff6ff; color:#2563eb; font-weight:800; font-size:0.8rem; padding:6px 14px; border-radius:9999px; text-transform:uppercase;">UZMAN MÜHENDİSLİK ARAÇLARI</span>
+        <span style="background:#fff8e1; color:#101318; font-weight:800; font-size:0.8rem; padding:6px 14px; border-radius:9999px; text-transform:uppercase;">UZMAN MÜHENDİSLİK ARAÇLARI</span>
         <h2 style="font-size:2rem; font-weight:800; color:#0f172a; margin:10px 0 6px 0;">40+ Profesyonel İnşaat ve Metraj Hesaplayıcı</h2>
         <p style="color:#64748b; font-size:1rem;">Projenizin tüm teknik kalemlerini 2026 ÇŞB rayiçleriyle ücretsiz hesaplayın.</p>
     </div>
 
     <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:20px;">
-        <a href="/araclar/boya-hesaplayici" style="background:#fff; border:1px solid #e2e8f0; border-radius:12px; padding:20px; text-decoration:none; color:#0f172a; transition:all 0.2s;" onmouseover="this.style.borderColor='#2563eb'">
+        <a href="/araclar/boya-hesaplayici" style="background:#fff; border:1px solid #e2e8f0; border-radius:12px; padding:20px; text-decoration:none; color:#0f172a; transition:all 0.2s;" onmouseover="this.style.borderColor='#101318'">
             <div style="font-size:1.5rem; margin-bottom:8px;">🎨</div>
             <strong style="display:block; font-size:1rem; margin-bottom:4px;">Boya Maliyet Hesabı</strong>
             <span style="font-size:0.85rem; color:#64748b;">m² alan ve litre sarfiyatı</span>
         </a>
-        <a href="/araclar/karo-hesaplayici" style="background:#fff; border:1px solid #e2e8f0; border-radius:12px; padding:20px; text-decoration:none; color:#0f172a; transition:all 0.2s;" onmouseover="this.style.borderColor='#2563eb'">
+        <a href="/araclar/karo-hesaplayici" style="background:#fff; border:1px solid #e2e8f0; border-radius:12px; padding:20px; text-decoration:none; color:#0f172a; transition:all 0.2s;" onmouseover="this.style.borderColor='#101318'">
             <div style="font-size:1.5rem; margin-bottom:8px;">🧩</div>
             <strong style="display:block; font-size:1rem; margin-bottom:4px;">Seramik & Karo Hesabı</strong>
             <span style="font-size:0.85rem; color:#64748b;">Kutu sayısı ve derz dolgusu</span>
         </a>
-        <a href="/araclar/banyo-maliyet-hesaplayici" style="background:#fff; border:1px solid #e2e8f0; border-radius:12px; padding:20px; text-decoration:none; color:#0f172a; transition:all 0.2s;" onmouseover="this.style.borderColor='#2563eb'">
+        <a href="/araclar/banyo-maliyet-hesaplayici" style="background:#fff; border:1px solid #e2e8f0; border-radius:12px; padding:20px; text-decoration:none; color:#0f172a; transition:all 0.2s;" onmouseover="this.style.borderColor='#101318'">
             <div style="font-size:1.5rem; margin-bottom:8px;">🚿</div>
             <strong style="display:block; font-size:1rem; margin-bottom:4px;">Banyo Yenileme</strong>
             <span style="font-size:0.85rem; color:#64748b;">Yalıtım ve tesisat dahil</span>
         </a>
-        <a href="/araclar/mutfak-maliyet-hesaplayici" style="background:#fff; border:1px solid #e2e8f0; border-radius:12px; padding:20px; text-decoration:none; color:#0f172a; transition:all 0.2s;" onmouseover="this.style.borderColor='#2563eb'">
+        <a href="/araclar/mutfak-maliyet-hesaplayici" style="background:#fff; border:1px solid #e2e8f0; border-radius:12px; padding:20px; text-decoration:none; color:#0f172a; transition:all 0.2s;" onmouseover="this.style.borderColor='#101318'">
             <div style="font-size:1.5rem; margin-bottom:8px;">🍳</div>
             <strong style="display:block; font-size:1rem; margin-bottom:4px;">Mutfak Tadilatı</strong>
             <span style="font-size:0.85rem; color:#64748b;">Dolap ve tezgah bütçesi</span>
         </a>
-        <a href="/araclar/demir-metraji-hesaplayici" style="background:#fff; border:1px solid #e2e8f0; border-radius:12px; padding:20px; text-decoration:none; color:#0f172a; transition:all 0.2s;" onmouseover="this.style.borderColor='#2563eb'">
+        <a href="/araclar/demir-metraji-hesaplayici" style="background:#fff; border:1px solid #e2e8f0; border-radius:12px; padding:20px; text-decoration:none; color:#0f172a; transition:all 0.2s;" onmouseover="this.style.borderColor='#101318'">
             <div style="font-size:1.5rem; margin-bottom:8px;">🔗</div>
             <strong style="display:block; font-size:1rem; margin-bottom:4px;">İnşaat Demiri Metrajı</strong>
             <span style="font-size:0.85rem; color:#64748b;">Donatı tonajı ve borsa fiyatı</span>
         </a>
-        <a href="/araclar/duvar-rengi-gorsellestirici" style="background:#fff; border:1px solid #e2e8f0; border-radius:12px; padding:20px; text-decoration:none; color:#0f172a; transition:all 0.2s;" onmouseover="this.style.borderColor='#2563eb'">
+        <a href="/araclar/duvar-rengi-gorsellestirici" style="background:#fff; border:1px solid #e2e8f0; border-radius:12px; padding:20px; text-decoration:none; color:#0f172a; transition:all 0.2s;" onmouseover="this.style.borderColor='#101318'">
             <div style="font-size:1.5rem; margin-bottom:8px;">📸</div>
             <strong style="display:block; font-size:1rem; margin-bottom:4px;">AI Duvar Renklendirici</strong>
             <span style="font-size:0.85rem; color:#64748b;">Oda fotoğrafı üzerinde boyama</span>
         </a>
-        <a href="/araclar/belge-olusturucu" style="background:#fff; border:1px solid #e2e8f0; border-radius:12px; padding:20px; text-decoration:none; color:#0f172a; transition:all 0.2s;" onmouseover="this.style.borderColor='#2563eb'">
+        <a href="/araclar/belge-olusturucu" style="background:#fff; border:1px solid #e2e8f0; border-radius:12px; padding:20px; text-decoration:none; color:#0f172a; transition:all 0.2s;" onmouseover="this.style.borderColor='#101318'">
             <div style="font-size:1.5rem; margin-bottom:8px;">📑</div>
             <strong style="display:block; font-size:1rem; margin-bottom:4px;">Sözleşme Sihirbazı (PDF)</strong>
             <span style="font-size:0.85rem; color:#64748b;">Resmi A4 taşeron sözleşmesi</span>
         </a>
-        <a href="/araclar" style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:12px; padding:20px; text-decoration:none; color:#2563eb; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+        <a href="/araclar" style="background:#fff8e1; border:1px solid #fde68a; border-radius:12px; padding:20px; text-decoration:none; color:#101318; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
             <strong style="font-size:1.1rem; margin-bottom:4px;">Tüm Araçları İncele →</strong>
             <span style="font-size:0.85rem;">40+ Mühendislik Hesaplayıcı</span>
         </a>

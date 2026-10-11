@@ -40,9 +40,9 @@ if (!$systemsJson) {
     --line:#e2e5e9;
     --yellow:#ffb800;
     --yellow-dark:#d99c00;
-    --green:#15803d;
+    --green:#101318;
     --red:#b91c1c;
-    --blue:#1d4ed8;
+    --blue:#101318;
     --radius:20px;
     --shadow:0 16px 50px rgba(15,23,42,.08);
 }

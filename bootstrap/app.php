@@ -16,17 +16,27 @@ return Application::configure(basePath: dirname(__DIR__))
         // Global middleware - her istekte calisir
         $middleware->append(\App\Http\Middleware\StagingTeamAccess::class);
         $middleware->append(\App\Http\Middleware\ToolQaGate::class);
+        $middleware->append(\App\Http\Middleware\EngineeringToolNotice::class);
         $middleware->append(\App\Http\Middleware\SecurityHeaders::class);
         $middleware->append(\App\Http\Middleware\ForceHttps::class);
         $middleware->append(\App\Http\Middleware\BlockSuspiciousRequests::class);
         $middleware->append(\App\Http\Middleware\InjectGa4Tag::class);
+        $middleware->append(\App\Http\Middleware\SeoDefaults::class);
+        $middleware->append(\App\Http\Middleware\BrandShell::class);
 
         // Route middleware alias'lari
         $middleware->alias([
             'auth' => \App\Http\Middleware\Authenticate::class,
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
             'api.ratelimit' => \App\Http\Middleware\ApiRateLimit::class,
+            'ai.spend' => \App\Http\Middleware\EnsureAiSpendEnabled::class,
         ]);
+
+        // AI kilidi throttle'dan ÖNCE çalışsın: kilit kapalıyken gelen istekler AI kotasını tüketmesin
+        $middleware->prependToPriorityList(
+            before: \Illuminate\Routing\Middleware\ThrottleRequests::class,
+            prepend: \App\Http\Middleware\EnsureAiSpendEnabled::class,
+        );
 
         // Giris yapmamis kullanicilari Filament login sayfasina yonlendir
         $middleware->redirectGuestsTo(

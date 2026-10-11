@@ -42,7 +42,7 @@ if (!$insulationsJson) {
     --yellow2:#df9f00;
     --dark:#111318;
     --orange:#9a3412;
-    --blue:#1d4ed8;
+    --blue:#101318;
     --radius:20px;
     --shadow:0 18px 55px rgba(15,23,42,.08);
 }
@@ -56,7 +56,7 @@ body{
     font-family:Inter,Arial,sans-serif;
     color:var(--text);
     background:
-        radial-gradient(circle at 50% -8%,rgba(37,99,235,.07),transparent 30%),
+        radial-gradient(circle at 50% -8%,rgba(16,19,24,.07),transparent 30%),
         var(--bg);
 }
 
@@ -108,9 +108,9 @@ a{text-decoration:none;color:inherit}
     display:inline-flex;
     padding:7px 12px;
     border-radius:999px;
-    background:#eff6ff;
-    border:1px solid #bfdbfe;
-    color:#1d4ed8;
+    background:#fff8e1;
+    border:1px solid #fde68a;
+    color:#101318;
     font-size:12px;
     font-weight:900;
     margin-bottom:16px;

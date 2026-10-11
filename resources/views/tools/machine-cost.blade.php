@@ -24,10 +24,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
 <body data-tool-slug="machine-cost">
-<header class="header">
-    <a href="/araclar" style="text-decoration:none; color:var(--muted); font-weight:700;">← Araçlara Dön</a>
-    <img src="/200.png" height="30" alt="WORKSİTEM">
-</header>
+<x-site.contech-header />
 <div class="container">
     <div style="text-align:center; margin-bottom:30px;">
         <div style="background: rgba(249, 115, 22, 0.1); color: var(--accent); padding: 6px 14px; border-radius: 100px; font-size: 12px; font-weight: 900; display:inline-block;">🚜 B2B EKİPMAN MODÜLÜ</div>
@@ -94,12 +91,13 @@ document.getElementById('calcBtn').addEventListener('click', () => {
         type: 'doughnut',
         data: {
             labels: ['Makine Kirası', 'Yakıt Gideri', 'Operatör Gideri'],
-            datasets: [{ data: [rentCost, fuelCost, opCost], backgroundColor: ['#f97316', '#ef4444', '#3b82f6'], borderWidth: 0 }]
+            datasets: [{ data: [rentCost, fuelCost, opCost], backgroundColor: ['#f97316', '#ef4444', '#101318'], borderWidth: 0 }]
         },
         options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels: {color:'#fff'} } } }
     });
 });
 </script>
     <script src="/js/tool-events.js" defer></script>
+    <x-site.contech-footer />
 </body>
 </html>

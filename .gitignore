@@ -47,18 +47,6 @@ price_stage_*
 .env.once*
 .env.backup*
 
-# .env yedekleri (asla commit edilmemeli)
-.env.bozuk*
-.env.kurtar*
-.env.once*
-.env.backup*
-
-# .env yedekleri (asla commit edilmemeli)
-.env.bozuk*
-.env.kurtar*
-.env.once*
-.env.backup*
-
 /.env.bak*
 # Editor/IDE save files
 *.save
@@ -69,3 +57,15 @@ price_stage_*
 
 # Sprint 2 temizliği
 *.bak-*
+
+# Elle alınan yedekler (*.pre-fix-*, *.pre-manual-*) — git geçmişi zaten yedek
+*.pre-fix-*
+*.pre-manual-*
+*.pre-*-20*
+
+# Sunucuda elle oluşturulmuş betik/veri dosyaları (anahtar içerebilir)
+/*.py
+/*.json
+!/composer.json
+!/package.json
+!/package-lock.json

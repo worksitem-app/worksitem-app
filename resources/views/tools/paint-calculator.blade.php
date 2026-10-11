@@ -808,7 +808,7 @@
                 transition:none!important;
             }
         }
-
+    
         @media(min-width:701px){
 
             .layout > .panel:first-child{

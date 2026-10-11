@@ -3,6 +3,8 @@
 return array (
   'tool_status' =>
   array (
+    // Yalnızca staging QA: tüm araçları "QA TEST" rozetiyle açar (canlıda .env'de tanımlanmamalı)
+    'staging_test_mode' => env('WORKSITEM_TOOL_QA_STAGING_UNLOCK', false),
     'default' => 'review',
     'overrides' =>
     array (
@@ -61,6 +63,24 @@ return array (
     16 => 'mutfak-maliyet-hesaplayici',
     17 => 'mantolama-maliyeti',
     18 => 'taks-kaks-hesaplayici',
+  ),
+  /*
+   * Sonucu yapısal/teknik karar için yanlış kullanılabilecek araçlar.
+   * Bu sayfalara App\Http\Middleware\EngineeringToolNotice belirgin bir
+   * "mühendislik hesabı yerine geçmez" uyarısı ekler (bkz. /legal/kullanim-kosullari).
+   */
+  'engineering_tools' => 
+  array (
+    0 => 'basit-kiris-statigi',
+    1 => 'kolon-tasima-kapasitesi',
+    2 => 'kolon-filiz-boyu',
+    3 => 'yapi-dinamigi',
+    4 => 'karot-dayanim',
+    5 => 'donati-tahvil-hesaplayici',
+    6 => 'bina-agirlik-hesabi',
+    7 => 'siginak-yonetmeligi',
+    8 => 'asansor-zorunlulugu',
+    9 => 'deprem-izolator-maliyeti',
   ),
   'tools' => 
   array (

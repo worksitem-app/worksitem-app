@@ -25,8 +25,8 @@
         .form-control { width: 100%; height: 50px; border: 1px solid var(--line); border-radius: 12px; padding: 0 15px; font-size: 15px; font-family: inherit; }
         .result-box { background: #111; color: #fff; border-radius: var(--radius); padding: 30px; text-align: center; margin-top: 10px; display: none; }
         .result-price { font-size: 38px; font-weight: 900; color: var(--accent); margin: 5px 0 15px; letter-spacing: -1px; }
-        .ai-insight { background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); padding: 15px; border-radius: 12px; margin-top: 15px; text-align: left; display: flex; gap: 12px; }
-        .ai-insight-text strong { color: #38bdf8; font-size: 14px; display: block; margin-bottom: 4px;}
+        .ai-insight { background: rgba(255,184,0,0.1); border: 1px solid rgba(255,184,0,0.3); padding: 15px; border-radius: 12px; margin-top: 15px; text-align: left; display: flex; gap: 12px; }
+        .ai-insight-text strong { color: #8a6200; font-size: 14px; display: block; margin-bottom: 4px;}
         .ai-insight-text p { font-size: 12px; color: #e4e4e7; line-height: 1.5; }
         .budget-confirm-box { margin-top: 25px; padding: 25px; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; display: none; text-align: center; }
         .budget-confirm-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top:15px; }
@@ -51,7 +51,7 @@
 <x-site.contech-header />
 <div class="container">
     <div class="tool-header">
-        <h1>🌡️ Yalıtım ve Mantolama Motoru</h1>
+        <h1>Yalıtım ve Mantolama Motoru</h1>
         <p>Dış cephe mantolama, su yalıtımı veya içten straforlu alçıpan yalıtım ihtiyaçlarınızın maliyetini simüle edin.</p>
     </div>
     <div class="card">

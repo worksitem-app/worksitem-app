@@ -87,6 +87,10 @@ class AiDesignService
         string $style,
         ?string $userPrompt = null
     ): array {
+        if (!config('services.ai_spend_enabled')) {
+            return ['status' => 'error', 'message' => 'AI iç mekan tasarımı geçici olarak devre dışı.'];
+        }
+
         $token = config('services.replicate.token');
 
         if (!$token) {

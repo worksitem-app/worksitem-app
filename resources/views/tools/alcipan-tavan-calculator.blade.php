@@ -1011,8 +1011,8 @@ function calculate() {
 
 
     document.getElementById('rPoz')
-        .innerText =
-            system.poz;
+        .innerHTML =
+            '<a href="/poz/' + system.poz + '" target="_blank" style="color:var(--yellow2); text-decoration:underline;" title="' + system.poz + ' detaylarını incele">' + system.poz + ' &rarr;</a>';
 
 
     if (

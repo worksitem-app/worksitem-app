@@ -26,7 +26,7 @@ class SmokeTest extends TestCase
 
     public function test_kvkk_sayfasi_200_donuyor(): void
     {
-        $this->get('/kvkk-aydinlatma-metni')->assertStatus(200);
+        $this->get('/kvkk-aydinlatma-metni')->assertRedirect('/legal/kvkk-aydinlatma');
     }
 
     public function test_admin_login_200_donuyor(): void

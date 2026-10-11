@@ -75,15 +75,15 @@
         .budget-yes { background: #fff; color: #111; }
         .budget-yes:hover { border-color: var(--accent); background: #fffaf0; box-shadow: 0 0 0 3px rgba(255,184,0,.10); }
 
-        .qualified-message { display: none; margin-top: 25px; padding: 20px; border-radius: 16px; background: #f0fdf4; border: 1px solid #bbf7d0; text-align: center;}
-        .qualified-message strong { display: block; font-size: 15px; margin-bottom: 5px; color: #166534; }
-        .qualified-message span { display: block; color: #15803d; font-size: 12px; line-height: 1.5; }
+        .qualified-message { display: none; margin-top: 25px; padding: 20px; border-radius: 16px; background: #fff8e1; border: 1px solid #fde68a; text-align: center;}
+        .qualified-message strong { display: block; font-size: 15px; margin-bottom: 5px; color: #101318; }
+        .qualified-message span { display: block; color: #101318; font-size: 12px; line-height: 1.5; }
 
         .lead-box { background: #f8f9fb; border: 1px solid var(--line); border-radius: var(--radius); padding: 30px; margin-top: 15px; display: none; }
         .lead-box h3 { font-size: 18px; font-weight: 900; margin-bottom: 8px; }
         .lead-box p { font-size: 13px; color: var(--muted); margin-bottom: 20px; line-height: 1.5; }
         .btn-submit { background: var(--accent); color: #000; margin-top: 10px; width: 100%; height: 50px; border: none; border-radius: 12px; font-weight: 800; font-size: 15px; cursor: pointer; transition: .2s; }
-        .btn-submit:hover { background: #e5a400; }
+        .btn-submit:hover { background: #e5a500; }
 
         @media(max-width: 600px) {
             .form-grid, .breakdown-grid, .budget-confirm-actions { grid-template-columns: 1fr; }
@@ -107,7 +107,7 @@
 <div class="container">
     <div class="tool-header">
         <div class="badge">AI Optimizasyon Motoru</div>
-        <h1>🤖 Akıllı Karo Hesaplayıcı</h1>
+        <h1>Akıllı Karo Hesaplayıcı</h1>
         <p>Mekan ve karo ebatlarını girin, algoritmamız yatay ve dikey döşeme senaryolarını test ederek en düşük fire oranını ve maliyeti bulsun.</p>
     </div>
 

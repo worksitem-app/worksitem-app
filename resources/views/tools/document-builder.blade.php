@@ -17,10 +17,10 @@
         .form-group { margin-bottom: 15px; }
         label { display: block; font-size: 12px; font-weight: 800; margin-bottom: 5px; color:#333; }
         input, select { width: 100%; height: 45px; border: 1px solid var(--line); border-radius: 8px; padding: 0 10px; font-family: inherit; font-size:13px; outline:none;}
-        input:focus, select:focus { border-color: #2563eb; }
+        input:focus, select:focus { border-color: #101318; }
         .btn { background: var(--accent); color: #fff; border: none; padding: 15px; width: 100%; border-radius: 12px; font-weight: 800; font-size:14px; cursor: pointer; margin-top: 10px; transition:.2s; }
         .btn:hover { opacity:0.9; }
-        .btn-word { background: #2563eb; margin-top: 10px; }
+        .btn-word { background: #101318; margin-top: 10px; }
 
         .legal-warning { background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 12px; padding: 15px; margin-bottom: 20px; }
         .legal-warning h4 { color: #ef4444; font-size: 13px; font-weight: 900; margin: 0 0 5px 0; }
@@ -30,7 +30,7 @@
         .doc-header { text-align: center; border-bottom: 2px solid #111; padding-bottom: 20px; margin-bottom: 30px; }
         .doc-title { font-size: 22px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; }
         .doc-content { font-size: 14px; line-height: 1.8; color: #000; text-align: justify; }
-        .dynamic-text { color: #2563eb; font-weight: bold; }
+        .dynamic-text { color: #101318; font-weight: bold; }
         .doc-signatures { display: flex; justify-content: space-between; margin-top: 100px; }
         .sign-box { text-align: center; width: 40%; font-size:14px; }
         .sign-line { border-top: 1px solid #111; margin-top: 50px; padding-top: 10px; font-weight: bold; }
@@ -39,10 +39,7 @@
 </head>
 <body data-tool-slug="document-builder">
 
-<header class="header">
-    <a href="/araclar" style="text-decoration:none; color:#6b7280; font-weight:700; display:flex; align-items:center;">← Araçlara Dön</a>
-    <img src="/200.png" height="30" alt="WORKSİTEM">
-</header>
+<x-site.contech-header />
 
 <div class="container">
     <div class="sidebar">
@@ -271,5 +268,6 @@
     }
 </script>
     <script src="/js/tool-events.js" defer></script>
+    <x-site.contech-footer />
 </body>
 </html>

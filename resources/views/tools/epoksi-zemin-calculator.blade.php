@@ -41,7 +41,7 @@ if (!$layersJson) {
     --yellow:#ffb800;
     --yellow2:#df9f00;
     --dark:#111318;
-    --green:#166534;
+    --green:#101318;
     --orange:#9a3412;
     --radius:20px;
     --shadow:0 18px 55px rgba(15,23,42,.08);

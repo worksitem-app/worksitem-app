@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Seramik & Fayans Metraj ve Maliyet Hesaplama 2026 | WORKSİTEM</title>
+<title>Seramik Hesaplama 2026: Kaç Kutu Fayans Gerekir? | WORKSİTEM</title>
 <meta name="description" content="Banyo, mutfak ve zemin için seramik/fayans metrajını; karo adedi, fire, kutu ihtiyacı, derz, işçilik ve yaklaşık malzeme maliyetiyle hesaplayın.">
 
 <meta
@@ -16,13 +16,13 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="WORKSİTEM">
 <meta property="og:locale" content="tr_TR">
-<meta property="og:title" content="Seramik & Fayans Metraj ve Maliyet Hesaplama 2026 | WORKSİTEM">
+<meta property="og:title" content="Seramik Hesaplama 2026: Kaç Kutu Fayans Gerekir? | WORKSİTEM">
 <meta property="og:description" content="Seramik ve fayans metrajını; fire, kutu ihtiyacı, derz, işçilik ve yaklaşık malzeme maliyetiyle birlikte hesaplayın.">
 <meta property="og:url" content="https://worksitem.com/araclar/seramik-maliyet-hesaplayici">
 <meta property="og:image" content="https://worksitem.com/brand/og-image.png">
 
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Seramik & Fayans Metraj ve Maliyet Hesaplama 2026 | WORKSİTEM">
+<meta name="twitter:title" content="Seramik Hesaplama 2026: Kaç Kutu Fayans Gerekir? | WORKSİTEM">
 <meta name="twitter:description" content="Seramik ve fayans metrajını; fire, kutu ihtiyacı, derz, işçilik ve yaklaşık malzeme maliyetiyle birlikte hesaplayın.">
 <meta name="twitter:image" content="https://worksitem.com/brand/og-image.png">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -255,6 +255,14 @@ summary:hover,summary:focus-visible{background:var(--accent);color:#111;outline:
   ]
 }
 </script>
+<style id="VISUALIZER_SALES_CTA_STYLE_V1">
+.visualizer-upsell{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:0 0 16px;padding:17px;border:1px solid rgba(255,184,0,.45);background:linear-gradient(135deg,rgba(255,184,0,.16),rgba(255,184,0,.06));border-radius:14px}
+.visualizer-upsell span{display:block;font-size:10px;font-weight:900;letter-spacing:.8px;color:#ffbf26;margin-bottom:4px}
+.visualizer-upsell strong{display:block;color:#fff;font-size:18px;line-height:1.25}
+.visualizer-upsell small{display:block;color:#d1d5db;font-size:11px;line-height:1.45;margin-top:5px;max-width:620px}
+.visualizer-cta{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 16px;border-radius:11px;background:#ffb800;color:#111;text-decoration:none;font-weight:900;text-align:center}
+@media(max-width:720px){.visualizer-upsell{display:block}.visualizer-cta{width:100%;margin-top:12px}.visualizer-upsell strong{font-size:17px}}
+</style>
 </head>
 
 <body data-tool-slug="tile-calculator">
@@ -382,7 +390,7 @@ $tileOfficial = collect($tilePrices ?? [])->mapWithKeys(function($p,$role){
         <small class="help">Ürün fiyatları marka, seri ve satıcıya göre değiştiği için WORKSITEM burada fiyat uydurmaz.</small>
     </div>
 
-
+    
 <div style="margin-top:18px;padding:16px;border:1px solid rgba(255,255,255,.12);border-radius:12px">
     <strong style="display:block;margin-bottom:5px">
         Yardımcı malzeme ve uygulama verileri
@@ -507,7 +515,17 @@ $tileOfficial = collect($tilePrices ?? [])->mapWithKeys(function($p,$role){
         <small id="purchaseSummary">—</small>
     </div>
 
-    <div class="result-grid">
+    <!-- VISUALIZER_SALES_CTA_V1 -->
+<div class="visualizer-upsell" id="visualizerUpsell">
+    <div>
+        <span>AI SERAMİK ÖNİZLEME</span>
+        <strong>Seramiği satın almadan önce mekânınızda görün.</strong>
+        <small>Hesapladığınız alan ve karo ebadıyla Worki, seçiminizin mekânda nasıl görüneceğini oluşturur.</small>
+    </div>
+    <a id="visualizerCta" class="visualizer-cta" href="/araclar/seramik-gorsellestirici">✨ Seramiği Mekânımda Gör →</a>
+</div>
+
+<div class="result-grid">
         <div class="metric"><span>Net Alan</span><strong id="netArea">0 m²</strong></div>
         <div class="metric"><span>Satın Alma Alanı</span><strong id="grossArea">0 m²</strong></div>
         <div class="metric"><span>Teorik Karo</span><strong id="baseTiles">0 adet</strong></div>
@@ -820,11 +838,11 @@ function addSurface(){
             </div>
             <div class="field">
                 <label>En (m)</label>
-                <input type="number" class="control s-width" value="4" min="0.1" step="0.1">
+                <input type="number" class="control s-width" value="" placeholder="örn. 4" min="0.1" step="0.1">
             </div>
             <div class="field">
                 <label>Boy / Yükseklik (m)</label>
-                <input type="number" class="control s-height" value="5" min="0.1" step="0.1">
+                <input type="number" class="control s-height" value="" placeholder="örn. 5" min="0.1" step="0.1">
             </div>
         </div>
         <div class="field">
@@ -1918,6 +1936,28 @@ $('calculateBtn').addEventListener('click',async ()=>{
     }
     $('leadCtaTitle').textContent=
         `${trNumber(netArea,2)} m² seramik alanınız için ücretsiz keşif ve anahtar teslim teklif alın`;
+    const visualizerCta=$('visualizerCta');
+    if(visualizerCta){
+        const visualizerSurface=items
+            .filter(s=>Number(s.width)>0 && Number(s.height)>0)
+            .sort((a,b)=>Number(b.area)-Number(a.area))[0] || null;
+
+        const visualizerArea=visualizerSurface
+            ? Number(visualizerSurface.area)
+            : Number(netArea);
+
+        const visualizerQuery=new URLSearchParams({
+            source:'cost-calculator',
+            area:Number(visualizerArea.toFixed(2)).toFixed(2),
+            tile_size:String(size)
+        });
+
+        if(visualizerSurface){
+            visualizerQuery.set('surface_width_m',Number(visualizerSurface.width).toFixed(2));
+            visualizerQuery.set('surface_height_m',Number(visualizerSurface.height).toFixed(2));
+        }
+        visualizerCta.href='/araclar/seramik-gorsellestirici?'+visualizerQuery.toString();
+    }
     $('resultBox').classList.add('active');
     $('resultBox').scrollIntoView({behavior:'smooth',block:'start'});
 });

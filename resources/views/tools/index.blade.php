@@ -36,7 +36,7 @@
     <meta name="theme-color" content="#ffffff">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
           rel="stylesheet">
 
     <style>
@@ -57,8 +57,8 @@
             --yellow-dark: #b77900;
             --yellow-soft: #fff8df;
 
-            --blue: #2563eb;
-            --blue-soft: #eff6ff;
+            --blue: #101318;
+            --blue-soft: #fff8e1;
 
             --green: #16803c;
             --green-soft: #ecfdf3;
@@ -90,7 +90,7 @@
             --yellow-dark: #fbbf24;
             --yellow-soft: #30260b;
 
-            --blue: #60a5fa;
+            --blue: #ffb800;
             --blue-soft: #172554;
 
             --green: #4ade80;
@@ -281,7 +281,7 @@
         }
 
         .hero h1 span {
-            color: var(--yellow-dark);
+            color: var(--ws-highlight, #9A6E00);
         }
 
         .hero-subtitle {
@@ -1112,8 +1112,8 @@ echo json_encode(
 
 .qa-status-badge.active{
     background:#dcfce7;
-    color:#166534;
-    border:1px solid #bbf7d0;
+    color:#101318;
+    border:1px solid #fde68a;
 }
 
 .tool-card.qa-review{
@@ -1798,13 +1798,14 @@ usort($allTools, function ($a, $b) {
                 $qaConfig = config('worksitem_tools.tool_status', []);
                 $qaDefault = $qaConfig['default'] ?? 'review';
                 $qaOverrides = $qaConfig['overrides'] ?? [];
+                $qaTestMode = !empty($qaConfig['staging_test_mode']);
             ?>
 
             <?php foreach ($allTools as $tool) { ?>
 
                 <?php
                     $qaStatus = $qaOverrides[$tool['slug']] ?? $qaDefault;
-                    $qaActive = $qaStatus === 'active';
+                    $qaActive = $qaTestMode || $qaStatus === 'active';
                     $qaStaging = request()->getHost() === 'app.worksitem.com';
                     $qaClickable = $qaActive || $qaStaging;
                 ?>
@@ -1831,7 +1832,7 @@ usort($allTools, function ($a, $b) {
                         </div>
 
                         <span class="qa-status-badge {{ $qaActive ? 'active' : 'review' }}">
-                            {{ $qaActive ? 'Aktif' : 'İncelemede' }}
+                            {{ $qaTestMode ? 'QA TEST' : ($qaActive ? 'Aktif' : 'İncelemede') }}
                         </span>
 
                     </div>

@@ -25,9 +25,9 @@ class SendDailyCeoReport extends Command
         $fromDb = $from->copy()->utc();
         $toDb = $now->copy()->utc();
 
-        $to = env('PRICE_MAIL')
+        $to = config('worksitem_leads.ceo_report_email')
             ?: config('worksitem_leads.notification_email')
-            ?: env('MAIL_FROM_ADDRESS')
+            ?: config('mail.from.address')
             ?: 'info@worksitem.com';
 
         $leadCount = 0;

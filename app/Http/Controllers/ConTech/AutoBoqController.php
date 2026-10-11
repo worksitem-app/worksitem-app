@@ -92,7 +92,8 @@ class AutoBoqController extends Controller
 
             return response()->json([
                 'success' => false,
-                'message' => 'Analiz sırasında bir hata oluştu: ' . $e->getMessage(),
+                // İç hata mesajı (SQL, API yanıtı, dosya yolu) kullanıcıya dönülmez; log'da var.
+                'message' => 'Analiz sırasında bir hata oluştu. Lütfen dosyanızı kontrol edip tekrar deneyin.',
             ], 422);
         }
     }

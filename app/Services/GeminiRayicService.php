@@ -27,6 +27,10 @@ class GeminiRayicService
 
     public function analyzePdf(string $path, string $period, string $source = 'YFK'): array
     {
+        if (!config('services.ai_spend_enabled')) {
+            throw new \RuntimeException('AI rayiç analizi geçici olarak devre dışı.');
+        }
+
         if (!is_file($path)) {
             throw new RuntimeException('PDF dosyası bulunamadı.');
         }
@@ -79,7 +83,7 @@ PDF'de yazan veriyi çıkartma görevidir.
 Sonucu yalnızca istenen JSON formatında döndür.
 PROMPT;
 
-        $response = Http::timeout(300)
+        $response = Http::timeout(60)
             ->withHeaders([
                 'x-goog-api-key' => $this->apiKey,
                 'Content-Type' => 'application/json',
@@ -191,7 +195,7 @@ PROMPT;
         /*
          * Gemini Files API resumable upload.
          */
-        $start = Http::timeout(120)
+        $start = Http::timeout(30)
             ->withHeaders([
                 'x-goog-api-key' => $this->apiKey,
                 'X-Goog-Upload-Protocol' => 'resumable',
@@ -226,7 +230,7 @@ PROMPT;
             );
         }
 
-        $upload = Http::timeout(300)
+        $upload = Http::timeout(60)
             ->withHeaders([
                 'Content-Length' => (string) $size,
                 'X-Goog-Upload-Offset' => '0',

@@ -228,7 +228,7 @@ $waterproofingsJson = json_encode(
 
 body{
     margin:0;
-    font-family:Arial,sans-serif;
+    font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     background:#f5f6f8;
     color:#111318
 }

@@ -32,6 +32,7 @@ class SitemapController extends Controller
             ['loc' => '/legal/cerez-politikasi', 'priority' => '0.4', 'changefreq' => 'monthly'],
             ['loc' => '/legal/gizlilik-politikasi', 'priority' => '0.4', 'changefreq' => 'monthly'],
             ['loc' => '/legal/kvkk-basvuru', 'priority' => '0.4', 'changefreq' => 'monthly'],
+            ['loc' => '/legal/kullanim-kosullari', 'priority' => '0.4', 'changefreq' => 'monthly'],
         ];
 
         /*

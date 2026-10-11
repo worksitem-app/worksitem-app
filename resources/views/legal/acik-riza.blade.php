@@ -23,7 +23,7 @@
         h1, h2 { color: #0f172a; }
         h1 { margin-top: 0; font-size: 2rem; }
         h2 { margin-top: 28px; font-size: 1.2rem; }
-        a { color: #2563eb; }
+        a { color: #101318; }
         .summary { padding: 16px; border-left: 4px solid #10b981; background: #ecfdf5; border-radius: 8px; }
         .version { color: #64748b; font-size: 0.9rem; }
         .nav-links { margin-top: 32px; padding-top: 24px; border-top: 1px solid #e2e8f0; }

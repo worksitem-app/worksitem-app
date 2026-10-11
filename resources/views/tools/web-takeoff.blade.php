@@ -12,7 +12,7 @@
     <style>
         :root {
             --bg: #1e1e24; --surface: #2b2b36; --border: #3f3f4e; --text: #fff; --muted: #a1a1aa;
-            --accent: #ffb800; --accent-hover: #e5a400;
+            --accent: #ffb800; --accent-hover: #e5a500;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); display:flex; flex-direction:column; height:100vh; overflow:hidden; }

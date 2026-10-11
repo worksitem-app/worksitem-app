@@ -20,7 +20,7 @@ class ProjectController extends Controller
         $projectType = DB::table('project_types')->where('slug', $slug)->orWhere('id', $slug)->first();
         if (!$projectType) abort(404, 'Proje tipi bulunamadı.');
         $project = Project::create(['project_type_id' => $projectType->id, 'status' => 'draft']);
-        return redirect()->route('projects.questions', $project->id);
+        return redirect()->route('projects.questions', $project);
     }
 
     public function questions(Project $project) {
@@ -189,11 +189,11 @@ class ProjectController extends Controller
                 'basement' => ['nullable', 'integer', 'min:0', 'max:10'],
                 'quality' => ['required', 'in:ekonomi,standart,premium'],
                 'notes' => ['nullable', 'string', 'max:3000'],
-                'file_bina' => ['nullable', 'file', 'max:10240'],
-                'file_kat' => ['nullable', 'file', 'max:10240'],
-                'file_kolon' => ['nullable', 'file', 'max:10240'],
-                'file_doseme' => ['nullable', 'file', 'max:10240'],
-                'file_diger' => ['nullable', 'file', 'max:10240'],
+                'file_bina' => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png,doc,docx,dwg', 'max:10240'],
+                'file_kat' => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png,doc,docx,dwg', 'max:10240'],
+                'file_kolon' => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png,doc,docx,dwg', 'max:10240'],
+                'file_doseme' => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png,doc,docx,dwg', 'max:10240'],
+                'file_diger' => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png,doc,docx,dwg', 'max:10240'],
             ]);
 
             $project = Project::create([
@@ -224,7 +224,8 @@ class ProjectController extends Controller
         $params = [
             'project_type' => 'komple',
             'quality' => 'standart',
-            'district' => $project->district ?? 'Genel',
+            // Bölge çarpanı şehir bazlı (KaintaCostEngine: İstanbul +%15)
+            'district' => $project->city ?: ($project->district ?? 'Genel'),
             'area' => $project->construction_area ?? 100,
         ];
 
@@ -255,6 +256,12 @@ public function guestRender(Request $request, AiRenderService $renderer)
             // Frontend'den gelen JSON komutlarını dizi olarak alıyoruz
                         // Frontend'den gelen veriyi validate et (XSS ve injection koruması)
             $projectData = $request->validate([
+                // Frontend (maliyet-hesapla.blade.php) bu üç alanı gönderiyor;
+                // önceden validasyondan düştükleri için render hep varsayılan prompt'la üretiliyordu.
+                // Bilinmeyen değerler AiRenderService içinde güvenli varsayılana düşer.
+                'type' => ['nullable', 'string', 'max:30', 'alpha_dash'],
+                'quality' => ['nullable', 'string', 'max:30', 'alpha_dash'],
+                'scope' => ['nullable', 'string', 'max:30', 'alpha_dash'],
                 'room_type' => ['nullable', 'string', 'max:50'],
                 'style' => ['nullable', 'string', 'max:50'],
                 'w' => ['nullable', 'numeric', 'min:1', 'max:100'],
@@ -300,6 +307,38 @@ public function guestRender(Request $request, AiRenderService $renderer)
             Log::error('Eski AJAX Render Hatasi: ' . $e->getMessage());
             return response()->json(['success' => false, 'message' => 'Görsel üretilemedi.']);
         }
+    }
+
+    /**
+     * Route (projects.pdf) tanımlıydı ama metot yoktu → her istekte 500.
+     */
+    public function downloadPdf(Project $project)
+    {
+        $project->load('answers.question', 'answers.option');
+        $params = $this->extractParametersFromAnswers($project);
+
+        $costData = app(KaintaCostEngine::class)->calculate(
+            $params['project_type'] ?? 'komple',
+            (float) ($params['area'] ?? 100),
+            $params['quality'] ?? 'standart',
+            $params['district'] ?? 'Genel'
+        );
+
+        $total = (float) ($costData['hesaplanan_maliyet_tl'] ?? 0);
+
+        $breakdown = [
+            'total' => $total,
+            'details' => collect($costData['ana_kalemler'] ?? [])
+                ->mapWithKeys(fn ($cost, $title) => [$title => [
+                    'cost' => (float) $cost,
+                    'percent' => $total > 0 ? round(((float) $cost / $total) * 100, 1) : 0,
+                ]])
+                ->all(),
+        ];
+
+        return \Barryvdh\DomPDF\Facade\Pdf::loadView('projects.pdf', compact('project', 'breakdown'))
+            ->setPaper('a4')
+            ->download('worksitem-maliyet-raporu-'.$project->getRouteKey().'.pdf');
     }
 
     public function lead(\App\Models\Project $project): \Illuminate\View\View

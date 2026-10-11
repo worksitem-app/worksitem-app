@@ -26,15 +26,15 @@
                 <label style="display:block; font-size:0.85rem; font-weight:700; color:#334155; margin-bottom:8px;">Proje Tipi *</label>
                 <div style="display:flex; flex-direction:column; gap:8px;">
                     <label style="display:flex; align-items:center; gap:10px; padding:10px 14px; border:1px solid #cbd5e1; border-radius:10px; cursor:pointer; font-size:0.9rem; font-weight:600; color:#1e293b;">
-                        <input type="radio" name="project_type" value="Yeni İnşaat (Villa, Bina, Fabrika)" checked style="accent-color:#2563eb;">
+                        <input type="radio" name="project_type" value="Yeni İnşaat (Villa, Bina, Fabrika)" checked style="accent-color:#101318;">
                         Yeni İnşaat (Villa, Bina, Fabrika)
                     </label>
                     <label style="display:flex; align-items:center; gap:10px; padding:10px 14px; border:1px solid #cbd5e1; border-radius:10px; cursor:pointer; font-size:0.9rem; font-weight:600; color:#1e293b;">
-                        <input type="radio" name="project_type" value="Tadilat ve Renovasyon" style="accent-color:#2563eb;">
+                        <input type="radio" name="project_type" value="Tadilat ve Renovasyon" style="accent-color:#101318;">
                         Tadilat ve Renovasyon
                     </label>
                     <label style="display:flex; align-items:center; gap:10px; padding:10px 14px; border:1px solid #cbd5e1; border-radius:10px; cursor:pointer; font-size:0.9rem; font-weight:600; color:#1e293b;">
-                        <input type="radio" name="project_type" value="Diğer / Emin Değilim" style="accent-color:#2563eb;">
+                        <input type="radio" name="project_type" value="Diğer / Emin Değilim" style="accent-color:#101318;">
                         Diğer / Emin Değilim
                     </label>
                 </div>
@@ -66,14 +66,14 @@
                         name="contact_consent"
                         value="1"
                         required
-                        style="margin-top:3px; accent-color:#2563eb;"
+                        style="margin-top:3px; accent-color:#101318;"
                     >
                     <span>
                         <a
-                            href="{{ route('kvkk.aydinlatma') }}"
+                            href="{{ route('legal.kvkk_aydinlatma') }}"
                             target="_blank"
                             rel="noopener noreferrer"
-                            style="color:#2563eb; font-weight:700; text-decoration:underline;"
+                            style="color:#101318; font-weight:700; text-decoration:underline;"
                         >KVKK Aydınlatma Metni</a>'ni okudum.
                         Proje ve keşif talebimin değerlendirilmesi amacıyla telefon
                         veya e-posta yoluyla benimle iletişime geçilmesini kabul ediyorum.

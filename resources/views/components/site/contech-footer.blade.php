@@ -830,6 +830,14 @@ html[data-theme="dark"] .wks-footer{
                     KVKK Başvuru
                 </a>
 
+                <a href="/legal/kullanim-kosullari">
+                    Kullanım Koşulları
+                </a>
+
+                <a href="/legal/cerez-politikasi" onclick="if(window.openCookieSettings){window.openCookieSettings();return false;}">
+                    Çerez Tercihleri
+                </a>
+
             </div>
 
         </nav>

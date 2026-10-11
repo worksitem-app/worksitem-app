@@ -12,14 +12,17 @@ class DatabaseSeeder extends Seeder
 
     /**
      * Seed the application's database.
+     *
+     * Canlı ortamda bilinen şifreli (test@example.com / "password") kullanıcı AÇILMAZ.
+     * Admin kullanıcısı için: php artisan make:filament-user  →  ardından is_admin = 1
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        if (app()->environment('local', 'testing')) {
+            User::factory()->create([
+                'name' => 'Test User',
+                'email' => 'test@example.com',
+            ]);
+        }
     }
 }

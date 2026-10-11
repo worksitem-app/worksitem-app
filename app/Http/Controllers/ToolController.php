@@ -183,24 +183,35 @@ class ToolController extends Controller
 
     public function generateRoomDesign(Request $request)
     {
-        $request->validate([
-            'room_type' => 'required',
-            'style' => 'required',
-            'w' => 'required|numeric',
-            'l' => 'required|numeric',
+        if (! config('services.ai_spend_enabled')) {
+            return response()->json([
+                'success' => false,
+                'error' => 'AI oda görselleştirme geçici olarak devre dışı.',
+            ], 503);
+        }
+
+        $v = $request->validate([
+            'room_type' => 'required|string|max:50',
+            'style' => 'required|string|max:50',
+            'w' => 'required|numeric|min:1|max:100',
+            'l' => 'required|numeric|min:1|max:100',
         ]);
 
-        $prompt = "A highly detailed, photorealistic interior design of a {$request->room_type}, sized {$request->w} meters by {$request->l} meters. The interior design style is {$request->style}. Cinematic lighting, architectural digest quality, 8k resolution, ray tracing, ultra realistic materials.";
+        $roomType = strip_tags($v['room_type']);
+        $style = strip_tags($v['style']);
+
+        $prompt = "A highly detailed, photorealistic interior design of a {$roomType}, sized {$v['w']} meters by {$v['l']} meters. The interior design style is {$style}. Cinematic lighting, architectural digest quality, 8k resolution, ray tracing, ultra realistic materials.";
         $apiKey = config('services.gemini.api_key');
 
         if(empty($apiKey)) {
-            return response()->json(['success' => false, 'error' => 'Sistem hatası: GEMINI_API_KEY .env dosyasında bulunamadı. Lütfen yöneticiye bildirin.']);
+            \Illuminate\Support\Facades\Log::error('generateRoomDesign: GEMINI_API_KEY tanımlı değil.');
+            return response()->json(['success' => false, 'error' => 'Görsel servisi şu an kullanılamıyor.'], 503);
         }
 
         $url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-image:generateContent';
 
         try {
-            $response = Http::withHeaders(['x-goog-api-key' => $apiKey])->timeout(60)->post($url, [
+            $response = Http::withHeaders(['x-goog-api-key' => $apiKey])->connectTimeout(5)->timeout(45)->post($url, [
                 'instances' => [['prompt' => $prompt]],
                 'parameters' => ['sampleCount' => 1]
             ]);
@@ -216,9 +227,15 @@ class ToolController extends Controller
                 }
             }
 
-            return response()->json(['success' => false, 'error' => 'Google API Yanıt Vermedi: ' . $response->body()]);
-        } catch (\Exception $e) {
-            return response()->json(['success' => false, 'error' => 'Bağlantı Hatası: ' . $e->getMessage()]);
+            // Dış API gövdesi kullanıcıya DÖNÜLMEZ (iç model adı, kota, anahtar bilgisi sızabilir)
+            \Illuminate\Support\Facades\Log::warning('generateRoomDesign API hatası', [
+                'status' => $response->status(),
+                'body' => mb_substr($response->body(), 0, 2000),
+            ]);
+            return response()->json(['success' => false, 'error' => 'Görsel üretilemedi, lütfen tekrar deneyin.'], 502);
+        } catch (\Throwable $e) {
+            report($e);
+            return response()->json(['success' => false, 'error' => 'Görsel servisine bağlanılamadı.'], 502);
         }
     }
 

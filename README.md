@@ -53,6 +53,8 @@ Canlı: https://worksitem.com
 
 Tarayıcıda aç: `http://localhost:8000`
 
+> **Canlıya çıkış:** [DEPLOY.md](DEPLOY.md) — `scripts/deploy.sh`, `php artisan app:preflight`, `php artisan app:make-admin`
+
 ### Yapılandırma
 
 .env dosyasında tanımlanması gereken API anahtarları:

@@ -11,7 +11,7 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        :root { --bg: #f3f4f6; --surface: #ffffff; --text: #0f172a; --muted: #64748b; --line: #e2e8f0; --accent: #2563eb; --radius: 12px; }
+        :root { --bg: #f3f4f6; --surface: #ffffff; --text: #0f172a; --muted: #64748b; --line: #e2e8f0; --accent: #101318; --radius: 12px; }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 60px; }
         .header { background: #fff; padding: 15px 20px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; position: sticky; top:0; z-index:10;}
@@ -20,7 +20,7 @@
         .page-header { text-align: center; max-width: 900px; margin: 40px auto 20px; padding: 0 20px; }
         .page-header h1 { font-size: 32px; font-weight: 900; letter-spacing: -1px; margin: 15px 0 10px; color: #0f172a; }
         .page-header p { font-size: 15px; color: var(--muted); line-height: 1.6; }
-        .ai-badge { display: inline-block; background: rgba(37, 99, 235, 0.1); color: var(--accent); padding: 6px 16px; border-radius: 100px; font-size: 13px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; }
+        .ai-badge { display: inline-block; background: rgba(16,19,24,0.1); color: var(--accent); padding: 6px 16px; border-radius: 100px; font-size: 13px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; }
 
         .container { max-width: 1200px; margin: 20px auto 30px; padding: 0 20px; display: flex; gap: 30px; align-items: flex-start; }
         @media(max-width: 900px) { .container { flex-direction: column; } }
@@ -28,7 +28,7 @@
         .sidebar-tabs { width: 250px; background: #fff; border-radius: var(--radius); border: 1px solid var(--line); padding: 15px 0; flex-shrink: 0; position: sticky; top: 80px; }
         .tab-btn { display: block; width: 100%; text-align: left; padding: 15px 25px; background: none; border: none; font-family: inherit; font-size: 14px; font-weight: 700; color: var(--muted); cursor: pointer; border-left: 3px solid transparent; transition: .2s; }
         .tab-btn:hover { background: #f8fafc; color: var(--text); }
-        .tab-btn.active { background: #eff6ff; color: var(--accent); border-left-color: var(--accent); }
+        .tab-btn.active { background: #fff8e1; color: var(--accent); border-left-color: var(--accent); }
         
         .content-area { flex-grow: 1; background: #fff; border-radius: var(--radius); border: 1px solid var(--line); padding: 30px; min-height: 500px; }
         .tab-content { display: none; animation: fadeIn 0.3s ease; }
@@ -51,7 +51,7 @@
         .summary-card { background: #0f172a; color: #fff; border-radius: 12px; padding: 30px; margin-top: 20px; }
         .summary-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 14px; }
         .summary-row:last-child { border-bottom: none; }
-        .summary-total { font-size: 24px; font-weight: 900; color: #38bdf8; padding-top: 20px; margin-top: 10px; border-top: 2px dashed rgba(255,255,255,0.2); }
+        .summary-total { font-size: 24px; font-weight: 900; color: #8a6200; padding-top: 20px; margin-top: 10px; border-top: 2px dashed rgba(255,255,255,0.2); }
         .btn-action { background: var(--accent); color: #fff; border: none; padding: 12px 20px; border-radius: 8px; font-weight: 800; cursor: pointer; width: 100%; margin-top: 20px; transition: .2s; }
         .btn-action:hover { opacity: 0.9; }
         
@@ -61,10 +61,7 @@
 </head>
 <body data-tool-slug="insaat-maliyeti">
 
-<header class="header">
-    <a href="/araclar" style="text-decoration:none; color:var(--muted); font-weight:700;">← Araçlara Dön</a>
-    <img src="/200.png" height="30" alt="WORKSİTEM">
-</header>
+<x-site.contech-header />
 
 <!-- YENİ: SEO ODAKLI H1 BAŞLIK ALANI -->
 <div class="page-header">
@@ -234,7 +231,7 @@
                 <div style="text-align:right; color:#94a3b8; font-size:13px; margin-top:10px;">Birim Maliyet: <strong id="sum-sqm" style="color:#fff;">0 TL / m²</strong></div>
             </div>
             
-            <button class="btn-action" style="background:#10b981;">📄 Profesyonel PDF Raporu İndir (Beta)</button>
+            <button class="btn-action" style="background:#101318;">📄 Profesyonel PDF Raporu İndir (Beta)</button>
         </div>
 
     </div>
@@ -321,5 +318,6 @@ function calculateAll() {
 document.addEventListener('DOMContentLoaded', calculateAll);
 </script>
     <script src="/js/tool-events.js" defer></script>
+    <x-site.contech-footer />
 </body>
 </html>

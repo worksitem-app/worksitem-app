@@ -25,7 +25,7 @@
         .tool-header { margin-bottom: 30px; text-align: center; }
         .tool-header h1 { font-size: 28px; font-weight: 900; letter-spacing: -1px; margin-bottom: 10px; }
         .tool-header p { color: var(--muted); font-size: 15px; }
-        .ai-badge { display: inline-block; background: rgba(59, 130, 246, 0.15); color: #2563eb; padding: 6px 14px; border-radius: 100px; font-size: 12px; font-weight: 900; margin-bottom: 15px; letter-spacing: 0.5px; text-transform: uppercase; }
+        .ai-badge { display: inline-block; background: rgba(16,19,24,0.15); color: #101318; padding: 6px 14px; border-radius: 100px; font-size: 12px; font-weight: 900; margin-bottom: 15px; letter-spacing: 0.5px; text-transform: uppercase; }
 
         .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 30px; }
         
@@ -45,8 +45,8 @@
         .break-item { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); }
         .break-item span { display: block; font-size: 12px; color: #a1a1aa; margin-bottom: 3px; }
         .break-item strong { display: block; font-size: 18px; color: #fff; font-weight: 800; }
-        .break-item.highlight { background: rgba(59, 130, 246, 0.1); border-color: rgba(59, 130, 246, 0.3); }
-        .break-item.highlight strong { color: #60a5fa; }
+        .break-item.highlight { background: rgba(16,19,24,0.1); border-color: rgba(16,19,24,0.3); }
+        .break-item.highlight strong { color: #ffb800; }
 
         .ai-insight { background: rgba(255, 184, 0, 0.1); border: 1px solid rgba(255, 184, 0, 0.3); padding: 15px; border-radius: 12px; margin-top: 15px; text-align: left; display: flex; gap: 12px; align-items: flex-start; }
         .ai-insight-icon { font-size: 24px; }
@@ -58,7 +58,7 @@
         .cross-sell-text { font-size: 12px; color: #a1a1aa; margin-bottom: 15px; }
         .cross-sell-links { display: flex; gap: 10px; }
         .cross-sell-links a { flex: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); padding: 10px; border-radius: 8px; font-size: 12px; font-weight: 700; color: #fff; text-align: center; transition: .2s; }
-        .cross-sell-links a:hover { background: rgba(59, 130, 246, 0.1); border-color: #60a5fa; color: #60a5fa; }
+        .cross-sell-links a:hover { background: rgba(16,19,24,0.1); border-color: #ffb800; color: #ffb800; }
 
         .budget-confirm-box { margin-top: 25px; padding: 25px; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; display: none; text-align: center; }
         .budget-confirm-title { font-size: 18px; font-weight: 900; margin-bottom: 8px; letter-spacing: -0.5px;}
@@ -68,11 +68,11 @@
         .budget-no { background: #fff; color: #555; }
         .budget-no:hover { background: #f8f9fb; border-color: #d1d5db; }
         .budget-yes { background: #fff; color: #111; }
-        .budget-yes:hover { border-color: #60a5fa; background: #eff6ff; box-shadow: 0 0 0 3px rgba(59, 130, 246,.10); }
+        .budget-yes:hover { border-color: #ffb800; background: #fff8e1; box-shadow: 0 0 0 3px rgba(16,19,24,.10); }
 
-        .qualified-message { display: none; margin-top: 25px; padding: 20px; border-radius: 16px; background: #f0fdf4; border: 1px solid #bbf7d0; text-align: center;}
-        .qualified-message strong { display: block; font-size: 15px; margin-bottom: 5px; color: #166534; }
-        .qualified-message span { display: block; color: #15803d; font-size: 12px; line-height: 1.5; }
+        .qualified-message { display: none; margin-top: 25px; padding: 20px; border-radius: 16px; background: #fff8e1; border: 1px solid #fde68a; text-align: center;}
+        .qualified-message strong { display: block; font-size: 15px; margin-bottom: 5px; color: #101318; }
+        .qualified-message span { display: block; color: #101318; font-size: 12px; line-height: 1.5; }
 
         .lead-box { background: #f8f9fb; border: 1px solid var(--line); border-radius: var(--radius); padding: 30px; margin-top: 15px; display: none; }
         .lead-box.active { display: block; animation: fadeIn 0.5s ease; }
@@ -82,8 +82,8 @@
         .btn { width: 100%; height: 50px; border: none; border-radius: 12px; font-weight: 800; font-size: 15px; cursor: pointer; transition: .2s; }
         .btn-calc { background: var(--text); color: #fff; margin-top: 10px; }
         .btn-calc:hover { background: #000; }
-        .btn-submit { background: #2563eb; color: #fff; margin-top: 10px; }
-        .btn-submit:hover { background: #1d4ed8; }
+        .btn-submit { background: #101318; color: #fff; margin-top: 10px; }
+        .btn-submit:hover { background: #101318; }
 
         @media(max-width: 600px) {
             .form-grid, .breakdown-grid, .budget-confirm-actions { grid-template-columns: 1fr; }
@@ -109,7 +109,7 @@
 <div class="container">
     <div class="tool-header">
         <div class="ai-badge">🤖 AI ENDEKS ve TMMOB Motoru</div>
-        <h1>📐 Statik Proje Bütçe Hesaplama</h1>
+        <h1>Statik Proje Bütçe Hesaplama</h1>
         <p>İMO katsayılarına ve deprem yönetmeliği çarpanlarına göre statik mühendislik tasarım bedelini hesaplayın.</p>
     </div>
 

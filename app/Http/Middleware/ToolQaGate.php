@@ -31,7 +31,9 @@ class ToolQaGate
            app.worksitem.com ekip erişimi zaten StagingTeamAccess ile korunuyor.
            İncelemedeki araçlar staging üzerinde QA için kullanılabilir.
         */
-        if ($request->getHost() === 'app.worksitem.com') {
+        // Host header istemci kontrolünde: yalnızca gerçekten staging ortamındaysak bypass et
+        // (StagingTeamAccess de yalnızca APP_ENV=staging iken devrede).
+        if (app()->environment('staging') && $request->getHost() === 'app.worksitem.com') {
             return $next($request);
         }
 
@@ -56,6 +58,13 @@ class ToolQaGate
         }
 
         $response = $next($request);
+
+        /*
+         * SEO: kilitli (review/soon/inactive) araçlar sitemap'te yok; arama motoruna da
+         * "indeksleme ama linkleri izle" diyoruz. Aksi halde Google tam ekran perdeli,
+         * kullanılamayan sayfaları indeksler → hemen çıkma ve düşük CTR sinyali.
+         */
+        $response->headers->set('X-Robots-Tag', 'noindex, follow');
 
         /* Redirect/404 vb. normal Laravel davranışını bozma */
         if (

@@ -23,7 +23,7 @@
         h1, h2 { color: #0f172a; }
         h1 { margin-top: 0; font-size: 2rem; }
         h2 { margin-top: 28px; font-size: 1.2rem; }
-        a { color: #2563eb; }
+        a { color: #101318; }
         .version { color: #64748b; font-size: 0.9rem; }
         .nav-links { margin-top: 32px; padding-top: 24px; border-top: 1px solid #e2e8f0; }
         .nav-links a { margin-right: 16px; font-weight: 600; }
@@ -78,7 +78,7 @@ html[data-theme="dark"] .cookie-manage{
 <main>
     <h1>Gizlilik Politikası</h1>
 
-    <p class="version">Metin sürümü: 2026-09-v1 · Yürürlük tarihi: 26.09.2026</p>
+    <p class="version">Metin sürümü: 2026-10-v2 · Yürürlük tarihi: 11.10.2026</p>
 
     <p>
         Worksitem olarak kişisel verilerinizin gizliliğine ve güvenliğine önem veriyoruz.
@@ -104,16 +104,18 @@ html[data-theme="dark"] .cookie-manage{
     <h2>2. Verilerinizin Saklanması</h2>
 
     <p>
-        Kişisel verileriniz, Türkiye'de bulunan ve KVKK uyumlu veri merkezlerinde
-        (Hostinger EU) saklanır. Yurt dışına aktarım gerektiren durumlarda,
-        <a href="/legal/acik-riza">Açık Rıza</a>'nıza dayanarak ve KVKK'nın 9. maddesi
-        kapsamında hareket edilir.
+        Kişisel verileriniz, barındırma hizmet sağlayıcımız Hostinger'ın veri merkezlerinde
+        saklanır; bu veri merkezleri yurt dışında bulunabilir. Yurt dışına aktarım, KVKK'nın
+        9. maddesi ve Kişisel Verilerin Yurt Dışına Aktarılmasına İlişkin Usul ve Esaslar
+        Hakkında Yönetmelik'te öngörülen güvencelere uygun olarak yapılır. Ayrıntılar için
+        <a href="/legal/kvkk-aydinlatma">Aydınlatma Metni</a>'nin 5. bölümüne bakabilirsiniz.
     </p>
 
     <h2>3. Verilerinizin Kimlerle Paylaşıldığı</h2>
 
     <ul>
         <li>Kainta İnşaat yetkili çalışanları ve satış ekibi</li>
+        <li>Yapay zekâ hizmet sağlayıcıları (Google Gemini, Replicate, OpenAI) — yalnızca ilgili aracı kullandığınızda</li>
         <li>Bilişim hizmet sağlayıcılarımız (Hostinger, Google)</li>
         <li>Yasal zorunluluk hâlinde yetkili kamu kurumları</li>
     </ul>

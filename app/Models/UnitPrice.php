@@ -2,22 +2,25 @@
 
 namespace App\Models;
 
+use App\Services\CostEngine;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 
 class UnitPrice extends Model
 {
     use HasFactory;
-    
-    protected $guarded = [];
-    protected static function booted(): void {
-        static::saved(function () {
-            \Illuminate\Support\Facades\Cache::forget("global_system_prices");
-            \Illuminate\Support\Facades\Cache::forget("pricing_engine_snapshot");
-        });
-        static::deleted(function () {
-            \Illuminate\Support\Facades\Cache::forget("global_system_prices");
-            \Illuminate\Support\Facades\Cache::forget("pricing_engine_snapshot");
-        });
+
+    protected $guarded = ['id'];
+
+    protected static function booted(): void
+    {
+        $flush = function () {
+            CostEngine::clearCache();
+            Cache::forget('pricing_engine_snapshot');
+        };
+
+        static::saved($flush);
+        static::deleted($flush);
     }
 }

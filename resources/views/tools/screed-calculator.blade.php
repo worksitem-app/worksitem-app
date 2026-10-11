@@ -64,9 +64,9 @@
         .budget-yes { background: #fff; color: #111; }
         .budget-yes:hover { border-color: var(--accent); background: #fffaf0; box-shadow: 0 0 0 3px rgba(255,184,0,.10); }
 
-        .qualified-message { display: none; margin-top: 25px; padding: 20px; border-radius: 16px; background: #f0fdf4; border: 1px solid #bbf7d0; text-align: center;}
-        .qualified-message strong { display: block; font-size: 15px; margin-bottom: 5px; color: #166534; }
-        .qualified-message span { display: block; color: #15803d; font-size: 12px; line-height: 1.5; }
+        .qualified-message { display: none; margin-top: 25px; padding: 20px; border-radius: 16px; background: #fff8e1; border: 1px solid #fde68a; text-align: center;}
+        .qualified-message strong { display: block; font-size: 15px; margin-bottom: 5px; color: #101318; }
+        .qualified-message span { display: block; color: #101318; font-size: 12px; line-height: 1.5; }
 
         .lead-box { background: #f8f9fb; border: 1px solid var(--line); border-radius: var(--radius); padding: 30px; margin-top: 15px; display: none; }
         .lead-box.active { display: block; animation: fadeIn 0.5s ease; }
@@ -77,7 +77,7 @@
         .btn-calc { background: var(--text); color: #fff; margin-top: 10px; }
         .btn-calc:hover { background: #000; }
         .btn-submit { background: var(--accent); color: #000; margin-top: 10px; }
-        .btn-submit:hover { background: #e5a400; }
+        .btn-submit:hover { background: #e5a500; }
 
         @media(max-width: 600px) {
             .form-grid, .breakdown-grid, .budget-confirm-actions { grid-template-columns: 1fr; }
@@ -102,7 +102,7 @@
 
 <div class="container">
     <div class="tool-header">
-        <h1>📏 Şap & Zemin Tesviye Hesaplayıcı</h1>
+        <h1>Şap & Zemin Tesviye Hesaplayıcı</h1>
         <p>Zemin kaplamasından önce dökülecek şap için gereken kum, çimento miktarını ve anahtar teslim uygulayıcı maliyetini hesaplayın.</p>
     </div>
 

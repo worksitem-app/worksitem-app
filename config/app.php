@@ -54,6 +54,9 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
+    // Virgülle ayrılmış proxy IP/CIDR listesi veya "*". Boş = proxy'ye güvenme.
+    'trusted_proxies' => env('TRUSTED_PROXIES', ''),
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone

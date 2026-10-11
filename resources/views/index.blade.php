@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>İnşaat ve Tadilat Maliyeti Hesaplama | WORKSİTEM</title>
+<title>İnşaat ve Tadilat Maliyeti Hesaplama 2026 – Ücretsiz | WORKSİTEM</title>
 <meta name="description" content="İnşaat ve tadilat maliyetinizi m² üzerinden hesaplayın. Kentsel dönüşüm için yeni yapı ön bütçesini görün; PDF, görsel veya CSV ile AI ön keşif yapın.">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
 <link rel="canonical" href="https://worksitem.com/">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="tr_TR">
 <meta property="og:site_name" content="WORKSİTEM">
-<meta property="og:title" content="İnşaat ve Tadilat Maliyeti Hesaplama | WORKSİTEM">
+<meta property="og:title" content="İnşaat ve Tadilat Maliyeti Hesaplama 2026 – Ücretsiz | WORKSİTEM">
 <meta property="og:description" content="Projenizi planlayın: m² ile yaklaşık bütçe, dosya ile AI ön keşif. Kentsel dönüşümde yeni yapı maliyetini kapsam sınırlarıyla inceleyin.">
 <meta property="og:url" content="https://worksitem.com/">
 <meta property="og:image" content="https://worksitem.com/brand/og-image.png">
@@ -18,7 +18,7 @@
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta property="og:image:alt" content="WORKSİTEM — inşaat maliyeti ve metraj araçları">
-<meta name="twitter:title" content="İnşaat ve Tadilat Maliyeti Hesaplama | WORKSİTEM">
+<meta name="twitter:title" content="İnşaat ve Tadilat Maliyeti Hesaplama 2026 – Ücretsiz | WORKSİTEM">
 <meta name="twitter:description" content="İnşaat, tadilat ve kentsel dönüşümde yeni yapı için yaklaşık bütçenizi oluşturun. Hesap kapsamını görün, proje değerlendirmesi isteyin.">
 <meta name="twitter:image" content="https://worksitem.com/brand/og-image.png">
 <link rel="icon" href="/favicon.ico" type="image/x-icon">
@@ -42,12 +42,12 @@ html[data-theme=dark]{--bg:#08090a;--surface:#111214;--s2:#17191c;--text:#f7f7f8
 *{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}body{font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}a{color:inherit;text-decoration:none}button{font:inherit}img{max-width:100%;display:block}.container{width:min(calc(100% - 32px),var(--max));margin:auto}
 .navbar{position:sticky;top:0;z-index:1000;background:rgba(246,247,249,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}html[data-theme=dark] .navbar{background:rgba(8,9,10,.9)}.nav-inner{min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:18px}.brand img{height:38px;width:auto}.nav-links{display:flex;gap:4px;align-items:center}.nav-link{padding:10px 12px;border-radius:10px;color:var(--muted);font-size:13px;font-weight:750}.nav-link:hover{background:var(--s2);color:var(--text)}.nav-actions{display:flex;gap:8px}.icon-btn{width:42px;height:42px;border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:12px;cursor:pointer}.menu-btn{display:none}
 .hero{position:relative;padding:74px 0 44px;overflow:hidden}.hero:before{content:"";position:absolute;width:560px;height:560px;right:-260px;top:-280px;border-radius:50%;background:rgba(255,184,0,.15);filter:blur(75px);pointer-events:none}.hero-grid{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(340px,.88fr);gap:52px;align-items:center}.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid rgba(255,184,0,.32);background:rgba(255,184,0,.1);color:#a97400;border-radius:999px;font-size:11px;font-weight:900;letter-spacing:.9px;text-transform:uppercase}.dot{width:7px;height:7px;background:var(--yellow);border-radius:50%}html[data-theme=dark] .eyebrow{color:var(--yellow)}
-h1{margin-top:20px;font-size:clamp(42px,6.1vw,72px);line-height:.99;letter-spacing:-3.5px;font-weight:950;max-width:820px}h1 span{color:var(--yellow2)}.hero-copy{margin-top:22px;max-width:690px;color:var(--muted);font-size:clamp(16px,2vw,19px);line-height:1.72}.hero-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}.btn{min-height:54px;padding:0 22px;border-radius:13px;display:inline-flex;align-items:center;justify-content:center;border:1px solid transparent;font-size:14px;font-weight:900;transition:.2s}.btn:hover{transform:translateY(-2px)}.btn-primary{background:var(--yellow);color:#080808}.btn-secondary{background:var(--surface);border-color:var(--line)}.trust{display:flex;flex-wrap:wrap;gap:14px 18px;margin-top:24px;color:var(--muted);font-size:12px;font-weight:650}.trust b{color:var(--green)}
+h1{margin-top:20px;font-size:clamp(42px,6.1vw,72px);line-height:.99;letter-spacing:-3.5px;font-weight:950;max-width:820px}h1 span{color:var(--ws-highlight,#9A6E00)}.hero-copy{margin-top:22px;max-width:690px;color:var(--muted);font-size:clamp(16px,2vw,19px);line-height:1.72}.hero-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}.btn{min-height:54px;padding:0 22px;border-radius:13px;display:inline-flex;align-items:center;justify-content:center;border:1px solid transparent;font-size:14px;font-weight:900;transition:.2s}.btn:hover{transform:translateY(-2px)}.btn-primary{background:var(--yellow);color:#080808}.btn-secondary{background:var(--surface);border-color:var(--line)}.trust{display:flex;flex-wrap:wrap;gap:14px 18px;margin-top:24px;color:var(--muted);font-size:12px;font-weight:650}.trust b{color:var(--green)}
 .start-card{background:var(--surface);border:1px solid var(--line);border-radius:24px;padding:24px;box-shadow:var(--shadow)}.start-top{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;margin-bottom:18px}.start-kicker,.kicker{color:var(--yellow2);font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:1.1px}.start-title{font-size:20px;font-weight:950;margin-top:3px}.start-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.start-item{min-height:112px;padding:16px;border:1px solid var(--line);background:var(--s2);border-radius:15px;display:flex;flex-direction:column;justify-content:space-between;transition:.2s}.start-item:hover{transform:translateY(-2px);border-color:rgba(255,184,0,.55)}.start-icon{font-size:22px}.start-item strong{font-size:14px;font-weight:900}.start-item span{display:block;margin-top:4px;color:var(--muted);font-size:11px}.start-footer{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-top:12px;padding-top:14px;border-top:1px solid var(--line)}.start-footer small{font-size:11px;color:var(--muted)}.text-link{font-size:12px;font-weight:900;color:var(--yellow2)}
 .method-strip{padding:12px 0 52px}.method-grid{display:grid;grid-template-columns:repeat(3,1fr);background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden}.method-item{padding:22px;border-right:1px solid var(--line)}.method-item:last-child{border-right:0}.method-item small{display:block;color:var(--yellow2);font-size:10px;font-weight:900;letter-spacing:1px;text-transform:uppercase}.method-item strong{display:block;margin-top:5px;font-size:15px}.method-item p{margin-top:6px;color:var(--muted);font-size:12px;line-height:1.65}
 section.block{padding:72px 0}.section-head{max-width:770px;margin-bottom:30px}h2{margin-top:8px;font-size:clamp(30px,4.5vw,47px);line-height:1.06;letter-spacing:-2px;font-weight:950}.section-head p{margin-top:12px;color:var(--muted);line-height:1.72}
 .tool-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}.tool{min-height:178px;padding:21px;border:1px solid var(--line);background:var(--surface);border-radius:18px;display:flex;flex-direction:column;transition:.2s}.tool:hover{transform:translateY(-4px);border-color:rgba(255,184,0,.46);box-shadow:var(--shadow)}.tool-icon{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:rgba(255,184,0,.12);font-size:19px;margin-bottom:16px}.tool h3{font-size:15px;font-weight:900}.tool p{margin-top:7px;color:var(--muted);font-size:12px;line-height:1.65}.tool .go{margin-top:auto;padding-top:16px;color:var(--yellow2);font-size:12px;font-weight:900}
-.pricing{display:grid;grid-template-columns:1fr 1fr;gap:16px}.pricing-card{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:26px}.pricing-card .num{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;background:var(--yellow);color:#000;font-weight:950;margin-bottom:16px}.pricing-card h3{font-size:19px;font-weight:950}.pricing-card p{margin-top:9px;color:var(--muted);font-size:13px;line-height:1.75}.source-note{margin-top:15px;padding:13px 14px;border-radius:12px;background:var(--s2);color:var(--muted);font-size:11px;line-height:1.6}
+.pricing{display:grid;grid-template-columns:1fr 1fr;gap:16px}.pricing-card{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:26px}.pricing-card .num{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;background:var(--yellow);color:#000;font-weight:950;margin-bottom:16px}.pricing-card h3{font-size:19px;font-weight:950}.pricing-card p{margin-top:9px;color:var(--muted);font-size:13px;line-height:1.75}.source-note{margin-top:15px;padding:13px 14px;border-radius:12px;background:var(--s2);color:var(--muted);font-size:11px;line-height:1.6}.data-source-note{margin-top:18px;padding:18px;border-left:4px solid var(--yellow);font-size:12px;line-height:1.7}.data-source-note strong{color:var(--text)}
 .definition{background:var(--black);color:#fff;border-radius:24px;padding:38px;border:1px solid rgba(255,255,255,.08)}.definition-grid{display:grid;grid-template-columns:1fr 1fr;gap:38px}.definition p{color:#adb0b7;margin-top:13px;line-height:1.75}.definition-points{display:grid;gap:10px}.definition-point{padding:15px 16px;border:1px solid rgba(255,255,255,.1);background:#111214;border-radius:13px}.definition-point strong{font-size:13px}.definition-point span{display:block;margin-top:4px;color:#a9adb5;font-size:11px;line-height:1.55}
 .faq{max-width:860px}.faq-item{border-bottom:1px solid var(--line)}.faq-q{width:100%;padding:20px 0;display:flex;justify-content:space-between;gap:18px;border:0;background:none;color:var(--text);text-align:left;font-weight:850;cursor:pointer}.faq-q b{color:var(--yellow2);font-size:20px}.faq-a{display:none;padding:0 0 20px;color:var(--muted);font-size:13px;line-height:1.75}.faq-item.open .faq-a{display:block}
 .cta{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:34px;display:flex;align-items:center;justify-content:space-between;gap:28px}.cta h2{font-size:clamp(28px,4vw,40px)}.cta p{margin-top:9px;color:var(--muted)}footer{padding:32px 0;border-top:1px solid var(--line)}.footer-inner{display:flex;justify-content:space-between;gap:20px;align-items:center}.footer-inner small{color:var(--muted)}.footer-brand{font-weight:950}.footer-brand span{color:var(--yellow2)}.mobile-cta{display:none}
@@ -185,7 +185,22 @@ html[data-theme=dark] body .wks-brand img,html[data-theme=dark] body .wks-foot-l
 {"@@context":"https://schema.org","@@type":"ItemList","name":"WORKSİTEM öne çıkan inşaat araçları","itemListElement":[{"@@type":"ListItem","position":1,"name":"İnşaat maliyeti hesaplama","url":"https://worksitem.com/maliyet-hesapla"},{"@@type":"ListItem","position":2,"name":"AI ön keşif ve ön fiyatlandırma","url":"https://worksitem.com/araclar/otomatik-kesif-fiyatlandirma"},{"@@type":"ListItem","position":3,"name":"Dijital metraj","url":"https://worksitem.com/araclar/dijital-metraj"},{"@@type":"ListItem","position":4,"name":"Beton hesaplama","url":"https://worksitem.com/araclar/beton-hesaplayici"}]}
 </script>
 <script type="application/ld+json">
-{"@@context":"https://schema.org","@@type":"WebPage","@@id":"https://worksitem.com/#webpage","url":"https://worksitem.com/","name":"İnşaat ve Tadilat Maliyeti Hesaplama | WORKSİTEM","inLanguage":"tr-TR","isPartOf":{"@@id":"https://worksitem.com/#website"},"description":"m² ile yaklaşık inşaat ve tadilat bütçesi, dosya ile AI ön keşif ve kentsel dönüşümde yeni yapı maliyeti ön değerlendirmesi."}
+{"@@context":"https://schema.org","@@type":"WebPage","@@id":"https://worksitem.com/#webpage","url":"https://worksitem.com/","name":"İnşaat ve Tadilat Maliyeti Hesaplama 2026 – Ücretsiz | WORKSİTEM","inLanguage":"tr-TR","isPartOf":{"@@id":"https://worksitem.com/#website"},"description":"m² ile yaklaşık inşaat ve tadilat bütçesi, dosya ile AI ön keşif ve kentsel dönüşümde yeni yapı maliyeti ön değerlendirmesi."}
+</script>
+<script type="application/ld+json">
+{
+  "@@context": "https://schema.org",
+  "@@type": "FAQPage",
+  "mainEntity": [
+    {"@@type":"Question","name":"WORKSİTEM sonucu kesin teklif midir?","acceptedAnswer":{"@@type":"Answer","text":"Hayır. Sonuçlar yaklaşık maliyet ve karar desteği içindir. Kesin teklif için proje, mahal, metraj, malzeme seçimi, uygulama koşulları ve saha bilgileri ayrıca değerlendirilmelidir."}},
+    {"@@type":"Question","name":"İnşaat maliyeti m² üzerinden nasıl hesaplanır?","acceptedAnswer":{"@@type":"Answer","text":"Sıfırdan inşaat hesabında seçtiğiniz yapı alt türü ilgili yapı sınıfına eşlenir; doğrulanmış m² birim fiyatı toplam alanla çarpılarak yaklaşık ön bütçe oluşturulur. Tadilat hesabında ise toplam alan ve seçilen tadilat kapsamı merkezi piyasa m² fiyat modeliyle değerlendirilir. İl ve ilçe bu hızlı hesapta fiyat katsayısı olarak uygulanmaz."}},
+    {"@@type":"Question","name":"Kentsel dönüşüm hesabına hangi giderler dahil?","acceptedAnswer":{"@@type":"Answer","text":"Dosyasız kentsel dönüşüm hesabı yalnızca yeni yapı için sıfırdan inşaat yöntemiyle ön bütçe üretir. Yıkım, tahliye, kira, ruhsat ve diğer dönüşüm giderleri ayrıca değerlendirilir. Destek ve hak sahipliği hesabı yapılmaz."}},
+    {"@@type":"Question","name":"Kaba inşaat ve anahtar teslim metrekare birim fiyatı farkı nedir?","acceptedAnswer":{"@@type":"Answer","text":"Kaba inşaat ve anahtar teslim m² birim fiyatı aynı kapsamı ifade etmez. Kaba inşaat, projede tanımlanan taşıyıcı sistem ve kaba yapı imalatlarıyla sınırlı olabilir; anahtar teslim kapsam ise sözleşmeye göre elektrik, mekanik, ince işler, kaplamalar ve diğer tamamlayıcı imalatları içerebilir. WORKSİTEM ana sayfa sonucu bu iki kapsam için ayrı ayrı kesin teklif vermez; ekranda belirtilen hesaplama yöntemine göre yaklaşık ön bütçe sunar. Kapsam karşılaştırması için metraj ve teknik şartname birlikte değerlendirilmelidir."}},
+    {"@@type":"Question","name":"Hangi proje dosyalarını yükleyebilirim?","acceptedAnswer":{"@@type":"Answer","text":"En fazla 10 MB boyutunda PDF, CSV, JPG, JPEG veya PNG dosyası yükleyebilirsiniz. Dosyanız yoksa toplam m² üzerinden hesap yapabilirsiniz. Dosya analizi için okunabilir ölçü ve iş kalemi bilgileri gerekir."}},
+    {"@@type":"Question","name":"Fiyatlandırılamayan işler toplamda yer alır mı?","acceptedAnswer":{"@@type":"Answer","text":"Hayır. Fiyatı veya güvenilir miktarı bulunamayan kalemler ayrı gösterilir ve hesaplanan ara toplama dahil edilmez. Bütün dosya kalemleri fiyatlandırılmış olsa bile dosyada yer almayan proje işleri bu tutara dahil değildir."}},
+    {"@@type":"Question","name":"Net teklif almak için ne yapmalıyım?","acceptedAnswer":{"@@type":"Answer","text":"Hesaplama sonucundan sonra proje değerlendirmesi talep edebilirsiniz. İletişim bilgilerinizi ve proje notunuzu paylaşmanızın ardından kapsam ve saha koşulları değerlendirilir. Uygun projelerde profesyonel saha keşfi ücretli olabilir."}}
+  ]
+}
 </script>
 <link rel="stylesheet" href="/css/worksitem-design.css">
 </head>
@@ -201,7 +216,7 @@ html[data-theme=dark] body .wks-brand img,html[data-theme=dark] body .wks-foot-l
 <div>
 <div class="eyebrow"><span class="dot" aria-hidden="true"></span> İnşaat · Tadilat · Kentsel dönüşüm</div>
 <h1>İnşaat ve tadilat <span>maliyetinizi</span> hesaplayın.</h1>
-<p class="hero-copy">Toplam alanınızı, şehrinizi ve kalite tercihinizi girin; yaklaşık proje bütçenizi görün. Dosyanız varsa AI ön keşifle iş kalemlerini inceleyin. Kentsel dönüşümde yeni yapının ön bütçesini değerlendirin.</p>
+<p class="hero-copy">Proje türünüzü, toplam alanınızı ve konumunuzu girin; yaklaşık proje bütçenizi görün. Dosyanız varsa AI ön keşifle iş kalemlerini inceleyin. Kentsel dönüşümde yeni yapının ön bütçesini değerlendirin.</p>
 <div class="hero-actions">
 <a class="btn btn-primary" href="#proje-hesaplayici">Ön Bütçemi Hesapla →</a>
 <a class="btn btn-secondary" href="/araclar">Tüm Hesaplama Araçları</a>
@@ -244,7 +259,7 @@ $homeBuildingTypes = \Illuminate\Support\Facades\DB::table('building_types')
 
 <aside class="home-estimator" id="proje-hesaplayici" aria-labelledby="estHeading">
 <div class="est-kicker">WORKSİTEM PROJE HESAPLAYICI</div>
-<h2 id="estHeading">Yaklaşık bütçenizi görün</h2>
+<h2 id="estHeading">Projeniz İçin Yaklaşık İnşaat ve Tadilat Bütçenizi Hesaplayın</h2>
 <p class="est-sub">Birkaç bilgiyle yaklaşık proje bütçenizi oluşturun.</p>
 
 <div class="est-label" id="estModeLabel">Ne yapmak istiyorsunuz?</div>
@@ -437,7 +452,7 @@ Seçtiğiniz yapı türü ve toplam alana göre yaklaşık ön bütçe güvenli 
 
 <section class="method-strip">
 <div class="container"><div class="method-grid">
-<div class="method-item"><small>Dosyasız hesap</small><strong>m² üzerinden yaklaşık bütçe</strong><p>Toplam alan, şehir ve kalite seçimine göre ön bütçe hesaplanır. Proje türü ve kat sayısı talep bilgisi olarak kaydedilir.</p></div>
+<div class="method-item"><small>Dosyasız hesap</small><strong>m² üzerinden yaklaşık bütçe</strong><p>Sıfırdan inşaatta yapı alt türü ve toplam alan; tadilatta ise kapsam ve toplam alan kullanılır. İl ve ilçe proje bağlamı için kaydedilir.</p></div>
 <div class="method-item"><small>Dosyalı analiz</small><strong>İş kalemlerinin ara toplamı</strong><p>PDF, görsel veya CSV içindeki iş kalemleri analiz edilir. Fiyatı ya da miktarı belirlenemeyen işler ayrıca gösterilir.</p></div>
 <div class="method-item"><small>Profesyonel teklif</small><strong>Projeye özel değerlendirme</strong><p>Ön bütçe kesin teklif değildir. Kapsam, malzeme seçimi ve saha koşulları için Kainta İnşaat'tan değerlendirme talep edebilirsiniz.</p></div>
 </div></div>
@@ -461,10 +476,13 @@ Seçtiğiniz yapı türü ve toplam alana göre yaklaşık ön bütçe güvenli 
 
 <section class="block" id="fiyatlama">
 <div class="container">
-<div class="section-head"><div class="kicker">Hesaplama yöntemi ve sınırları</div><h2>Ön bütçe nasıl hesaplanır?</h2><p>WORKSİTEM anasayfası iki farklı yöntem kullanır: dosyasız m² hesabı ve dosyadan iş kalemi analizi. Sonuçları karşılaştırırken aynı kapsamı temsil edip etmediklerini kontrol edin.</p></div>
+<div class="section-head"><div class="kicker">Hesaplama yöntemi ve sınırları</div><h2>İnşaat ve Tadilat Ön Bütçesi Nasıl Hesaplanır?</h2><p>WORKSİTEM anasayfası iki farklı yöntem kullanır: dosyasız m² hesabı ve dosyadan iş kalemi analizi. Sonuçları karşılaştırırken aynı kapsamı temsil edip etmediklerini kontrol edin.</p></div>
 <div class="pricing">
-<article class="pricing-card"><div class="num">1</div><h3>Dosyasız m² hesabı</h3><p>Sistemdeki inşaat veya tadilat birim fiyatı; toplam alan, şehir ve kalite katsayılarıyla hesaplanır. Sonuçtaki maliyet kırılımı yaklaşık dağılımdır; ayrıntılı metraj veya ayrı ayrı fiyatlandırılmış işçilik ve malzeme teklifi değildir.</p><div class="source-note">Alanı tüm proje için girin. Kat sayısı toplam alanla yeniden çarpılmaz. Proje türü ve kat bilgisi, teklif talebinin değerlendirilmesi için saklanır.</div></article>
+<article class="pricing-card"><div class="num">1</div><h3>Dosyasız m² hesabı</h3><p>Sıfırdan inşaatta seçilen yapı alt türü bir yapı sınıfına eşlenir ve doğrulanmış m² birim fiyatı toplam alanla hesaplanır. Tadilatta toplam alan ve seçilen tadilat kapsamı merkezi piyasa m² fiyat modeliyle hesaplanır. İl ve ilçe bu hızlı hesapta fiyat katsayısı olarak uygulanmaz.</p><div class="source-note">Alanı tüm proje için girin. Kat sayısı toplam alanla yeniden çarpılmaz. Sonuç yaklaşık ön bütçedir; ayrıntılı metraj veya ayrı ayrı fiyatlandırılmış işçilik ve malzeme teklifi değildir.</div></article>
 <article class="pricing-card"><div class="num">2</div><h3>Dosyadan AI ön keşif</h3><p>Dosyadaki iş kalemleri, miktarlar ve eşleşen birim fiyatlarla ara toplam oluşturulur. Fiyatlandırılamayan kalemler ara toplama dahil edilmez. Dosyada bulunmayan işler için otomatik olarak tam proje bütçesi üretilmez.</p><div class="source-note">Şehir ve beyan ettiğiniz toplam alan, bu dosya analizindeki kalem miktarlarını otomatik değiştirmez. Dosyanın okunabilirliği ve kapsamı sonucu etkiler.</div></article>
+</div>
+<div class="source-note data-source-note">
+<strong>Veri kaynağı ve güncellik:</strong> Sıfırdan inşaat hesabında seçilen yapı alt türü bir yapı sınıfına bağlanır. Bu sınıf için merkezi fiyat motorunda onaylı ve aktif piyasa fiyatı varsa taban referans olarak o kayıt; yoksa ÇŞİDB 2026 Yapı Yaklaşık Birim Maliyetleri resmî referansı kullanılır. Kullanıcıya gösterilen ön bütçe bu taban referansın merkezi piyasa, proje ve genel konum katsayılarıyla sunucu tarafında değerlendirilmesiyle oluşturulur; kullanıcının seçtiği il ve ilçe bu sürümde ayrıca fiyat katsayısı üretmez. Tadilat hesabı onaylı piyasa m² fiyatları ve seçilen tadilat kapsamı üzerinden hesaplanır. Dosya analizinde yalnızca eşleşen ve fiyatlandırılabilen iş kalemleri ara toplama dahil edilir. Sonuçlar yaklaşık ön bütçedir; kesin teklif değildir.
 </div>
 </div>
 </section>
@@ -472,7 +490,7 @@ Seçtiğiniz yapı türü ve toplam alana göre yaklaşık ön bütçe güvenli 
 <section class="block" id="kentsel-donusum" aria-labelledby="renewalHeading">
 <div class="container"><div class="pricing-card">
 <div class="kicker">Kentsel dönüşüm ön değerlendirmesi</div>
-<h2 id="renewalHeading">Yeni yapı bütçesi, dönüşümün tüm maliyeti değildir.</h2>
+<h2 id="renewalHeading">Kentsel Dönüşüm Yeni Yapı Maliyeti ve Kapsamı</h2>
 <p>Kentsel dönüşüm seçeneği, dosyasız hesapta mevcut sıfırdan inşaat yöntemiyle yeni yapının yaklaşık bütçesini gösterir. Yıkım, tahliye, kira, ruhsat ve diğer dönüşüm giderleri bu tahmine ayrıca eklenmelidir; burada destek veya hak sahipliği hesaplanmaz.</p>
 <p>Dosya yüklerseniz sonuç yalnızca analiz edilen ve fiyatlandırılabilen iş kalemlerinin ara toplamıdır. Dönüşümün tamamı için proje, mevcut yapı ve uygulama kapsamı birlikte değerlendirilmelidir.</p>
 <a class="btn btn-secondary" href="#proje-hesaplayici" id="chooseRenewal" style="margin-top:18px">Kentsel dönüşüm ön bütçesini incele →</a>
@@ -492,11 +510,12 @@ Seçtiğiniz yapı türü ve toplam alana göre yaklaşık ön bütçe güvenli 
 
 <section class="block" id="sss">
 <div class="container">
-<div class="section-head"><div class="kicker">Sık sorulan sorular</div><h2>WORKSİTEM maliyet sonuçları nasıl okunmalı?</h2></div>
+<div class="section-head"><div class="kicker">Sık sorulan sorular</div><h2>İnşaat Maliyeti Hesaplama Hakkında Sık Sorulan Sorular</h2></div>
 <div class="faq">
 <div class="faq-item"><button class="faq-q" type="button"><span>WORKSİTEM sonucu kesin teklif midir?</span><b>+</b></button><div class="faq-a">Hayır. Sonuçlar yaklaşık maliyet ve karar desteği içindir. Kesin teklif için proje, mahal, metraj, malzeme seçimi, uygulama koşulları ve saha bilgileri ayrıca değerlendirilmelidir.</div></div>
-<div class="faq-item"><button class="faq-q" type="button"><span>İnşaat maliyeti m² üzerinden nasıl hesaplanır?</span><b>+</b></button><div class="faq-a">Dosyasız hesapta sistemdeki inşaat veya tadilat birim fiyatı, toplam alan, şehir ve kalite katsayıları kullanılır. Alan büyüklüğü de birim maliyeti etkiler. Sonuç yaklaşık ön bütçedir; proje türü ve kat sayısı bu hızlı hesapta ayrı fiyat katsayısı olarak uygulanmaz.</div></div>
+<div class="faq-item"><button class="faq-q" type="button"><span>İnşaat maliyeti m² üzerinden nasıl hesaplanır?</span><b>+</b></button><div class="faq-a">Sıfırdan inşaat hesabında seçtiğiniz yapı alt türü ilgili yapı sınıfına eşlenir; doğrulanmış m² birim fiyatı toplam alanla çarpılarak yaklaşık ön bütçe oluşturulur. Tadilat hesabında ise toplam alan ve seçilen tadilat kapsamı merkezi piyasa m² fiyat modeliyle değerlendirilir. İl ve ilçe bu hızlı hesapta fiyat katsayısı olarak uygulanmaz.</div></div>
 <div class="faq-item"><button class="faq-q" type="button"><span>Kentsel dönüşüm hesabına hangi giderler dahil?</span><b>+</b></button><div class="faq-a">Dosyasız kentsel dönüşüm hesabı yalnızca yeni yapı için sıfırdan inşaat yöntemiyle ön bütçe üretir. Yıkım, tahliye, kira, ruhsat ve diğer dönüşüm giderleri ayrıca değerlendirilir. Destek ve hak sahipliği hesabı yapılmaz.</div></div>
+<div class="faq-item"><button class="faq-q" type="button"><span>Kaba inşaat ve anahtar teslim metrekare birim fiyatı farkı nedir?</span><b>+</b></button><div class="faq-a">Kaba inşaat ve anahtar teslim m² birim fiyatı aynı kapsamı ifade etmez. Kaba inşaat, projede tanımlanan taşıyıcı sistem ve kaba yapı imalatlarıyla sınırlı olabilir; anahtar teslim kapsam ise sözleşmeye göre elektrik, mekanik, ince işler, kaplamalar ve diğer tamamlayıcı imalatları içerebilir. WORKSİTEM ana sayfa sonucu bu iki kapsam için ayrı ayrı kesin teklif vermez; ekranda belirtilen hesaplama yöntemine göre yaklaşık ön bütçe sunar. Kapsam karşılaştırması için metraj ve teknik şartname birlikte değerlendirilmelidir.</div></div>
 <div class="faq-item"><button class="faq-q" type="button"><span>Hangi proje dosyalarını yükleyebilirim?</span><b>+</b></button><div class="faq-a">En fazla 10 MB boyutunda PDF, CSV, JPG, JPEG veya PNG dosyası yükleyebilirsiniz. Dosyanız yoksa toplam m² üzerinden hesap yapabilirsiniz. Dosya analizi için okunabilir ölçü ve iş kalemi bilgileri gerekir.</div></div>
 <div class="faq-item"><button class="faq-q" type="button"><span>Fiyatlandırılamayan işler toplamda yer alır mı?</span><b>+</b></button><div class="faq-a">Hayır. Fiyatı veya güvenilir miktarı bulunamayan kalemler ayrı gösterilir ve hesaplanan ara toplama dahil edilmez. Bütün dosya kalemleri fiyatlandırılmış olsa bile dosyada yer almayan proje işleri bu tutara dahil değildir.</div></div>
 <div class="faq-item"><button class="faq-q" type="button"><span>Net teklif almak için ne yapmalıyım?</span><b>+</b></button><div class="faq-a">Hesaplama sonucundan sonra proje değerlendirmesi talep edebilirsiniz. İletişim bilgilerinizi ve proje notunuzu paylaşmanızın ardından kapsam ve saha koşulları değerlendirilir. Uygun projelerde profesyonel saha keşfi ücretli olabilir.</div></div>
@@ -505,6 +524,10 @@ Seçtiğiniz yapı türü ve toplam alana göre yaklaşık ön bütçe güvenli 
 </section>
 
 <section class="block"><div class="container"><div class="cta"><div><div class="kicker">Projeniz için başlayın</div><h2>Önce bütçeyi görün, kapsamı birlikte netleştirelim.</h2><p>İnşaat, tadilat veya kentsel dönüşüm projenizi tanımlayın.</p></div><a class="btn btn-primary" href="#proje-hesaplayici">Ön Bütçemi Hesapla →</a></div></div></section>
+
+
+@include('components.collaboration-cta')
+
 </main>
 
 <x-site.contech-footer />
@@ -1823,6 +1846,5 @@ initTrPhoneField();
 syncLocationFields();
 })();
 </script>
-@include('components.collaboration-cta')
 </body>
 </html>

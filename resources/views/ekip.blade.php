@@ -9,7 +9,7 @@
     <meta name="robots" content="index,follow">
     <link rel="canonical" href="https://worksitem.com/ekip">
 
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/worksitem-design.css">
 
     <style>
@@ -47,7 +47,7 @@
 
         <h1 class="ws-h1" style="margin-top:18px;max-width:900px">
             İnşaat tecrübesi ile<br>
-            <span style="color:var(--ws-yellow)">teknolojiyi aynı masaya getiriyoruz.</span>
+            <span style="color:var(--ws-highlight,#9A6E00)">teknolojiyi aynı masaya getiriyoruz.</span>
         </h1>
 
         <p class="ws-body ws-muted team-lead">

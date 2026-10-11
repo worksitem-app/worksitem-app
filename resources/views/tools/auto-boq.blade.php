@@ -13,7 +13,7 @@
             --card: #ffffff;
             --text: #0f172a;
             --muted: #6b7280;
-            --accent: #2563eb;
+            --accent: #101318;
             --success: #10b981;
             --danger: #ef4444;
             --warning: #f59e0b;
@@ -25,7 +25,7 @@
         .header a:hover { color: var(--text); }
         .header img { height: 30px; }
         .container { max-width: 1100px; margin: 40px auto; padding: 0 20px; }
-        .ai-badge { background: rgba(37, 99, 235, 0.1); color: var(--accent); padding: 6px 14px; border-radius: 100px; font-size: 12px; font-weight: 900; display: inline-block; }
+        .ai-badge { background: rgba(16,19,24,0.1); color: var(--accent); padding: 6px 14px; border-radius: 100px; font-size: 12px; font-weight: 900; display: inline-block; }
         h1 { font-weight: 900; margin-top: 10px; font-size: 32px; }
         .subtitle { color: var(--muted); margin-top: 8px; font-size: 15px; }
         .card { background: var(--card); border-radius: 16px; padding: 32px; margin-top: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
@@ -40,7 +40,7 @@
         textarea:focus, input[type="file"]:focus { outline: none; border-color: var(--accent); }
         input[type="file"] { cursor: pointer; background: #fafbfc; }
         input[type="file"]::file-selector-button { background: var(--accent); color: #fff; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 700; margin-right: 12px; font-family: inherit; }
-        .file-info { margin-top: 10px; padding: 12px 16px; background: #f0f9ff; border-radius: 8px; font-size: 13px; color: var(--accent); font-weight: 600; }
+        .file-info { margin-top: 10px; padding: 12px 16px; background: #fff8e1; border-radius: 8px; font-size: 13px; color: var(--accent); font-weight: 600; }
         .options { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 20px; }
         .options label { font-weight: 700; font-size: 13px; color: var(--muted); }
         .options select { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px; font-family: inherit; font-size: 14px; font-weight: 600; }
@@ -80,10 +80,7 @@
     </style>
 </head>
 <body>
-<header class="header">
-    <a href="/araclar">← Araçlara Dön</a>
-    <img src="/200.png" alt="WORKSİTEM">
-</header>
+<x-site.contech-header />
 
 <div class="container">
     <div style="text-align:center; margin-bottom:30px;">
@@ -135,7 +132,16 @@
                 </div>
             </div>
 
+            @if(config('services.ai_spend_enabled'))
             <button type="button" class="btn" id="submitBtn">✦ Yapay Zeka ile Fiyatlandır</button>
+            @else
+            <button type="button" class="btn" id="submitBtn" disabled>
+                AI Ön Keşif Geçici Olarak Kapalı
+            </button>
+            <div style="margin-top:12px;text-align:center;color:var(--muted);font-size:13px;line-height:1.5;">
+                Poz, rayiç ve diğer ücretsiz hesaplama araçları kullanılmaya devam edebilir.
+            </div>
+            @endif
         </form>
     </div>
 
@@ -376,5 +382,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 </script>
+    <x-site.contech-footer />
 </body>
 </html>

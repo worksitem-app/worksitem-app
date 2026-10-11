@@ -115,7 +115,7 @@
 
 <body>
     <nav class="navbar" style="background:#fff; border-bottom:1px solid #e2e8f0; padding:16px 5%; display:flex; justify-content:space-between; align-items:center;">
-        <a href="https://kainta.com" target="_blank" rel="noopener" style="font-size:22px; font-weight:800; color:#0f172a; text-decoration:none;">KAINTA <span style="background:#2563eb; color:white; padding:4px 8px; border-radius:6px; font-size:12px;">AI</span></a>
+        <a href="https://kainta.com" target="_blank" rel="noopener" style="font-size:22px; font-weight:800; color:#0f172a; text-decoration:none;">KAINTA <span style="background:#101318; color:white; padding:4px 8px; border-radius:6px; font-size:12px;">AI</span></a>
         <div><a href="https://worksitem.com" style="color:#64748b; text-decoration:none; font-weight:500;">Ana Site</a></div>
     </nav>
 

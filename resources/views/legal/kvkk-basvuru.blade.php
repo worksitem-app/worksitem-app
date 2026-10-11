@@ -23,12 +23,12 @@
         h1, h2 { color: #0f172a; }
         h1 { margin-top: 0; font-size: 2rem; }
         h2 { margin-top: 28px; font-size: 1.2rem; }
-        a { color: #2563eb; }
+        a { color: #101318; }
         .version { color: #64748b; font-size: 0.9rem; }
         .nav-links { margin-top: 32px; padding-top: 24px; border-top: 1px solid #e2e8f0; }
         .nav-links a { margin-right: 16px; font-weight: 600; }
         ul li { margin-bottom: 8px; }
-        .info-box { background: #eff6ff; padding: 16px; border-radius: 8px; border-left: 4px solid #2563eb; margin: 16px 0; }
+        .info-box { background: #fff8e1; padding: 16px; border-radius: 8px; border-left: 4px solid #101318; margin: 16px 0; }
     </style>
 <style id="worksitem-legal-theme-v1">
 html[data-theme="light"]{

@@ -8,7 +8,7 @@
     <title>Ön Maliyet Sonucu | Kainta İnşaat</title>
     <style>
         * { box-sizing: border-box; }
-        body { margin: 0; background: #f5f7fa; color: #18202a; font-family: Arial, sans-serif; }
+        body { margin: 0; background: #f5f7fa; color: #18202a; font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
         .container { width: min(900px, calc(100% - 28px)); margin: 0 auto; padding: 50px 0 70px; }
         .header { text-align: center; margin-bottom: 32px; }
         h1 { margin: 10px 0; font-size: clamp(28px, 5vw, 42px); }
@@ -23,14 +23,14 @@
         .row:last-child { border-bottom: none; }
         .item-name { font-weight: bold; color: #334155; }
         .item-value { font-weight: bold; color: #0f172a; }
-        .disclaimer { margin-top: 30px; padding: 20px; background: #e0f2fe; color: #0369a1; border-radius: 12px; font-size: 14px; line-height: 1.6; }
+        .disclaimer { margin-top: 30px; padding: 20px; background: #fff8e1; color: #8a6200; border-radius: 12px; font-size: 14px; line-height: 1.6; }
         .btn-home { display: block; width: 100%; text-align: center; background: #fff; color: #0f172a; border: 1px solid #cbd5e1; padding: 16px; border-radius: 12px; font-size: 16px; font-weight: bold; text-decoration: none; margin-top: 20px; cursor: pointer; transition: background 0.2s; }
         .btn-home:hover { background: #f8fafc; }
     </style>
 </head>
 <body>
     <nav class="navbar" style="background:#fff; border-bottom:1px solid #e2e8f0; padding:16px 5%; display:flex; justify-content:space-between; align-items:center;">
-        <a href="https://kainta.com" target="_blank" rel="noopener" style="font-size:22px; font-weight:800; color:#0f172a; text-decoration:none;">KAINTA <span style="background:#2563eb; color:white; padding:4px 8px; border-radius:6px; font-size:12px;">AI</span></a>
+        <a href="https://kainta.com" target="_blank" rel="noopener" style="font-size:22px; font-weight:800; color:#0f172a; text-decoration:none;">KAINTA <span style="background:#101318; color:white; padding:4px 8px; border-radius:6px; font-size:12px;">AI</span></a>
         <div><a href="https://worksitem.com" style="color:#64748b; text-decoration:none; font-weight:500;">Ana Site</a></div>
     </nav>
 

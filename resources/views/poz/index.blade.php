@@ -22,7 +22,7 @@
     letter-spacing:-2.4px;
     font-weight:950;
 }
-.poz-search-hero h1 span{color:var(--yellow-dark)}
+.poz-search-hero h1 span{color:var(--ws-highlight,#9A6E00)}
 .poz-search-hero p{
     max-width:760px;
     margin:14px 0 0;

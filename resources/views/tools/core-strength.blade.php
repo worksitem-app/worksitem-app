@@ -7,18 +7,18 @@
     <title>Karot Basınç Dayanımı | WORKSİTEM</title>
     <meta name="description" content="Karot numunesinin kırılma yükü ve geometrisine göre eşdeğer silindir beton basınç dayanımını MPa cinsinden hesaplayın.">
     <link rel="canonical" href="https://worksitem.com/araclar/karot-dayanim">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         body { font-family:'Inter', sans-serif; background:#fdfdfd; color:#111827; margin:0; padding-bottom:60px;}
         .container { max-width:800px; margin:40px auto; padding:30px; background:#fff; border:1px solid #e5e7eb; border-radius:16px; box-shadow:0 4px 6px rgba(0,0,0,0.05); }
-        h1 { font-size:24px; font-weight:800; margin-bottom:10px; color:#1e3a8a;}
+        h1 { font-size:24px; font-weight:800; margin-bottom:10px; color:#101318;}
         .form-group { margin-bottom:20px; }
         label { display:block; font-size:13px; font-weight:700; color:#6b7280; margin-bottom:8px; text-transform:uppercase;}
         input { width:100%; padding:14px; border:1px solid #e5e7eb; border-radius:8px; font-family:inherit; font-size:15px; }
         .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:15px; }
-        .result-box { background:#fff1f2; border:2px solid #fecdd3; padding:20px; border-radius:12px; margin-top:20px; text-align:center;}
-        .result-val { font-size:32px; font-weight:800; color:#be123c; }
-        .cta { display:block; width:100%; padding:16px; background:#e11d48; color:#fff; text-align:center; font-weight:800; text-decoration:none; border-radius:8px; margin-top:20px; }
+        .result-box { background:#fff8e1; border:2px solid #fde68a; padding:20px; border-radius:12px; margin-top:20px; text-align:center;}
+        .result-val { font-size:32px; font-weight:800; color:#101318; }
+        .cta { display:block; width:100%; padding:16px; background:#101318; color:#fff; text-align:center; font-weight:800; text-decoration:none; border-radius:8px; margin-top:20px; }
     </style>
     <meta property="og:image" content="https://worksitem.com/brand/og-image.png">
     <meta property="og:image:width" content="1200">
@@ -33,7 +33,7 @@
 <body data-tool-slug="core-strength">
     <x-site.contech-header />
     <div class="container">
-        <h1>🧱 Karot Basınç Dayanımı Çevirici</h1>
+        <h1>Karot Basınç Dayanımı Çevirici</h1>
         <p style="color:#6b7280; margin-bottom:30px;">Pres makinesinde kırılan karot numunesinin kırılma yüküne ve geometrisine göre eşdeğer silindir beton dayanımını (MPa) hesaplayın.</p>
         
         <div class="grid-2">
@@ -52,20 +52,14 @@
         </div>
 
         <div class="result-box">
-            <div style="font-size:14px; color:#9f1239; font-weight:600; margin-bottom:5px;">EŞDEĞER SİLİNDİR DAYANIMI</div>
+            <div style="font-size:14px; color:#101318; font-weight:600; margin-bottom:5px;">EŞDEĞER SİLİNDİR DAYANIMI</div>
             <div class="result-val" id="res">0 MPa</div>
-            <div style="font-size:12px; color:#be123c; margin-top:10px;">h/d düzeltme katsayısı otomatik uygulanmıştır.</div>
+            <div style="font-size:12px; color:#101318; margin-top:10px;">h/d düzeltme katsayısı otomatik uygulanmıştır.</div>
         </div>
 
         <a href="/maliyet-hesapla?service=deprem-testi" class="cta">Bina Deprem Testi ve Karot Alımı İçin Uzman Çağır →</a>
     </div>
 
-        <!-- STANDART KAİNTA LEAD HUNİSİ (CTA) -->
-        <div class="no-print" style="margin-top: 40px; padding: 30px; background: #f0fdf4; border: 2px solid #bbf7d0; border-radius: 16px; text-align: center;">
-            <h3 style="color: #166534; font-size: 20px; font-weight: 800; margin-bottom: 10px;">Hesaplamayı Yaptınız, Şimdi İşi Uzmanına Bırakın</h3>
-            <p style="color: #15803d; font-size: 14px; margin-bottom: 20px;">Kainta İnşaat mühendislerinden projenize özel resmi keşif ve bütçe teklifi alın.</p>
-            <a href="/maliyet-hesapla" style="display: inline-block; background: #166534; color: #fff; padding: 16px 32px; font-size: 16px; font-weight: 800; border-radius: 8px; text-decoration: none; box-shadow: 0 4px 10px rgba(22,101,52,0.3); transition: all 0.2s;">Ön maliyet hesabına geç →</a>
-        </div>
     <script>
                 // --- MERKEZİ ÇŞB FİYAT MOTORU & KAİNTA ÇARPANI ---
         const CSB_PRICES = {!! isset($SYSTEM_PRICES) ? $SYSTEM_PRICES : '{}' !!};

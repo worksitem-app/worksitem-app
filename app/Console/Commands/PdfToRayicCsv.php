@@ -23,6 +23,11 @@ class PdfToRayicCsv extends Command
 
     public function handle(): int
     {
+        if (!config('services.ai_spend_enabled')) {
+            $this->error('AI harcama kilidi aktif. Komut çalıştırılmadı.');
+            return self::FAILURE;
+        }
+
         $apiKey = config('services.gemini.api_key');
 
         if (!$apiKey) {
@@ -399,7 +404,7 @@ class PdfToRayicCsv extends Command
         $uploadUrl =
             'https://generativelanguage.googleapis.com/upload/v1beta/files';
 
-        $response = Http::timeout(300)
+        $response = Http::timeout(30)
             ->withHeaders([
                 'x-goog-api-key' => $apiKey,
                 'X-Goog-Upload-Protocol' => 'resumable',
@@ -469,7 +474,7 @@ class PdfToRayicCsv extends Command
             return null;
         }
 
-        $upload = Http::timeout(600)
+        $upload = Http::timeout(60)
             ->withHeaders([
                 'Content-Length' => $fileSize,
                 'X-Goog-Upload-Offset' => '0',
@@ -699,7 +704,7 @@ PROMPT;
             ],
         ];
 
-        $ai = Http::timeout(600)
+        $ai = Http::timeout(60)
             ->withHeaders([
                 'Content-Type' =>
                     'application/json',

@@ -35,9 +35,9 @@
         .tool-header { margin-bottom: 30px; text-align: center; }
         .tool-header h1 { font-size: 28px; font-weight: 900; letter-spacing: -1px; margin-bottom: 10px; }
         .tool-header p { color: var(--muted); font-size: 15px; }
-        .ai-badge { display: inline-block; background: rgba(59, 130, 246, 0.15); color: #2563eb; padding: 6px 14px; border-radius: 100px; font-size: 12px; font-weight: 900; margin-bottom: 15px; text-transform: uppercase; }
+        .ai-badge { display: inline-block; background: rgba(16,19,24,0.15); color: #101318; padding: 6px 14px; border-radius: 100px; font-size: 12px; font-weight: 900; margin-bottom: 15px; text-transform: uppercase; }
 
-        .tooltip-word { border-bottom: 1px dashed #2563eb; color: #2563eb; cursor: help; position: relative; font-weight: 600; }
+        .tooltip-word { border-bottom: 1px dashed #101318; color: #101318; cursor: help; position: relative; font-weight: 600; }
         .tooltip-word::after { content: attr(data-tooltip); position: absolute; bottom: 130%; left: 50%; transform: translateX(-50%); background: #111; color: #fff; padding: 8px 12px; border-radius: 8px; font-size: 11px; white-space: nowrap; opacity: 0; visibility: hidden; transition: 0.2s; pointer-events: none; z-index: 20; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
         .tooltip-word:hover::after { opacity: 1; visibility: visible; }
 
@@ -50,8 +50,8 @@
         .form-control:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(255,184,0,0.15); }
         select.form-control optgroup { font-weight: 800; color: #111; }
 
-        .commercial-box { grid-column: 1 / -1; background: rgba(59, 130, 246, 0.04); padding: 20px; border-radius: 12px; border: 1px dashed rgba(59, 130, 246, 0.3); margin-top: 10px; }
-        .commercial-title { font-size: 13px; font-weight: 900; color: #2563eb; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+        .commercial-box { grid-column: 1 / -1; background: rgba(16,19,24,0.04); padding: 20px; border-radius: 12px; border: 1px dashed rgba(16,19,24,0.3); margin-top: 10px; }
+        .commercial-title { font-size: 13px; font-weight: 900; color: #101318; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
         
         .permits-box { grid-column: 1 / -1; background: rgba(16, 185, 129, 0.04); padding: 20px; border-radius: 12px; border: 1px dashed rgba(16, 185, 129, 0.3); margin-top: 20px; }
         .permits-title { font-size: 13px; font-weight: 900; color: #059669; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
@@ -61,9 +61,9 @@
         .checkbox-label input { width: 18px; height: 18px; cursor: pointer; accent-color: #10b981; }
 
         .slider-group label { display: flex; justify-content: space-between; align-items: center; }
-        .slider-val { font-size: 16px; font-weight: 900; color: #2563eb; background: #fff; padding: 4px 10px; border-radius: 8px; border: 1px solid #bfdbfe; }
+        .slider-val { font-size: 16px; font-weight: 900; color: #101318; background: #fff; padding: 4px 10px; border-radius: 8px; border: 1px solid #fde68a; }
         input[type="range"] { -webkit-appearance: none; width: 100%; height: 6px; background: #e2e8f0; border-radius: 5px; outline: none; margin-top: 10px; }
-        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 20px; height: 20px; border-radius: 50%; background: #2563eb; cursor: pointer; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 20px; height: 20px; border-radius: 50%; background: #101318; cursor: pointer; }
         
         .result-box { background: #111; color: #fff; border-radius: var(--radius); padding: 30px; text-align: center; margin-top: 10px; display: none; }
         .result-box.active { display: block; animation: fadeIn 0.4s ease; }
@@ -87,20 +87,20 @@
         .chart-container.active { display: block; }
         .chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; color: #111; }
 
-        .export-btn { background: #10b981; color: #fff; border: none; border-radius: 12px; padding: 12px 20px; font-weight: 800; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-top: 15px; transition: .2s; }
-        .export-btn:hover { background: #059669; }
+        .export-btn { background: #101318; color: #fff; border: none; border-radius: 12px; padding: 12px 20px; font-weight: 800; font-size: 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-top: 15px; transition: .2s; }
+        .export-btn:hover { background: #2a2f38; }
 
         .budget-confirm-box { margin-top: 25px; padding: 25px; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; display: none; text-align: center; }
         .budget-confirm-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top:15px;}
         .budget-btn { min-height: 52px; border-radius: 13px; font-weight: 800; border: 1.5px solid var(--line); cursor: pointer; }
         .budget-yes { background: #fff; color: #111; }
-        .budget-yes:hover { border-color: #38bdf8; background: #f0f9ff; }
+        .budget-yes:hover { border-color: #8a6200; background: #fff8e1; }
         .budget-no { background: #fff; color: #555; }
 
         .lead-box { background: #f8f9fb; border: 1px solid var(--line); border-radius: var(--radius); padding: 30px; margin-top: 15px; display: none; }
         .btn { width: 100%; height: 50px; border: none; border-radius: 12px; font-weight: 800; font-size: 15px; cursor: pointer; }
         .btn-calc { background: var(--text); color: #fff; margin-top: 10px; }
-        .btn-submit { background: #2563eb; color: #fff; margin-top: 10px; }
+        .btn-submit { background: #101318; color: #fff; margin-top: 10px; }
     </style>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
@@ -114,7 +114,7 @@
 <div class="container">
     <div class="tool-header">
         <div class="ai-badge">🛠️ B2B TADİLAT & YENİLEME</div>
-        <h1>🍳 Mutfak Yenileme Motoru</h1>
+        <h1>Mutfak Yenileme Motoru</h1>
         <p>İnce işçilik, ekipman ve malzeme metrajlarına göre profesyonel mutfak bütçenizi ve <span class="tooltip-word" data-tooltip="Tadilat süresince yapılması gereken haftalık harcama grafiği">haftalık nakit akışınızı</span> hesaplayın.</p>
     </div>
 

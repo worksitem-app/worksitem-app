@@ -32,6 +32,10 @@ class AutoBoqService
         string $quality = 'standard'
     ): array {
 
+        if (!config('services.ai_spend_enabled')) {
+            throw new \RuntimeException('AI otomatik keşif geçici olarak devre dışı.');
+        }
+
         // Excel dosyaları için özel handling — Gemini binary Excel'i desteklemiyor
         $mimeType = $file->getMimeType();
         $extension = strtolower($file->getClientOriginalExtension());

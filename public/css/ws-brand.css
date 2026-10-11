@@ -1,0 +1,48 @@
+/* ==========================================================================
+   WORKSİTEM — global marka katmanı (BrandShell middleware ile tüm public
+   sayfalara en son yüklenir). Sayfa tasarımına dokunmaz; yalnızca tüm sitede
+   aynı olması gerekenleri sabitler: yazı ailesi, odak halkası, seçim rengi,
+   azaltılmış hareket tercihi.
+   Renkler: logo sarısı #FFB800 · mürekkep #101318 · beyaz üzerinde sarı yazı #8A6200
+   ========================================================================== */
+:root {
+    --ws-yellow: #FFB800;
+    --ws-yellow-600: #E5A500;
+    --ws-yellow-50: #FFF8E1;
+    --ws-ink: #101318;
+    --ws-amber-text: #8A6200;
+    --ws-muted: #5B6472;
+    --ws-page: #F5F6F8;
+    --ws-line: #E5E7EB;
+    --ws-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+body {
+    font-family: var(--ws-font);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 { font-family: var(--ws-font); }
+button, input, select, textarea { font-family: inherit; }
+
+::selection { background: #FFE08A; color: var(--ws-ink); }
+
+:focus-visible {
+    outline: 2px solid var(--ws-ink);
+    outline-offset: 2px;
+}
+html[data-theme="dark"] :focus-visible { outline-color: var(--ws-yellow); }
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* Başlık vurgusu (hero'daki renkli ifade): beyaz zeminde ≥4.5:1 kontrast */
+:root { --ws-highlight: #9A6E00; }
+html[data-theme="dark"] { --ws-highlight: #FFC94B; }

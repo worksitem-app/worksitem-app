@@ -138,4 +138,54 @@ class PozPublicController extends Controller
             'breadcrumbSchema'
         ));
     }
+
+    /**
+     * Canlı poz arama API'si (eski: routes/web.php içinde closure).
+     * GET /api/pozlar/search?q=...&institution=...
+     */
+    public function search(Request $request, \App\Services\TenderPricingService $pricing)
+    {
+        $validated = $request->validate([
+            'q' => ['nullable', 'string', 'max:100'],
+            'institution' => ['nullable', 'string', 'max:100'],
+        ]);
+
+        $q = trim((string) ($validated['q'] ?? ''));
+        $inst = (string) ($validated['institution'] ?? 'all');
+
+        $query = TenderPoz::query()->where('is_active', true);
+
+        if ($inst !== 'all' && $inst !== '') {
+            $query->where('institution', $inst);
+        }
+
+        if ($q !== '') {
+            // LIKE joker karakterlerini kaçır: "%" araması tüm tabloyu taramasın
+            $like = '%'.addcslashes($q, '%_\\').'%';
+            $query->where(function ($sub) use ($like) {
+                $sub->where('poz_no', 'LIKE', $like)
+                    ->orWhere('description', 'LIKE', $like);
+            });
+        }
+
+        $rows = $query->orderBy('poz_no')->limit(40)->get()->map(function ($poz) use ($pricing) {
+            $calc = $pricing->calculate($poz, 1);
+
+            return [
+                'id' => $poz->id,
+                'year' => $poz->year,
+                'period' => $poz->period,
+                'institution' => $poz->institution,
+                'poz_no' => $poz->poz_no,
+                'description' => $poz->description,
+                'unit' => $poz->unit,
+                'official_unit_price' => $calc['official_unit_price'],
+                'offer_unit_price' => $calc['offer_unit_price'],
+                'quote_status' => $calc['status'],
+                'quote_message' => $calc['reason'],
+            ];
+        });
+
+        return response()->json($rows);
+    }
 }

@@ -24,5 +24,6 @@ class CostEngine
     public static function clearCache()
     {
         Cache::forget('global_system_prices');
+        Cache::forget(\App\Providers\AppServiceProvider::TOOLS_PRICING_CACHE_KEY);
     }
 }

@@ -6,52 +6,55 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Public HTML yanıtlarına çerez onay bandını ve onaya bağlı GA4 yükleyicisini ekler.
+ *
+ * KVKK: Analitik/pazarlama etiketleri kullanıcı onay vermeden YÜKLENMEZ.
+ * (Eskiden gtag.js her sayfaya koşulsuz basılıyordu; Çerez Politikası ile çelişiyordu.)
+ */
 class InjectGa4Tag
 {
     public function handle(Request $request, Closure $next): Response
     {
         $response = $next($request);
-        error_log("[GA4-MW] Request: " . $request->path() . " | Content-Type: " . $response->headers->get("Content-Type", "none"));
 
-        // Sadece HTML yanıtlarına enjekte et
-        $contentType = $response->headers->get('Content-Type', '');
-        if (strpos($contentType, 'text/html') === false) {
+        $contentType = (string) $response->headers->get('Content-Type', '');
+        if (! str_contains($contentType, 'text/html')) {
             return $response;
         }
 
-        $ga4Id = config('services.ga4.measurement_id');
-        if (empty($ga4Id)) {
+        if ($request->is('admin', 'admin/*', 'livewire/*')) {
+            return $response;
+        }
+
+        $gaId = (string) config('services.ga4.measurement_id');
+        if (! preg_match('/^G-[A-Z0-9]{4,20}$/', $gaId)) {
+            $gaId = '';
+        }
+
+        $adsEnabled = filled(config('lead_conversion.google_ads.conversion_id'));
+
+        // Hiçbir izleyici yapılandırılmamışsa onay istenecek bir şey yok.
+        if ($gaId === '' && ! $adsEnabled) {
             return $response;
         }
 
         $content = $response->getContent();
-        if (empty($content) || stripos($content, 'googletagmanager.com/gtag') !== false) {
-            return $response; // Zaten tag varsa ekleme
+        if (! is_string($content) || $content === '' || str_contains($content, 'id="ws-cookie-banner"')) {
+            return $response;
         }
 
-        $ga4Tag = <<<HTML
-<!-- Google Analytics 4 -->
-<script async src="https://www.googletagmanager.com/gtag/js?id={$ga4Id}"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', '{$ga4Id}', {
-    'send_page_view': true,
-    'anonymize_ip': true
-  });
-</script>
-<!-- End Google Analytics 4 -->
-HTML;
+        $snippet = view('partials.cookie-consent', ['gaId' => $gaId])->render();
 
-        // </head> tag'inin hemen öncesine ekle
-        if (stripos($content, '</head>') !== false) {
-            $content = preg_replace('/<\/head>/i', $ga4Tag . "\n</head>", $content, 1);
-        } elseif (stripos($content, '<body') !== false) {
-            $content = preg_replace('/<body/i', $ga4Tag . "\n<body", $content, 1);
+        if (stripos($content, '</body>') !== false) {
+            $pos = strripos($content, '</body>');
+            $content = substr($content, 0, $pos).$snippet."\n".substr($content, $pos);
+        } else {
+            $content .= $snippet;
         }
 
         $response->setContent($content);
+
         return $response;
     }
 }

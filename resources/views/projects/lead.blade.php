@@ -8,7 +8,7 @@
     <title>İletişim Bilgileri | Kainta İnşaat</title>
     <style>
         * { box-sizing: border-box; }
-        body { margin: 0; background: #f5f7fa; color: #18202a; font-family: Arial, sans-serif; }
+        body { margin: 0; background: #f5f7fa; color: #18202a; font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
         .container { width: min(600px, calc(100% - 28px)); margin: 60px auto; }
         .card { background: #fff; padding: 40px; border-radius: 18px; box-shadow: 0 7px 22px rgba(15,23,42,.04); border: 1px solid #e5e7eb; }
         h1 { font-size: 28px; margin-top: 0; text-align: center; }

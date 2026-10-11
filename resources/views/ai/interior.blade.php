@@ -1,31 +1,32 @@
 <!DOCTYPE html>
-<html lang="tr" data-theme="dark">
+<html lang="tr">
 <head>
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>AI İç Mekan Tasarımı | WORKSİTEM</title>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>AI İç Mekan Tasarımı: Odanın Fotoğrafını Yükle, Yeni Halini Gör | WORKSİTEM</title>
+    <meta name="description" content="Odanızın fotoğrafını yükleyin, yapay zekâ ile modern, minimalist veya klasik stilde yeni tasarımını saniyeler içinde görün ve tahmini tadilat bütçesini öğrenin. Ücretsiz.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        :root[data-theme="dark"] {
-            --bg: #0b0f17; --card-bg: #151c28; --border: #21262d;
-            --yellow: #ffb700; --text: #f0f6fc; --muted: #8b949e;
-            --cyan: #38bdf8; --green: #10b981; --input-bg: #0d1117;
+        :root {
+            --bg: #f5f6f8; --card-bg: #ffffff; --border: #e5e7eb;
+            --yellow: #ffb800; --text: #101318; --muted: #5b6472;
+            --cyan: #8a6200; --green: #10b981; --input-bg: #ffffff;
         }
-        :root[data-theme="light"] {
-            --bg: #f8fafc; --card-bg: #ffffff; --border: #e2e8f0;
-            --yellow: #d97706; --text: #0f172a; --muted: #64748b;
-            --cyan: #0284c7; --green: #059669; --input-bg: #ffffff;
+        :root[data-theme="dark"] {
+            --bg: #0b0f17; --card-bg: #151c28; --border: #1e293b;
+            --yellow: #ffb800; --text: #f1f5f9; --muted: #94a3b8;
+            --cyan: #ffb800; --green: #10b981; --input-bg: #0d1117;
         }
         * { transition: background-color 0.3s, color 0.3s, border-color 0.3s; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; }
         .container { max-width: 1000px; margin: 40px auto; padding: 0 4%; }
-        h1 { font-family: 'Bebas Neue'; font-size: 42px; color: var(--text); margin-bottom: 10px; text-align: center; }
+        h1 { font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 42px; color: var(--text); margin-bottom: 10px; text-align: center; }
         .subtitle { text-align: center; color: var(--muted); margin-bottom: 40px; }
 
         .topbar { padding: 15px 4%; border-bottom: 1px solid var(--border); background: var(--card-bg); display: flex; justify-content: space-between; align-items: center; }
-        .topbar a { color: var(--text); text-decoration: none; font-family: 'Bebas Neue'; font-size: 24px; }
+        .topbar a { color: var(--text); text-decoration: none; font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 24px; }
 
         .theme-toggle {
             background: var(--input-bg); border: 1px solid var(--border); color: var(--text);
@@ -34,8 +35,8 @@
         }
         .theme-toggle:hover { border-color: var(--cyan); }
 
-        .upload-area { background: var(--input-bg); border: 2px dashed var(--border); border-radius: 12px; padding: 40px; text-align: center; cursor: pointer; transition: 0.3s; margin-bottom: 20px; }
-        .upload-area:hover { border-color: var(--cyan); background: rgba(56,189,248,0.05); }
+        .upload-area { display: block; background: var(--input-bg); border: 2px dashed var(--border); border-radius: 12px; padding: 40px; text-align: center; cursor: pointer; transition: 0.3s; margin-bottom: 20px; }
+        .upload-area:hover { border-color: #ffb800; background: rgba(255,184,0,0.06); }
         .upload-area input { display: none; }
 
         .style-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px; }
@@ -54,13 +55,13 @@
         .prompt-textarea:focus { outline: none; border-color: var(--cyan); }
         .char-counter { color: var(--muted); font-size: 12px; margin-top: 5px; text-align: right; }
 
-        .submit-btn { width: 100%; background: var(--cyan); color: #fff; font-family: 'Bebas Neue'; font-size: 24px; padding: 16px; border: none; border-radius: 8px; cursor: pointer; transition: 0.3s; margin-top: 20px; }
-        .submit-btn:hover { background: #0ea5e9; }
+        .submit-btn { width: 100%; background: #ffb800; color: #101318; font-weight: 800; font-family:inherit; font-size: 17px; padding: 16px; border: none; border-radius: 8px; cursor: pointer; transition: 0.3s; margin-top: 20px; }
+        .submit-btn:hover { background: #e5a500; }
         .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
         .result-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 30px; margin-top: 40px; text-align: center; }
         .result-img { max-width: 100%; border-radius: 8px; border: 2px solid var(--border); margin-bottom: 20px; }
-        .cta-btn { display: inline-block; background: var(--green); color: #fff; font-family: 'Bebas Neue'; font-size: 22px; padding: 15px 30px; border-radius: 8px; text-decoration: none; }
+        .cta-btn { display: inline-block; background: var(--green); color: #fff; font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 22px; padding: 15px 30px; border-radius: 8px; text-decoration: none; }
         .error-box { background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; color: #fca5a5; padding: 15px; border-radius: 8px; margin-top: 20px; font-size: 14px; }
 
         /* === YÜKLEME EKRANI === */
@@ -80,7 +81,7 @@
             position: absolute;
             top: 0; left: -100%;
             width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(56,189,248,0.08), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255,184,0,0.08), transparent);
             animation: shine 4s infinite;
         }
         @keyframes shine { 0% { left: -100%; } 100% { left: 100%; } }
@@ -101,8 +102,8 @@
             position: absolute;
             inset: 0;
             background-image:
-                linear-gradient(rgba(56,189,248,0.15) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(56,189,248,0.15) 1px, transparent 1px);
+                linear-gradient(rgba(255,184,0,0.15) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,184,0,0.15) 1px, transparent 1px);
             background-size: 30px 30px;
             border-radius: 12px;
             animation: blueprint-pulse 2s infinite;
@@ -114,7 +115,7 @@
         .ruler {
             font-size: 90px;
             animation: ruler-spin 3s ease-in-out infinite;
-            filter: drop-shadow(0 0 20px rgba(56,189,248,0.6));
+            filter: drop-shadow(0 0 20px rgba(255,184,0,0.6));
             z-index: 2;
             position: relative;
         }
@@ -192,7 +193,7 @@
             transform: translateX(-50%);
             font-size: 60px;
             animation: worker-hammer 0.8s infinite;
-            filter: drop-shadow(0 0 15px rgba(56,189,248,0.5));
+            filter: drop-shadow(0 0 15px rgba(255,184,0,0.5));
             z-index: 3;
         }
         @keyframes worker-hammer {
@@ -233,7 +234,7 @@
         }
 
         .stage-title {
-            font-family: 'Bebas Neue';
+            font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             font-size: 28px;
             color: var(--cyan);
             margin: 15px 0 8px;
@@ -289,7 +290,7 @@
         }
         .progress-percent {
             color: var(--cyan);
-            font-family: 'Bebas Neue';
+            font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             font-size: 26px;
             margin-top: 8px;
             letter-spacing: 2px;
@@ -343,16 +344,10 @@
     </style>
 </head>
 <body>
-    <div class="topbar">
-        <a href="/araclar">◀ WORKSİTEM ARAÇLAR</a>
-        <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">
-            <span id="themeIcon">🌙</span>
-            <span id="themeLabel">Koyu</span>
-        </button>
-    </div>
+    <x-site.contech-header />
 
     <div class="container">
-        <h1>🛋️ AI İç Mekan Tasarımcısı</h1>
+        <h1>AI İç Mekan Tasarımcısı</h1>
         <p class="subtitle">Odanızın fotoğrafını yükleyin, hayalinizdeki tasarımı yazın, yapay zeka gerçeğe dönüştürsün.</p>
 
         <div id="errorContainer"></div>
@@ -408,36 +403,22 @@
                 placeholder="Örn: Kitap rafı ekle, yeşil bitkiler koy, sıcak ve samimi bir atmosfer olsun, duvarlar krem rengi olsun..."></textarea>
             <div class="char-counter"><span id="charCount">0</span>/300 karakter</div>
 
-            <button type="submit" class="submit-btn" id="btnSubmit">✨ YAPAY ZEKA İLE TASARLA</button>
+            @if(config('services.ai_spend_enabled'))
+            <button type="submit" class="submit-btn" id="btnSubmit">Tasarımı oluştur</button>
+            @else
+            <button type="button" class="submit-btn" id="btnSubmit" disabled
+                    style="opacity:.55;cursor:not-allowed;">
+                AI tasarım geçici olarak kapalı
+            </button>
+            <div style="margin-top:12px;text-align:center;color:var(--muted);font-size:13px;line-height:1.5;">
+                Görsel üretim özelliği şu anda kullanıma kapalıdır.
+            </div>
+            @endif
         </form>
     </div>
 
     <script>
-        // === TEMA ===
-        function toggleTheme() {
-            const html = document.documentElement;
-            const current = html.getAttribute('data-theme');
-            const next = current === 'dark' ? 'light' : 'dark';
-            html.setAttribute('data-theme', next);
-            localStorage.setItem('theme', next);
-            updateThemeUI(next);
-        }
-        function updateThemeUI(theme) {
-            const icon = document.getElementById('themeIcon');
-            const label = document.getElementById('themeLabel');
-            if (!icon || !label) return;
-            if (theme === 'dark') { icon.textContent = '🌙'; label.textContent = 'Koyu'; }
-            else { icon.textContent = '☀️'; label.textContent = 'Açık'; }
-        }
-        (function initTheme() {
-            const saved = localStorage.getItem('theme');
-            if (saved) {
-                document.documentElement.setAttribute('data-theme', saved);
-                updateThemeUI(saved);
-            } else {
-                updateThemeUI('dark');
-            }
-        })();
+        // Tema: site geneli header bileşeni yönetir (localStorage: worksitem-theme)
 
         function selectStyle(element) {
             document.querySelectorAll('.style-grid .style-card').forEach(el => el.classList.remove('active'));
@@ -652,7 +633,7 @@
             resultContainer.innerHTML = '';
             loadingContainer.innerHTML = '';
             btnSubmit.disabled = true;
-            btnSubmit.innerText = '⏳ TASARLANIYOR...';
+            btnSubmit.innerText = 'Tasarlanıyor…';
             showLoadingAnimation();
 
             try {
@@ -690,21 +671,21 @@
                             setTimeout(() => showResult(statusData.output_url), 500);
                             btnSubmit.disabled = false;
                             remainingQuota = Math.max(0, remainingQuota - 1);
-                            btnSubmit.innerText = '✨ YENİ TASARIM (' + remainingQuota + ' hak kaldı)';
+                            btnSubmit.innerText = 'Yeni tasarım oluştur (' + remainingQuota + ' hak kaldı)';
                         } else if (statusData.status === 'failed') {
                             clearInterval(pollInterval);
                             stopLoadingAnimation(false);
                             showError(statusData.message || 'Tasarım başarısız oldu.');
                             btnSubmit.disabled = false;
                             remainingQuota = Math.max(0, remainingQuota - 1);
-                            btnSubmit.innerText = '✨ TEKRAR DENE';
+                            btnSubmit.innerText = 'Tekrar dene';
                         } else if (attempts >= maxAttempts) {
                             clearInterval(pollInterval);
                             stopLoadingAnimation(false);
                             showError('Zaman aşımı. Lütfen tekrar deneyin.');
                             btnSubmit.disabled = false;
                             remainingQuota = Math.max(0, remainingQuota - 1);
-                            btnSubmit.innerText = '✨ TEKRAR DENE';
+                            btnSubmit.innerText = 'Tekrar dene';
                         }
                     } catch (err) { console.error('Polling hatası:', err); }
                 }, 3000);
@@ -713,7 +694,7 @@
                 showError(err.message);
                 btnSubmit.disabled = false;
                             remainingQuota = Math.max(0, remainingQuota - 1);
-                btnSubmit.innerText = '✨ YAPAY ZEKA İLE TASARLA';
+                btnSubmit.innerText = 'Tasarımı oluştur';
             }
         });
 
@@ -721,7 +702,7 @@
             loadingContainer.innerHTML = '';
             resultContainer.innerHTML = `
                 <div class="result-box">
-                    <h2 style="font-family:'Bebas Neue'; color:var(--yellow); font-size:32px; margin-bottom:15px;">🎉 Tasarımınız Hazır!</h2>
+                    <h2 style="font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color:var(--yellow); font-size:32px; margin-bottom:15px;">🎉 Tasarımınız Hazır!</h2>
                     <img src="${imageUrl}" class="result-img" alt="AI Interior Design">
                     <p style="color:var(--muted); font-size:14px; margin-bottom:20px;">Bu tasarım yapay zeka tarafından referans amaçlı üretilmiştir.</p>
                     <button class="cta-btn" onclick="openCostModal()">💰 Bu Tasarımın Maliyetini Hesapla →</button>
@@ -737,5 +718,6 @@
     </script>
     <script src="/js/tool-events.js" defer></script>
     <script src="/js/ai-cost-modal.js"></script>
+    <x-site.contech-footer />
 </body>
 </html>

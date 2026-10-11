@@ -8,10 +8,10 @@
     <title>Merdiven Ergonomi & Maliyet | WORKSİTEM</title>
     <meta name="description" content="2R+T=63 ergonomi kuralına göre ideal merdiven basamak ölçülerini hesaplayın ve mermer kaplama için yaklaşık bütçenizi planlayın.">
     <link rel="canonical" href="https://worksitem.com/araclar/merdiven-basamak-hesabi">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        :root { --bg:#f8fafc; --surface:#ffffff; --border:#e2e8f0; --primary:#2563eb; --primary-light:#eff6ff; --text-main:#0f172a; --text-muted:#64748b; --green:#059669; --transition:all 0.25s ease;}
-        body { font-family:'Plus Jakarta Sans',sans-serif; background:var(--bg); color:var(--text-main); margin:0; padding-bottom:80px; }
+        :root { --bg:#f8fafc; --surface:#ffffff; --border:#e2e8f0; --primary:#101318; --primary-light:#fff8e1; --text-main:#0f172a; --text-muted:#64748b; --green:#059669; --transition:all 0.25s ease;}
+        body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text-main); margin:0; padding-bottom:80px; }
         .navbar { display:flex; justify-content:space-between; align-items:center; padding:1rem 5%; background:var(--surface); border-bottom:1px solid var(--border); position:sticky; top:0; z-index:50;}
         .logo-wrapper { display:flex; align-items:center; gap:8px; text-decoration:none; }
         .logo-mark { background:var(--primary); color:#fff; font-weight:800; font-size:14px; padding:4px 10px; border-radius:6px; }
@@ -45,7 +45,7 @@
     <x-site.contech-header />
     <div class="container">
         <div>
-            <h1>🪜 Merdiven & Mermer Hesabı</h1>
+            <h1>Merdiven & Mermer Hesabı</h1>
             <p class="subtitle">İdeal basamak genişliğini (2R+T=63) ve mermer kaplama bütçesini planlayın.</p>
             <div class="form-card">
                 <div class="form-group"><label>Kat Yüksekliği (m)</label><input type="number" id="h" class="form-control" value="3.00" step="0.05" oninput="calc()"></div>
@@ -68,12 +68,6 @@
         </div>
     </div>
 
-        <!-- STANDART KAİNTA LEAD HUNİSİ (CTA) -->
-        <div class="no-print" style="margin-top: 40px; padding: 30px; background: #f0fdf4; border: 2px solid #bbf7d0; border-radius: 16px; text-align: center;">
-            <h3 style="color: #166534; font-size: 20px; font-weight: 800; margin-bottom: 10px;">Hesaplamayı Yaptınız, Şimdi İşi Uzmanına Bırakın</h3>
-            <p style="color: #15803d; font-size: 14px; margin-bottom: 20px;">Kainta İnşaat mühendislerinden projenize özel resmi keşif ve bütçe teklifi alın.</p>
-            <a href="/maliyet-hesapla" style="display: inline-block; background: #166534; color: #fff; padding: 16px 32px; font-size: 16px; font-weight: 800; border-radius: 8px; text-decoration: none; box-shadow: 0 4px 10px rgba(22,101,52,0.3); transition: all 0.2s;">Ön maliyet hesabına geç →</a>
-        </div>
     <script>
                 // --- MERKEZİ ÇŞB FİYAT MOTORU & KAİNTA ÇARPANI ---
         const CSB_PRICES = {!! isset($SYSTEM_PRICES) ? $SYSTEM_PRICES : '{}' !!};

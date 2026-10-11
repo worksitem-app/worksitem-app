@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Schema;
 
 class KaintaCostEngine
 {
-    public function calculate($projectType, $area, $quality = 'standart', $district = 'Genel')
+    public function calculate($projectType, $area, $quality = 'standart', $district = 'Genel', bool $withAiAdvice = false)
     {
         // 1. Baz Fiyatın Belirlenmesi
         $basePrice = 7500; // Standart Tadilat
@@ -28,7 +28,10 @@ class KaintaCostEngine
 
         // 2. Katsayılar (Çarpanlar)
         $qualityMultiplier = ($quality === 'premium' || $quality === 'lüks') ? 1.35 : 1.0;
-        $districtMultiplier = ($district === 'Istanbul') ? 1.15 : 1.0;
+        // ÖNCE: ($district === 'Istanbul') — form 'istanbul' gönderiyor ve ilçe alanına bakılıyordu,
+        // çarpan hiçbir zaman uygulanmıyordu. Büyük/küçük harf ve Türkçe İ/ı normalize edilir.
+        $region = str_replace(['i̇', 'ı'], ['i', 'i'], mb_strtolower(trim((string) $district), 'UTF-8'));
+        $districtMultiplier = $region === 'istanbul' ? 1.15 : 1.0;
 
         // 3. Nihai Birim Fiyat ve Toplam
         $unitPrice = $basePrice * $qualityMultiplier * $districtMultiplier;
@@ -43,7 +46,11 @@ class KaintaCostEngine
         ];
 
         // 5. AI Danışman Yorumu (Gemini)
-        $aiAdvice = $this->getAiExpertAdvice($projectType, $area, $totalCost);
+        // AI yorumu varsayılan olarak KAPALI: senkron 60 sn'lik dış çağrı her GET'te
+        // maliyet + gecikme yaratıyordu ve sonuç sayfasında gösterilmiyordu.
+        $aiAdvice = $withAiAdvice
+            ? $this->getAiExpertAdvice($projectType, $area, $totalCost)
+            : null;
 
         return [
             'hesaplanan_maliyet_tl' => $totalCost,
@@ -55,6 +62,10 @@ class KaintaCostEngine
 
     private function getAiExpertAdvice($projectType, $area, $totalCost)
     {
+        if (!config('services.ai_spend_enabled')) {
+            return 'Kesin teklif öncesinde saha ölçülerinin ve malzeme sınıflarının doğrulanması önerilir.';
+        }
+
         $apiKey = config('services.gemini.api_key');
         if (empty($apiKey)) return "🤖 Sistem Uyarısı: AI modülü API anahtarı bekleniyor.";
 
@@ -64,7 +75,7 @@ class KaintaCostEngine
         $prompt = "Sen Kainta İnşaat'ın Baş Mühendisisin. Müşteri '{$projectType}' projesi (Alan: {$area} m²) için maliyet hesapladı. Bütçe: {$formattedCost} TL. Amacın müşteriye güven vermek ve Kainta ile çalışmaya ikna etmek. Müşteriye hitaben, projeye özel 3 maddelik çok kısa teknik tavsiye ver. Fiyat hesabı YAZMA, kaliteyi vurgula.";
 
         try {
-            $response = Http::withHeaders(['x-goog-api-key' => $apiKey])->timeout(60)->post($url, [
+            $response = Http::withHeaders(['x-goog-api-key' => $apiKey])->connectTimeout(5)->timeout(20)->post($url, [
                 'contents' => [['parts' => [['text' => $prompt]]]],
                 'generationConfig' => ['temperature' => 0.7, 'maxOutputTokens' => 250]
             ]);

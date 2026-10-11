@@ -8,10 +8,15 @@ class AISalesEngineer
 {
     public static function generateProposal($customerName, $service, $area, $notes)
     {
+        if (!config('services.ai_spend_enabled')) {
+            return 'AI teklif metni geçici olarak devre dışı.';
+        }
+
         $apiKey = config('services.gemini.api_key');
         if (empty($apiKey)) return "API Anahtarı eksik.";
 
-        $url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent';
+        $model = config('services.gemini.boq_model', 'gemini-3.6-flash');
+        $url = "https://generativelanguage.googleapis.com/v1beta/models/{$model}:generateContent";
 
         $prompt = "Sen Kainta İnşaat'ın Kıdemli Satış ve Teklif Mühendisisin. Müşterimiz {$customerName}, {$area} m² alan için '{$service}' talebinde bulundu. Müşteri notu: '{$notes}'. 
         Amacın: Müşteriye çok şık, güven veren, teknik ama anlaşılır bir ön teklif / niyet mektubu yazmak.
@@ -23,7 +28,7 @@ class AISalesEngineer
         Lütfen HTML etiketleri (<strong>, <br>, <ul>, <li>) kullanarak doğrudan basıma/gönderime hazır bir metin üret.";
 
         try {
-            $response = Http::withHeaders(['x-goog-api-key' => $apiKey])->timeout(60)->post($url, [
+            $response = Http::withHeaders(['x-goog-api-key' => $apiKey])->connectTimeout(5)->timeout(45)->post($url, [
                 'contents' => [['parts' => [['text' => $prompt]]]],
                 'generationConfig' => ['temperature' => 0.6, 'maxOutputTokens' => 800]
             ]);

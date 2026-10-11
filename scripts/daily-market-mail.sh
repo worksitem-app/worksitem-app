@@ -1,14 +1,7 @@
 #!/bin/sh
-APP_DIR="$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)"
-cd "$APP_DIR" || exit 1
-
-/usr/bin/php artisan reports:daily-ceo
-CEO_EXIT=$?
-
-/usr/bin/php artisan prices:daily-material-report
-MARKET_EXIT=$?
-
-echo "CEO_EXIT=$CEO_EXIT"
-echo "MARKET_EXIT=$MARKET_EXIT"
-
-[ "$CEO_EXIT" -eq 0 ] && [ "$MARKET_EXIT" -eq 0 ]
+# KULLANIM DIŞI (2026-10): Raporlar artık Laravel zamanlayıcısında (routes/console.php).
+# Sunucuda yalnızca şu cron satırı olmalı:
+#   * * * * * cd /path/to/worksitem && php artisan schedule:run >> /dev/null 2>&1
+# Bu betiğe bağlı eski cron satırını silin; aksi halde raporlar iki kez gider.
+echo "daily-market-mail.sh kullanım dışı: raporlar schedule:run ile gönderiliyor." >&2
+exit 0

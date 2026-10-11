@@ -8,7 +8,7 @@
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        :root { --bg:#050505; --surface:#0A0A0A; --border:rgba(255,255,255,0.1); --text-main:#FFFFFF; --text-muted:#A1A1AA; --primary:#FFB800; --green:#FFB800; }
+        :root { --bg:#f5f6f8; --surface:#ffffff; --border:#e5e7eb; --text-main:#101318; --text-muted:#5b6472; --primary:#FFB800; --green:#FFB800; }
         * { box-sizing:border-box; margin:0; padding:0; }
         body { font-family:'Inter', sans-serif; background:var(--bg); color:var(--text-main); height: 100vh; display: flex; flex-direction: column; overflow: hidden;}
         ::-webkit-scrollbar { width: 8px; height: 8px; } ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
