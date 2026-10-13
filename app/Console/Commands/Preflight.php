@@ -75,7 +75,7 @@ class Preflight extends Command
         $this->warnUnless($ga === '' || preg_match('/^G-[A-Z0-9]{4,20}$/', $ga), 'GA4 ID biçimi', "GA4_MEASUREMENT_ID geçersiz: $ga");
 
         // ── Zamanlayıcı (cron) ─────────────────────────────────
-        $beat = (int) Cache::get(self::HEARTBEAT_KEY, 0);
+        $beat = (int) Cache::get(self::HEARTBEAT_KEY, 0); // unix zaman damgası (Laravel 13 önbellekte nesne okumaz)
         $this->warnUnless($beat > 0 && (time() - $beat) <= 300, 'Zamanlayıcı (cron) çalışıyor',
             'Son 5 dk zamanlayıcı kalp atışı yok. Cron: * * * * * cd '.base_path().' && php artisan schedule:run >> /dev/null 2>&1');
 

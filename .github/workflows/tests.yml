@@ -2,35 +2,48 @@ name: Tests
 
 on:
   push:
-    branches: [ main ]
+    branches: [main, staging]
   pull_request:
-    branches: [ main ]
 
 jobs:
   tests:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
+      - uses: shivammathur/setup-php@v2
         with:
           php-version: '8.3'
-          extensions: mbstring, xml, ctype, iconv, intl, pdo, pdo_sqlite, sqlite3, gd, zip, bcmath
+          extensions: mbstring, pdo_sqlite, gd, zip, intl, bcmath
           coverage: none
 
-      - name: Prepare environment file
+      - name: Composer cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.composer/cache
+          key: composer-${{ hashFiles('composer.lock') }}
+
+      - run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Prepare env
         run: |
           cp .env.example .env
-          php artisan key:generate --force 2>&1 || true
+          php artisan key:generate
 
-      - name: Install Composer dependencies
-        run: composer install --prefer-dist --no-progress --no-interaction
+      - name: Lint (syntax)
+        run: find app routes config database bootstrap -name '*.php' -print0 | xargs -0 -n1 -P4 php -l > /dev/null
 
-      - name: List installed packages
-        run: composer show --direct | head -30
+      - name: Production cache'leri derlenebiliyor mu
+        run: |
+          php artisan route:cache && php artisan route:clear
+          php artisan config:cache && php artisan config:clear
+          php artisan view:cache && php artisan view:clear
 
-      - name: Run tests
-        run: ./vendor/bin/phpunit --testdox
+      - name: Tests
+        run: php artisan test
+
+      - name: Güvenlik açığı taraması (bağımlılıklar)
+        run: composer audit --no-interaction
+        continue-on-error: true

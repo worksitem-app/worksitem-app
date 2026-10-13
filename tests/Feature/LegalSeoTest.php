@@ -45,8 +45,11 @@ class LegalSeoTest extends TestCase
             ->assertDontSee('id="ws-eng-notice"', false);
     }
 
-    public function test_kilitli_arac_noindex_aktif_arac_indekslenebilir(): void
+    public function test_kilitli_arac_varsayilan_olarak_indekslenebilir_istenirse_noindex(): void
     {
+        $this->assertNull($this->get('/araclar/kolon-tasima-kapasitesi')->headers->get('X-Robots-Tag'));
+
+        config(['worksitem_tools.noindex_review_tools' => true]);
         $this->get('/araclar/kolon-tasima-kapasitesi')
             ->assertHeader('X-Robots-Tag', 'noindex, follow');
 
