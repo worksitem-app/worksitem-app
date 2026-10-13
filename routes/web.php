@@ -68,6 +68,44 @@ Route::prefix('legal')->name('legal.')->group(function () {
 Route::view('/maliyet-hesapla', 'maliyet-hesapla')->name('maliyet_hesapla');
 Route::view('/maliyet-hesapla/basarili', 'thanks')->name('lead.thanks');
 
+// Sponsor (marka) alanları: tıklama takibi ve marka başvuru sayfası
+Route::get('/sp/{sponsor}', [\App\Http\Controllers\SponsorController::class, 'go'])
+    ->whereNumber('sponsor')->middleware('throttle:public-read')->name('sponsor.go');
+// Telefonla giriş (SMS kodu) + AI kullanım hakkı (günde N ücretsiz, sonrası kredi)
+Route::prefix('ai-hesap')->name('ai_account.')->controller(\App\Http\Controllers\AiAccountController::class)->group(function () {
+    Route::get('/durum', 'status')->middleware('throttle:public-read')->name('status');
+    Route::post('/kod', 'sendCode')->middleware('throttle:public-write')->name('code');
+    Route::post('/giris', 'login')->middleware('throttle:public-write')->name('login');
+    Route::post('/cikis', 'logout')->middleware('throttle:public-write')->name('logout');
+});
+
+Route::get('/planlayici/urun/{product}', [\App\Http\Controllers\Tools\BathPlannerController::class, 'product'])
+    ->whereNumber('product')->middleware('throttle:public-read')->name('planner.product');
+Route::get('/planlayici/seramik/{tile}', [\App\Http\Controllers\Tools\BathPlannerController::class, 'tile'])
+    ->whereNumber('tile')->middleware('throttle:public-read')->name('planner.tile');
+Route::get('/markalar-icin', [\App\Http\Controllers\SponsorController::class, 'page'])->name('sponsor.page');
+Route::post('/markalar-icin', [\App\Http\Controllers\SponsorController::class, 'apply'])
+    ->middleware('throttle:public-write')->name('sponsor.apply');
+
+// Yerinde keşif: teşekkür sayfasında kabul → ödeme/iletişim sayfası (oturuma bağlı, indekslenmez)
+Route::post('/kesif/kabul', [\App\Http\Controllers\InspectionController::class, 'accept'])
+    ->middleware('throttle:public-write')->name('kesif.accept');
+Route::get('/kesif/odeme', [\App\Http\Controllers\InspectionController::class, 'payment'])->name('kesif.payment');
+Route::post('/kesif/odeme/kart', [\App\Http\Controllers\InspectionController::class, 'iyzicoStart'])
+    ->middleware('throttle:public-write')->name('kesif.iyzico.start');
+// iyzico dönüşü: oturum/CSRF yok (çapraz site POST); sonuç sunucu tarafında iyzico'dan doğrulanır
+Route::post('/kesif/odeme/iyzico/sonuc', [\App\Http\Controllers\InspectionController::class, 'iyzicoCallback'])
+    ->withoutMiddleware([\Illuminate\Session\Middleware\StartSession::class, \Illuminate\View\Middleware\ShareErrorsFromSession::class, \Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class, \Illuminate\Foundation\Http\Middleware\PreventRequestForgery::class])
+    ->middleware('throttle:public-write')->name('kesif.iyzico.callback');
+Route::get('/kesif/odeme/sonuc/{lead}', [\App\Http\Controllers\InspectionController::class, 'result'])
+    ->middleware('signed')->name('kesif.result');
+Route::get('/kesif/sozlesme.pdf', [\App\Http\Controllers\InspectionController::class, 'contractPdf'])
+    ->middleware('throttle:public-read')->name('kesif.contract_pdf');
+Route::get('/legal/kesif-on-bilgilendirme-formu', [\App\Http\Controllers\InspectionController::class, 'document'])
+    ->defaults('doc', 'obf')->name('legal.kesif_obf');
+Route::get('/legal/kesif-mesafeli-hizmet-sozlesmesi', [\App\Http\Controllers\InspectionController::class, 'document'])
+    ->defaults('doc', 'mhs')->name('legal.kesif_mhs');
+
 Route::controller(ProjectController::class)->prefix('maliyet-hesapla')->group(function () {
     Route::middleware('throttle:public-write')->group(function () {
         Route::post('/', 'store')->name('maliyet_hesapla.store');
@@ -86,7 +124,7 @@ Route::controller(ProjectController::class)->prefix('maliyet-hesapla')->group(fu
     });
 
     // AI harcama kilidi (AI_SPEND_ENABLED) kapalıyken 503 döner; throttle hakkı tüketilmez
-    Route::middleware(['ai.spend', 'throttle:ai'])->group(function () {
+    Route::middleware(['ai.spend', 'ai.quota', 'throttle:ai'])->group(function () {
         Route::post('/guest-render', 'guestRender')->name('projects.guest.render');
         Route::post('/proje/{project}/render', 'generateRender')->name('projects.render');
     });
@@ -118,7 +156,7 @@ Route::middleware('throttle:public-write')->group(function () {
 
 Route::controller(AiDesignController::class)->prefix('ai-tasarim/ic-mekan')->name('ai.interior')->group(function () {
     Route::get('/', 'interiorIndex');
-    Route::post('/start', 'startGeneration')->middleware(['ai.spend', 'throttle:ai'])->name('.start');
+    Route::post('/start', 'startGeneration')->middleware(['ai.spend', 'ai.quota', 'throttle:ai'])->name('.start');
     Route::get('/status/{id}', 'checkStatus')->middleware('throttle:ai-poll')->name('.status');
     Route::post('/estimate/{id}', 'estimate')->middleware('throttle:public-write')->name('.estimate');
     Route::get('/quota', 'getQuota')->middleware('throttle:public-read')->name('.quota');
@@ -132,34 +170,42 @@ Route::controller(AiDesignController::class)->prefix('ai-tasarim/ic-mekan')->nam
 Route::prefix('araclar')->name('tools.')->group(function () {
     Route::view('/', 'tools.index')->name('index');
 
+    // ── Hesap motoru (banyo tarzı): kalem dökümü, canlı hesap, Pro rapor ──
+    // Araç listesi: config/worksitem_estimators.php (eski sayfalar: ToolController@paintCalculator / tileCalculator)
+    $kit = \App\Http\Controllers\Kit\KitController::class;
+    $kitPro = \App\Http\Controllers\Kit\KitProReportController::class;
+    foreach (['boya-hesaplayici' => 'paint', 'seramik-maliyet-hesaplayici' => 'tile_calculator', 'mutfak-maliyet-hesaplayici' => 'mutfak_calculator',
+        'wc-maliyet-hesabi' => 'wc_calculator', 'parke-maliyet-hesaplayici' => 'parquet_calculator', 'zemin-kaplama' => 'zemin_calculator',
+        'mantolama-maliyeti' => 'yalitim_calculator', 'pvc-dograma-hesaplayici' => 'pvc',
+        'sap-hesaplayici' => 'screed', 'kara-siva-hesaplama' => 'rough_plaster', 'alci-siva-hesaplama' => 'plaster', 'duvar-maliyet-hesaplayici' => 'wall', 'bahce-duvari-maliyeti' => 'garden_wall', 'kalip-plywood-maliyeti' => 'formwork', 'saha-betonu-hesaplayici' => 'concrete', 'duvar-orgu' => 'duvar_calculator', 'iskele-metraji-maliyeti' => 'iskele_calculator', 'hafriyat-kazi-hesabi' => 'excavation_calculator',
+        'alcipan-hesaplayici' => 'alcipan_calculator', 'asma-tavan-hesaplayici' => 'ceiling_calculator', 'su-yalitimi-hesaplayici' => 'waterproofing_calculator', 'epoksi-zemin-hesaplayici' => 'epoxy_floor_calculator', 'sandvic-panel-hesaplayici' => 'sandwich_panel_calculator', 'radyator-petek-hesaplayici' => 'radiator', 'gunes-paneli-hesaplama' => 'ges_calculator', 'deprem-izolator-maliyeti' => 'isolator', 'tahmini-bina-maliyeti' => 'building_cost', 'statik-proje-bedeli' => 'statik_calculator',
+        'beton-hesaplayici' => 'beton_calculator', 'su-tesisat-hesaplama' => 'sutesisat_calculator', 'cati-maliyet-hesaplayici' => 'cati_calculator'] as $kitSlug => $kitName) {
+        Route::get('/'.$kitSlug, [$kit, 'show'])->defaults('kit', $kitSlug)->name($kitName);
+    }
+    Route::get('/{kit}/hesapla', [$kit, 'calc'])->whereIn('kit', \App\Estimators\KitRegistry::slugs())
+        ->middleware('throttle:kit-calc')->name('kit.calc');
+    Route::get('/{kit}/pro-rapor', [$kitPro, 'show'])->whereIn('kit', \App\Estimators\KitRegistry::slugs())
+        ->middleware('throttle:public-read')->name('kit.pro');
+    Route::post('/{kit}/pro-rapor/kod', [$kitPro, 'sendCode'])->whereIn('kit', \App\Estimators\KitRegistry::slugs())
+        ->middleware('throttle:public-write')->name('kit.pro_code');
+    Route::post('/{kit}/pro-rapor', [$kitPro, 'download'])->whereIn('kit', \App\Estimators\KitRegistry::slugs())
+        ->middleware('throttle:public-write')->name('kit.pro_download');
+
     // ── Controller tabanlı (veri hazırlayan) araçlar ──
     Route::controller(ToolController::class)->group(function () {
-        Route::get('/boya-hesaplayici', 'paintCalculator')->name('paint');
         Route::get('/duvar-rengi-gorsellestirici', 'paintVisualizer')->name('paint_visualizer');
-        Route::get('/seramik-maliyet-hesaplayici', 'tileCalculator')->name('tile_calculator');
         Route::get('/demir-metraji-hesaplayici', 'rebarCalculator')->name('rebar');
-        Route::get('/saha-betonu-hesaplayici', 'concreteCalculator')->name('concrete');
 
-        Route::get('/sap-hesaplayici', 'screedCalculator')->name('screed');
         Route::get('/oda-planlayici', 'roomPlanner')->name('room');
         Route::get('/belge-olusturucu', 'documentBuilder')->name('document');
-        Route::get('/pvc-dograma-hesaplayici', 'pvcCalculator')->name('pvc');
-        Route::get('/duvar-maliyet-hesaplayici', 'wallCalculator')->name('wall');
-        Route::get('/radyator-petek-hesaplayici', 'radiatorCalculator')->name('radiator');
         Route::get('/donati-tahvil-hesaplayici', 'rebarEquivalentCalculator')->name('rebar.equivalent');
-        Route::get('/tahmini-bina-maliyeti', 'buildingCostCalculator')->name('building_cost');
-        Route::get('/bahce-duvari-maliyeti', 'gardenWallCalculator')->name('garden_wall');
-        Route::get('/deprem-izolator-maliyeti', 'isolatorCalculator')->name('isolator');
         Route::get('/insaat-muhendisi-maas-hesabi', 'salaryCalculator')->name('salary');
         Route::get('/yagmur-borusu-hesabi', 'rainpipeCalculator')->name('rainpipe');
         Route::get('/azami-konut-kredisi', 'mortgageCalculator')->name('mortgage');
         Route::get('/birim-fiyat-analiz', 'unitPriceCalculator')->name('unit_price');
         Route::get('/merdiven-basamak-hesabi', 'stairsCalculator')->name('stairs');
-        Route::get('/kalip-plywood-maliyeti', 'formworkCalculator')->name('formwork');
         Route::get('/jenerator-hesaplama', 'generatorCalculator')->name('generator');
-        Route::get('/alci-siva-hesaplama', 'plasterCalculator')->name('plaster');
         Route::get('/enerji-tuketim-hesaplama', 'energyCalculator')->name('energy');
-        Route::get('/kara-siva-hesaplama', 'roughPlasterCalculator')->name('rough_plaster');
 
         // İleri mühendislik ve niş araçlar
         Route::get('/yapi-dinamigi', 'structuralDynamics')->name('structural_dynamics');
@@ -180,54 +226,46 @@ Route::prefix('araclar')->name('tools.')->group(function () {
         Route::post('/belge-olusturucu/indir', 'generateDocument')
             ->middleware('throttle:public-write')->name('document.generate');
         Route::post('/oda-planlayici/generate', 'generateRoomDesign')
-            ->middleware(['ai.spend', 'throttle:ai'])->name('room.generate');
+            ->middleware(['ai.spend', 'ai.quota', 'throttle:ai'])->name('room.generate');
     });
 
     // ── ConTech hesaplayıcıları (sunucu tarafı fiyat bağlama) ──
-    Route::get('/alcipan-hesaplayici', [ConTech\DrywallCalculatorController::class, 'index'])->name('alcipan_calculator');
-    Route::get('/asma-tavan-hesaplayici', [ConTech\CeilingCalculatorController::class, 'index'])->name('ceiling_calculator');
-    Route::get('/su-yalitimi-hesaplayici', [ConTech\WaterproofingCalculatorController::class, 'index'])->name('waterproofing_calculator');
-    Route::get('/epoksi-zemin-hesaplayici', [ConTech\EpoxyFloorCalculatorController::class, 'index'])->name('epoxy_floor_calculator');
-    Route::get('/sandvic-panel-hesaplayici', [ConTech\SandwichPanelCalculatorController::class, 'index'])->name('sandwich_panel_calculator');
     Route::get('/yukseltilmis-doseme-hesaplayici', [ConTech\RaisedFloorCalculatorController::class, 'index'])->name('raised_floor_calculator');
     Route::get('/havalandirma-hesaplayici', [ConTech\VentilationCalculatorController::class, 'index'])->name('ventilation_calculator');
 
     Route::get('/otomatik-kesif-fiyatlandirma', [ConTech\AutoBoqController::class, 'index'])->name('auto_boq');
     Route::post('/otomatik-kesif-fiyatlandirma/hesapla', [ConTech\AutoBoqController::class, 'calculate'])
-        ->middleware(['ai.spend', 'throttle:ai'])->name('auto_boq.calc');
+        ->middleware(['ai.spend', 'ai.quota', 'throttle:ai'])->name('auto_boq.calc');
 
     // Seramik görselleştirici (MVP) — render çıktısı oturuma bağlı token ile indirilir
     Route::get('/seramik-gorsellestirici', [TileVisualizerController::class, 'index'])->name('tile_visualizer');
 
-    Route::get('/beton-hesaplayici', function (ToolPriceService $prices) {
-        return view('tools.beton-calculator', ['toolPrices' => $prices->forTool('beton-hesaplayici')]);
-    })->name('beton_calculator');
 
     // ── Statik (yalnızca view) araçlar ──
-    Route::view('/parke-maliyet-hesaplayici', 'tools.parquet-calculator')->name('parquet_calculator');
-    Route::view('/mutfak-maliyet-hesaplayici', 'tools.mutfak-calculator')->name('mutfak_calculator');
     Route::view('/banyo-maliyet-hesaplayici', 'tools.banyo-calculator')->name('banyo_calculator');
-    Route::view('/wc-maliyet-hesabi', 'tools.wc-calculator')->name('wc_calculator');
+    Route::get('/banyo-planlayici', [\App\Http\Controllers\Tools\BathPlannerController::class, 'show'])->name('banyo_planner');
+    Route::get('/wc-planlayici', [\App\Http\Controllers\Tools\BathPlannerController::class, 'wc'])->name('wc_planner');
+    Route::post('/banyo-planlayici/render', [\App\Http\Controllers\Tools\BathPlannerController::class, 'render'])
+        ->middleware(['ai.spend', 'ai.quota', 'throttle:ai'])->name('banyo_planner_render');
+    Route::get('/banyo-maliyet-hesaplayici/rapor.pdf', [\App\Http\Controllers\Reports\BathroomReportController::class, 'pdf'])
+        ->middleware('throttle:public-read')->name('banyo_report_pdf');
+    Route::get('/banyo-maliyet-hesaplayici/pro-rapor', [\App\Http\Controllers\Reports\BathroomProReportController::class, 'show'])
+        ->middleware('throttle:public-read')->name('banyo_pro_report');
+    Route::post('/banyo-maliyet-hesaplayici/pro-rapor/kod', [\App\Http\Controllers\Reports\BathroomProReportController::class, 'sendCode'])
+        ->middleware('throttle:public-write')->name('banyo_pro_report_code');
+    Route::post('/banyo-maliyet-hesaplayici/pro-rapor', [\App\Http\Controllers\Reports\BathroomProReportController::class, 'download'])
+        ->middleware('throttle:public-write')->name('banyo_pro_report_download');
     Route::view('/cimento-kum-hesaplama', 'tools.cement-sand-calculator')->name('cement_calculator');
     Route::view('/metrekup-hacim-hesaplama', 'tools.volume-calculator')->name('volume_calculator');
-    Route::view('/hafriyat-kazi-hesabi', 'tools.excavation-calculator')->name('excavation_calculator');
-    Route::view('/iskele-metraji-maliyeti', 'tools.iskele-calculator')->name('iskele_calculator');
     Route::view('/iscilik-maliyeti', 'tools.iscilik-calculator')->name('iscilik_calculator');
     Route::view('/sgk-asgari-iscilik', 'tools.sgk-calculator')->name('sgk_calculator');
     Route::view('/klima-btu-hesaplayici', 'tools.klima-calculator')->name('klima_calculator');
-    Route::view('/su-tesisat-hesaplama', 'tools.su-tesisat-calculator')->name('sutesisat_calculator');
     Route::view('/kablo-kesiti-hesabi', 'tools.kablo-calculator')->name('kablo_calculator');
     Route::view('/asansor-zorunlulugu', 'tools.asansor-calculator')->name('asansor_calculator');
     Route::view('/taks-kaks-hesaplayici', 'tools.taks-kaks-calculator')->name('taks_kaks_calculator');
     Route::view('/pafta-olcu-hesaplayici', 'tools.pafta-calculator')->name('pafta_calculator');
-    Route::view('/statik-proje-bedeli', 'tools.statik-calculator')->name('statik_calculator');
     Route::view('/kat-karsiligi-analiz', 'tools.kat-karsiligi')->name('kat_karsiligi');
-    Route::view('/gunes-paneli-hesaplama', 'tools.ges-calculator')->name('ges_calculator');
     Route::view('/daire-kira-degeri', 'tools.kira-calculator')->name('kira_calculator');
-    Route::view('/cati-maliyet-hesaplayici', 'tools.cati-calculator')->name('cati_calculator');
-    Route::view('/mantolama-maliyeti', 'tools.yalitim-calculator')->name('yalitim_calculator');
-    Route::view('/zemin-kaplama', 'tools.zemin-calculator')->name('zemin_calculator');
-    Route::view('/duvar-orgu', 'tools.duvar-calculator')->name('duvar_calculator');
     Route::view('/dijital-metraj', 'tools.web-takeoff')->name('digital_takeoff');
     Route::view('/insaat-maliyeti-hesaplama', 'tools.insaat-maliyeti')->name('insaat_maliyeti');
 });
@@ -245,7 +283,7 @@ Route::get('/poz/{pozNo}', [PozPublicController::class, 'show'])->name('poz.show
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
 Route::post('/api/seramik-gorsellestirici/render', [TileVisualizerController::class, 'render'])
-    ->middleware(['ai.spend', 'throttle:ai'])->name('api.tile_visualizer.render');
+    ->middleware(['ai.spend', 'ai.quota', 'throttle:ai'])->name('api.tile_visualizer.render');
 
 Route::middleware('throttle:public-read')->group(function () {
     Route::get('/api/pozlar/search', [PozPublicController::class, 'search'])->name('api.poz.search');

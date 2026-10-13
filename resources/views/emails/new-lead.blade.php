@@ -98,7 +98,7 @@ Belirtilmedi
 
 <tr>
 <td style="color:#6b7280;">Lead ID</td>
-<td>{{ $lead->public_id }}</td>
+<td>{{ $lead->displayNo() }} <small style="color:#888">({{ $lead->public_id }})</small></td>
 </tr>
 
 <tr>

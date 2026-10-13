@@ -58,16 +58,16 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
     </style>
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <x-calc.head />
 </head>
-<body data-tool-slug="insaat-maliyeti">
+<body class="wc" data-tool-slug="insaat-maliyeti">
 
 <x-site.contech-header />
 
 <!-- YENİ: SEO ODAKLI H1 BAŞLIK ALANI -->
 <div class="page-header">
     <span class="ai-badge">🏢 AI Destekli B2B İnşaat Simülatörü</span>
-    <h1>Profesyonel Şantiye Maliyeti ve Fizibilite Motoru</h1>
-    <p>Müteahhitler, mimarlar ve proje yöneticileri için tasarlanmış kapsamlı keşif aracı. Malzeme sarfiyatlarını, işçilik yevmiyelerini ve resmî harçları hesaplayın; ticari kârınızı netleştirin.</p>
+    <x-calc.hero title="İnşaat maliyeti hesaplama" crumb="İnşaat maliyeti">Müteahhitler, mimarlar ve proje yöneticileri için tasarlanmış kapsamlı keşif aracı. Malzeme sarfiyatlarını, işçilik yevmiyelerini ve resmî harçları hesaplayın; ticari kârınızı netleştirin.</x-calc.hero>
 </div>
 
 <div class="container">
@@ -318,6 +318,7 @@ function calculateAll() {
 document.addEventListener('DOMContentLoaded', calculateAll);
 </script>
     <script src="/js/tool-events.js" defer></script>
+<x-calc.kit />
     <x-site.contech-footer />
 </body>
 </html>

@@ -63,10 +63,10 @@
         .search-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
 
         /* Swatches Grid */
-        .swatch-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; margin-bottom: 10px; max-height: 250px; overflow-y: auto; padding-right: 5px; }
+        .swatch-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; margin-bottom: 10px; max-height: 360px; overflow-y: auto; padding-right: 5px; }
         .swatch-card { background: #fff; border: 2px solid var(--border); border-radius: 10px; padding: 8px; cursor: pointer; transition: var(--transition); text-align: center; }
         .swatch-card:hover { transform: translateY(-2px); border-color: #94a3b8; }
-        .swatch-card.active { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(30,58,138,0.2); }
+        .swatch-card.active { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(255,184,0,.35); }
         .swatch-color { height: 55px; border-radius: 6px; margin-bottom: 6px; border: 1px solid rgba(0,0,0,0.05); }
         .swatch-brand { font-size: 0.65rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; }
         .swatch-title { font-size: 0.75rem; font-weight: 700; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -130,6 +130,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
 <style id="paint-catalog-db-ui">
+/* hidden özniteliği display kurallarıyla ezilmesin (boş sponsor rozeti, '#' giden bağlantılar) */
+.sponsor-badge[hidden],.catalog-actions[hidden],.catalog-action-link[hidden]{display:none!important}
 .sponsor-inline{
     margin-left:5px;
     font-size:10px;
@@ -463,7 +465,7 @@ body{
     <script>
         // DB tabanlı, kullanım hakkı doğrulanmış renk kataloğu
         const COLOR_DATABASE = @json($paintColorCatalog ?? collect());
-let currentBrand = 'RAL Kataloğu';
+let currentBrand = 'Tüm';
         let currentCategory = 'Tüm';
         let selectedColor = COLOR_DATABASE.length ? COLOR_DATABASE[0] : null;
 

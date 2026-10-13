@@ -38,6 +38,12 @@ class TileVisualizerController extends Controller
         'geometrik' => ['name'=>'Geometrik','size'=>'20x20','style'=>'Dekoratif','file'=>'geometrik.png'],
     ];
 
+    /** Seramik kataloğu (banyo planlayıcı da kullanır) */
+    public static function catalog(): array
+    {
+        return self::CATALOG;
+    }
+
     public function index(Request $request)
     {
         if ($this->testMode()) {
@@ -60,9 +66,14 @@ class TileVisualizerController extends Controller
         }
         unset($tile);
 
+        $walletMode = (bool) config('worksitem_ai_credits.enabled');
+        $credits = app(\App\Services\AI\AiCredits::class);
+
         return view('tools.tile-visualizer', [
             'catalog' => $catalog,
             'credits' => (int) $request->session()->get(self::SESSION_KEY, 0),
+            'walletMode' => $walletMode,
+            'wallet' => $walletMode ? $credits->status($credits->current($request)) : null,
             'testMode' => $this->testMode(),
         ]);
     }
@@ -93,7 +104,9 @@ class TileVisualizerController extends Controller
             ], 422);
         }
 
-        $credits = (int) $request->session()->get(self::SESSION_KEY, 0);
+        // Telefonla giriş + kredi sistemi hakkı ayırdıysa oturumdaki eski test kredisi kullanılmaz
+        $walletCharge = $request->attributes->get('ai_charge');
+        $credits = $walletCharge ? 1 : (int) $request->session()->get(self::SESSION_KEY, 0);
         if ($credits < 1) {
             return response()->json([
                 'message' => 'Test render krediniz kalmadı.',
@@ -396,7 +409,15 @@ class TileVisualizerController extends Controller
             $previewBytes = $this->makeWatermarkedPreview($originalBytes);
 
             $remaining = max(0, $credits - 1);
-            $request->session()->put(self::SESSION_KEY, $remaining);
+            $creditsLabel = null;
+            if ($walletCharge) {
+                $svc = app(\App\Services\AI\AiCredits::class);
+                $st = $svc->status(\App\Models\AiWallet::query()->find($walletCharge['wallet_id']));
+                $remaining = (int) ($st['credits'] ?? 0);
+                $creditsLabel = self::walletLabel($st);
+            } else {
+                $request->session()->put(self::SESSION_KEY, $remaining);
+            }
 
             return response()->json([
                 'success' => true,
@@ -405,6 +426,7 @@ class TileVisualizerController extends Controller
                 'render_token' => $render['token'],
                 'download_url' => url('/api/seramik-gorsellestirici/download/'.$render['token']),
                 'credits' => $remaining,
+                'credits_label' => $creditsLabel,
                 'model' => $model,
                 'provider' => 'gemini',
             ]);
@@ -508,6 +530,12 @@ class TileVisualizerController extends Controller
         return ['token' => $token, 'file' => $file];
     }
 
+    /** Filigranlı, küçültülmüş önizleme (banyo planlayıcı render'ı da kullanır) */
+    public static function watermark(string $bytes): string
+    {
+        return (new self)->makeWatermarkedPreview($bytes);
+    }
+
     private function makeWatermarkedPreview(string $bytes): string
     {
         if (false && class_exists(\Imagick::class) && class_exists(\ImagickDraw::class)) {
@@ -599,5 +627,15 @@ class TileVisualizerController extends Controller
     private function testMode(): bool
     {
         return app()->environment('staging') || (bool) config('services.tile_visualizer.test_mode');
+    }
+
+    /** Telefonla giriş yapan kullanıcının AI hakkı özeti (sayfadaki rozet için) */
+    public static function walletLabel(?array $st): string
+    {
+        if (! $st || empty($st['logged_in'])) {
+            return 'Günde '.($st['free_per_day'] ?? 1).' ücretsiz AI';
+        }
+
+        return 'Bugün '.$st['free_left'].' ücretsiz · '.$st['credits'].' kredi';
     }
 }

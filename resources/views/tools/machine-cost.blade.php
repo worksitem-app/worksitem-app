@@ -22,14 +22,14 @@
         .chart-box { background: rgba(255,255,255,0.05); border-radius: 12px; padding: 20px; margin-top:20px; }
     </style>
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <x-calc.head />
 </head>
-<body data-tool-slug="machine-cost">
+<body class="wc" data-tool-slug="machine-cost">
 <x-site.contech-header />
 <div class="container">
     <div style="text-align:center; margin-bottom:30px;">
         <div style="background: rgba(249, 115, 22, 0.1); color: var(--accent); padding: 6px 14px; border-radius: 100px; font-size: 12px; font-weight: 900; display:inline-block;">🚜 B2B EKİPMAN MODÜLÜ</div>
-        <h1 style="font-weight:900; margin-top:10px;">İş Makinesi Maliyet Motoru</h1>
-        <p style="color:var(--muted);">Kira, yakıt ve operatör giderlerini birleştirerek gerçek saatlik ve aylık şantiye ekipman maliyetinizi hesaplayın.</p>
+        <x-calc.hero title="İş makinesi maliyeti hesaplama" crumb="İş makinesi">Kira, yakıt ve operatör giderlerini birleştirerek gerçek saatlik ve aylık şantiye ekipman maliyetinizi hesaplayın.</x-calc.hero>
     </div>
 
     <div class="card">
@@ -48,9 +48,9 @@
         <button class="btn" id="calcBtn">Toplam Makine Amortismanını Hesapla</button>
     </div>
 
-    <div class="result-box" id="resBox">
+    <div class="result-box" id="resBox" data-wc-result>
         <div style="font-size:12px; color:#a1a1aa; font-weight:700;">TOPLAM EKİPMAN BÜTÇESİ</div>
-        <div class="result-price" id="totalCost">0 TL</div>
+        <div class="result-price" id="totalCost" data-wc-price>0 TL</div>
         <div style="display:flex; justify-content:space-between; margin-top:20px; border-top:1px solid #333; padding-top:15px; text-align:left;">
             <div><span style="color:#a1a1aa; font-size:12px;">Makine Kirası</span><br><strong id="rentCost">0 TL</strong></div>
             <div><span style="color:#a1a1aa; font-size:12px;">Yakıt Gideri</span><br><strong id="fuelCost">0 TL</strong></div>
@@ -98,6 +98,7 @@ document.getElementById('calcBtn').addEventListener('click', () => {
 });
 </script>
     <script src="/js/tool-events.js" defer></script>
+<x-calc.kit />
     <x-site.contech-footer />
 </body>
 </html>

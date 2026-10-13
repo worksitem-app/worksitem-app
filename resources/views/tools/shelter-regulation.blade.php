@@ -28,12 +28,12 @@
     <link rel="manifest" href="/site.webmanifest">
     <meta name="theme-color" content="#ffffff">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <x-calc.head />
 </head>
-<body data-tool-slug="shelter-regulation">
+<body class="wc" data-tool-slug="shelter-regulation">
     <x-site.contech-header />
     <div class="container">
-        <h1>Sığınak Zorunluluğu & Alanı Hesabı</h1>
-        <p style="color:#6b7280; margin-bottom:30px;">Planlı Alanlar İmar Yönetmeliği gereği binanızda sığınak zorunluluğu olup olmadığını ve gereken alanı öğrenin.</p>
+        <x-calc.hero title="Sığınak zorunluluğu ve alanı hesaplama" crumb="Sığınak">Planlı Alanlar İmar Yönetmeliği gereği binanızda sığınak zorunluluğu olup olmadığını ve gereken alanı öğrenin.</x-calc.hero>
         
         <div class="form-group">
             <label>Bina Tipi</label>
@@ -51,9 +51,9 @@
             <input type="number" id="area" value="1600" oninput="calc()">
         </div>
 
-        <div class="result-box">
+        <div class="result-box" data-wc-result>
             <div style="font-size:14px; color:#101318; font-weight:600; margin-bottom:5px;">YÖNETMELİK SONUCU</div>
-            <div class="result-val" id="resText">Zorunlu Değil</div>
+            <div class="result-val" id="resText" data-wc-price>Zorunlu Değil</div>
             <div style="font-size:13px; color:#101318; margin-top:10px; font-weight:600;" id="resArea">Gereken Sığınak Alanı: 0 m²</div>
         </div>
         <a href="/maliyet-hesapla?service=mimari-proje" class="cta">Mimari Çözüm ve Proje İçin Teklif Al →</a>
@@ -100,6 +100,7 @@
         }
         document.addEventListener('DOMContentLoaded', calc);
     </script>
+<x-calc.kit />
     <x-site.contech-footer />
     <script src="/js/tool-events.js" defer></script>
 </body>

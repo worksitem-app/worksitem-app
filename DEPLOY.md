@@ -41,6 +41,29 @@ Betik sırasıyla şunları yapar: bakım modu, DB yedeği, `git pull`, `compose
 
 **Duman testi (2 dk):** ana sayfa, `/araclar`, bir hesaplayıcı, `/maliyet-hesapla` akışı sonuna kadar (lead e-postası geldi mi?), `/admin` girişi, çerez bandında Reddet ve Kabul et, `/up`.
 
+## 2b. Staging'den canlıya geçiş (Ekim 2026 araç dalgası)
+
+Staging (`~/apps/worksitem-staging`) test edildikten sonra kod oradan canlıya (`~/apps/worksitem`) taşınır. Git veya FTP gerekmez.
+
+```bash
+cd ~/apps/worksitem-staging
+bash scripts/golive-from-staging.sh check                       # 1) sadece kontrol, hiçbir şeyi değiştirmez
+bash scripts/golive-from-staging.sh deploy --preset ilk-dalga   # 2) onaydan sonra: CANLI yazınca başlar
+bash scripts/golive-from-staging.sh rollback                    # gerekirse: son yedeğe dön (GERI yazınca)
+```
+
+`deploy` sırası: yedek (`~/backups/golive-TARIH/`: kod arşivi, veritabanı dökümü, .env) → staging'de olup canlıda olmayan .env anahtarlarını onayla ekleme (değerler ekrana yazılmaz; APP_, DB_, MAIL_, GA4_, iyzico adresi, AI_SPEND_ENABLED gibi ortama özel anahtarlar asla kopyalanmaz) → bakım modu → kod eşitleme (app, config, routes, resources, database, bootstrap, lang içinde canlıda kalmış eski dosyalar silinir; storage, .env, vendor, public/storage dokunulmaz) → `composer install --no-dev` (composer yoksa vendor staging'den kopyalanır) → migration (önce SQL önizlemesi yedek klasörüne yazılır) → önbellekler → araç ön ayarı → site açılır → `app:preflight`, `app:integrations`, duman testi.
+
+**Araç ön ayarları** (`config/worksitem_golive.php`):
+
+| Ön ayar | İçerik |
+|---|---|
+| `ilk-dalga` | Banyo, mutfak, WC, seramik, boya, parke, zemin, mantolama, PVC, su tesisatı, beton, duvar rengi (12) |
+| `ikinci-dalga` | Kaba inşaat ve teknik maliyet araçları (21) |
+| `yapay-zeka` | Oda planlayıcı, otomatik keşif. Yalnızca `AI_SPEND_ENABLED=true` ve sağlayıcı bütçe limitlerinden sonra |
+
+Ön ayar listede olmayan araçlara dokunmaz. Sonradan tek tek açıp kapatmak için: admin › Sistem Yönetimi › Araç Yayın Durumu, ya da `php artisan tools:publish ikinci-dalga`. Deneme için `--dry-run`, listede olmayanları kapatmak için `--only`.
+
 ## 3. Geri dönüş
 
 ```bash

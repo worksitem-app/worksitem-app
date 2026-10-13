@@ -29,12 +29,12 @@
     <link rel="manifest" href="/site.webmanifest">
     <meta name="theme-color" content="#ffffff">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <x-calc.head />
 </head>
-<body data-tool-slug="core-strength">
+<body class="wc" data-tool-slug="core-strength">
     <x-site.contech-header />
     <div class="container">
-        <h1>Karot Basınç Dayanımı Çevirici</h1>
-        <p style="color:#6b7280; margin-bottom:30px;">Pres makinesinde kırılan karot numunesinin kırılma yüküne ve geometrisine göre eşdeğer silindir beton dayanımını (MPa) hesaplayın.</p>
+        <x-calc.hero title="Karot basınç dayanımı hesaplama" crumb="Karot dayanımı">Pres makinesinde kırılan karot numunesinin kırılma yüküne ve geometrisine göre eşdeğer silindir beton dayanımını (MPa) hesaplayın.</x-calc.hero>
         
         <div class="grid-2">
             <div class="form-group">
@@ -51,9 +51,9 @@
             <input type="number" id="force" value="150" oninput="calc()">
         </div>
 
-        <div class="result-box">
+        <div class="result-box" data-wc-result>
             <div style="font-size:14px; color:#101318; font-weight:600; margin-bottom:5px;">EŞDEĞER SİLİNDİR DAYANIMI</div>
-            <div class="result-val" id="res">0 MPa</div>
+            <div class="result-val" id="res" data-wc-price>0 MPa</div>
             <div style="font-size:12px; color:#101318; margin-top:10px;">h/d düzeltme katsayısı otomatik uygulanmıştır.</div>
         </div>
 
@@ -101,6 +101,7 @@
         }
         document.addEventListener('DOMContentLoaded', calc);
     </script>
+<x-calc.kit />
     <x-site.contech-footer />
     <script src="/js/tool-events.js" defer></script>
 </body>

@@ -206,6 +206,7 @@
                 <textarea name="notes" class="form-control" style="height: 80px; padding-top:10px;" placeholder="Ek talepleriniz (Örn: Taşyünü veya akustik alçıpan kullanılacak)..."></textarea>
             </div>
 
+            <x-lead-consent-fields />
             <button type="submit" class="btn btn-submit">Kainta İnşaat'tan Profesyonel Teklif Al →</button>
         </form>
     </div>

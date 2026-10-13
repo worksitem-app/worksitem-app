@@ -101,18 +101,19 @@
     <link rel="manifest" href="/site.webmanifest">
     <meta name="theme-color" content="#ffffff">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <x-calc.head />
 </head>
-<body data-tool-slug="pafta-calculator">
+<body class="wc" data-tool-slug="pafta-calculator">
 
 <x-site.contech-header />
 
-<div class="container">
-    <div class="tool-header">
-        <h1>Pafta Ölçü & Harita Ölçek Motoru</h1>
-        <p>Proje, harita veya imar paftası üzerinde cetvelle ölçtüğünüz mesafenin gerçek arazide kaç metreye denk geldiğini hassas şekilde hesaplayın.</p>
-    </div>
+<main class="wc-wrap">
+    <x-calc.hero title="Pafta ölçeği ve gerçek ölçü hesaplama" crumb="Pafta ölçek">
+        Proje, harita veya imar paftası üzerinde cetvelle ölçtüğünüz mesafenin gerçek arazide kaç metreye denk geldiğini hassas şekilde hesaplayın.
+    </x-calc.hero>
 
-    <div class="card">
+    <div class="wc-grid">
+    <div class="card wc-panel">
         <div class="form-grid">
             <div class="form-group">
                 <label>Harita / Proje Ölçeği</label>
@@ -134,9 +135,14 @@
         <button type="button" class="btn btn-calc" id="calculateBtn">Gerçek Arazi Uzunluğunu Bul →</button>
     </div>
 
-    <div class="result-box" id="resultBox">
+    <aside class="wc-aside">
+    <div class="wc-empty" data-wc-empty>
+        <strong>Sonuç burada görünecek</strong>
+        Bilgileri girip hesaplayın; sonuç, döküm ve yaklaşık bütçe burada görünür.
+    </div>
+    <div class="result-box wc-result" data-wc-result id="resultBox">
         <div class="result-label">GERÇEK ARAZİ ÖLÇÜLERİ</div>
-        <div class="result-price" id="realMeters">0.00 Metre</div>
+        <div class="result-price" id="realMeters" data-wc-price>0.00 Metre</div>
         
         <p style="font-size: 11px; color: #6b7280; margin-bottom:20px;">
             ⚠️ Bu değerler matematiksel orantıdır. Kağıt genleşmeleri veya çizim hataları sonucu gerçek arazide farklar çıkabilir.
@@ -169,6 +175,10 @@
             </div>
         </div>
     </div>
+    </aside>
+    </div>{{-- /wc-grid --}}
+
+    <div class="wc-below">
 
     <!-- ELEME KAPISI -->
     <div class="budget-confirm-box" id="budgetConfirmBox">
@@ -218,11 +228,13 @@
                 <textarea name="notes" class="form-control" style="height: 80px; padding-top:10px;" placeholder="Aplikasyon krokisi mi lazım? Sınır tespiti mi yapılacak?"></textarea>
             </div>
 
+            <x-lead-consent-fields />
             <button type="submit" class="btn btn-submit">Bütçeniz uygunsa Kainta İnşaat'tan net teklif alın →</button>
         </form>
     </div>
 
-</div>
+    </div>{{-- /wc-below --}}
+</main>
 
 <script>
 document.getElementById('calculateBtn').addEventListener('click', function() {
@@ -292,7 +304,8 @@ document.getElementById('btnNo').addEventListener('click', function() {
 });
 </script>
 
-    <x-site.contech-footer />
+    <x-calc.kit />
+<x-site.contech-footer />
     <script src="/js/tool-events.js" defer></script>
 </body>
 </html>

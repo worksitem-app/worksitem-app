@@ -517,36 +517,19 @@ input:focus,select:focus{
     <link rel="manifest" href="/site.webmanifest">
     <meta name="theme-color" content="#ffffff">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <x-calc.head />
 </head>
 
-<body data-tool-slug="epoksi-zemin-calculator">
+<body class="wc" data-tool-slug="epoksi-zemin-calculator">
 
 <x-site.contech-header />
 
 
-<section class="hero">
-
-<div class="container">
-
-    <div class="kicker">
-        CONTECH · ENDÜSTRİYEL ZEMİN
-    </div>
-
-    <h1>
-        Epoksi Zemin Metraj ve
-        Maliyet Hesaplayıcı
-    </h1>
-
-    <p>
-        Fabrika, depo, otopark ve ticari alanlar için
-        2,5 mm self-leveling epoksi kaplama maliyetini;
-        gerekli ise zemin tesviyesi ve UV dayanımlı
-        son kat ile birlikte hesaplayın.
-    </p>
-
+<div class="wc-wrap" style="padding-bottom:0">
+    <x-calc.hero title="Epoksi zemin kaplama maliyeti hesaplama" crumb="Epoksi zemin">
+        Fabrika, depo, otopark ve ticari alanlar için 2,5 mm self-leveling epoksi kaplama maliyetini; gerekli ise zemin tesviyesi ve UV dayanımlı son kat ile birlikte hesaplayın.
+    </x-calc.hero>
 </div>
-
-</section>
 
 
 <main class="container">
@@ -716,7 +699,7 @@ input:focus,select:focus{
 
 <section>
 
-<div class="card result" id="result">
+<div class="card result" id="result" data-wc-result>
 
     <div class="result-top">
 
@@ -728,7 +711,7 @@ input:focus,select:focus{
             Endüstriyel Epoksi Zemin
         </div>
 
-        <div class="total" id="rTotal">
+        <div class="total" id="rTotal" data-wc-price>
             -
         </div>
 
@@ -1292,6 +1275,7 @@ document.getElementById('budgetNo')
 
 </script>
 
+<x-calc.kit />
     <x-site.contech-footer />
     <script src="/js/tool-events.js" defer></script>
 </body>

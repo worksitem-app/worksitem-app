@@ -251,6 +251,7 @@
             <input type="hidden" name="calculated_area" id="leadCalculatedData" value="">
             <div class="form-group" style="margin-top:15px;"><input type="text" name="name" class="form-control" required placeholder="Adınız Soyadınız"></div>
             <div class="form-group"><input type="tel" name="phone" class="form-control" required placeholder="Telefonunuz"></div>
+            <x-lead-consent-fields />
             <button type="submit" class="btn btn-submit">Hemen Gönder →</button>
         </form>
     </div>

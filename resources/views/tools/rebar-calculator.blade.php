@@ -94,18 +94,19 @@
     <link rel="manifest" href="/site.webmanifest">
     <meta name="theme-color" content="#ffffff">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <x-calc.head />
 </head>
-<body data-tool-slug="rebar-calculator">
+<body class="wc" data-tool-slug="rebar-calculator">
 
 <x-site.contech-header />
 
-<div class="container">
-    <div class="tool-header">
-        <h1>İnşaat Demiri Maliyet Hesaplayıcı</h1>
-        <p>Betonarme elemanınızın türüne göre gereken çelik donatı (demir) tonajını hesaplayın.</p>
-    </div>
+<main class="wc-wrap">
+    <x-calc.hero title="İnşaat demiri metrajı ve maliyet hesaplama" crumb="İnşaat demiri">
+        Betonarme elemanınızın türüne göre gereken çelik donatı (demir) tonajını hesaplayın.
+    </x-calc.hero>
 
-    <div class="card">
+    <div class="wc-grid">
+    <div class="card wc-panel">
         <div class="form-group">
             <label>Toplam Beton Hacmi (m³)</label>
             <input type="number" id="volume" class="form-control" placeholder="Örn: 100" value="100" min="1" step="1">
@@ -124,9 +125,14 @@
         <button type="button" class="btn btn-calc" id="calculateBtn">Metraj ve Bütçeyi Hesapla →</button>
     </div>
 
-    <div class="result-box" id="resultBox">
+    <aside class="wc-aside">
+    <div class="wc-empty" data-wc-empty>
+        <strong>Sonuç burada görünecek</strong>
+        Bilgileri girip hesaplayın; sonuç, döküm ve yaklaşık bütçe burada görünür.
+    </div>
+    <div class="result-box wc-result" data-wc-result id="resultBox">
         <div class="result-label">METRAJ VE BÜTÇE ANALİZİ</div>
-        <div class="result-price" id="totalPrice">0 TL</div>
+        <div class="result-price" id="totalPrice" data-wc-price>0 TL</div>
         
         <p style="font-size: 11px; color: #6b7280; margin-bottom:20px;">
             ⚠️ Bu değerler güncel rayiçleriyle hazırlanmış yaklaşık maliyettir. Kesin donatı metrajı statik projeyle belirlenir.
@@ -160,6 +166,10 @@
             </div>
         </div>
     </div>
+    </aside>
+    </div>{{-- /wc-grid --}}
+
+    <div class="wc-below">
 
     <!-- ELEME KAPISI -->
     <div class="budget-confirm-box" id="budgetConfirmBox">
@@ -209,11 +219,13 @@
                 <textarea name="notes" class="form-control" style="height: 80px; padding-top:10px;" placeholder="Lojistik veya ek talepleriniz (Örn: Sadece malzeme mi, işçilik dahil mi?)..."></textarea>
             </div>
 
+            <x-lead-consent-fields />
             <button type="submit" class="btn btn-submit">Bütçeniz uygunsa Kainta İnşaat'tan net teklif alın →</button>
         </form>
     </div>
 
-</div>
+    </div>{{-- /wc-below --}}
+</main>
 
 <script>
 document.getElementById('calculateBtn').addEventListener('click', function() {
@@ -274,7 +286,10 @@ document.getElementById('btnNo').addEventListener('click', function() {
 });
 </script>
 
-    <x-site.contech-footer />
+    <x-calc.kit />
+<x-tools.tool-guide slug="demir-metraji-hesaplayici" />
+
+<x-site.contech-footer />
     <script src="/js/tool-events.js" defer></script>
 </body>
 </html>

@@ -33,12 +33,13 @@
     <link rel="manifest" href="/site.webmanifest">
     <meta name="theme-color" content="#ffffff">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <x-calc.head />
 </head>
-<body data-tool-slug="radiator-calculator">
+<body class="wc" data-tool-slug="radiator-calculator">
     <x-site.contech-header />
     <div class="container">
         <div>
-            <h1>Radyatör Petek Boyu Hesabı</h1>
+            <x-calc.hero title="Radyatör (petek) dilim hesaplama" crumb="Radyatör"></x-calc.hero>
             <div class="form-card">
                 <div class="grid-2">
                     <div class="form-group"><label>Oda Alanı (m²)</label><input type="number" id="area" class="form-control" value="20" oninput="calc()"></div>
@@ -62,11 +63,11 @@
             </div>
         </div>
         <div>
-            <div class="form-card" style="border-color:var(--cyan); position:sticky; top:20px;">
+            <div class="form-card" style="border-color:var(--cyan); position:sticky; top:20px;" data-wc-result>
                 <div style="font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size:24px; color:var(--cyan); margin-bottom:15px;">📊 TERMODİNAMİK ANALİZ</div>
                 <div class="res-item"><span>Oda Hacmi</span> <strong id="r_vol">0 m³</strong></div>
                 <div class="res-item"><span>Gereken Isı Enerjisi (Yaklaşık)</span> <strong id="r_kcal">0 Kcal/h</strong></div>
-                <div class="res-item total"><span>ÖNERİLEN PETEK BOYU</span> <span id="r_len">0 Metre</span></div>
+                <div class="res-item total"><span>ÖNERİLEN PETEK BOYU</span> <span id="r_len" data-wc-price>0 Metre</span></div>
                 
                 <div class="ai-box">
                     <div style="color:var(--cyan); font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size:22px; margin-bottom:10px;">🤖 Mühendis Yorumu</div>
@@ -122,6 +123,7 @@
         }
         document.addEventListener('DOMContentLoaded', calc);
     </script>
+<x-calc.kit />
     <x-site.contech-footer />
     <script src="/js/tool-events.js" defer></script>
 </body>

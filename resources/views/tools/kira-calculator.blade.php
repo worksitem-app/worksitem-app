@@ -105,18 +105,19 @@
     <link rel="manifest" href="/site.webmanifest">
     <meta name="theme-color" content="#ffffff">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <x-calc.head />
 </head>
-<body data-tool-slug="kira-calculator">
+<body class="wc" data-tool-slug="kira-calculator">
 
 <x-site.contech-header />
 
-<div class="container">
-    <div class="tool-header">
-        <h1>Kira ve Amortisman Değer Motoru</h1>
-        <p>Gayrimenkulünüzün güncel piyasa değerine ve amortisman beklentinize göre adil aylık kira bedelini ve yatırım getirisini hesaplayın.</p>
-    </div>
+<main class="wc-wrap">
+    <x-calc.hero title="Daire kira değeri ve amortisman hesaplama" crumb="Kira değeri">
+        Gayrimenkulünüzün güncel piyasa değerine ve amortisman beklentinize göre adil aylık kira bedelini ve yatırım getirisini hesaplayın.
+    </x-calc.hero>
 
-    <div class="card">
+    <div class="wc-grid">
+    <div class="card wc-panel">
         <div class="form-group">
             <label>Mülkün Güncel Piyasa Değeri (TL)</label>
             <input type="number" id="propertyValue" class="form-control" placeholder="Örn: 5000000" value="5000000" min="500000" step="100000">
@@ -141,9 +142,14 @@
         <button type="button" class="btn btn-calc" id="calculateBtn">Adil Kira Değerini Belirle →</button>
     </div>
 
-    <div class="result-box" id="resultBox">
+    <aside class="wc-aside">
+    <div class="wc-empty" data-wc-empty>
+        <strong>Sonuç burada görünecek</strong>
+        Bilgileri girip hesaplayın; sonuç, döküm ve yaklaşık bütçe burada görünür.
+    </div>
+    <div class="result-box wc-result" data-wc-result id="resultBox">
         <div class="result-label">ÖNERİLEN ADİL AYLIK KİRA DEĞERİ</div>
-        <div class="result-price" id="monthlyRent">0 TL</div>
+        <div class="result-price" id="monthlyRent" data-wc-price>0 TL</div>
         
         <p style="font-size: 11px; color: #6b7280; margin-bottom:20px;">
             ⚠️ Bu rakam, yatırımın kendini kaç yılda çıkaracağına dair matematiksel bir referanstır. Bölgesel talebe göre değişiklik gösterebilir.
@@ -185,6 +191,10 @@
             </div>
         </div>
     </div>
+    </aside>
+    </div>{{-- /wc-grid --}}
+
+    <div class="wc-below">
 
     <!-- ELEME KAPISI -->
     <div class="budget-confirm-box" id="budgetConfirmBox">
@@ -234,11 +244,13 @@
                 <textarea name="notes" class="form-control" style="height: 80px; padding-top:10px;" placeholder="Dairemi komple yenilemek istiyorum. Veya: Yeni bir arsa aldım, inşaat teklifi istiyorum."></textarea>
             </div>
 
+            <x-lead-consent-fields />
             <button type="submit" class="btn btn-submit">Kainta İnşaat'tan Profesyonel Destek Al →</button>
         </form>
     </div>
 
-</div>
+    </div>{{-- /wc-below --}}
+</main>
 
 <script>
 document.getElementById('calculateBtn').addEventListener('click', function() {
@@ -333,7 +345,8 @@ document.getElementById('btnNo').addEventListener('click', function() {
 });
 </script>
 
-    <x-site.contech-footer />
+    <x-calc.kit />
+<x-site.contech-footer />
     <script src="/js/tool-events.js" defer></script>
 </body>
 </html>

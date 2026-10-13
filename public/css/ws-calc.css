@@ -1,0 +1,112 @@
+/*
+ * Worksitem hesaplayıcı tasarım kiti (banyo v2 tasarımından türetildi)
+ * Kullanım: <body class="wc">, <x-calc.head/>, <x-calc.hero/>, <x-calc.kit/>
+ * Eski araçların sınıfları (.card, .form-control, .result-box ...) .wc altında yeniden biçimlenir;
+ * id'ler ve JavaScript'e dokunulmaz.
+ */
+body.wc{
+  --wc-ink:#101318; --wc-yellow:#FFB800; --wc-yellow-50:#FFF8E1; --wc-amber:#8A6200;
+  --wc-page:#F5F6F8; --wc-line:#E3E6EA; --wc-muted:#5B6472; --wc-white:#fff;
+  --wc-r-lg:18px; --wc-r-md:12px; --wc-r-sm:8px;
+  /* eski araç değişkenlerini aynı palete bağla */
+  --bg:#F5F6F8; --surface:#fff; --surface-2:#F5F6F8; --text:#101318; --muted:#5B6472;
+  --line:#E3E6EA; --accent:#FFB800; --control-bg:#fff; --button-bg:#101318; --button-text:#fff;
+  background:var(--wc-page); color:var(--wc-ink);
+  font-family:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif; line-height:1.5; padding-bottom:0;
+}
+body.wc :focus-visible{outline:3px solid var(--wc-yellow);outline-offset:2px}
+
+/* Sayfa başlığı */
+.wc-wrap{max-width:1160px;margin:0 auto;padding:20px 16px 40px}
+.wc-crumb{font-size:13px;color:var(--wc-muted);margin-bottom:14px}
+.wc-crumb a{text-decoration:none;color:inherit}
+.wc-crumb a:hover{text-decoration:underline}
+.wc-head h1{font-size:clamp(26px,5vw,40px);line-height:1.12;letter-spacing:-.02em;font-weight:900;max-width:24ch;margin:0;text-align:left}
+.wc-lede{margin-top:10px;font-size:16px;color:#363c46;max-width:64ch}
+.wc-lede strong{color:var(--wc-ink)}
+.wc-facts{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;font-size:13px;color:var(--wc-muted)}
+.wc-facts span{background:var(--wc-white);border:1px solid var(--wc-line);border-radius:999px;padding:5px 11px}
+
+/* İki sütun: form + sabit sonuç */
+.wc-grid{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:24px;margin-top:24px;align-items:start}
+.wc-aside{position:sticky;top:84px;display:grid;gap:12px}
+
+/* Form paneli (eski .card) */
+body.wc .wc-panel{background:var(--wc-white);border:1px solid var(--wc-line);border-radius:var(--wc-r-lg);padding:22px;margin:0;box-shadow:none}
+body.wc .wc-panel .form-group{margin-bottom:16px}
+body.wc .wc-panel .form-group label,body.wc .wc-panel label.wc-label{display:block;font-size:13px;font-weight:700;margin-bottom:6px;color:var(--wc-ink)}
+body.wc .wc-panel .form-control{height:48px;border:1.5px solid var(--wc-line);border-radius:var(--wc-r-md);padding:0 12px;font-size:16px;font-weight:600;background:var(--wc-white);color:var(--wc-ink);width:100%;font-family:inherit}
+body.wc .wc-panel textarea.form-control{height:auto;min-height:96px;padding:10px 12px}
+body.wc .wc-panel .form-control:focus{outline:0;border-color:var(--wc-ink);box-shadow:none}
+body.wc .wc-panel .form-grid{gap:12px;margin-bottom:0}
+body.wc .wc-panel .btn-calc,body.wc .wc-cta{display:block;width:100%;min-height:52px;height:auto;margin-top:6px;border:0;border-radius:var(--wc-r-md);background:var(--wc-ink);color:var(--wc-white);font-weight:800;font-size:16px;cursor:pointer}
+body.wc .wc-panel .btn-calc:hover,body.wc .wc-cta:hover{background:#000}
+body.wc .wc-section-title{display:flex;align-items:center;gap:10px;font-size:16px;font-weight:800;margin:6px 0 12px}
+body.wc .wc-section-title i{font-style:normal;display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--wc-ink);color:var(--wc-white);font-size:12px;font-weight:800;flex:0 0 24px}
+
+/* Seçim kartı görünümlü düğmeler (eski segment/mode düğmeleri) */
+body.wc .wc-panel .calc-mode-btn{border:1.5px solid var(--wc-line);border-radius:var(--wc-r-md);background:var(--wc-white);font-weight:800;min-height:48px}
+body.wc .wc-panel .calc-mode-btn.is-active{border-color:var(--wc-ink);background:var(--wc-yellow-50);box-shadow:inset 0 0 0 1px var(--wc-ink)}
+
+/* Sonuç kartı: karo derzi deseni */
+body.wc .wc-result{position:relative;border-radius:var(--wc-r-lg);overflow:hidden;background-color:var(--wc-ink);color:var(--wc-white);text-align:left;margin:0;padding:22px;
+  background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);background-size:28px 28px}
+body.wc .wc-result .result-price,body.wc .wc-price{margin:6px 0 4px;font-size:clamp(28px,6vw,38px);line-height:1.1;font-weight:900;letter-spacing:-.025em;color:var(--wc-yellow);font-variant-numeric:tabular-nums;text-align:left;overflow-wrap:anywhere}
+body.wc .wc-r-label{font-size:14px;color:#c9ced6;font-weight:600;letter-spacing:0;text-transform:none}
+.wc-fx{display:flex;flex-wrap:wrap;gap:6px 14px;margin:6px 0 4px;font-size:12.5px;color:#aab1bc;font-variant-numeric:tabular-nums}
+.wc-fx[hidden]{display:none}
+.wc-fx em{font-style:normal;color:#7f8794}
+body.wc .wc-result .ai-insight{background:rgba(255,184,0,.08);border-color:rgba(255,184,0,.28)}
+
+/* Hesaptan önce boş durum */
+.wc-empty{border:1.5px dashed #c9ced6;border-radius:var(--wc-r-lg);padding:22px;background:var(--wc-white);color:var(--wc-muted);font-size:14px}
+.wc-empty strong{display:block;color:var(--wc-ink);font-size:16px;margin-bottom:4px}
+.wc-empty[hidden]{display:none}
+
+/* Eleme kapısı + teklif formu */
+body.wc .budget-confirm-box{border-radius:var(--wc-r-lg);border:1px solid var(--wc-line);background:var(--wc-white);padding:22px}
+body.wc .budget-btn{border-radius:var(--wc-r-md);border:1.5px solid var(--wc-line);min-height:52px;font-weight:800}
+body.wc .lead-box{border-radius:var(--wc-r-lg);border:1px solid var(--wc-line);background:var(--wc-white);padding:22px}
+body.wc .lead-box .form-control{height:48px;border:1.5px solid var(--wc-line);border-radius:var(--wc-r-md);font-size:16px}
+body.wc .btn-submit{min-height:52px;height:auto;border-radius:var(--wc-r-md);background:var(--wc-yellow);color:var(--wc-ink);font-weight:800;font-size:16px;border:0}
+.wc-below{max-width:760px;margin:24px auto 0}
+
+/* Mobil sabit sonuç çubuğu */
+.wc-dock{display:none}
+@media (max-width:900px){
+  .wc-grid{grid-template-columns:1fr}
+  .wc-aside{position:static}
+  .wc-dock{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:40;align-items:center;justify-content:space-between;gap:12px;
+    background:var(--wc-ink);color:var(--wc-white);padding:10px 16px calc(10px + env(safe-area-inset-bottom));box-shadow:0 -6px 20px rgba(16,19,24,.18);transition:transform .2s}
+  .wc-dock.is-hidden{transform:translateY(110%)}
+  .wc-dock small{display:block;font-size:12px;color:#aab1bc}
+  .wc-dock strong{display:block;font-size:17px;font-weight:900;color:var(--wc-yellow);font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:62vw}
+  .wc-dock button{border:0;border-radius:10px;background:var(--wc-yellow);color:var(--wc-ink);font-weight:800;font-size:14px;padding:11px 14px;min-height:44px;cursor:pointer;white-space:nowrap}
+  body.wc.wc-has-dock{padding-bottom:72px}
+}
+@media (max-width:560px){
+  body.wc .wc-panel{padding:16px 14px}
+  body.wc .wc-result{padding:18px 16px}
+}
+@media (prefers-reduced-motion:reduce){.wc-dock{transition:none}}
+@media print{.wc-dock,.wc-empty{display:none!important}.wc-aside{position:static}.wc-grid{grid-template-columns:1fr}}
+
+/* Araç uyarlamaları */
+.wc-below-wide{max-width:960px}
+.wc-aside .result-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+body.wc .wc-result.result{margin:0}
+body.wc .wc-result .result-main{font-size:clamp(28px,6vw,38px);letter-spacing:-.025em;font-variant-numeric:tabular-nums}
+body.wc .wc-panel input:not([type=checkbox]):not([type=radio]),body.wc .wc-panel select{border:1.5px solid var(--wc-line);border-radius:var(--wc-r-md);min-height:48px;font-size:16px}
+body.wc .wc-panel input:focus,body.wc .wc-panel select:focus{outline:0;border-color:var(--wc-ink)}
+.wc-aside .visualizer-upsell{display:block!important}
+.wc-aside .visualizer-cta{width:100%;margin-top:12px}
+/* Boya: koyu özet bloğuna karo deseni ve sarı tutar */
+body.wc .result-panel .metric-main{background-color:var(--wc-ink);background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);background-size:28px 28px}
+body.wc .result-panel .metric-main strong#budgetRange{color:var(--wc-yellow);font-variant-numeric:tabular-nums}
+body.wc .paint-wrap{padding-top:20px}
+body.wc .paint-wrap .wc-head h1{font-size:clamp(26px,5vw,40px)}
+
+/* Sonuç altı hukuki kısa uyarı (tüm hesaplayıcılar) */
+.ws-result-legal{margin:12px 0 0;padding:10px 12px;border-radius:10px;background:rgba(16,19,24,.04);border:1px dashed rgba(16,19,24,.18);font-size:12px;line-height:1.55;color:#5B6472;text-align:left}
+.ws-result-legal a{color:inherit;text-decoration:underline}
+html[data-theme="dark"] .ws-result-legal{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.18);color:#AAB1BC}

@@ -111,6 +111,12 @@ return array (
       'title' => 'Bahçe Duvarı Maliyeti',
       'cat' => 'kaba',
     ),
+    'banyo-planlayici' => 
+    array (
+      'title' => '2D / 3D Banyo Planlayıcı',
+      'cat' => 'ince',
+      'desc' => 'Banyo ölçülerinize göre lavabo, klozet ve duşu yerleştirin; 2D plan ve 3D görünümde seramik deneyin.',
+    ),
     'banyo-maliyet-hesaplayici' => 
     array (
       'title' => 'Banyo Tadilat Maliyeti',
@@ -417,6 +423,12 @@ return array (
     array (
       'title' => 'TAKS / KAKS Hesaplayıcı',
       'cat' => 'yatirim',
+    ),
+    'wc-planlayici' =>
+    array (
+      'title' => '2D / 3D WC Planlayıcı',
+      'cat' => 'ince',
+      'desc' => 'WC ölçülerinize göre lavabo ve klozeti yerleştirin; 2D plan ve 3D görünümde seramik ve boya deneyin.',
     ),
     'wc-maliyet-hesabi' => 
     array (

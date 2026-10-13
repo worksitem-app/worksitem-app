@@ -77,10 +77,34 @@
     <link rel="manifest" href="/site.webmanifest">
     <meta name="theme-color" content="#ffffff">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <x-calc.head />
+    <style id="ws-app-shell">
+        /* Uygulama kabuğu: sayfa kaydırılabilir, uygulama alanı ekran yüksekliğinde; açık temada okunur metin */
+        body.wc{height:auto!important;overflow:auto!important;display:block!important}
+        .app-container{height:calc(100vh - 72px);min-height:640px;border-top:1px solid var(--border)}
+        .search-input,.filter-select{color:#101318!important;background:#fff!important}
+        .filter-select option{background:#fff!important;color:#101318!important}
+        .poz-name,.poz-price,.row-total,.summary-value{color:#101318!important}
+        .summary-value.grand{color:#8A6200!important}
+        .btn-excel{background:#fff!important;color:#101318!important}
+        .input-qty{background:#fff!important;color:#101318!important}
+        .toolbar{background:#fff!important}
+        .tab-btn[disabled]{opacity:.55;cursor:not-allowed}
+        .tab-btn small{font-size:10px;font-weight:800;background:#FFF8E1;color:#8A6200;border-radius:999px;padding:2px 6px;margin-left:6px;text-transform:none}
+        @media (max-width: 900px){
+            .app-container{flex-direction:column;height:auto;min-height:0}
+            .sidebar{width:100%!important;max-height:440px;border-right:0!important;border-bottom:1px solid var(--border)}
+            .main-content{overflow:visible!important}
+            .table-container{padding:14px!important;overflow-x:auto}
+        }
+    </style>
 </head>
-<body data-tool-slug="tender-module">
+<body class="wc" data-tool-slug="tender-module">
 
     <x-site.contech-header />
+    <div class="wc-wrap" style="padding-bottom:14px">
+        <x-calc.hero title="İhale ve keşif özeti hazırlama (poz bazlı)" crumb="İhale modülü" :facts="['ÇŞB, Karayolları, İller Bankası pozları', 'Metraj cetveli ve birim fiyat analizi']">Poz kütüphanesinden iş kalemlerini seçin, miktarları girin; KDV hariç ve KDV dahil keşif özetini, metraj cetvelini ve birim fiyat analizini tek ekranda hazırlayın.</x-calc.hero>
+    </div>
 
     <div class="app-container">
         <div class="ambient-glow"></div>
@@ -110,8 +134,8 @@
         <div class="main-content">
             <div class="toolbar">
                 <button class="tab-btn active">Keşif Özeti</button>
-                <button class="tab-btn" onclick="alert('Metraj Cetveli Yükleniyor...')">Metraj Cetveli</button>
-                <button class="tab-btn" onclick="alert('Analizler...')">Birim Fiyat Analizi</button>
+                <button class="tab-btn" type="button" disabled>Metraj Cetveli<small>Yakında</small></button>
+                <button class="tab-btn" type="button" disabled>Birim Fiyat Analizi<small>Yakında</small></button>
             </div>
 
             <div class="table-container">
@@ -252,5 +276,6 @@
         document.addEventListener('DOMContentLoaded', fetchPozs);
     </script>
     <script src="/js/tool-events.js" defer></script>
+    <x-site.contech-footer />
 </body>
 </html>

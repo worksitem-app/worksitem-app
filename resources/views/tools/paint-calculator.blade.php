@@ -2431,9 +2431,10 @@ summary:focus-visible{
     }
 }
 </style>
+    <x-calc.head />
 </head>
 
-<body data-tool-slug="paint-calculator">
+<body data-tool-slug="paint-calculator" class="wc">
 
 <x-site.contech-header />
 
@@ -2456,14 +2457,10 @@ summary:focus-visible{
 
 <main class="paint-wrap" id="ana-icerik">
 
-    <section class="paint-hero">
-<h1>Boya Hesaplama: Kaç Litre Boya Gider?</h1>
-
-        <p>
-            Boyanacak alanın ölçülerini girin; boya ihtiyacını,
-            işçilik bütçesini ve gerekiyorsa dış cephe erişim maliyetini hesaplayın.
-        </p>
-    </section>
+    <x-calc.hero title="Boya hesaplama: kaç litre boya gider?" crumb="Boya hesaplama" :facts="['İç ve dış cephe', 'Malzeme ve işçilik bütçesi']">
+        5 × 4 m ve 2,8 m tavan yüksekliğindeki bir odanın duvarları, 1 kapı ve 2 pencere düşüldükten sonra yaklaşık 45 m² eder; 2 kat boya ve %10 fire ile yaklaşık 10 litre duvar boyası gerekir. Ölçüleri girin; boya litresini, kutu sayısını, işçiliği ve gerekiyorsa dış cephe iskele bedelini görün.
+    </x-calc.hero>
+    <div style="height:24px"></div>
 
     <div class="layout">
 
@@ -2848,20 +2845,21 @@ summary:focus-visible{
 
             <h2>Hesap özeti</h2>
 
-            <div id="resultEmpty" class="result-empty">
+            <div id="resultEmpty" class="result-empty" data-wc-empty>
                 Ölçülerinizi girip hesaplama yaptığınızda boya miktarı ve yaklaşık işçilik bütçesi burada görünecek.
             </div>
 
             <div
                 id="resultLive"
                 class="result-live"
+                data-wc-result
                 aria-live="polite">
 
                 <div class="metric-main">
 
                     <span id="budgetTitle">Tahmini toplam bütçe</span>
 
-                    <strong id="budgetRange">—</strong>
+                    <strong id="budgetRange" data-wc-price>—</strong>
 
                     <small>
                         Malzeme, işçilik ve varsa erişim bedeli birlikte hesaplanır.
@@ -5479,6 +5477,7 @@ syncSurfaceScope();
 </script>
 
 
+<x-calc.kit :dock="false" />{{-- boyanın kendi mobil teklif çubuğu var --}}
 <x-site.contech-footer />
 <script src="/js/p1-product-events.js" defer></script>
 </body>

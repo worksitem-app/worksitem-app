@@ -250,6 +250,15 @@ class LeadCaptureService
             }
         }
 
+        // Müşteriye "talebiniz alındı" SMS'i (bilgilendirme; hata lead kaydını bozmaz)
+        if (! $result['duplicate']) {
+            try {
+                app(\App\Services\Sms\CustomerSms::class)->leadReceived($result['lead']);
+            } catch (\Throwable $exception) {
+                Log::warning('Lead SMS failed', ['lead_id' => $result['lead']->id ?? null, 'error' => $exception->getMessage()]);
+            }
+        }
+
         return $result;
     }
 

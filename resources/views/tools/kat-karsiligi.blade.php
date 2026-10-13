@@ -105,18 +105,19 @@
     <link rel="manifest" href="/site.webmanifest">
     <meta name="theme-color" content="#ffffff">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <x-calc.head />
 </head>
-<body data-tool-slug="kat-karsiligi">
+<body class="wc" data-tool-slug="kat-karsiligi">
 
 <x-site.contech-header />
 
-<div class="container">
-    <div class="tool-header">
-        <h1>Kat Karşılığı Fizibilite Motoru</h1>
-        <p>Arsa sahibi ile müteahhit arasındaki paylaşıma göre projenin toplam maliyetini, satış gelirini ve net kârlılığını (risk oranını) simüle edin.</p>
-    </div>
+<main class="wc-wrap">
+    <x-calc.hero title="Kat karşılığı fizibilite hesaplama" crumb="Kat karşılığı">
+        Arsa sahibi ile müteahhit arasındaki paylaşıma göre projenin toplam maliyetini, satış gelirini ve net kârlılığını (risk oranını) simüle edin.
+    </x-calc.hero>
 
-    <div class="card">
+    <div class="wc-grid">
+    <div class="card wc-panel">
         <div class="form-grid">
             <div class="form-group">
                 <label>Arsa Alanı (Net m²)</label>
@@ -151,9 +152,14 @@
         <button type="button" class="btn btn-calc" id="calculateBtn">Müteahhit Kârını ve Riski Hesapla →</button>
     </div>
 
-    <div class="result-box" id="resultBox">
+    <aside class="wc-aside">
+    <div class="wc-empty" data-wc-empty>
+        <strong>Sonuç burada görünecek</strong>
+        Bilgileri girip hesaplayın; sonuç, döküm ve yaklaşık bütçe burada görünür.
+    </div>
+    <div class="result-box wc-result" data-wc-result id="resultBox">
         <div class="result-label">MÜTEAHHİT NET KÂR BEKLENTİSİ</div>
-        <div class="result-price" id="netProfit">0 TL</div>
+        <div class="result-price" id="netProfit" data-wc-price>0 TL</div>
         
         <p style="font-size: 11px; color: #6b7280; margin-bottom:20px;">
             ⚠️ Hatırlatma: Müteahhit toplam brüt alanın %100'ünü inşa etmek için para harcar, ancak sadece kendi % payına düşen daireleri satarak gelir elde eder.
@@ -194,6 +200,10 @@
             </div>
         </div>
     </div>
+    </aside>
+    </div>{{-- /wc-grid --}}
+
+    <div class="wc-below">
 
     <!-- ELEME KAPISI -->
     <div class="budget-confirm-box" id="budgetConfirmBox">
@@ -243,11 +253,13 @@
                 <textarea name="notes" class="form-control" style="height: 80px; padding-top:10px;" placeholder="Arsa sahibi ile sözleşme imzalandı mı? Mimari proje çizildi mi?"></textarea>
             </div>
 
+            <x-lead-consent-fields />
             <button type="submit" class="btn btn-submit">Kainta İnşaat'tan Müteahhitlik Teklifi Al →</button>
         </form>
     </div>
 
-</div>
+    </div>{{-- /wc-below --}}
+</main>
 
 <script>
 document.getElementById('calculateBtn').addEventListener('click', function() {
@@ -349,7 +361,10 @@ document.getElementById('btnNo').addEventListener('click', function() {
 });
 </script>
 
-    <x-site.contech-footer />
+    <x-calc.kit />
+<x-tools.tool-guide slug="kat-karsiligi-analiz" />
+
+<x-site.contech-footer />
     <script src="/js/tool-events.js" defer></script>
 </body>
 </html>

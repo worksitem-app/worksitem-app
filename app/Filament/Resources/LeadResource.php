@@ -17,11 +17,24 @@ class LeadResource extends Resource
     protected static ?string $model = Lead::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-fire';
-    protected static ?string $navigationLabel = 'Satış Talepleri';
-    protected static ?string $modelLabel = 'Satış Talebi';
-    protected static ?string $pluralModelLabel = 'Satış Talepleri';
-    protected static ?string $navigationGroup = 'Müşteri Yönetimi (CRM)';
+    protected static ?string $navigationLabel = 'Teklif Talepleri';
+    protected static ?string $modelLabel = 'Teklif Talebi';
+    protected static ?string $pluralModelLabel = 'Teklif Talepleri';
+    protected static ?string $navigationGroup = 'Teklifler (CRM)';
     protected static ?int $navigationSort = 1;
+
+    /** Menüde yeni (henüz dokunulmamış) talep sayısı */
+    public static function getNavigationBadge(): ?string
+    {
+        $n = Lead::query()->where('status', 'yeni')->count();
+
+        return $n > 0 ? (string) $n : null;
+    }
+
+    public static function getNavigationBadgeColor(): ?string
+    {
+        return 'warning';
+    }
 
     public static function form(Form $form): Form
     {
@@ -29,6 +42,11 @@ class LeadResource extends Resource
             Forms\Components\Section::make('Lead Özeti')
                 ->description('Worksitem tarafından hesaplanan satış önceliği')
                 ->schema([
+                    Forms\Components\TextInput::make('ref_code')
+                        ->label('Talep No (müşteriye SMS ile giden)')
+                        ->disabled()
+                        ->dehydrated(false),
+
                     Forms\Components\TextInput::make('public_id')
                         ->label('Lead No')
                         ->disabled()
@@ -65,6 +83,61 @@ class LeadResource extends Resource
                         ->searchable()
                         ->preload()
                         ->nullable(),
+
+                    Forms\Components\Select::make('inspection_status')
+                        ->label('Yerinde Keşif')
+                        ->options(self::inspectionOptions())
+                        ->placeholder('Keşif kabul edilmedi')
+                        ->live()
+                        ->afterStateUpdated(function (?string $state, Forms\Set $set, Forms\Get $get): void {
+                            if ($state === 'odendi' && ! $get('inspection_paid_at')) {
+                                $set('inspection_paid_at', now()->format('Y-m-d H:i:s'));
+                            }
+                        }),
+
+                    Forms\Components\DateTimePicker::make('inspection_accepted_at')
+                        ->label('Keşif Kabul Zamanı')
+                        ->disabled()
+                        ->dehydrated(false),
+
+                    Forms\Components\DateTimePicker::make('inspection_paid_at')
+                        ->label('Keşif Ödeme Zamanı'),
+
+                    Forms\Components\DateTimePicker::make('inspection_appointment_at')
+                        ->label('Keşif Randevusu')
+                        ->seconds(false)
+                        ->minutesStep(15)
+                        ->timezone('Europe/Istanbul')
+                        ->helperText('Kaydedince müşteriye randevu SMS\'i gider; bir gün önce 18:00\'de hatırlatma gönderilir.'),
+
+                    Forms\Components\TextInput::make('inspection_address')
+                        ->label('Keşif Adresi')
+                        ->maxLength(255)
+                        ->placeholder('Mahalle, sokak, no, daire — ilçe/il'),
+
+                    Forms\Components\Select::make('inspection_payment_method')
+                        ->label('Keşif Ödeme Yöntemi')
+                        ->options(fn (): array => collect((array) config('worksitem_inspection.payment_methods'))->map(fn ($m) => $m['label'])->all())
+                        ->placeholder('—'),
+
+                    Forms\Components\Placeholder::make('inspection_summary')
+                        ->label('Keşif Siparişi')
+                        ->content(function (?Lead $record): string {
+                            $d = (array) ($record?->inspection_data ?? []);
+                            if ($d === []) {
+                                return '—';
+                            }
+                            $inv = (array) ($d['invoice'] ?? []);
+                            $early = (bool) ($d['consents']['early_performance'] ?? false);
+
+                            return (($inv['type'] ?? '') === 'kurumsal'
+                                    ? 'Kurumsal fatura: '.($inv['title'] ?? '').' · '.($inv['tax_office'] ?? '').' / '.($inv['tax_no'] ?? '')
+                                    : 'Bireysel fatura')
+                                .' · '.($early ? 'Cayma süresinde keşif istendi' : 'Keşif 14 gün sonra yapılmalı')
+                                .' · Sözleşme '.($record?->inspection_terms_version ?? '-')
+                                .(! empty($d['iyzico']['payment_id']) ? ' · iyzico ödeme no '.$d['iyzico']['payment_id'] : '');
+                        })
+                        ->columnSpan(2),
                 ])
                 ->columns(3),
 
@@ -261,9 +334,9 @@ class LeadResource extends Resource
                 Tables\Columns\TextColumn::make('name')
                     ->label('Müşteri')
                     ->description(fn (Lead $record): string =>
-                        $record->phone ?: 'Telefon yok'
+                        trim(($record->ref_code ? $record->ref_code.' · ' : '').($record->phone ?: 'Telefon yok'))
                     )
-                    ->searchable(['name', 'phone', 'phone_normalized', 'email'])
+                    ->searchable(['name', 'phone', 'phone_normalized', 'email', 'ref_code'])
                     ->sortable(),
 
                 Tables\Columns\TextColumn::make('project_type')
@@ -285,7 +358,14 @@ class LeadResource extends Resource
 
                 Tables\Columns\TextColumn::make('estimated_cost')
                     ->label('Tahmini Bütçe')
-                    ->money('TRY', divideBy: 1)
+                    ->formatStateUsing(function ($state, Lead $record): string {
+                        $f = fn ($v) => '₺'.number_format((float) $v, 0, ',', '.');
+                        if ($record->estimated_min && $record->estimated_max) {
+                            return $f($record->estimated_min).' – '.$f($record->estimated_max);
+                        }
+
+                        return $state !== null ? $f($state) : '—';
+                    })
                     ->placeholder('—')
                     ->sortable()
                     ->toggleable(),
@@ -332,18 +412,30 @@ class LeadResource extends Resource
                     ->options(self::statusOptions())
                     ->sortable(),
 
+                Tables\Columns\TextColumn::make('inspection_status')
+                    ->label('Keşif')
+                    ->badge()
+                    ->formatStateUsing(fn (?string $state): string => self::inspectionOptions()[$state] ?? '—')
+                    ->color(fn (?string $state): string => match ($state) {
+                        'kabul' => 'warning',
+                        'odendi' => 'success',
+                        'iptal' => 'gray',
+                        default => 'gray',
+                    })
+                    ->description(fn (Lead $record): ?string => $record->inspection_payment_method
+                        ? config('worksitem_inspection.payment_methods.'.$record->inspection_payment_method.'.label')
+                        : null)
+                    ->placeholder('—')
+                    ->sortable(),
+
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Geliş Tarihi')
                     ->dateTime('d.m.Y H:i')
                     ->sortable()
                     ->toggleable(),
             ])
-            ->defaultSort(function (Builder $query): Builder {
-                return $query
-                    ->orderByDesc('sales_ready')
-                    ->orderByDesc('lead_score')
-                    ->orderByDesc('created_at');
-            })
+            // En yeni talep en üstte (önceden skor sırası yeni talepleri aşağıda gizliyordu)
+            ->defaultSort('created_at', 'desc')
             ->filters([
                 Tables\Filters\TernaryFilter::make('sales_ready')
                     ->label('Satışa Hazır')
@@ -371,6 +463,14 @@ class LeadResource extends Resource
                         ->pluck('source', 'source')
                         ->all())
                     ->searchable(),
+
+                Tables\Filters\SelectFilter::make('inspection_status')
+                    ->label('Yerinde Keşif')
+                    ->options(self::inspectionOptions()),
+
+                Tables\Filters\Filter::make('today_new')
+                    ->label('Bugün gelenler')
+                    ->query(fn (Builder $query): Builder => $query->whereDate('created_at', today())),
 
                 Tables\Filters\Filter::make('today_actions')
                     ->label('Bugün Aranacaklar')
@@ -433,24 +533,6 @@ class LeadResource extends Resource
         ];
     }
 
-    public static function getNavigationBadge(): ?string
-    {
-        return (string) static::getModel()::query()
-            ->where('sales_ready', true)
-            ->where('status', 'yeni')
-            ->count();
-    }
-
-    public static function getNavigationBadgeColor(): ?string
-    {
-        return static::getModel()::query()
-            ->where('sales_ready', true)
-            ->where('status', 'yeni')
-            ->exists()
-                ? 'danger'
-                : 'gray';
-    }
-
     private static function qualityOptions(): array
     {
         return [
@@ -459,6 +541,16 @@ class LeadResource extends Resource
             'nurture' => '🌱 NURTURE',
             'research' => '🔎 RESEARCH',
             'unqualified' => 'Belirsiz',
+        ];
+    }
+
+    /** @return array<string, string> */
+    public static function inspectionOptions(): array
+    {
+        return [
+            'kabul' => 'Kabul — ödeme bekleniyor',
+            'odendi' => 'Ödendi — randevu verilecek',
+            'iptal' => 'İptal',
         ];
     }
 

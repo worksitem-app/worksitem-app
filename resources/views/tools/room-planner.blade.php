@@ -6,8 +6,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>AI İç Mimar & Oda Yeniden Tasarım (Generative AI) | WORKSİTEM</title>
-    <meta name="description" content="Odanızın mevcut fotoğrafını yükleyin; generative AI ile yapıyı koruyarak farklı iç mimari stillerde yeniden tasarlanmış görünüm oluşturun.">
+    <title>Yapay Zekâ ile Oda Tasarımı: Fotoğraftan İç Mimari Öneri | WORKSİTEM</title>
+    <meta name="description" content="Odanızın fotoğrafını yükleyin; yapay zekâ duvar ve pencereleri koruyarak odanızı modern, İskandinav, endüstriyel gibi stillerde yeniden tasarlasın.">
     <link rel="canonical" href="https://worksitem.com/araclar/oda-planlayici">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
@@ -22,7 +22,7 @@
         
         .panel { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:25px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); height:fit-content; }
         
-        h1 { font-size:1.8rem; font-weight:800; margin-bottom:10px; background: -webkit-linear-gradient(45deg, #ffb800, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        h1 { font-size:1.8rem; font-weight:800; margin-bottom:10px; color:#101318;letter-spacing:-0.02em; }
         p.subtitle { color:var(--text-muted); font-size:0.9rem; margin-bottom:25px; line-height:1.5; }
         
         .form-group { margin-bottom:20px; }
@@ -65,12 +65,13 @@
 </head>
 <body data-tool-slug="room-planner">
     <x-site.contech-header />
+    <nav class="wc-crumb" aria-label="Sayfa yolu" style="max-width:1200px;margin:18px auto 0;padding:0 4%;font-size:13px;color:#5B6472"><a href="/" style="color:inherit">Ana sayfa</a> / <a href="/araclar" style="color:inherit">Araçlar</a> / <span>Oda tasarımı</span></nav>
     
     <div class="container">
         <!-- SOL PANEL: GİRDİLER VE FOTOĞRAF -->
         <div class="panel">
-            <h1>Generative AI İç Mimar</h1>
-            <p class="subtitle">Evinizin mevcut fotoğrafını yükleyin, yapay zeka odanın yapısını bozmadan hayalinizdeki stilde yeniden döşesin.</p>
+            <h1>Yapay zekâ ile oda tasarımı</h1>
+            <p class="subtitle">Odanızın fotoğrafını yükleyin, stili seçin; yapay zekâ duvar, pencere ve kapıları koruyarak odayı seçtiğiniz stilde yeniden döşesin. Sonuç bir görselleştirmedir, uygulama projesi değildir.</p>
             
             <div class="upload-box" onclick="document.getElementById('fileInput').click()">
                 <div class="upload-icon">📸</div>

@@ -18,6 +18,7 @@ class UnitPrice extends Model
         $flush = function () {
             CostEngine::clearCache();
             Cache::forget('pricing_engine_snapshot');
+            Cache::forget(\App\Services\BathroomPriceBook::CACHE_KEY);
         };
 
         static::saved($flush);

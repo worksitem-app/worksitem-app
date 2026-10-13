@@ -33,12 +33,13 @@
     <link rel="manifest" href="/site.webmanifest">
     <meta name="theme-color" content="#ffffff">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <x-calc.head />
 </head>
-<body data-tool-slug="pvc-calculator">
+<body class="wc" data-tool-slug="pvc-calculator">
     <x-site.contech-header />
     <div class="container">
         <div>
-            <h1>PVC Doğrama Hesaplama</h1>
+            <x-calc.hero title="PVC doğrama maliyeti hesaplama" crumb="PVC doğrama"></x-calc.hero>
             <div class="form-card">
                 <div class="grid-2">
                     <div class="form-group"><label>Genişlik (cm)</label><input type="number" id="w" class="form-control" value="150" oninput="calc()"></div>
@@ -61,13 +62,13 @@
             </div>
         </div>
         <div>
-            <div class="form-card" style="border-color:var(--yellow); position:sticky; top:20px;">
+            <div class="form-card" style="border-color:var(--yellow); position:sticky; top:20px;" data-wc-result>
                 <div style="font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size:24px; color:var(--yellow); margin-bottom:15px;">📊 MALİYET ANALİZİ</div>
                 <div class="res-item"><span>Profil Tahmini Ağırlığı</span> <strong id="r_kg">0 Kg</strong></div>
                 <div class="res-item"><span>PVC Profil Maliyeti</span> <strong id="r_prof">0 TL</strong></div>
                 <div class="res-item"><span>Isıcam Alanı</span> <strong id="r_m2">0 m²</strong></div>
                 <div class="res-item"><span>Cam Maliyeti</span> <strong id="r_glass">0 TL</strong></div>
-                <div class="res-item total"><span>TOPLAM PENCERE MALİYETİ</span> <span id="r_total">0 TL</span></div>
+                <div class="res-item total"><span>TOPLAM PENCERE MALİYETİ</span> <span id="r_total" data-wc-price>0 TL</span></div>
                 
                 <div class="ai-box">
                     <div style="color:var(--cyan); font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size:22px; margin-bottom:10px;">🤖 AI Yorumu</div>
@@ -123,6 +124,7 @@
         }
         document.addEventListener('DOMContentLoaded', calc);
     </script>
+<x-calc.kit />
     <x-site.contech-footer />
     <script src="/js/tool-events.js" defer></script>
 </body>

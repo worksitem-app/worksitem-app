@@ -263,9 +263,10 @@ summary:hover,summary:focus-visible{background:var(--accent);color:#111;outline:
 .visualizer-cta{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 16px;border-radius:11px;background:#ffb800;color:#111;text-decoration:none;font-weight:900;text-align:center}
 @media(max-width:720px){.visualizer-upsell{display:block}.visualizer-cta{width:100%;margin-top:12px}.visualizer-upsell strong{font-size:17px}}
 </style>
+    <x-calc.head />
 </head>
 
-<body data-tool-slug="tile-calculator">
+<body data-tool-slug="tile-calculator" class="wc">
 <x-site.contech-header />
 
 @php
@@ -281,14 +282,13 @@ $tileOfficial = collect($tilePrices ?? [])->mapWithKeys(function($p,$role){
 })->all();
 @endphp
 
-<main class="container">
-<section class="hero">
-    <div class="badge">2026 Seramik & Fayans Aracı</div>
-    <h1>Seramik ve Fayans Metraj & Maliyet Hesaplama Aracı 2026</h1>
-    <p>Banyo, mutfak veya zemin tadilatınız için kaplanacak alanı ve karo ebadını girin. Gereken seramik/fayans adedini, fireli metrajı, yaklaşık kutu ihtiyacını, işçilik referansını ve mevcut doğrulanmış piyasa verilerine göre yaklaşık malzeme maliyetini hesaplayın.</p>
-</section>
+<main class="wc-wrap">
+<x-calc.hero title="Seramik ve fayans hesaplama ({{ now()->year }})" crumb="Seramik ve fayans hesaplama" :facts="['Adet, kutu ve fireli metraj', 'Yapıştırıcı ve derz dolgu']">
+    20 m² zemine 60×60 cm karo döşenecekse %10 fire ile yaklaşık 62 adet karo gerekir. Kaplanacak alanı ve karo ebadını girin; adet, kutu sayısı, yapıştırıcı, derz dolgu ve doğrulanmış piyasa fiyatlarına göre yaklaşık malzeme bütçesini görün.
+</x-calc.hero>
 
-<section class="card">
+<div class="wc-grid">
+<section class="card wc-panel">
     <div class="mode-switch">
         <button type="button" class="mode-btn active" data-mode="quick">Hızlı Hesap</button>
         <button type="button" class="mode-btn" data-mode="detailed">Detaylı Hesap</button>
@@ -489,15 +489,20 @@ $tileOfficial = collect($tilePrices ?? [])->mapWithKeys(function($p,$role){
 
     </div>
 </div>
-<button type="button" id="calculateBtn" class="btn btn-main">Seramik İhtiyacını Hesapla →</button>
+<button type="button" id="calculateBtn" class="btn btn-main wc-cta">Seramik ihtiyacını hesapla</button>
 </section>
 
-<section class="result" id="resultBox">
-    <div class="result-label" id="resultBudgetLabel">
-        TAHMİNİ KARO MALZEME BÜTÇESİ
+<aside class="wc-aside">
+<div class="wc-empty" data-wc-empty>
+    <strong>Sonuç burada görünecek</strong>
+    Alanı ve karo ebadını girip hesaplayın: adet, kutu, fireli metraj ve yaklaşık malzeme bütçesi.
+</div>
+<section class="result wc-result" id="resultBox" data-wc-result>
+    <div class="result-label wc-r-label" id="resultBudgetLabel">
+        Tahmini karo malzeme bütçesi
     </div>
 
-    <div class="result-main" id="mainResult">
+    <div class="result-main" id="mainResult" data-wc-price>
         Güncel fiyat verisi bekleniyor
     </div>
 
@@ -590,7 +595,10 @@ $tileOfficial = collect($tilePrices ?? [])->mapWithKeys(function($p,$role){
         Hesaplama ön keşif amaçlıdır. Kesimler, yüzey geometrisi, kolon-kirişler, desen yönü ve uygulama koşulları gerçek ihtiyacı değiştirebilir.
     </p>
 </section>
+</aside>
+</div>{{-- /wc-grid --}}
 
+<div class="wc-below wc-below-wide">
 <section
     class="engineer-note"
     id="kaintaEngineerNote"
@@ -610,8 +618,9 @@ $tileOfficial = collect($tilePrices ?? [])->mapWithKeys(function($p,$role){
 </section>
 
 <section class="lead">
-    <h2 id="leadCtaTitle">Hesapladığınız seramik alanı için ücretsiz keşif ve anahtar teslim teklif alın</h2>
-    <p>Hesaplanan metrajınızı Kainta İnşaat ekibine gönderin; malzeme, fayans ustası işçiliği ve uygulama kapsamı için ücretsiz keşif ve anahtar teslim teklif talep edin.</p>
+    <h2 id="leadCtaTitle">Hesapladığınız seramik alanı için yerinde keşif ve anahtar teslim teklif alın</h2>
+    <p>Hesaplanan metrajınızı Kainta İnşaat ekibine gönderin; malzeme, fayans ustası işçiliği ve uygulama kapsamı için yerinde keşif ve anahtar teslim teklif talep edin.</p>
+    <p style="font-size:13px;color:var(--muted);margin-top:-6px"><x-inspection-fee-note short /></p>
 
     @if(isset($errors) && $errors->any())
         <div class="notice" role="alert" style="margin-bottom:16px;">
@@ -757,8 +766,10 @@ $tileOfficial = collect($tilePrices ?? [])->mapWithKeys(function($p,$role){
         kesin malzeme ve uygulama sistemi ayrıca değerlendirilmelidir.
     </p>
 </section>
+</div>{{-- /wc-below --}}
 </main>
 
+<x-calc.kit />
 <x-site.contech-footer />
 <script src="/js/tool-events.js" defer></script>
 
@@ -1935,7 +1946,7 @@ $('calculateBtn').addEventListener('click',async ()=>{
         }
     }
     $('leadCtaTitle').textContent=
-        `${trNumber(netArea,2)} m² seramik alanınız için ücretsiz keşif ve anahtar teslim teklif alın`;
+        `${trNumber(netArea,2)} m² seramik alanınız için yerinde keşif ve anahtar teslim teklif alın`;
     const visualizerCta=$('visualizerCta');
     if(visualizerCta){
         const visualizerSurface=items

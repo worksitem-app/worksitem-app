@@ -184,7 +184,13 @@ class UnitPriceResource extends Resource
                     ->toggleable(),
             ])
             ->defaultSort('updated_at', 'desc')
+            ->persistFiltersInSession()
             ->filters([
+                Tables\Filters\SelectFilter::make('category')
+                    ->label('Kategori')
+                    ->options(fn (): array => self::categoryOptions())
+                    ->searchable(),
+
                 Tables\Filters\SelectFilter::make('price_pool')
                     ->label('Fiyat Havuzu')
                     ->options([
@@ -237,5 +243,22 @@ class UnitPriceResource extends Resource
             'create' => Pages\CreateUnitPrice::route('/create'),
             'edit' => Pages\EditUnitPrice::route('/{record}/edit'),
         ];
+    }
+
+    /** Kategori filtresi: okunur adlar (banyo_tadilati → Banyo tadilatı) */
+    private static function categoryOptions(): array
+    {
+        $labels = [
+            'banyo_tadilati' => 'Banyo tadilatı',
+            'seramik_sarf' => 'Seramik sarf malzemesi',
+        ];
+
+        return UnitPrice::query()
+            ->whereNotNull('category')
+            ->distinct()
+            ->orderBy('category')
+            ->pluck('category')
+            ->mapWithKeys(fn ($c) => [$c => $labels[$c] ?? ucfirst(str_replace('_', ' ', $c))])
+            ->all();
     }
 }

@@ -80,7 +80,37 @@ class LeadController extends Controller
             'referrer' => ['nullable', 'string', 'max:2000'],
             'price_version' => ['nullable', 'string', 'max:100'],
             'calculation_id' => ['nullable', 'uuid'],
+        ], [
+            'name.required' => 'Lütfen adınızı ve soyadınızı yazın.',
+            'phone.required' => 'Lütfen telefon numaranızı yazın.',
+            'phone.min' => 'Telefon numaranızı 05XX XXX XX XX biçiminde, 11 haneli yazın.',
+            'phone.max' => 'Telefon numaranızı 05XX XXX XX XX biçiminde, 11 haneli yazın.',
+            'contact_consent.required' => 'Devam etmek için KVKK onay kutusunu işaretleyin.',
+            'contact_consent.accepted' => 'Devam etmek için KVKK onay kutusunu işaretleyin.',
+            'email.email' => 'Lütfen geçerli bir e-posta adresi yazın.',
         ]);
+
+        foreach (config('worksitem_lead_guard.fields', []) as $field) {
+            if (\App\Support\LeadTextGuard::isOffensive($request->input($field))) {
+                throw \Illuminate\Validation\ValidationException::withMessages([
+                    $field => 'Lütfen formda uygun bir dil kullanın.',
+                ]);
+            }
+        }
+
+        // Sahte / anlamsız ad ve konum (lkjnhbv, fkfkdfgf, asdasd, test ...) e-postaya ve admin'e düşmesin
+        if (! \App\Support\LeadTextGuard::isValidFullName($request->input('name'))) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'name' => 'Lütfen gerçek adınızı ve soyadınızı yazın. Örnek: Ayşe Yılmaz',
+            ]);
+        }
+        foreach (['location', 'city', 'district'] as $field) {
+            if (filled($request->input($field)) && \App\Support\LeadTextGuard::looksFake($request->input($field))) {
+                throw \Illuminate\Validation\ValidationException::withMessages([
+                    $field => 'Lütfen geçerli bir şehir ve ilçe yazın. Örnek: İzmir, Karşıyaka',
+                ]);
+            }
+        }
 
         /* SERAMIK_ZERO_TRUST_GUARD */
         if (
@@ -897,6 +927,9 @@ class LeadController extends Controller
                 'duplicate' => $result['duplicate'],
             ], $result['duplicate'] ? 200 : 201);
         }
+
+        // Teşekkür sayfasındaki keşif teklifi bu talebe bağlanır (yalnızca bu oturum)
+        $request->session()->put('kesif_lead', $lead->public_id);
 
         return redirect()
             ->route('lead.thanks')

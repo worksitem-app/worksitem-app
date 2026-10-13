@@ -102,18 +102,19 @@
     <link rel="manifest" href="/site.webmanifest">
     <meta name="theme-color" content="#ffffff">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <x-calc.head />
 </head>
-<body data-tool-slug="kablo-calculator">
+<body class="wc" data-tool-slug="kablo-calculator">
 
 <x-site.contech-header />
 
-<div class="container">
-    <div class="tool-header">
-        <h1>Kablo Kesiti & Gerilim Düşümü</h1>
-        <p>Çekilen güce, mesafeye ve gerilime göre sistemin ihtiyacı olan en güvenli kablo kesitini (mm²) ve bütçenizi hesaplayın.</p>
-    </div>
+<main class="wc-wrap">
+    <x-calc.hero title="Kablo kesiti hesaplama ve gerilim düşümü" crumb="Kablo kesiti hesabı" :facts="['Akım ve gerilim düşümü kontrolü', 'Monofaze / trifaze']">
+        Monofaze 220 V'ta 5,5 kW'lık bir yük 50 metre mesafeye taşınırken 25 A akım çeker; %3 gerilim düşümü sınırında 10 mm² bakır kablo gerekir (gerçekleşen düşüm yaklaşık %2). Gücü, mesafeyi, gerilimi ve yük tipini girin; önerilen kesiti ve yaklaşık kablo bütçesini görün.
+    </x-calc.hero>
 
-    <div class="card">
+    <div class="wc-grid">
+    <div class="card wc-panel">
         <div class="form-grid">
             <div class="form-group">
                 <label>Çekilen Toplam Güç (kW)</label>
@@ -143,12 +144,25 @@
             </div>
         </div>
 
-        <button type="button" class="btn btn-calc" id="calculateBtn">Mühendislik Analizini Getir →</button>
+        <div class="form-group">
+            <label for="loadType">Yük Tipi (izin verilen gerilim düşümü)</label>
+            <select id="loadType" class="form-control">
+                <option value="3" selected>Priz, kuvvet ve motor hattı (%3)</option>
+                <option value="1.5">Aydınlatma hattı (%1,5)</option>
+            </select>
+        </div>
+
+        <button type="button" class="btn btn-calc" id="calculateBtn">Kablo kesitini ve bütçeyi hesapla</button>
     </div>
 
-    <div class="result-box" id="resultBox">
+    <aside class="wc-aside">
+    <div class="wc-empty" data-wc-empty>
+        <strong>Sonuç burada görünecek</strong>
+        Gücü, mesafeyi ve gerilimi girip hesaplayın: çekilen akım, gerilim düşümü, önerilen kablo kesiti ve bütçe.
+    </div>
+    <div class="result-box wc-result" data-wc-result id="resultBox">
         <div class="result-label">GÜVENLİ KABLO VE ALTYAPI BÜTÇESİ</div>
-        <div class="result-price" id="totalPrice">0 TL</div>
+        <div class="result-price" id="totalPrice" data-wc-price>0 TL</div>
         
         <p style="font-size: 11px; color: #6b7280; margin-bottom:20px;">
             ⚠️ Bu değerler kablo bedeli, kroşe/boru/tava sarfiyatı ve çekim işçiliği dahil tahmini yaklaşık maliyettir.
@@ -186,6 +200,10 @@
             <div class="cross-sell-text">Elektrik altyapınız yenilenirken veya sıfırdan kurulurken, klasik şalt malzemeler yerine akıllı otomasyon sistemlerine geçiş yapmayı düşündünüz mü?</div>
         </div>
     </div>
+    </aside>
+    </div>{{-- /wc-grid --}}
+
+    <div class="wc-below">
 
     <div class="budget-confirm-box" id="budgetConfirmBox">
         <div class="budget-confirm-title">Elektrik taahhüt işleriniz için destek ister misiniz?</div>
@@ -232,11 +250,13 @@
                 <textarea name="notes" class="form-control" style="height: 80px; padding-top:10px;" placeholder="Yeni inşaat mı, yoksa fabrika içi makine hattı mı çekilecek?"></textarea>
             </div>
 
+            <x-lead-consent-fields />
             <button type="submit" class="btn btn-submit">Bütçeniz uygunsa Kainta İnşaat'tan net teklif alın →</button>
         </form>
     </div>
 
-</div>
+    </div>{{-- /wc-below --}}
+</main>
 
 <script>
 document.getElementById('calculateBtn').addEventListener('click', function() {
@@ -250,47 +270,33 @@ document.getElementById('calculateBtn').addEventListener('click', function() {
         return;
     }
 
-    let current = 0;
-    let s_voltage = 0;
-    const limitE = 1.5; // Maksimum izin verilen gerilim düşümü (aydınlatma için %1.5 güvenli sınır)
+    // DÜZELTME (12.10.2026): güç kW girilir; formüller watt ister (eski sürümde 1000 kat düşük gerilim düşümü çıkıyordu).
+    const pW = p * 1000;
+    const limitE = parseFloat((document.getElementById('loadType') || {}).value) || 3; // %: aydınlatma 1,5 · kuvvet 3
+    const k = 56; // bakır iletkenlik (m/Ω·mm²)
+    let current, s_voltage;
 
     if (vType === 220) {
-        // I = P(W) / V
-        current = (p * 1000) / 220;
-        // Monofaze gerilim düşümü kesiti: S = (200 * P * L) / (56 * limitE * 220^2)
-        s_voltage = (200 * p * l) / (56 * limitE * 220 * 220);
+        current = pW / 220;                                        // I = P / U
+        s_voltage = (200 * pW * l) / (k * limitE * 220 * 220);     // S = 200·P·L / (k·%e·U²)
     } else {
-        // I = P(W) / (1.732 * V)
-        current = (p * 1000) / (1.732 * 380);
-        // Trifaze gerilim düşümü kesiti: S = (100 * P * L) / (56 * limitE * 380^2)
-        s_voltage = (100 * p * l) / (56 * limitE * 380 * 380);
+        current = pW / (1.732 * 380);                              // I = P / (√3·U)
+        s_voltage = (100 * pW * l) / (k * limitE * 380 * 380);     // S = 100·P·L / (k·%e·U²)
     }
 
-    // Akım taşıma kapasitesine göre minimum kesit (Yaklaşık NYM/NYY havada)
-    let s_current = 1.5;
-    if (current > 125) s_current = 50;
-    else if (current > 100) s_current = 35;
-    else if (current > 80) s_current = 25;
-    else if (current > 63) s_current = 16;
-    else if (current > 40) s_current = 10;
-    else if (current > 32) s_current = 6;
-    else if (current > 25) s_current = 4;
-    else if (current > 16) s_current = 2.5;
+    // Akım taşıma kapasitesine göre en küçük kesit — sıva altı boru içi bakır, ihtiyatlı değerler (ön kontrol amaçlı)
+    const ampacity = [[1.5, 13], [2.5, 20], [4, 25], [6, 32], [10, 40], [16, 63], [25, 80], [35, 100], [50, 125], [70, 160], [95, 200], [120, 225], [150, 250], [240, 330]];
+    const fit = ampacity.find(([, a]) => a >= current);
+    const s_current = fit ? fit[0] : 240;
 
-    // Standart kablo kesitleri
-    const sizes = [1.5, 2.5, 4, 6, 10, 16, 25, 35, 50, 70, 95, 120, 150, 240];
+    const sizes = ampacity.map(([s]) => s);
     const required_s = Math.max(s_current, s_voltage);
-    
     let chosen_s = sizes.find(s => s >= required_s);
-    if (!chosen_s) chosen_s = 240; // Çok yüksekse en büyükte tut.
+    if (!chosen_s) chosen_s = 240;
 
-    // Gerçekleşen gerilim düşümü (%e) hesaplanması
-    let actual_e = 0;
-    if(vType === 220) {
-        actual_e = (200 * p * l) / (56 * chosen_s * 220 * 220);
-    } else {
-        actual_e = (100 * p * l) / (56 * chosen_s * 380 * 380);
-    }
+    const actual_e = vType === 220
+        ? (200 * pW * l) / (k * chosen_s * 220 * 220)
+        : (100 * pW * l) / (k * chosen_s * 380 * 380);
 
     // Bütçe Hesaplama (Birim fiyat kablo kalınlaştıkça ve tesisat tipine göre artar)
     // Örn: Base (İşçilik) + (Kesit * Çarpan)
@@ -310,7 +316,7 @@ document.getElementById('calculateBtn').addEventListener('click', function() {
     if (s_voltage > s_current) {
         insightText.innerHTML = `Dikkat: Girdiğiniz hat mesafesi (${l}m) çok uzun olduğu için, kablo kesiti cihazın çektiği akımdan ziyade <strong>gerilim düşümü (voltaj kaybı)</strong> sınırlarına göre büyütülerek <strong>${chosen_s} mm²</strong> seçilmiştir. Aksi halde cihazlarınız düşük voltajdan dolayı zarar görebilirdi.`;
     } else {
-        insightText.innerHTML = `İç Tesisleri Yönetmeliğine göre aydınlatma devrelerinde %1.5, motor devrelerinde %3 gerilim düşümüne izin verilir. Bu hesaplamada kablo kesiti doğrudan cihazın çektiği <strong>${current.toFixed(1)} Amper</strong> akım kapasitesine göre güvenli limitlerde belirlenmiştir.`;
+        insightText.innerHTML = `Elektrik İç Tesisleri Yönetmeliğine göre aydınlatma hatlarında %1,5, kuvvet/priz hatlarında %3 gerilim düşümüne izin verilir. Bu hesapta kesiti belirleyen, hattın çektiği <strong>${current.toFixed(1)} Amper</strong> akımdır; gerilim düşümü sınırın altındadır. Sigorta değeri ve kesin kesit, yetkili elektrik mühendisince onaylanmalıdır.`;
     }
 
     document.getElementById('leadCalculatedData').value = `Güç: ${p}kW | Mesafe: ${l}m | Gerilim: ${vType}V | Önerilen Kesit: ${chosen_s}mm2 | Bütçe: ${money.format(grandTotal)} TL`;
@@ -344,7 +350,8 @@ document.getElementById('btnNo').addEventListener('click', function() {
 });
 </script>
 
-    <x-site.contech-footer />
+    <x-calc.kit />
+<x-site.contech-footer />
     <script src="/js/tool-events.js" defer></script>
 </body>
 </html>

@@ -93,18 +93,19 @@
     <link rel="manifest" href="/site.webmanifest">
     <meta name="theme-color" content="#ffffff">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <x-calc.head />
 </head>
-<body data-tool-slug="sgk-calculator">
+<body class="wc" data-tool-slug="sgk-calculator">
 
 <x-site.contech-header />
 
-<div class="container">
-    <div class="tool-header">
-        <h1>SGK Asgari İşçilik ve İskan Motoru</h1>
-        <p>Resmi yapı yaklaşık birim maliyetleri üzerinden, iskan ruhsatı (ilişiksizlik belgesi) alabilmeniz için ödemeniz gereken eksik prim tutarını hesaplayın.</p>
-    </div>
+<main class="wc-wrap">
+    <x-calc.hero title="SGK asgari işçilik hesaplama" crumb="SGK asgari işçilik">
+        Resmi yapı yaklaşık birim maliyetleri üzerinden, iskan ruhsatı (ilişiksizlik belgesi) alabilmeniz için ödemeniz gereken eksik prim tutarını hesaplayın.
+    </x-calc.hero>
 
-    <div class="card">
+    <div class="wc-grid">
+    <div class="card wc-panel">
         <h3 style="font-size: 14px; margin-bottom: 15px; color: var(--text);">1. Yapı Bilgileri ve Rayiç Bedel</h3>
         
         <div class="form-grid">
@@ -139,9 +140,14 @@
         <button type="button" class="btn btn-calc" id="calculateBtn">Mevzuat Analizini ve Cezayı Hesapla →</button>
     </div>
 
-    <div class="result-box" id="resultBox">
+    <aside class="wc-aside">
+    <div class="wc-empty" data-wc-empty>
+        <strong>Sonuç burada görünecek</strong>
+        Bilgileri girip hesaplayın; sonuç, döküm ve yaklaşık bütçe burada görünür.
+    </div>
+    <div class="result-box wc-result" data-wc-result id="resultBox">
         <div class="result-label">ÖDENMESİ GEREKEN FARK SGK PRİMİ (CEZA)</div>
-        <div class="result-price" id="penaltyPrice">0 TL</div>
+        <div class="result-price" id="penaltyPrice" data-wc-price>0 TL</div>
         
         <p style="font-size: 11px; color: #6b7280; margin-bottom:20px;">
             ⚠️ Bu tablo %37.5 prim oranı (Kısa vadeli sigorta, MYÖ, GSS, İşsizlik vb.) üzerinden hesaplanmıştır.
@@ -174,6 +180,10 @@
             </div>
         </div>
     </div>
+    </aside>
+    </div>{{-- /wc-grid --}}
+
+    <div class="wc-below">
 
     <!-- ELEME KAPISI -->
     <div class="budget-confirm-box" id="budgetConfirmBox">
@@ -223,11 +233,13 @@
                 <textarea name="notes" class="form-control" style="height: 80px; padding-top:10px;" placeholder="İnşaat tamamlandı mı? Belediye başvurusu yapıldı mı?"></textarea>
             </div>
 
+            <x-lead-consent-fields />
             <button type="submit" class="btn btn-submit">Kainta İnşaat'tan Danışmanlık Al →</button>
         </form>
     </div>
 
-</div>
+    </div>{{-- /wc-below --}}
+</main>
 
 <script>
 document.getElementById('calculateBtn').addEventListener('click', function() {
@@ -296,7 +308,8 @@ document.getElementById('btnNo').addEventListener('click', function() {
 });
 </script>
 
-    <x-site.contech-footer />
+    <x-calc.kit />
+<x-site.contech-footer />
     <script src="/js/tool-events.js" defer></script>
 </body>
 </html>

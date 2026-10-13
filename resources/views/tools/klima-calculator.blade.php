@@ -100,18 +100,19 @@
     <link rel="manifest" href="/site.webmanifest">
     <meta name="theme-color" content="#ffffff">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <x-calc.head />
 </head>
-<body data-tool-slug="klima-calculator">
+<body class="wc" data-tool-slug="klima-calculator">
 
 <x-site.contech-header />
 
-<div class="container">
-    <div class="tool-header">
-        <h1>İklimlendirme & BTU Motoru</h1>
-        <p>Kişi sayısı, yalıtım ve cephe durumuna göre mekanınızın ihtiyacı olan doğru iklimlendirme (klima) kapasitesini bilimsel olarak hesaplayın.</p>
-    </div>
+<main class="wc-wrap">
+    <x-calc.hero title="Klima BTU hesaplama: oda için kaç BTU klima gerekir?" crumb="Klima BTU hesabı">
+        Kişi sayısı, yalıtım ve cephe durumuna göre mekanınızın ihtiyacı olan doğru iklimlendirme (klima) kapasitesini bilimsel olarak hesaplayın.
+    </x-calc.hero>
 
-    <div class="card">
+    <div class="wc-grid">
+    <div class="card wc-panel">
         <div class="form-grid">
             <div class="form-group">
                 <label>Oda / Mekan Alanı (m²)</label>
@@ -145,9 +146,14 @@
         <button type="button" class="btn btn-calc" id="calculateBtn">Isı Yükünü ve Kapasiteyi Hesapla →</button>
     </div>
 
-    <div class="result-box" id="resultBox">
+    <aside class="wc-aside">
+    <div class="wc-empty" data-wc-empty>
+        <strong>Sonuç burada görünecek</strong>
+        Bilgileri girip hesaplayın; sonuç, döküm ve yaklaşık bütçe burada görünür.
+    </div>
+    <div class="result-box wc-result" data-wc-result id="resultBox">
         <div class="result-label">İKLİMLENDİRME ANALİZİ</div>
-        <div class="result-price" id="recommendedDevice">0 BTU</div>
+        <div class="result-price" id="recommendedDevice" data-wc-price>0 BTU</div>
         
         <p style="font-size: 11px; color: #6b7280; margin-bottom:20px;">
             ⚠️ Bu sonuç, bölgesel ortalamalar ve yalıtım katsayıları baz alınarak hazırlanan mekanik mühendislik tavsiyesidir.
@@ -188,6 +194,10 @@
             </div>
         </div>
     </div>
+    </aside>
+    </div>{{-- /wc-grid --}}
+
+    <div class="wc-below">
 
     <!-- ELEME KAPISI -->
     <div class="budget-confirm-box" id="budgetConfirmBox">
@@ -237,11 +247,13 @@
                 <textarea name="notes" class="form-control" style="height: 80px; padding-top:10px;" placeholder="Tesisat çekili mi? Duvar tipi mi, asma tavan içi kanallı tip mi düşünüyorsunuz?"></textarea>
             </div>
 
+            <x-lead-consent-fields />
             <button type="submit" class="btn btn-submit">Bütçeniz uygunsa Kainta İnşaat'tan net teklif alın →</button>
         </form>
     </div>
 
-</div>
+    </div>{{-- /wc-below --}}
+</main>
 
 <script>
 document.getElementById('calculateBtn').addEventListener('click', function() {
@@ -323,7 +335,10 @@ document.getElementById('btnNo').addEventListener('click', function() {
 });
 </script>
 
-    <x-site.contech-footer />
+    <x-calc.kit />
+<x-tools.tool-guide slug="klima-btu-hesaplayici" />
+
+<x-site.contech-footer />
     <script src="/js/tool-events.js" defer></script>
 </body>
 </html>

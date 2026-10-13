@@ -475,34 +475,19 @@ input:focus,select:focus{
     <link rel="manifest" href="/site.webmanifest">
     <meta name="theme-color" content="#ffffff">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <x-calc.head />
 </head>
 
-<body data-tool-slug="yukseltilmis-doseme-calculator">
+<body class="wc" data-tool-slug="yukseltilmis-doseme-calculator">
 
 <x-site.contech-header />
 
 
-<section class="hero">
-<div class="container">
-
-    <div class="kicker">
-        CONTECH · OFİS & TEKNİK ALAN
-    </div>
-
-    <h1>
-        Yükseltilmiş Döşeme
-        Metraj Hesaplayıcı
-    </h1>
-
-    <p>
-        60×60 cm modüler yükseltilmiş döşeme için
-        panel, ayak ve stringer metrajınızı çıkarın.
-        Alt yalıtım seçerseniz doğrulanmış 2026-08 YFK
-        referans maliyetini ayrıca görün.
-    </p>
-
+<div class="wc-wrap" style="padding-bottom:0">
+    <x-calc.hero title="Yükseltilmiş döşeme maliyeti hesaplama" crumb="Yükseltilmiş döşeme">
+        60×60 cm modüler yükseltilmiş döşeme için panel, ayak ve stringer metrajınızı çıkarın. Alt yalıtım seçerseniz doğrulanmış 2026-08 YFK referans maliyetini ayrıca görün.
+    </x-calc.hero>
 </div>
-</section>
 
 
 <main class="container">
@@ -644,7 +629,7 @@ input:focus,select:focus{
 
 <section>
 
-<div class="card result" id="result">
+<div class="card result" id="result" data-wc-result>
 
     <div class="result-top">
 
@@ -656,7 +641,7 @@ input:focus,select:focus{
             60×60 cm Modüler Sistem
         </div>
 
-        <div class="total" id="rMainStatus">
+        <div class="total" id="rMainStatus" data-wc-price>
             Metraj hazır
         </div>
 
@@ -1329,6 +1314,7 @@ updateInsulationNote();
 
 </script>
 
+<x-calc.kit />
     <x-site.contech-footer />
     <script src="/js/tool-events.js" defer></script>
 </body>

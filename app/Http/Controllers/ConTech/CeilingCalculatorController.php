@@ -23,7 +23,52 @@ class CeilingCalculatorController extends Controller
         |
         */
 
-        $systems = [
+        $systems = static::catalog();
+
+        foreach ($systems as &$system) {
+
+            $record = null;
+
+            if (!empty($system['poz'])) {
+                $record = $this->prices->byPoz(
+                    $system['poz'],
+                    '2026-08',
+                    'YFK'
+                );
+            }
+
+            $found = is_array($record)
+                && isset($record['price'])
+                && is_numeric($record['price']);
+
+            $system['price_found'] = $found;
+
+            $system['unit_price'] = $found
+                ? (float) $record['price']
+                : null;
+
+            $system['unit'] = $record['unit'] ?? 'm²';
+
+            $system['price_source'] = $found
+                ? ($record['source'] ?? 'rayic_prices')
+                : null;
+
+            $system['price_period'] = $found
+                ? '2026-08'
+                : null;
+        }
+
+        unset($system);
+
+        return view('tools.asma-tavan-calculator', [
+            'systems' => $systems,
+        ]);
+    }
+
+    /** Sistem / katman kataloğu (fiyat içermez; hesap motoru da kullanır) */
+    public static function catalog(): array
+    {
+        return [
 
             'alcipan' => [
                 'label' => 'Alçıpan Asma Tavan',
@@ -121,44 +166,5 @@ class CeilingCalculatorController extends Controller
                 'note' => 'Metraj hesaplanır. Doğrulanmış fiyat bulunmadığı için fiyat üretilmez.',
             ],
         ];
-
-        foreach ($systems as &$system) {
-
-            $record = null;
-
-            if (!empty($system['poz'])) {
-                $record = $this->prices->byPoz(
-                    $system['poz'],
-                    '2026-08',
-                    'YFK'
-                );
-            }
-
-            $found = is_array($record)
-                && isset($record['price'])
-                && is_numeric($record['price']);
-
-            $system['price_found'] = $found;
-
-            $system['unit_price'] = $found
-                ? (float) $record['price']
-                : null;
-
-            $system['unit'] = $record['unit'] ?? 'm²';
-
-            $system['price_source'] = $found
-                ? ($record['source'] ?? 'rayic_prices')
-                : null;
-
-            $system['price_period'] = $found
-                ? '2026-08'
-                : null;
-        }
-
-        unset($system);
-
-        return view('tools.asma-tavan-calculator', [
-            'systems' => $systems,
-        ]);
     }
 }

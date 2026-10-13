@@ -30,12 +30,12 @@
     <link rel="manifest" href="/site.webmanifest">
     <meta name="theme-color" content="#ffffff">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <x-calc.head />
 </head>
-<body data-tool-slug="simple-beam">
+<body class="wc" data-tool-slug="simple-beam">
     <x-site.contech-header />
     <div class="container">
-        <h1>Basit Kiriş Statiği Hesaplayıcı</h1>
-        <p style="color:#6b7280; margin-bottom:30px;">Düzgün yayılı yüke maruz iki ucu mafsallı basit kirişin maksimum eğilme momenti ve kesme kuvvetini hesaplayın.</p>
+        <x-calc.hero title="Basit kiriş statiği hesaplama" crumb="Basit kiriş">Düzgün yayılı yüke maruz iki ucu mafsallı basit kirişin maksimum eğilme momenti ve kesme kuvvetini hesaplayın.</x-calc.hero>
         
         <div class="grid-2">
             <div class="form-group">
@@ -48,10 +48,10 @@
             </div>
         </div>
 
-        <div class="result-box">
+        <div class="result-box" data-wc-result>
             <div class="res-col">
                 <span style="font-size:13px; color:#5b21b6; font-weight:700;">MAKSİMUM MOMENT (M)</span>
-                <span class="result-val" id="resM">0 kNm</span>
+                <span class="result-val" id="resM" data-wc-price>0 kNm</span>
             </div>
             <div class="res-col" style="border-left:2px solid #ddd6fe; padding-left:20px;">
                 <span style="font-size:13px; color:#5b21b6; font-weight:700;">MAKS. KESME KUVVETİ (V)</span>
@@ -92,6 +92,7 @@
         }
         document.addEventListener('DOMContentLoaded', calc);
     </script>
+<x-calc.kit />
     <x-site.contech-footer />
     <script src="/js/tool-events.js" defer></script>
 </body>

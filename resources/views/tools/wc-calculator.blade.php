@@ -100,18 +100,19 @@
     <link rel="manifest" href="/site.webmanifest">
     <meta name="theme-color" content="#ffffff">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <x-calc.head />
 </head>
-<body data-tool-slug="wc-calculator">
+<body class="wc" data-tool-slug="wc-calculator">
 
 <x-site.contech-header />
 
-<div class="container">
-    <div class="tool-header">
-        <h1>WC Maliyet Hesabı</h1>
-        <p>WC ve tuvalet yenileme işlemleriniz için seramik, su yalıtımı ve vitrifiye maliyetlerinizi hesaplayın.</p>
-    </div>
+<main class="wc-wrap">
+    <x-calc.hero title="WC tadilat maliyeti hesaplama" crumb="WC tadilatı">
+        WC ve tuvalet yenileme işlemleriniz için seramik, su yalıtımı ve vitrifiye maliyetlerinizi hesaplayın.
+    </x-calc.hero>
 
-    <div class="card">
+    <div class="wc-grid">
+    <div class="card wc-panel">
         <div class="form-grid">
             <div class="form-group">
                 <label>WC Eni (m)</label>
@@ -140,9 +141,14 @@
         <button type="button" class="btn btn-calc" id="calculateBtn">Bütçe Analizini Getir →</button>
     </div>
 
-    <div class="result-box" id="resultBox">
+    <aside class="wc-aside">
+    <div class="wc-empty" data-wc-empty>
+        <strong>Sonuç burada görünecek</strong>
+        Bilgileri girip hesaplayın; sonuç, döküm ve yaklaşık bütçe burada görünür.
+    </div>
+    <div class="result-box wc-result" data-wc-result id="resultBox">
         <div class="result-label">ANAHTAR TESLİM BÜTÇE ANALİZİ</div>
-        <div class="result-price" id="totalPrice">0 TL</div>
+        <div class="result-price" id="totalPrice" data-wc-price>0 TL</div>
         
         <p style="font-size: 11px; color: #6b7280; margin-bottom:20px;">
             ⚠️ Bu değerler güncel pozlarla hazırlanmış yaklaşık maliyettir. Kırım, sıva tamiratları ve işçilik dahil edilmiştir.
@@ -183,6 +189,10 @@
             </div>
         </div>
     </div>
+    </aside>
+    </div>{{-- /wc-grid --}}
+
+    <div class="wc-below">
 
     <!-- ELEME KAPISI -->
     <div class="budget-confirm-box" id="budgetConfirmBox">
@@ -232,11 +242,13 @@
                 <textarea name="notes" class="form-control" style="height: 80px; padding-top:10px;" placeholder="Gömme rezervuar tipi, havalandırma talebi vs..."></textarea>
             </div>
 
+            <x-lead-consent-fields />
             <button type="submit" class="btn btn-submit">Bütçeniz uygunsa Kainta İnşaat'tan net teklif alın →</button>
         </form>
     </div>
 
-</div>
+    </div>{{-- /wc-below --}}
+</main>
 
 <script>
 document.getElementById('calculateBtn').addEventListener('click', function() {
@@ -315,7 +327,8 @@ document.getElementById('btnNo').addEventListener('click', function() {
 });
 </script>
 
-    <x-site.contech-footer />
+    <x-calc.kit />
+<x-site.contech-footer />
     <script src="/js/tool-events.js" defer></script>
 <script src="/js/p1-product-events.js" defer></script>
 

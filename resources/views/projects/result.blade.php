@@ -70,7 +70,7 @@
     </div>
 
     <footer style="background:#1e293b; color:#94a3b8; padding:30px 20px; text-align:center; font-size:14px; margin-top:50px;">
-        </body>copy; 2026 Kainta İnşaat Mimarlık. Tüm hakları saklıdır.<br><span style="font-size:11px; opacity:0.6;">Yapay zeka destekli motor</span>
+        &copy; 2026 Kainta İnşaat Mimarlık. Tüm hakları saklıdır.<br><span style="font-size:11px; opacity:0.6;">Yapay zeka destekli motor</span>
     </footer>
 </body>
 </html>

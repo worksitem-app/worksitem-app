@@ -441,33 +441,19 @@ input:focus,select:focus{
     <link rel="manifest" href="/site.webmanifest">
     <meta name="theme-color" content="#ffffff">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <x-calc.head />
 </head>
 
-<body data-tool-slug="alcipan-tavan-calculator">
+<body class="wc" data-tool-slug="alcipan-tavan-calculator">
 
 <x-site.contech-header />
 
 
-<section class="hero">
-<div class="container">
-
-    <div class="kicker">
-        CONTECH · İNCE İŞLER
-    </div>
-
-    <h1>
-        Alçıpan Bölme & Giydirme
-        Duvar Hesaplayıcı
-    </h1>
-
-    <p>
-        Bölme veya giydirme duvarınızın net metrajını çıkarın.
-        Sistem seçiminize göre doğrulanmış 2026-08 YFK
-        referans maliyetini görün.
-    </p>
-
+<div class="wc-wrap" style="padding-bottom:0">
+    <x-calc.hero title="Alçıpan bölme ve giydirme duvar hesaplama" crumb="Alçıpan duvar" :facts="['Bölme ve giydirme duvar', 'C50 / C75 / C100 profil', 'YFK 2026 birim fiyatları']">
+        5 m uzunluğunda ve 2,8 m yüksekliğinde bir alçıpan bölme duvarın net imalat alanı 14 m²'dir; kapı ve pencere boşlukları düşülerek hesaplanır. Uygulama tipini, profili, levha türünü ve ölçüleri girin; net metrajı ve seçilen sisteme ait Bakanlık birim fiyatıyla yaklaşık tutarı görün.
+    </x-calc.hero>
 </div>
-</section>
 
 
 <main class="container">
@@ -643,7 +629,7 @@ input:focus,select:focus{
 
 <section>
 
-<div class="card result" id="result">
+<div class="card result" id="result" data-wc-result>
 
     <div class="result-top">
 
@@ -655,7 +641,7 @@ input:focus,select:focus{
             -
         </div>
 
-        <div class="total" id="rTotal">
+        <div class="total" id="rTotal" data-wc-price>
             -
         </div>
 
@@ -1250,7 +1236,10 @@ refreshUi();
 
 </script>
 
-    <x-site.contech-footer />
+    <x-calc.kit />
+    <x-tools.tool-guide slug="alcipan-hesaplayici" />
+
+<x-site.contech-footer />
     <script src="/js/tool-events.js" defer></script>
 </body>
 </html>

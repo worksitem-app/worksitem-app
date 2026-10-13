@@ -100,18 +100,19 @@
     <link rel="manifest" href="/site.webmanifest">
     <meta name="theme-color" content="#ffffff">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <x-calc.head />
 </head>
-<body data-tool-slug="su-tesisat-calculator">
+<body class="wc" data-tool-slug="su-tesisat-calculator">
 
 <x-site.contech-header />
 
-<div class="container">
-    <div class="tool-header">
-        <h1>Su Tesisatı & Mekanik Bütçe Motoru</h1>
-        <p>Islak hacim (Banyo/Mutfak) sayısına göre boru metrajınızı ve işçilik dahil anahtar teslim sıhhi tesisat bütçenizi hesaplayın.</p>
-    </div>
+<main class="wc-wrap">
+    <x-calc.hero title="Su tesisatı maliyeti hesaplama" crumb="Su tesisatı" :facts="['Temiz su ve pis su boru metrajı', 'Malzeme + işçilik']">
+        120 m², 2 banyolu ve 1 mutfaklı bir dairede standart PPRC ve PVC pimaş ile temiz ve pis su tesisatının yenilenmesi yaklaşık 24.810 TL tutar (64 m temiz su, 40 m pis su borusu; vitrifiye montajı hariç). Daire alanını, ıslak hacim sayısını ve boru tipini girin.
+    </x-calc.hero>
 
-    <div class="card">
+    <div class="wc-grid">
+    <div class="card wc-panel">
         <div class="form-group">
             <label>Daire / Ev Büyüklüğü (m²)</label>
             <input type="number" id="area" class="form-control" placeholder="Örn: 120" value="120" min="20" step="5">
@@ -139,9 +140,14 @@
         <button type="button" class="btn btn-calc" id="calculateBtn">Metraj ve Tesisat Bütçesini Çıkar →</button>
     </div>
 
-    <div class="result-box" id="resultBox">
+    <aside class="wc-aside">
+    <div class="wc-empty" data-wc-empty>
+        <strong>Sonuç burada görünecek</strong>
+        Daire alanını, banyo ve mutfak sayısını girip hesaplayın: boru metrajı, malzeme ve işçilik bütçesi.
+    </div>
+    <div class="result-box wc-result" data-wc-result id="resultBox">
         <div class="result-label">ANAHTAR TESLİM MEKANİK BÜTÇE</div>
-        <div class="result-price" id="totalPrice">0 TL</div>
+        <div class="result-price" id="totalPrice" data-wc-price>0 TL</div>
         
         <p style="font-size: 11px; color: #6b7280; margin-bottom:20px;">
             ⚠️ Bu değerler malzeme, kırım ve boru döşeme işçilikleri dahil yaklaşık rayiçlerdir. Vitrifiye (klozet, lavabo) montajları hariçtir.
@@ -183,6 +189,10 @@
             </div>
         </div>
     </div>
+    </aside>
+    </div>{{-- /wc-grid --}}
+
+    <div class="wc-below">
 
     <!-- ELEME KAPISI -->
     <div class="budget-confirm-box" id="budgetConfirmBox">
@@ -232,11 +242,13 @@
                 <textarea name="notes" class="form-control" style="height: 80px; padding-top:10px;" placeholder="Gömme rezervuar tesisatı var mı? Ev sıfır mı, tadilat mı görecek?"></textarea>
             </div>
 
+            <x-lead-consent-fields />
             <button type="submit" class="btn btn-submit">Bütçeniz uygunsa Kainta İnşaat'tan net teklif alın →</button>
         </form>
     </div>
 
-</div>
+    </div>{{-- /wc-below --}}
+</main>
 
 <script>
 document.getElementById('calculateBtn').addEventListener('click', function() {
@@ -325,7 +337,8 @@ document.getElementById('btnNo').addEventListener('click', function() {
 });
 </script>
 
-    <x-site.contech-footer />
+    <x-calc.kit />
+<x-site.contech-footer />
     <script src="/js/tool-events.js" defer></script>
 </body>
 </html>

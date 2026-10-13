@@ -40,7 +40,9 @@ class AiDesignController extends Controller
             ->where('is_free_quota', true)
             ->count();
 
-        if ($todayCount >= self::FREE_DAILY_LIMIT) {
+        // Telefonla giriş + kredi sistemi hakkı ayırdıysa IP tabanlı eski günlük sınır uygulanmaz
+        $walletCharge = $request->attributes->get('ai_charge');
+        if (! $walletCharge && $todayCount >= self::FREE_DAILY_LIMIT) {
             return response()->json([
                 'success' => false,
                 'message' => 'Günlük ücretsiz tasarım hakkınız doldu. Profesyonel tasarım için Kainta İnşaat ile iletişime geçin.',
@@ -83,6 +85,10 @@ class AiDesignController extends Controller
         ]);
 
         $remaining = max(0, self::FREE_DAILY_LIMIT - ($todayCount + 1));
+        if ($walletCharge) {
+            // Tasarım sonradan başarısız olursa hak iade edilsin (checkStatus)
+            \Illuminate\Support\Facades\Cache::put('ai-charge:'.$generation->public_id, $walletCharge, now()->addHours(6));
+        }
 
         return response()->json([
             'success' => true,
@@ -125,6 +131,7 @@ class AiDesignController extends Controller
             ]);
         } elseif ($result['status'] === 'failed') {
             $generation->update(['status' => 'failed']);
+            $this->refundWalletCharge($generation->public_id);
         }
 
         return response()->json($result);
@@ -174,5 +181,14 @@ class AiDesignController extends Controller
     private function ipHash(Request $request): string
     {
         return hash_hmac('sha256', (string) $request->ip(), (string) config('app.key'));
+    }
+
+    /** Kredi/ücretsiz hak ayrılmış bir tasarım başarısız olduysa hakkı bir kez iade eder */
+    private function refundWalletCharge(string $publicId): void
+    {
+        $charge = \Illuminate\Support\Facades\Cache::pull('ai-charge:'.$publicId);
+        if (is_array($charge) && ($wallet = \App\Models\AiWallet::query()->find($charge['wallet_id'] ?? 0))) {
+            app(\App\Services\AI\AiCredits::class)->refund($wallet, $charge['reservation'], 'ai.interior.start');
+        }
     }
 }

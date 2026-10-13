@@ -42,13 +42,13 @@
     <link rel="manifest" href="/site.webmanifest">
     <meta name="theme-color" content="#ffffff">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <x-calc.head />
 </head>
-<body data-tool-slug="zemin-calculator">
+<body class="wc" data-tool-slug="zemin-calculator">
 <x-site.contech-header />
 <div class="container">
     <div style="text-align: center; margin-bottom: 30px;">
-        <h1 style="font-size: 28px; font-weight: 900; letter-spacing: -1px; margin-bottom: 10px;">Zemin ve Fayans Motoru</h1>
-        <p style="color: var(--muted); font-size: 15px;">Parke, seramik, fayans veya mermer kaplama ihtiyaçlarınızın fire payı dahil malzeme metrajını ve bütçesini çıkarın.</p>
+        <x-calc.hero title="Zemin kaplama ve fayans maliyeti hesaplama" crumb="Zemin kaplama">Parke, seramik, fayans veya mermer kaplama ihtiyaçlarınızın fire payı dahil malzeme metrajını ve bütçesini çıkarın.</x-calc.hero>
     </div>
     <div class="card">
         <div class="form-grid">
@@ -73,9 +73,9 @@
         <button type="button" class="btn-calc" id="calcBtn">Zemin Maliyetini Hesapla →</button>
     </div>
 
-    <div class="result-box" id="resBox">
+    <div class="result-box" id="resBox" data-wc-result>
         <div style="font-size: 12px; color: #a1a1aa; font-weight: 700; letter-spacing: 1px;">TAHMİNİ MALZEME VE İŞÇİLİK BÜTÇESİ</div>
-        <div class="result-price" id="resPrice">0 TL</div>
+        <div class="result-price" id="resPrice" data-wc-price>0 TL</div>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; text-align: left;">
             <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
                 <span style="display: block; font-size: 12px; color: #a1a1aa;">Net Alan</span>
@@ -101,6 +101,7 @@
             <input type="text" name="name" class="form-control" required placeholder="Adınız Soyadınız" style="margin-bottom:15px;">
             <input type="tel" name="phone" class="form-control" required placeholder="Telefon Numaranız" style="margin-bottom:15px;">
             <input type="text" name="location" class="form-control" required placeholder="Şehir/İlçe" style="margin-bottom:15px;">
+            <x-lead-consent-fields />
             <button type="submit" class="btn-submit">Teklif Al →</button>
         </form>
     </div>
@@ -137,6 +138,7 @@ document.getElementById('calcBtn').onclick = () => {
 document.getElementById('bYes').onclick = () => { document.getElementById('bConf').style.display='none'; document.getElementById('leadForm').style.display='block'; };
 document.getElementById('bNo').onclick = () => { document.getElementById('bConf').innerHTML = '<p>Bizi tercih ettiğiniz için teşekkürler.</p>'; };
 </script>
+<x-calc.kit />
     <x-site.contech-footer />
     <script src="/js/tool-events.js" defer></script>
 <script src="/js/p1-product-events.js" defer></script>

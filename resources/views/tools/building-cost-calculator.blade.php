@@ -101,19 +101,19 @@
         .btn-submit { background: #101318; color: #fff; margin-top: 10px; }
     </style>
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <x-calc.head />
 </head>
-<body data-tool-slug="building-cost-calculator">
+<body class="wc" data-tool-slug="building-cost-calculator">
 
 <x-site.contech-header />
 
-<div class="container">
-    <div class="tool-header">
-        <div class="ai-badge">🏛️ ÇŞB 2026 VERİTABANI</div>
-        <h1>Bina İnşaat Maliyeti & Nakit Akışı Motoru</h1>
-        <p>Bakanlığın güncel <span class="tooltip-word" data-tooltip="Çevre ve Şehircilik Bakanlığı tarafından her yıl açıklanan resmi birim maliyetleri">ÇŞB yapı sınıflarına</span> göre projenizin net yapım maliyetini, yasal harçlarını, kârını hesaplayın ve aylık ödeme planını simüle edin.</p>
-    </div>
+<main class="wc-wrap">
+    <x-calc.hero title="Bina inşaat maliyeti ve nakit akışı hesaplama" crumb="Bina maliyeti">
+        Bakanlığın güncel ÇŞB yapı sınıflarına göre projenizin net yapım maliyetini, yasal harçlarını, kârını hesaplayın ve aylık ödeme planını simüle edin.
+    </x-calc.hero>
 
-    <div class="card">
+    <div class="wc-grid">
+    <div class="card wc-panel">
         <div class="form-grid">
             <div class="form-group">
                 <label><span class="tooltip-word" data-tooltip="Otopark, sığınak ve balkonlar dahil yapının tüm alanıdır.">Toplam Brüt İnşaat Alanı (m²)</span></label>
@@ -180,9 +180,14 @@
         <button type="button" class="btn btn-calc" id="calculateBtn">Maliyet ve Nakit Akışını Çıkar →</button>
     </div>
 
-    <div class="result-box" id="resultBox">
+    <aside class="wc-aside">
+    <div class="wc-empty" data-wc-empty>
+        <strong>Sonuç burada görünecek</strong>
+        Bilgileri girip hesaplayın; sonuç, döküm ve yaklaşık bütçe burada görünür.
+    </div>
+    <div class="result-box wc-result" data-wc-result id="resultBox">
         <div class="result-label">ANAHTAR TESLİM TOPLAM BÜTÇE</div>
-        <div class="result-price" id="totalPrice">0 TL</div>
+        <div class="result-price" id="totalPrice" data-wc-price>0 TL</div>
         <p style="font-size: 11px; color: #6b7280; margin-bottom:20px;">⚠️ KDV, Genel Giderler ve Kâr Dâhildir. Arsa payı hariçtir.</p>
 
         <span class="formula-toggle" onclick="document.getElementById('formulaBox').classList.toggle('active')">Bu Rakam Nasıl Hesaplanıyor? (Şeffaflık Raporu) ▼</span>
@@ -222,6 +227,10 @@
             </div>
         </div>
     </div>
+    </aside>
+    </div>{{-- /wc-grid --}}
+
+    <div class="wc-below">
 
     <!-- ... (Aşağıdaki Lead form html'i aynı) ... -->
     <div class="budget-confirm-box" id="budgetConfirmBox">
@@ -240,10 +249,12 @@
             <input type="hidden" name="calculated_area" id="leadCalculatedData" value="">
             <div class="form-group" style="margin-top:15px;"><input type="text" name="name" class="form-control" required placeholder="Adınız Soyadınız"></div>
             <div class="form-group"><input type="tel" name="phone" class="form-control" required placeholder="Telefonunuz"></div>
+            <x-lead-consent-fields />
             <button type="submit" class="btn btn-submit">Gönder →</button>
         </form>
     </div>
-</div>
+    </div>{{-- /wc-below --}}
+</main>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
@@ -394,6 +405,9 @@ document.getElementById('btnNo').addEventListener('click', () => { document.getE
 </script>
 
     <script src="/js/tool-events.js" defer></script>
-    <x-site.contech-footer />
+    <x-calc.kit />
+<x-tools.tool-guide slug="tahmini-bina-maliyeti" />
+
+<x-site.contech-footer />
 </body>
 </html>

@@ -469,36 +469,19 @@ input:focus,select:focus{
     <link rel="manifest" href="/site.webmanifest">
     <meta name="theme-color" content="#ffffff">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <x-calc.head />
 </head>
 
-<body data-tool-slug="sandvic-panel-calculator">
+<body class="wc" data-tool-slug="sandvic-panel-calculator">
 
 <x-site.contech-header />
 
 
-<section class="hero">
-
-<div class="container">
-
-    <div class="kicker">
-        CONTECH · FABRİKA & DEPO
-    </div>
-
-    <h1>
-        Sandviç Panel Çatı &
-        Cephe Hesaplayıcı
-    </h1>
-
-    <p>
-        Fabrika, depo ve sanayi yapılarında sandviç panel
-        metrajınızı hesaplayın. Çatı sistemlerinde doğrulanmış
-        2026-08 YFK referans maliyetlerini görün; cephe
-        tarafında fiyat uydurmadan gerçek metrajınızı çıkarın.
-    </p>
-
+<div class="wc-wrap" style="padding-bottom:0">
+    <x-calc.hero title="Sandviç panel metrajı ve maliyeti hesaplama" crumb="Sandviç panel">
+        Fabrika, depo ve sanayi yapılarında sandviç panel metrajınızı hesaplayın. Çatı sistemlerinde doğrulanmış 2026-08 YFK referans maliyetlerini görün; cephe tarafında fiyat uydurmadan gerçek metrajınızı çıkarın.
+    </x-calc.hero>
 </div>
-
-</section>
 
 
 <main class="container">
@@ -732,7 +715,7 @@ input:focus,select:focus{
 
 <section>
 
-<div class="card result" id="result">
+<div class="card result" id="result" data-wc-result>
 
     <div class="result-top">
 
@@ -744,7 +727,7 @@ input:focus,select:focus{
             -
         </div>
 
-        <div class="total" id="rTotal">
+        <div class="total" id="rTotal" data-wc-price>
             -
         </div>
 
@@ -1558,6 +1541,7 @@ refreshFields();
 
 </script>
 
+<x-calc.kit />
     <x-site.contech-footer />
     <script src="/js/tool-events.js" defer></script>
 </body>

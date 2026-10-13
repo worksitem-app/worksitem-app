@@ -22,6 +22,12 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        // Admin'den yönetilen araç yayın durumları config varsayılanlarının üzerine yazılır
+        // (ToolQaGate, sitemap, araç listesi aynı kaynağı okur)
+        if (! $this->app->runningUnitTests()) {
+            \App\Models\ToolStatus::applyToConfig();
+        }
+
         // Yalnızca production'da: local/test ortamında https zorlamak
         // url() / redirect / test assertion'larını bozuyordu.
         if ($this->app->environment('production', 'staging')) {
@@ -91,6 +97,8 @@ class AppServiceProvider extends ServiceProvider
         ]);
 
         // AI durum sorgulama (polling) — sık ama sınırsız değil
+        // Canlı hesap (ölçü değiştikçe): yazarken çok istek gelir, cömert ama sınırlı
+        RateLimiter::for('kit-calc', fn (Request $r) => Limit::perMinute(240)->by('kit:'.$r->ip()));
         RateLimiter::for('ai-poll', fn (Request $r) => Limit::perMinute(90)->by($r->ip()));
 
         // DB'ye kayıt açan public form endpoint'leri (proje, hesaplama)

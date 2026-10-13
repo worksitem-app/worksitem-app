@@ -17,6 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->append(\App\Http\Middleware\StagingTeamAccess::class);
         $middleware->append(\App\Http\Middleware\ToolQaGate::class);
         $middleware->append(\App\Http\Middleware\EngineeringToolNotice::class);
+        $middleware->append(\App\Http\Middleware\ToolLegalNotice::class);
         $middleware->append(\App\Http\Middleware\SecurityHeaders::class);
         $middleware->append(\App\Http\Middleware\ForceHttps::class);
         $middleware->append(\App\Http\Middleware\BlockSuspiciousRequests::class);
@@ -30,6 +31,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin' => \App\Http\Middleware\AdminMiddleware::class,
             'api.ratelimit' => \App\Http\Middleware\ApiRateLimit::class,
             'ai.spend' => \App\Http\Middleware\EnsureAiSpendEnabled::class,
+            'ai.quota' => \App\Http\Middleware\EnsureAiQuota::class,
         ]);
 
         // AI kilidi throttle'dan ÖNCE çalışsın: kilit kapalıyken gelen istekler AI kotasını tüketmesin
@@ -37,6 +39,12 @@ return Application::configure(basePath: dirname(__DIR__))
             before: \Illuminate\Routing\Middleware\ThrottleRequests::class,
             prepend: \App\Http\Middleware\EnsureAiSpendEnabled::class,
         );
+        // AI kullanım hakkı da throttle'dan önce: giriş/kredi penceresi IP kotasını tüketmesin
+        $middleware->appendToPriorityList(
+            after: \App\Http\Middleware\EnsureAiSpendEnabled::class,
+            append: \App\Http\Middleware\EnsureAiQuota::class,
+        );
+        $middleware->append(\App\Http\Middleware\InjectAiGate::class);
 
         // Giris yapmamis kullanicilari Filament login sayfasina yonlendir
         $middleware->redirectGuestsTo(

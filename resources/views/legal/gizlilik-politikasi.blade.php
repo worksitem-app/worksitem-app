@@ -1,173 +1,88 @@
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-<script id="worksitem-legal-theme-init">
-(function(){
-    var theme=null;
-    try{theme=localStorage.getItem("worksitem-theme");}catch(e){}
-    if(theme!=="light" && theme!=="dark"){
-        theme=window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-    }
-    document.documentElement.setAttribute("data-theme",theme);
-})();
-</script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gizlilik Politikası | Worksitem</title>
-    <meta name="description" content="Worksitem gizlilik politikası ve veri güvenliği taahhütleri.">
-    <meta name="robots" content="index, follow">
-    <link rel="canonical" href="{{ url('/legal/gizlilik-politikasi') }}">
-    <style>
-        body { margin: 0; background: #f8fafc; color: #1e293b; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.7; }
-        main { max-width: 900px; margin: 40px auto; padding: 32px; background: #fff; border: 1px solid #e2e8f0; border-radius: 16px; }
-        h1, h2 { color: #0f172a; }
-        h1 { margin-top: 0; font-size: 2rem; }
-        h2 { margin-top: 28px; font-size: 1.2rem; }
-        a { color: #101318; }
-        .version { color: #64748b; font-size: 0.9rem; }
-        .nav-links { margin-top: 32px; padding-top: 24px; border-top: 1px solid #e2e8f0; }
-        .nav-links a { margin-right: 16px; font-weight: 600; }
-    </style>
-<style id="worksitem-legal-theme-v1">
-html[data-theme="light"]{
-    color-scheme:light;
-}
-html[data-theme="dark"]{
-    color-scheme:dark;
-}
-html[data-theme="dark"] body{
-    background:#10151d!important;
-    color:#f3f6fa!important;
-}
-html[data-theme="dark"] main{
-    background:#18212c!important;
-    color:#f3f6fa!important;
-    border-color:rgba(230,238,250,.18)!important;
-}
-html[data-theme="dark"] h1,
-html[data-theme="dark"] h2,
-html[data-theme="dark"] h3,
-html[data-theme="dark"] strong{
-    color:#f3f6fa;
-}
-html[data-theme="dark"] p,
-html[data-theme="dark"] li,
-html[data-theme="dark"] td{
-    color:#b4c0ce;
-}
-html[data-theme="dark"] th{
-    background:#202c3a!important;
-    color:#f3f6fa!important;
-}
-html[data-theme="dark"] table,
-html[data-theme="dark"] th,
-html[data-theme="dark"] td{
-    border-color:rgba(230,238,250,.18)!important;
-}
-html[data-theme="dark"] .summary,
-html[data-theme="dark"] .info-box,
-html[data-theme="dark"] .cookie-manage{
-    background:#202c3a!important;
-    color:#f3f6fa!important;
-}
-</style>
-</head>
-<body>
+<x-legal.document
+    title="Gizlilik Politikası"
+    description="Worksitem gizlilik politikası ve veri güvenliği taahhütleri."
+    path="/legal/gizlilik-politikasi"
+    type="Politika"
+    version="2026-10-v2"
+    effective="11.10.2026"
+    robots="index, follow"
+>
+<p>
+    Worksitem olarak kişisel verilerinizin gizliliğine ve güvenliğine önem veriyoruz.
+    Bu politika, verilerinizi nasıl koruduğumuzu ve hangi taahhütleri yerine getirdiğimizi
+    açıklar.
+</p>
 
-<x-site.contech-header />
-<main>
-    <h1>Gizlilik Politikası</h1>
+<h2>1. Veri Güvenliği Taahhüdümüz</h2>
 
-    <p class="version">Metin sürümü: 2026-10-v2 · Yürürlük tarihi: 11.10.2026</p>
+<p>Kişisel verilerinizin güvenliği için aşağıdaki teknik ve idari tedbirleri uygularız:</p>
 
-    <p>
-        Worksitem olarak kişisel verilerinizin gizliliğine ve güvenliğine önem veriyoruz.
-        Bu politika, verilerinizi nasıl koruduğumuzu ve hangi taahhütleri yerine getirdiğimizi
-        açıklar.
-    </p>
+<ul>
+    <li><strong>SSL/TLS şifreleme:</strong> Tüm veri iletimi HTTPS üzerinden şifrelenir.</li>
+    <li><strong>Şifre hash'leme:</strong> Kullanıcı şifreleri bcrypt (12 round) ile hash'lenir.</li>
+    <li><strong>IP özetleme:</strong> IP adresleri HMAC-SHA256 ile tek yönlü özetlenir.</li>
+    <li><strong>CSRF koruması:</strong> Tüm formlar CSRF token ile korunur.</li>
+    <li><strong>XSS koruması:</strong> Kullanıcı girdileri HTML-escape edilir.</li>
+    <li><strong>SQL injection koruması:</strong> Tüm sorgular parametrik binding kullanır.</li>
+    <li><strong>Rate limiting:</strong> Form spam'ine karşı rate limit uygulanır.</li>
+    <li><strong>Düzenli yedekleme:</strong> Veriler günlük yedeklenir.</li>
+</ul>
 
-    <h2>1. Veri Güvenliği Taahhüdümüz</h2>
+<h2>2. Verilerinizin Saklanması</h2>
 
-    <p>Kişisel verilerinizin güvenliği için aşağıdaki teknik ve idari tedbirleri uygularız:</p>
+<p>
+    Kişisel verileriniz, barındırma hizmet sağlayıcımız Hostinger'ın veri merkezlerinde
+    saklanır; bu veri merkezleri yurt dışında bulunabilir. Yurt dışına aktarım, KVKK'nın
+    9. maddesi ve Kişisel Verilerin Yurt Dışına Aktarılmasına İlişkin Usul ve Esaslar
+    Hakkında Yönetmelik'te öngörülen güvencelere uygun olarak yapılır. Ayrıntılar için
+    <a href="/legal/kvkk-aydinlatma">Aydınlatma Metni</a>'nin 5. bölümüne bakabilirsiniz.
+</p>
 
-    <ul>
-        <li><strong>SSL/TLS şifreleme:</strong> Tüm veri iletimi HTTPS üzerinden şifrelenir.</li>
-        <li><strong>Şifre hash'leme:</strong> Kullanıcı şifreleri bcrypt (12 round) ile hash'lenir.</li>
-        <li><strong>IP özetleme:</strong> IP adresleri HMAC-SHA256 ile tek yönlü özetlenir.</li>
-        <li><strong>CSRF koruması:</strong> Tüm formlar CSRF token ile korunur.</li>
-        <li><strong>XSS koruması:</strong> Kullanıcı girdileri HTML-escape edilir.</li>
-        <li><strong>SQL injection koruması:</strong> Tüm sorgular parametrik binding kullanır.</li>
-        <li><strong>Rate limiting:</strong> Form spam'ine karşı rate limit uygulanır.</li>
-        <li><strong>Düzenli yedekleme:</strong> Veriler günlük yedeklenir.</li>
-    </ul>
+<h2>3. Verilerinizin Kimlerle Paylaşıldığı</h2>
 
-    <h2>2. Verilerinizin Saklanması</h2>
+<ul>
+    <li>Kainta İnşaat yetkili çalışanları ve satış ekibi</li>
+    <li>Yapay zekâ hizmet sağlayıcıları (Google Gemini, Replicate, OpenAI) — yalnızca ilgili aracı kullandığınızda</li>
+    <li>Bilişim hizmet sağlayıcılarımız (Hostinger, Google)</li>
+    <li>Yasal zorunluluk hâlinde yetkili kamu kurumları</li>
+</ul>
 
-    <p>
-        Kişisel verileriniz, barındırma hizmet sağlayıcımız Hostinger'ın veri merkezlerinde
-        saklanır; bu veri merkezleri yurt dışında bulunabilir. Yurt dışına aktarım, KVKK'nın
-        9. maddesi ve Kişisel Verilerin Yurt Dışına Aktarılmasına İlişkin Usul ve Esaslar
-        Hakkında Yönetmelik'te öngörülen güvencelere uygun olarak yapılır. Ayrıntılar için
-        <a href="/legal/kvkk-aydinlatma">Aydınlatma Metni</a>'nin 5. bölümüne bakabilirsiniz.
-    </p>
+<p>
+    Verileriniz hiçbir şekilde <strong>reklam amaçlı üçüncü taraflara satılmaz</strong>.
+</p>
 
-    <h2>3. Verilerinizin Kimlerle Paylaşıldığı</h2>
+<h2>4. Veri İhlali Bildirimi</h2>
 
-    <ul>
-        <li>Kainta İnşaat yetkili çalışanları ve satış ekibi</li>
-        <li>Yapay zekâ hizmet sağlayıcıları (Google Gemini, Replicate, OpenAI) — yalnızca ilgili aracı kullandığınızda</li>
-        <li>Bilişim hizmet sağlayıcılarımız (Hostinger, Google)</li>
-        <li>Yasal zorunluluk hâlinde yetkili kamu kurumları</li>
-    </ul>
+<p>
+    Bir veri ihlali tespit etmemiz hâlinde, KVKK'nın 12. maddesi ve Kişisel Veri
+    İhlali Bildirim Prosedürü kapsamında:
+</p>
 
-    <p>
-        Verileriniz hiçbir şekilde <strong>reklam amaçlı üçüncü taraflara satılmaz</strong>.
-    </p>
+<ul>
+    <li><strong>72 saat içinde</strong> KVKK Kurulu'na bildiririz.</li>
+    <li>Etkilenen kullanıcılara en kısa sürede bildirim yaparız.</li>
+    <li>İhlalin kapsamını ve alınan tedbirleri kamuoyuyla paylaşırız.</li>
+</ul>
 
-    <h2>4. Veri İhlali Bildirimi</h2>
+<h2>5. Veri Sahibi Hakları</h2>
 
-    <p>
-        Bir veri ihlali tespit etmemiz hâlinde, KVKK'nın 12. maddesi ve Kişisel Veri
-        İhlali Bildirim Prosedürü kapsamında:
-    </p>
+<p>
+    KVKK'nın 11. maddesi kapsamındaki haklarınız için
+    <a href="/legal/kvkk-basvuru">KVKK Başvuru Formu</a>'nu kullanabilirsiniz.
+</p>
 
-    <ul>
-        <li><strong>72 saat içinde</strong> KVKK Kurulu'na bildiririz.</li>
-        <li>Etkilenen kullanıcılara en kısa sürede bildirim yaparız.</li>
-        <li>İhlalin kapsamını ve alınan tedbirleri kamuoyuyla paylaşırız.</li>
-    </ul>
+<h2>6. Politika Güncellemeleri</h2>
 
-    <h2>5. Veri Sahibi Hakları</h2>
+<p>
+    Bu gizlilik politikası, yasal mevzuat veya hizmet kapsamındaki değişikliklere
+    bağlı olarak güncellenebilir. Önemli değişikliklerde kullanıcılarımıza bildirim
+    yapılır.
+</p>
 
-    <p>
-        KVKK'nın 11. maddesi kapsamındaki haklarınız için
-        <a href="/legal/kvkk-basvuru">KVKK Başvuru Formu</a>'nu kullanabilirsiniz.
-    </p>
+<h2>7. İletişim</h2>
 
-    <h2>6. Politika Güncellemeleri</h2>
-
-    <p>
-        Bu gizlilik politikası, yasal mevzuat veya hizmet kapsamındaki değişikliklere
-        bağlı olarak güncellenebilir. Önemli değişikliklerde kullanıcılarımıza bildirim
-        yapılır.
-    </p>
-
-    <h2>7. İletişim</h2>
-
-    <p>
-        Gizlilik ile ilgili soru ve talepleriniz için:
-        <a href="mailto:info@worksitem.com">info@worksitem.com</a>
-    </p>
-
-    <div class="nav-links">
-        <a href="/legal/kvkk-aydinlatma">Aydınlatma Metni</a>
-        <a href="/legal/acik-riza">Açık Rıza Metni</a>
-        <a href="/legal/cerez-politikasi">Çerez Politikası</a>
-        <a href="/legal/kvkk-basvuru">Başvuru Formu</a>
-    </div>
-</main>
-
-<x-site.contech-footer />
-
-</body>
-</html>
+<p>
+    Gizlilik ile ilgili soru ve talepleriniz için:
+    <a href="mailto:info@worksitem.com">info@worksitem.com</a>
+</p>
+</x-legal.document>

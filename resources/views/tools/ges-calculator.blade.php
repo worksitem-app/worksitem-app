@@ -100,18 +100,19 @@
     <link rel="manifest" href="/site.webmanifest">
     <meta name="theme-color" content="#ffffff">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <x-calc.head />
 </head>
-<body data-tool-slug="ges-calculator">
+<body class="wc" data-tool-slug="ges-calculator">
 
 <x-site.contech-header />
 
-<div class="container">
-    <div class="tool-header">
-        <h1>Güneş Paneli (GES) Fizibilite Motoru</h1>
-        <p>Aylık elektrik faturanızdan yola çıkarak çatı GES sistem ihtiyacınızı, kurulum maliyetini ve amortisman süresini hesaplayın.</p>
-    </div>
+<main class="wc-wrap">
+    <x-calc.hero title="Güneş paneli (GES) maliyeti ve geri dönüş hesaplama" crumb="Güneş paneli">
+        Aylık elektrik faturanızdan yola çıkarak çatı GES sistem ihtiyacınızı, kurulum maliyetini ve amortisman süresini hesaplayın.
+    </x-calc.hero>
 
-    <div class="card">
+    <div class="wc-grid">
+    <div class="card wc-panel">
         <div class="form-group">
             <label>Aylık Ortalama Elektrik Faturası (TL)</label>
             <input type="number" id="bill" class="form-control" placeholder="Örn: 3000" value="3000" min="500" step="500">
@@ -139,9 +140,14 @@
         <button type="button" class="btn btn-calc" id="calculateBtn">Sistem Analizi ve Bütçeyi Çıkar →</button>
     </div>
 
-    <div class="result-box" id="resultBox">
+    <aside class="wc-aside">
+    <div class="wc-empty" data-wc-empty>
+        <strong>Sonuç burada görünecek</strong>
+        Bilgileri girip hesaplayın; sonuç, döküm ve yaklaşık bütçe burada görünür.
+    </div>
+    <div class="result-box wc-result" data-wc-result id="resultBox">
         <div class="result-label">ANAHTAR TESLİM KURULUM MALİYETİ</div>
-        <div class="result-price" id="totalPrice">0 TL</div>
+        <div class="result-price" id="totalPrice" data-wc-price>0 TL</div>
         
         <p style="font-size: 11px; color: #6b7280; margin-bottom:20px;">
             ⚠️ Bu değerler; paneller (450W), inverter (çevirici), konstrüksiyon montajı ve EPC mühendislik hizmetleri dahil tahmini piyasa rayicidir.
@@ -179,6 +185,10 @@
             <div class="cross-sell-text">Çatıya kurulacak GES sisteminin ömrü 25 yıldır. Bu süre boyunca çatıya müdahale etmek çok zordur. Paneller kurulmadan önce çatı yalıtımınızı yenilemeniz tavsiye edilir.</div>
         </div>
     </div>
+    </aside>
+    </div>{{-- /wc-grid --}}
+
+    <div class="wc-below">
 
     <!-- ELEME KAPISI -->
     <div class="budget-confirm-box" id="budgetConfirmBox">
@@ -228,11 +238,13 @@
                 <textarea name="notes" class="form-control" style="height: 80px; padding-top:10px;" placeholder="Elektrik aboneliğiniz Mesken mi, Ticarethane mi? Çatı alanınız ne kadar?"></textarea>
             </div>
 
+            <x-lead-consent-fields />
             <button type="submit" class="btn btn-submit">Kainta İnşaat Enerji'den Teklif Al →</button>
         </form>
     </div>
 
-</div>
+    </div>{{-- /wc-below --}}
+</main>
 
 <script>
 document.getElementById('calculateBtn').addEventListener('click', function() {
@@ -325,7 +337,8 @@ document.getElementById('btnNo').addEventListener('click', function() {
 });
 </script>
 
-    <x-site.contech-footer />
+    <x-calc.kit />
+<x-site.contech-footer />
     <script src="/js/tool-events.js" defer></script>
 </body>
 </html>

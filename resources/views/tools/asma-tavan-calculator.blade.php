@@ -468,34 +468,18 @@ input:focus,select:focus{
     <link rel="manifest" href="/site.webmanifest">
     <meta name="theme-color" content="#ffffff">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <x-calc.head />
 </head>
 
-<body data-tool-slug="asma-tavan-calculator">
+<body class="wc" data-tool-slug="asma-tavan-calculator">
 
 <x-site.contech-header />
 
-<section class="hero">
-    <div class="container">
-
-        <div class="kicker">
-            CONTECH · METRAJ + DOĞRULANMIŞ FİYAT
-        </div>
-
-        <h1>
-            Asma Tavan Metraj ve
-            Maliyet Hesaplayıcı
-        </h1>
-
-        <p>
-            60x60, 30x30, sarkmalı, gizli taşıyıcılı,
-            lamel, PVC, alçıpan, baffle ve petek tavan
-            sistemleri için yaklaşık metrajınızı çıkarın.
-            Doğrulanmış fiyat bulunan sistemlerde
-            2026-08 YFK referans bedelini görün.
-        </p>
-
-    </div>
-</section>
+<div class="wc-wrap" style="padding-bottom:0">
+    <x-calc.hero title="Asma tavan maliyeti hesaplama" crumb="Asma tavan">
+        60x60, 30x30, sarkmalı, gizli taşıyıcılı, lamel, PVC, alçıpan, baffle ve petek tavan sistemleri için yaklaşık metrajınızı çıkarın. Doğrulanmış fiyat bulunan sistemlerde 2026-08 YFK referans bedelini görün.
+    </x-calc.hero>
+</div>
 
 <main class="container">
 
@@ -620,7 +604,7 @@ input:focus,select:focus{
 
 <section>
 
-<div class="card result" id="result">
+<div class="card result" id="result" data-wc-result>
 
     <div class="result-top">
 
@@ -632,7 +616,7 @@ input:focus,select:focus{
             -
         </div>
 
-        <div class="total" id="rTotal">
+        <div class="total" id="rTotal" data-wc-price>
             -
         </div>
 
@@ -1098,6 +1082,7 @@ document.getElementById('budgetNo')
     );
 </script>
 
+<x-calc.kit />
     <x-site.contech-footer />
     <script src="/js/tool-events.js" defer></script>
 </body>

@@ -41,6 +41,11 @@ class SeoDefaults
             $tags[]= '<link rel="canonical" href="'.e($canonical).'">';
         }
 
+        $verify = (string) config('services.google.site_verification');
+        if ($verify !== '' && $request->path() === '/' && ! str_contains($html, 'google-site-verification')) {
+            $tags[] = '<meta name="google-site-verification" content="'.e($verify).'">';
+        }
+
         if (! preg_match('#property=["\']og:title#i', $html)) {
             $title = preg_match('#<title[^>]*>(.*?)</title>#is', $html, $m) ? trim(html_entity_decode(strip_tags($m[1]))) : config('app.name');
             $desc = preg_match('#<meta\s+name=["\']description["\']\s+content=["\']([^"\']*)#i', $html, $m) ? html_entity_decode($m[1]) : '';

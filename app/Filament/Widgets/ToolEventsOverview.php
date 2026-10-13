@@ -8,7 +8,10 @@ use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class ToolEventsOverview extends BaseWidget
 {
-    protected static ?int $sort = 1;
+    // Kontrol merkezinde "Araç performansı" tablosu bu bilgiyi gösteriyor
+    protected static bool $isDiscovered = false;
+
+    protected static ?int $sort = 4;
     protected int|string|array $columnSpan = 'full';
 
     protected function getStats(): array

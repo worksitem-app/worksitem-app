@@ -19,13 +19,13 @@
     <link rel="manifest" href="/site.webmanifest">
     <meta name="theme-color" content="#ffffff">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <x-calc.head />
 </head>
-<body data-tool-slug="energy-calculator">
+<body class="wc" data-tool-slug="energy-calculator">
     <x-site.contech-header />
     <div class="container">
         <div>
-            <h1>Enerji Tüketim Hesaplayıcı</h1>
-            <p class="subtitle">Elektrikli cihazlarınızın kWh tüketimini ve faturanıza olan etkisini hesaplayın.</p>
+            <x-calc.hero title="Enerji tüketimi ve elektrik maliyeti hesaplama" crumb="Enerji tüketimi">Elektrikli cihazlarınızın kWh tüketimini ve faturanıza olan etkisini hesaplayın.</x-calc.hero>
             <div class="form-card">
                 <div class="form-group">
                     <label>Hazır Cihaz Seçimi</label>
@@ -46,11 +46,11 @@
             </div>
         </div>
         <div>
-            <div class="form-card" style="border-color:var(--primary); position:sticky; top:100px;">
+            <div class="form-card" style="border-color:var(--primary); position:sticky; top:100px;" data-wc-result>
                 <div class="result-header">FATURA ETKİSİ</div>
                 <div class="res-item"><span>Günlük Tüketim</span> <strong id="r_daily">0 kWh</strong></div>
                 <div class="res-item"><span>Aylık Tüketim</span> <strong id="r_monthly">0 kWh</strong></div>
-                <div class="res-item total"><span>AYLIK FATURA YÜKÜ</span> <strong id="r_cost">0 TL</strong></div>
+                <div class="res-item total"><span>AYLIK FATURA YÜKÜ</span> <strong id="r_cost" data-wc-price>0 TL</strong></div>
                 <x-tools.lead-cta service="enerji" />
             </div>
         </div>
@@ -98,6 +98,7 @@
             document.querySelector('.cta-btn').setAttribute('href', `/maliyet-hesapla?service=enerji&kwh=${monthlyKwh.toFixed(1)}`);
         } document.addEventListener('DOMContentLoaded', calc);
     </script>
+<x-calc.kit />
     <x-site.contech-footer />
     <script src="/js/tool-events.js" defer></script>
 </body>

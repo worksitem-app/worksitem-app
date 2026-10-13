@@ -33,13 +33,13 @@
     <link rel="manifest" href="/site.webmanifest">
     <meta name="theme-color" content="#ffffff">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <x-calc.head />
 </head>
-<body data-tool-slug="isolator-calculator">
+<body class="wc" data-tool-slug="isolator-calculator">
     <x-site.contech-header />
     <div class="container">
         <div>
-            <h1>Sismik (Deprem) İzolatör Maliyeti</h1>
-            <p style="color:var(--muted); font-size:14px; margin-bottom:30px;">2026 ÇŞB Poz 15.570.1001 ve türevleri baz alınarak binanıza eklenecek sismik koruma sistemlerinin ön bütçesini çıkarın.</p>
+            <x-calc.hero title="Deprem izolatörü maliyeti hesaplama" crumb="Deprem izolatörü">2026 ÇŞB Poz 15.570.1001 ve türevleri baz alınarak binanıza eklenecek sismik koruma sistemlerinin ön bütçesini çıkarın.</x-calc.hero>
             <div class="form-card">
                 <div class="grid-2">
                     <div class="form-group"><label>Bina Kat Sayısı</label><input type="number" id="floors" class="form-control" value="5" oninput="calc()"></div>
@@ -56,11 +56,11 @@
             </div>
         </div>
         <div>
-            <div class="form-card" style="border-color:var(--cyan); position:sticky; top:20px;">
+            <div class="form-card" style="border-color:var(--cyan); position:sticky; top:20px;" data-wc-result>
                 <div style="font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size:24px; color:var(--cyan); margin-bottom:15px;">📊 2026 ÇŞB BÜTÇE ANALİZİ</div>
                 <div class="res-item"><span>Gereken İzolatör Adedi</span> <strong id="r_count">0 Adet</strong></div>
                 <div class="res-item"><span>Birim İzolatör Maliyeti</span> <strong id="r_unit">0 TL</strong></div>
-                <div class="res-item total"><span>TOPLAM İZOLATÖR CİHAZ MALİYETİ</span> <span id="r_total">0 TL</span></div>
+                <div class="res-item total"><span>TOPLAM İZOLATÖR CİHAZ MALİYETİ</span> <span id="r_total" data-wc-price>0 TL</span></div>
                 
                 <div class="ai-box">
                     <div style="color:var(--cyan); font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size:22px; margin-bottom:10px;">🤖 Statik Proje Uyarıları</div>
@@ -108,6 +108,7 @@
         }
         document.addEventListener('DOMContentLoaded', calc);
     </script>
+<x-calc.kit />
     <x-site.contech-footer />
     <script src="/js/tool-events.js" defer></script>
 </body>

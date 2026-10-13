@@ -79,7 +79,14 @@ class Preflight extends Command
         $this->warnUnless($beat > 0 && (time() - $beat) <= 300, 'Zamanlayıcı (cron) çalışıyor',
             'Son 5 dk zamanlayıcı kalp atışı yok. Cron: * * * * * cd '.base_path().' && php artisan schedule:run >> /dev/null 2>&1');
 
+        $this->warnUnless(app(\App\Services\FxRates::class)->current() !== null, 'Döviz kuru önbellekte (TCMB)',
+            'Döviz kuru yok: php artisan fx:update (banyo aracında $/€/£ satırı gizli kalır)');
+
         // ── Performans ─────────────────────────────────────────
+        $missing = collect(['mersis' => 'COMPANY_MERSIS', 'tax_office' => 'COMPANY_TAX_OFFICE', 'tax_no' => 'COMPANY_TAX_NO', 'kep' => 'COMPANY_KEP'])
+            ->filter(fn ($env, $key) => blank(config("worksitem_company.$key")))->values()->implode(', ');
+        $this->warnUnless($missing === '', 'Şirket kimlik bilgileri (sözleşmeler)', "Keşif sözleşmesinde eksik: $missing (.env)");
+
         $this->warnUnless(app()->configurationIsCached(), 'config cache', 'php artisan config:cache çalıştırın');
         $this->warnUnless(app()->routesAreCached(), 'route cache', 'php artisan route:cache çalıştırın');
 

@@ -22,7 +22,7 @@ class GoLiveHardeningTest extends TestCase
 
     public function test_ai_global_gunluk_tavan_farkli_ip_lerden_de_asilamaz(): void
     {
-        config(['services.ai.global_daily_limit' => 1, 'services.ai_spend_enabled' => true]);
+        config(['services.ai.global_daily_limit' => 1, 'services.ai_spend_enabled' => true, 'worksitem_ai_credits.enabled' => false]);
 
         $this->withServerVariables(['REMOTE_ADDR' => '10.0.0.1'])
             ->postJson('/ai-tasarim/ic-mekan/start', [])
@@ -35,7 +35,7 @@ class GoLiveHardeningTest extends TestCase
 
     public function test_ai_harcama_kilidi_kapaliyken_ai_uclari_503_doner_ve_hak_tuketmez(): void
     {
-        config(['services.ai_spend_enabled' => false, 'services.ai.global_daily_limit' => 1]);
+        config(['services.ai_spend_enabled' => false, 'services.ai.global_daily_limit' => 1, 'worksitem_ai_credits.enabled' => false]);
 
         foreach (['/ai-tasarim/ic-mekan/start', '/maliyet-hesapla/guest-render', '/api/seramik-gorsellestirici/render'] as $url) {
             $this->postJson($url, [])->assertStatus(503);

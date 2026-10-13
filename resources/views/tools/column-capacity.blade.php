@@ -29,12 +29,12 @@
     <link rel="manifest" href="/site.webmanifest">
     <meta name="theme-color" content="#ffffff">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <x-calc.head />
 </head>
-<body data-tool-slug="column-capacity">
+<body class="wc" data-tool-slug="column-capacity">
     <x-site.contech-header />
     <div class="container">
-        <h1>Kolon Eksenel Taşıma Kapasitesi</h1>
-        <p style="color:#6b7280; margin-bottom:30px;">Beton sınıfı ve donatı miktarına göre betonarme bir kolonun teorik maksimum eksenel yük taşıma kapasitesini (Nd) hesaplayın.</p>
+        <x-calc.hero title="Kolon eksenel taşıma kapasitesi hesaplama" crumb="Kolon kapasitesi">Beton sınıfı ve donatı miktarına göre betonarme bir kolonun teorik maksimum eksenel yük taşıma kapasitesini (Nd) hesaplayın.</x-calc.hero>
         
         <div class="grid-2">
             <div class="form-group">
@@ -63,9 +63,9 @@
             </div>
         </div>
 
-        <div class="result-box">
+        <div class="result-box" data-wc-result>
             <div style="font-size:14px; color:#101318; font-weight:600; margin-bottom:5px;">TEORİK EKSENEL KAPASİTE (Yaklaşık)</div>
-            <div class="result-val" id="res">0 Ton</div>
+            <div class="result-val" id="res" data-wc-price>0 Ton</div>
             <div style="font-size:12px; color:#101318; margin-top:10px;">Not: TS500 basitleştirilmiş formülü kullanılmıştır. Moment etkileri dahil değildir.</div>
         </div>
 
@@ -111,6 +111,7 @@
         }
         document.addEventListener('DOMContentLoaded', calc);
     </script>
+<x-calc.kit />
     <x-site.contech-footer />
     <script src="/js/tool-events.js" defer></script>
 </body>

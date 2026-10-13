@@ -40,13 +40,13 @@
     <link rel="manifest" href="/site.webmanifest">
     <meta name="theme-color" content="#ffffff">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <x-calc.head />
 </head>
-<body data-tool-slug="stairs-calculator">
+<body class="wc" data-tool-slug="stairs-calculator">
     <x-site.contech-header />
     <div class="container">
         <div>
-            <h1>Merdiven & Mermer Hesabı</h1>
-            <p class="subtitle">İdeal basamak genişliğini (2R+T=63) ve mermer kaplama bütçesini planlayın.</p>
+            <x-calc.hero title="Merdiven basamak hesaplama" crumb="Merdiven">İdeal basamak genişliğini (2R+T=63) ve mermer kaplama bütçesini planlayın.</x-calc.hero>
             <div class="form-card">
                 <div class="form-group"><label>Kat Yüksekliği (m)</label><input type="number" id="h" class="form-control" value="3.00" step="0.05" oninput="calc()"></div>
                 <div class="grid-2">
@@ -56,12 +56,12 @@
             </div>
         </div>
         <div>
-            <div class="form-card" style="border-color:var(--primary); position:sticky; top:100px;">
+            <div class="form-card" style="border-color:var(--primary); position:sticky; top:100px;" data-wc-result>
                 <div class="result-header">MİMARİ ÇIKTI</div>
                 <div class="res-item"><span>Gereken Basamak Sayısı</span> <strong id="r_steps">0 Adet</strong></div>
                 <div class="res-item"><span>Tam Rıht Yüksekliği</span> <strong id="r_riht">0 cm</strong></div>
                 <div class="res-item"><span>İdeal Basamak Genişliği (Adım)</span> <strong id="r_tread">0 cm</strong></div>
-                <div class="res-item total"><span>MERMER KAPLAMA MALİYETİ</span> <strong id="r_cost">0 TL</strong></div>
+                <div class="res-item total"><span>MERMER KAPLAMA MALİYETİ</span> <strong id="r_cost" data-wc-price>0 TL</strong></div>
                 
                 <x-tools.lead-cta service="ince-isler" />
             </div>
@@ -108,6 +108,7 @@
             document.querySelector('.cta-btn').setAttribute('href', `/maliyet-hesapla?service=ince-isler&area=${steps*w}`);
         } document.addEventListener('DOMContentLoaded', calc);
     </script>
+<x-calc.kit />
     <x-site.contech-footer />
     <script src="/js/tool-events.js" defer></script>
 </body>

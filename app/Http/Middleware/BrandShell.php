@@ -36,7 +36,7 @@ class BrandShell
                 .'<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
                 .'<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">';
         }
-        $tags .= '<link rel="stylesheet" href="/css/ws-brand.css?v=1">';
+        $tags .= '<link rel="stylesheet" href="'.\App\Support\Asset::url('css/ws-brand.css').'">';
 
         $pos = stripos($html, '</head>');
         $response->setContent(substr($html, 0, $pos).$tags."\n".substr($html, $pos));

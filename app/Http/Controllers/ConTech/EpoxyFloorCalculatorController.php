@@ -23,32 +23,7 @@ class EpoxyFloorCalculatorController extends Controller
         |
         */
 
-        $layers = [
-
-            'leveling' => [
-                'label' => 'Zemin Tesviyesi · Self Leveling 2 mm',
-                'poz' => '15.190.1007',
-                'source_page' => 10,
-                'required' => false,
-                'note' => 'Çimento esaslı kendiliğinden yerleşen harç ile ortalama 2 mm zemin tesviyesi.',
-            ],
-
-            'epoxy' => [
-                'label' => 'Self-Leveling Epoksi Zemin · 2,5 mm',
-                'poz' => '15.190.1014',
-                'source_page' => 10,
-                'required' => true,
-                'note' => '2,5 mm kalınlıkta self-leveling epoksi esaslı zemin kaplaması.',
-            ],
-
-            'uv_topcoat' => [
-                'label' => 'UV Dayanımlı Poliüretan Son Kat',
-                'poz' => '15.190.1017',
-                'source_page' => 10,
-                'required' => false,
-                'note' => 'Epoksi kaplama üzerine UV dayanımlı, renkli, elastik, mat poliüretan son kat.',
-            ],
-        ];
+        $layers = static::catalog();
 
         foreach ($layers as &$layer) {
 
@@ -84,5 +59,36 @@ class EpoxyFloorCalculatorController extends Controller
         return view('tools.epoksi-zemin-calculator', [
             'layers' => $layers,
         ]);
+    }
+
+    /** Sistem / katman kataloğu (fiyat içermez; hesap motoru da kullanır) */
+    public static function catalog(): array
+    {
+        return [
+
+            'leveling' => [
+                'label' => 'Zemin Tesviyesi · Self Leveling 2 mm',
+                'poz' => '15.190.1007',
+                'source_page' => 10,
+                'required' => false,
+                'note' => 'Çimento esaslı kendiliğinden yerleşen harç ile ortalama 2 mm zemin tesviyesi.',
+            ],
+
+            'epoxy' => [
+                'label' => 'Self-Leveling Epoksi Zemin · 2,5 mm',
+                'poz' => '15.190.1014',
+                'source_page' => 10,
+                'required' => true,
+                'note' => '2,5 mm kalınlıkta self-leveling epoksi esaslı zemin kaplaması.',
+            ],
+
+            'uv_topcoat' => [
+                'label' => 'UV Dayanımlı Poliüretan Son Kat',
+                'poz' => '15.190.1017',
+                'source_page' => 10,
+                'required' => false,
+                'note' => 'Epoksi kaplama üzerine UV dayanımlı, renkli, elastik, mat poliüretan son kat.',
+            ],
+        ];
     }
 }

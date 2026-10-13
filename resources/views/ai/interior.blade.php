@@ -671,7 +671,7 @@
                             setTimeout(() => showResult(statusData.output_url), 500);
                             btnSubmit.disabled = false;
                             remainingQuota = Math.max(0, remainingQuota - 1);
-                            btnSubmit.innerText = 'Yeni tasarım oluştur (' + remainingQuota + ' hak kaldı)';
+                            btnSubmit.innerText = 'Yeni tasarım oluştur';
                         } else if (statusData.status === 'failed') {
                             clearInterval(pollInterval);
                             stopLoadingAnimation(false);

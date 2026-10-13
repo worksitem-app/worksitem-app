@@ -83,9 +83,29 @@
     <link rel="manifest" href="/site.webmanifest">
     <meta name="theme-color" content="#ffffff">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <x-calc.head />
+    <style id="ws-app-shell">
+        body.wc{height:auto!important;overflow:auto!important;display:block!important}
+        /* Uygulamanın koyu çalışma alanı paleti (sayfa kiti açık renk değişkenlerini ezmesin) */
+        .takeoff-shell{--bg:#1e1e24;--surface:#2b2b36;--border:#3f3f4e;--text:#fff;--muted:#a1a1aa;color:#fff;background:#1e1e24}
+        .takeoff-shell{height:calc(100vh - 72px);min-height:620px}
+        .ws-mobile-note{display:none}
+        @media (max-width: 900px){
+            .takeoff-shell{flex-wrap:wrap;height:auto;min-height:0}
+            .sidebar-left{width:100%!important;flex-direction:row!important;justify-content:center;gap:12px;padding:10px 0!important;border-right:0!important;border-bottom:1px solid var(--border)}
+            .sidebar-left .tool-tooltip{display:none}
+            .main-workspace{flex:1 1 100%!important;height:62vh;min-height:380px}
+            .sidebar-right{width:100%!important;border-left:0!important}
+            .ws-mobile-note{display:block;margin:0 16px 12px;padding:10px 12px;border-radius:10px;background:#FFF8E1;border:1px solid #FFE08A;font-size:13px;color:#5c4a10}
+        }
+    </style>
 </head>
-<body data-tool-slug="web-takeoff">
+<body class="wc" data-tool-slug="web-takeoff">
 <x-site.contech-header />
+<div class="wc-wrap" style="padding-bottom:14px">
+    <x-calc.hero title="Dijital metraj: PDF plan üzerinden alan ölçümü" crumb="Dijital metraj" :facts="['PDF, JPG, PNG plan', 'Ölçek kalibrasyonu', 'Metraj listesi (BOQ)']">Kat planınızı yükleyin, bilinen bir ölçüyle ölçeği ayarlayın ve alanları tıklayarak ölçün; ölçümler metraj listesine eklenir ve tek tuşla fiyatlandırılır.</x-calc.hero>
+</div>
+<p class="ws-mobile-note">Ölçüm için en iyi deneyim bilgisayar ekranındadır; telefonda planı yakınlaştırarak kullanabilirsiniz.</p>
 <div class="takeoff-shell">
 
     <!-- LEFT TOOLBAR -->
@@ -198,7 +218,7 @@
     let totalM2 = 0;
 
     // PDF.js Tanımlamaları
-    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+    if (window.pdfjsLib) pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
 
     // TOOLBAR İŞLEMLERİ
     document.querySelectorAll('.tool-btn').forEach(btn => {
@@ -401,5 +421,6 @@
 
 </script>
     <script src="/js/tool-events.js" defer></script>
+<x-site.contech-footer />
 </body>
 </html>

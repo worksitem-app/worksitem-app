@@ -157,15 +157,20 @@ summary:focus-visible{
 }
 </style>
 
+    <x-calc.head />
 </head>
-<body data-tool-slug="beton-calculator">
+<body data-tool-slug="beton-calculator" class="wc">
 <x-site.contech-header />
-<div class="container">
-    <div style="text-align: center; margin-bottom: 30px;">
-        <h1 style="font-size: 28px; font-weight: 900; letter-spacing: -1px; margin-bottom: 10px;">Beton Hesaplama (m³): Kaç m³ Beton Gerekir?</h1>
-        <p style="color: var(--muted); font-size: 15px;">Döşeme, radye temel, tekil veya sürekli temel, kolon, kiriş, perde, merdiven ve kazık ölçülerini girin; net beton hacmini, seçtiğiniz fire oranına göre sipariş miktarını, transmikser seferini ve beton sınıfına göre yaklaşık malzeme dağılımını hesaplayın.</p>
-    </div>
-    <div class="card">
+@php
+    $wcC25 = $toolPrices->get('concrete_c25');
+@endphp
+<main class="wc-wrap">
+    <x-calc.hero title="Beton hesaplama: kaç m³ beton gerekir?" crumb="Beton hesaplama" :facts="['Döşeme, temel, kolon, kiriş, perde', 'Transmikser sefer sayısı']">
+        100 m² alanlı ve 20 cm kalınlığındaki bir döşeme için net 20 m³, %5 fire ile yaklaşık 21 m³ hazır beton sipariş edilir.@if ($wcC25) Worksitem fiyat veritabanında C25/30 hazır beton şu an {{ '₺'.number_format((float) $wcC25->price, 0, ',', '.') }}/m³.@endif Eleman tipini ve ölçüleri girin; net hacmi, sipariş miktarını, mikser seferini ve yaklaşık bütçeyi görün.
+    </x-calc.hero>
+
+    <div class="wc-grid">
+    <div class="card wc-panel">
         <div class="form-group">
             <label for="geometryType">Betonarme Eleman / Döküm Tipi</label>
             <select id="geometryType" class="form-control">
@@ -286,12 +291,17 @@ summary:focus-visible{
         </div>
         <input type="hidden" id="formworkSystem" value="">
 <input type="hidden" id="formworkSystemCompat" value="1">
-<button type="button" class="btn-calc" id="calcBtn">Beton Hacmini ve Bütçeyi Çıkar →</button>
+<button type="button" class="btn-calc" id="calcBtn">Beton hacmini ve bütçeyi hesapla</button>
     </div>
 
-    <div class="result-box" id="resBox" role="status" aria-live="polite" tabindex="-1">
-        <div style="font-size: 12px; color: #a1a1aa; font-weight: 700; letter-spacing: 1px;">TAHMİNİ BÜTÇE ARALIĞI</div>
-        <div class="result-price" id="resPrice">0 TL</div>
+    <aside class="wc-aside">
+    <div class="wc-empty" data-wc-empty>
+        <strong>Sonuç burada görünecek</strong>
+        Eleman tipini ve ölçüleri girip hesaplayın: net hacim, fire dahil sipariş miktarı, mikser seferi ve yaklaşık bütçe.
+    </div>
+    <div class="result-box wc-result" id="resBox" data-wc-result role="status" aria-live="polite" tabindex="-1">
+        <div class="wc-r-label">Tahmini bütçe aralığı</div>
+        <div class="result-price" id="resPrice" data-wc-price>0 TL</div>
         <div class="beton-result-grid">
             <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
                 <span id="resOrderLabel" style="display:block;font-size:12px;color:#a1a1aa;">Sipariş Hacmi (fire dahil)</span>
@@ -358,7 +368,10 @@ summary:focus-visible{
             <div class="ai-insight-text"><strong id="aiTitle">Beton Sınıfı Notu</strong><p id="aiText"></p></div>
         </div>
     </div>
-    
+    </aside>
+    </div>{{-- /wc-grid --}}
+
+    <div class="wc-below">
     <div style="margin:18px 0 0;text-align:center;">
         <a
             href="/araclar/kalip-plywood-maliyeti?source=beton-hesaplayici"
@@ -625,7 +638,8 @@ summary:focus-visible{
             </button>
         </form>
     </div>
-</div>
+    </div>{{-- /wc-below --}}
+</main>
 <section
     style="
         max-width:816px;
@@ -1932,6 +1946,7 @@ document.getElementById('bNo').onclick = () => {
         '<p>Bizi tercih ettiğiniz için teşekkürler.</p>';
 };
 </script>
+<x-calc.kit />
 <x-site.contech-footer />
     <script src="/js/tool-events.js" defer>
 /* BETON_REVENUE_FUNNEL_V2 */

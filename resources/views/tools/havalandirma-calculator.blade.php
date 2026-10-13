@@ -410,28 +410,19 @@ input,select{
     <link rel="manifest" href="/site.webmanifest">
     <meta name="theme-color" content="#ffffff">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <x-calc.head />
 </head>
 
-<body data-tool-slug="havalandirma-calculator">
+<body class="wc" data-tool-slug="havalandirma-calculator">
 
 <x-site.contech-header />
 
 
-<section class="hero">
-<div class="container">
-
-    <div class="kicker">CONTECH · MEKANİK TESİSAT</div>
-
-    <h1>Havalandırma Kanalı & HVAC Maliyet Hesaplayıcı</h1>
-
-    <p>
-        Kanalın gerçek sac yüzeyini hesaplayın;
-        izolasyon, menfez, lineer difüzör ve aspiratörleri
-        ayrı YFK pozlarıyla bütçeye ekleyin.
-    </p>
-
+<div class="wc-wrap" style="padding-bottom:0">
+    <x-calc.hero title="Havalandırma kanalı ve HVAC maliyeti hesaplama" crumb="Havalandırma kanalı">
+        Kanalın gerçek sac yüzeyini hesaplayın; izolasyon, menfez, lineer difüzör ve aspiratörleri ayrı YFK pozlarıyla bütçeye ekleyin.
+    </x-calc.hero>
 </div>
-</section>
 
 
 <main class="container">
@@ -775,7 +766,7 @@ input,select{
 
 <section>
 
-<div class="card result" id="result">
+<div class="card result" id="result" data-wc-result>
 
     <div class="result-head">
 
@@ -783,7 +774,7 @@ input,select{
             YFK Referans Bütçesi
         </div>
 
-        <div class="total" id="rTotal">
+        <div class="total" id="rTotal" data-wc-price>
             -
         </div>
 
@@ -1535,6 +1526,7 @@ refreshDuctFields();
 
 </script>
 
+<x-calc.kit />
     <x-site.contech-footer />
     <script src="/js/tool-events.js" defer></script>
 </body>

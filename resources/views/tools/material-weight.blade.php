@@ -28,12 +28,12 @@
     <link rel="manifest" href="/site.webmanifest">
     <meta name="theme-color" content="#ffffff">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <x-calc.head />
 </head>
-<body data-tool-slug="material-weight">
+<body class="wc" data-tool-slug="material-weight">
     <x-site.contech-header />
     <div class="container">
-        <h1>İnşaat Malzeme Ağırlığı</h1>
-        <p style="color:#6b7280; margin-bottom:30px;">Özgül ağırlıklara (Yoğunluk) göre hacimsel malzemelerin lojistik nakliye tonajını hesaplayın.</p>
+        <x-calc.hero title="İnşaat malzemesi ağırlığı hesaplama" crumb="Malzeme ağırlığı">Özgül ağırlıklara (Yoğunluk) göre hacimsel malzemelerin lojistik nakliye tonajını hesaplayın.</x-calc.hero>
         
         <div class="form-group">
             <label>Malzeme Cinsi</label>
@@ -51,9 +51,9 @@
             <input type="number" id="vol" value="10" oninput="calc()">
         </div>
 
-        <div class="result-box">
+        <div class="result-box" data-wc-result>
             <div style="font-size:14px; color:#5b21b6; font-weight:600; margin-bottom:5px;">TOPLAM AĞIRLIK (TONAJ)</div>
-            <div class="result-val" id="res">0 Ton</div>
+            <div class="result-val" id="res" data-wc-price>0 Ton</div>
         </div>
         <a href="/maliyet-hesapla?service=nakliye-lojistik" class="cta">Lojistik ve Nakliye İçin Keşif Al →</a>
     </div>
@@ -85,6 +85,7 @@
         }
         document.addEventListener('DOMContentLoaded', calc);
     </script>
+<x-calc.kit />
     <x-site.contech-footer />
     <script src="/js/tool-events.js" defer></script>
 </body>

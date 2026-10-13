@@ -535,29 +535,21 @@ button{
     <link rel="manifest" href="/site.webmanifest">
     <meta name="theme-color" content="#ffffff">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <x-calc.head />
 </head>
 
-<body data-tool-slug="cati-calculator">
+<body class="wc" data-tool-slug="cati-calculator">
 
 <x-site.contech-header />
 
 
 <div class="wrap">
 
-<section class="hero">
-
-    <h1>
-        Çatı Maliyet & Kaplama Motoru
-    </h1>
-
-    <p>
-        Gerçek eğimli çatı alanını hesaplayın.
-        Kiremit, klasik trapez sac, bitümlü levha,
-        OSB/tahta kaplama, su yalıtımı ve mahyayı
-        2026 YFK referans fiyatlarıyla bütçelendirin.
-    </p>
-
-</section>
+<div class="wc-wrap" style="padding-bottom:0">
+    <x-calc.hero title="Çatı maliyeti ve kiremit metrajı hesaplama" crumb="Çatı maliyeti" :facts="['Gerçek eğimli çatı alanı', 'Kiremit, trapez sac, bitümlü levha', 'YFK 2026 birim fiyatları']">
+        12 × 10 m oturumlu, 30° eğimli beşik bir çatının gerçek alanı yaklaşık 125 m²'dir; %5 fireyle 131,5 m² kaplama ve yaklaşık 12 m mahya siparişi gerekir. Bina ölçülerini, eğimi ve kaplama tipini girin; metrajı ve Çevre, Şehircilik ve İklim Değişikliği Bakanlığı birim fiyatlarıyla yaklaşık bütçeyi görün.
+    </x-calc.hero>
+</div>
 
 
 <div class="layout">
@@ -795,10 +787,7 @@ Kırma Çatı
 
 <section>
 
-<div
-    class="card result"
-    id="result"
->
+<div class="card result" id="result" data-wc-result>
 
 <div class="totalbox">
 
@@ -806,10 +795,7 @@ Kırma Çatı
 YFK 2026-08 Referans Bütçesi
 </div>
 
-<div
-    class="total"
-    id="total"
->
+<div class="total" id="total" data-wc-price>
 -
 </div>
 
@@ -1615,7 +1601,10 @@ refreshCovering();
 
 </script>
 
-    <x-site.contech-footer />
+    <x-calc.kit />
+    <x-tools.tool-guide slug="cati-maliyet-hesaplayici" />
+
+<x-site.contech-footer />
     <script src="/js/tool-events.js" defer></script>
 </body>
 </html>

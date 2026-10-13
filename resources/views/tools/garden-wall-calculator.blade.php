@@ -33,13 +33,13 @@
     <link rel="manifest" href="/site.webmanifest">
     <meta name="theme-color" content="#ffffff">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <x-calc.head />
 </head>
-<body data-tool-slug="garden-wall-calculator">
+<body class="wc" data-tool-slug="garden-wall-calculator">
     <x-site.contech-header />
     <div class="container">
         <div>
-            <h1>Bahçe Duvarı Maliyeti</h1>
-            <p style="color:var(--muted); font-size:14px; margin-bottom:30px;">2026 ÇŞB rayiçleriyle taş duvar veya betonarme duvar imalat bedelini hesaplayın.</p>
+            <x-calc.hero title="Bahçe duvarı maliyeti hesaplama" crumb="Bahçe duvarı">2026 ÇŞB rayiçleriyle taş duvar veya betonarme duvar imalat bedelini hesaplayın.</x-calc.hero>
             <div class="form-card">
                 <div class="grid-2">
                     <div class="form-group"><label>Duvar Uzunluğu (m)</label><input type="number" id="l" class="form-control" value="50" oninput="calc()"></div>
@@ -55,11 +55,11 @@
             </div>
         </div>
         <div>
-            <div class="form-card" style="border-color:var(--yellow); position:sticky; top:20px;">
+            <div class="form-card" style="border-color:var(--yellow); position:sticky; top:20px;" data-wc-result>
                 <div style="font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size:24px; color:var(--yellow); margin-bottom:15px;">📊 ÇŞB BÜTÇE ANALİZİ</div>
                 <div class="res-item"><span>Toplam Hacim (m³)</span> <strong id="r_vol">0 m³</strong></div>
                 <div class="res-item"><span>Birim Maliyet Şekli</span> <strong id="r_method">0 TL</strong></div>
-                <div class="res-item total"><span>TAHMİNİ MALİYET</span> <span id="r_total">0 TL</span></div>
+                <div class="res-item total"><span>TAHMİNİ MALİYET</span> <span id="r_total" data-wc-price>0 TL</span></div>
                 
                 <div class="ai-box">
                     <div style="color:var(--cyan); font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size:22px; margin-bottom:10px;">🤖 Statik ve Estetik Notu</div>
@@ -124,6 +124,7 @@
         }
         document.addEventListener('DOMContentLoaded', calc);
     </script>
+<x-calc.kit />
     <x-site.contech-footer />
     <script src="/js/tool-events.js" defer></script>
 </body>

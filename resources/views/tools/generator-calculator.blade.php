@@ -19,13 +19,13 @@
     <link rel="manifest" href="/site.webmanifest">
     <meta name="theme-color" content="#ffffff">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <x-calc.head />
 </head>
-<body data-tool-slug="generator-calculator">
+<body class="wc" data-tool-slug="generator-calculator">
     <x-site.contech-header />
     <div class="container">
         <div>
-            <h1>Jeneratör Kapasite Hesabı</h1>
-            <p class="subtitle">Eşzamanlı çalışacak cihazlarınızın toplam gücüne göre gereken kVA kapasitesini bulun.</p>
+            <x-calc.hero title="Jeneratör gücü (kVA) hesaplama" crumb="Jeneratör gücü">Eşzamanlı çalışacak cihazlarınızın toplam gücüne göre gereken kVA kapasitesini bulun.</x-calc.hero>
             <div class="form-card">
                 <div class="form-group">
                     <label>Kullanım Tipi (Hızlı Seçim)</label>
@@ -40,11 +40,11 @@
             </div>
         </div>
         <div>
-            <div class="form-card" style="border-color:var(--primary); position:sticky; top:100px;">
+            <div class="form-card" style="border-color:var(--primary); position:sticky; top:100px;" data-wc-result>
                 <div class="result-header">SİSTEM ANALİZİ</div>
                 <div class="res-item"><span>Toplam Aktif Güç</span> <strong id="r_kw">0 kW</strong></div>
                 <div class="res-item"><span>Kalkış Akımı (Demeraj) Payı</span> <strong id="r_margin">0 kW</strong></div>
-                <div class="res-item total"><span>ÖNERİLEN JENERATÖR</span> <strong id="r_kva">0 kVA</strong></div>
+                <div class="res-item total"><span>ÖNERİLEN JENERATÖR</span> <strong id="r_kva" data-wc-price>0 kVA</strong></div>
                 <x-tools.lead-cta service="jenerator" />
             </div>
         </div>
@@ -90,6 +90,7 @@
             document.querySelector('.cta-btn').setAttribute('href', `/maliyet-hesapla?service=jenerator&kva=${Math.ceil(kva)}`);
         } document.addEventListener('DOMContentLoaded', calc);
     </script>
+<x-calc.kit />
     <x-site.contech-footer />
     <script src="/js/tool-events.js" defer></script>
 </body>

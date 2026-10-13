@@ -51,6 +51,12 @@ Schedule::command('app:prune-ai-inputs --days=30')
     ->timezone('Europe/Istanbul')
     ->withoutOverlapping();
 
+// Banyo vb. araçlarda $/€/£ karşılığı için TCMB kuru (TCMB ~15:30'da yayımlar)
+Schedule::command('fx:update')
+    ->twiceDaily(10, 16)
+    ->timezone('Europe/Istanbul')
+    ->withoutOverlapping();
+
 /*
 |--------------------------------------------------------------------------
 | WORKSITEM Daily Paint Market Research
@@ -62,3 +68,10 @@ Schedule::command('app:prune-ai-inputs --days=30')
 
 // prices:research-paint-web disabled: external Gemini quota dependency.
 
+
+// Keşif randevusu hatırlatma SMS'i (randevudan bir gün önce)
+Schedule::command('sms:appointment-reminders')
+    ->dailyAt('18:00')
+    ->timezone('Europe/Istanbul')
+    ->withoutOverlapping()
+    ->onOneServer();

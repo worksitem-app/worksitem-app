@@ -46,15 +46,16 @@
     <link rel="manifest" href="/site.webmanifest">
     <meta name="theme-color" content="#ffffff">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <x-calc.head />
 </head>
-<body data-tool-slug="yalitim-calculator">
+<body class="wc" data-tool-slug="yalitim-calculator">
 <x-site.contech-header />
-<div class="container">
-    <div class="tool-header">
-        <h1>Yalıtım ve Mantolama Motoru</h1>
-        <p>Dış cephe mantolama, su yalıtımı veya içten straforlu alçıpan yalıtım ihtiyaçlarınızın maliyetini simüle edin.</p>
-    </div>
-    <div class="card">
+<main class="wc-wrap">
+    <x-calc.hero title="Mantolama ve ısı yalıtımı maliyeti hesaplama" crumb="Mantolama maliyeti" :facts="['Dış cephe, iç cephe, çatı', 'İskele seçeneği']">
+        200 m² duvara içten straforlu alçıpanla ısı yalıtımı yaklaşık 90.000 TL tutar (olası aralık 76.500–108.000 TL). Uygulama alanını, yalıtım tipini ve iskele ihtiyacını seçerek dış cephe mantolama dahil yaklaşık bütçenizi görün.
+    </x-calc.hero>
+    <div class="wc-grid">
+    <div class="card wc-panel">
         <div class="form-group"><label>Uygulama Yüzey Alanı (m²)</label><input type="number" id="area" class="form-control" value="200" min="10" step="10"></div>
         <div class="form-group">
             <label>Yalıtım Türü</label>
@@ -74,14 +75,23 @@
         <button type="button" class="btn-calc" id="calcBtn">Yalıtım Bütçesini Hesapla →</button>
     </div>
 
-    <div class="result-box" id="resBox">
+    <aside class="wc-aside">
+    <div class="wc-empty" data-wc-empty>
+        <strong>Sonuç burada görünecek</strong>
+        Alanı ve yalıtım tipini seçip hesaplayın: anahtar teslim yalıtım bütçesi ve olası aralık.
+    </div>
+    <div class="result-box wc-result" data-wc-result id="resBox">
         <div style="font-size: 12px; color: #a1a1aa; font-weight: 700; letter-spacing: 1px;">ANAHTAR TESLİM İZOLASYON BÜTÇESİ</div>
-        <div class="result-price" id="resPrice">0 TL</div>
+        <div class="result-price" id="resPrice" data-wc-price>0 TL</div>
         <div class="ai-insight">
             <div style="font-size: 24px;">🌡️</div>
             <div class="ai-insight-text"><strong id="aiTitle">Enerji Verimliliği Notu</strong><p id="aiText"></p></div>
         </div>
     </div>
+    </aside>
+    </div>{{-- /wc-grid --}}
+
+    <div class="wc-below">
     
     <div class="budget-confirm-box" id="bConf"><div style="font-size: 18px; font-weight: 900;">Kainta İnşaat'tan Enerji Kimlik Teklifi Alın</div><div class="budget-confirm-actions"><button class="budget-btn budget-yes" id="bYes">✓ Evet, teklif istiyorum.</button><button class="budget-btn" id="bNo">Sadece maliyete baktım.</button></div></div>
     
@@ -92,10 +102,12 @@
             <input type="text" name="name" class="form-control" required placeholder="Adınız Soyadınız" style="margin-bottom:15px;">
             <input type="tel" name="phone" class="form-control" required placeholder="Telefon Numaranız" style="margin-bottom:15px;">
             <input type="text" name="location" class="form-control" required placeholder="Şehir/İlçe" style="margin-bottom:15px;">
+            <x-lead-consent-fields />
             <button type="submit" class="btn-submit">Teklif Al →</button>
         </form>
     </div>
-</div>
+    </div>{{-- /wc-below --}}
+</main>
 <script>
 document.getElementById('calcBtn').onclick = () => {
     const area = parseFloat(document.getElementById('area').value)||0;
@@ -121,6 +133,9 @@ document.getElementById('calcBtn').onclick = () => {
 document.getElementById('bYes').onclick = () => { document.getElementById('bConf').style.display='none'; document.getElementById('leadForm').style.display='block'; };
 document.getElementById('bNo').onclick = () => { document.getElementById('bConf').innerHTML = '<p>Enerji tasarrufu yolunda bizi tercih ettiğiniz için teşekkürler.</p>'; };
 </script>
-    <x-site.contech-footer />
+    <x-tools.tool-guide slug="mantolama-maliyeti" />
+
+<x-calc.kit />
+<x-site.contech-footer />
     <script src="/js/tool-events.js" defer></script>
 </body></html>

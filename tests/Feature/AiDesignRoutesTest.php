@@ -31,7 +31,7 @@ class AiDesignRoutesTest extends TestCase
 
     public function test_start_endpoint_validation_fails_without_data(): void
     {
-        config(['services.ai_spend_enabled' => true]);
+        config(['services.ai_spend_enabled' => true, 'worksitem_ai_credits.enabled' => false]);
         $response = $this->postJson('/ai-tasarim/ic-mekan/start', []);
         $response->assertStatus(422);
         $response->assertJsonValidationErrors(['room_image', 'style']);

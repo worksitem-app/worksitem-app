@@ -235,6 +235,7 @@
                 <input type="text" name="location" class="form-control" required placeholder="Örn: Ankara, Çankaya">
             </div>
 
+            <x-lead-consent-fields />
             <button type="submit" class="btn btn-submit">Bilgileri Gönder ve Teklif Al →</button>
         </form>
     </div>

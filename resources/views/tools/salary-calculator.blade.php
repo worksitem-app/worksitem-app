@@ -33,13 +33,13 @@
     <link rel="manifest" href="/site.webmanifest">
     <meta name="theme-color" content="#ffffff">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <x-calc.head />
 </head>
-<body data-tool-slug="salary-calculator">
+<body class="wc" data-tool-slug="salary-calculator">
     <x-site.contech-header />
     <div class="container">
         <div>
-            <h1>İnşaat Mühendisi Maaş Hesabı</h1>
-            <p style="color:var(--muted); font-size:14px; margin-bottom:30px;">TMMOB asgari ücretleri, deneyim yılı ve pozisyonunuza göre piyasadaki tahmini net maaşınızı öğrenin.</p>
+            <x-calc.hero title="İnşaat mühendisi maaşı hesaplama" crumb="Mühendis maaşı">TMMOB asgari ücretleri, deneyim yılı ve pozisyonunuza göre piyasadaki tahmini net maaşınızı öğrenin.</x-calc.hero>
             <div class="form-card">
                 <div class="grid-2">
                     <div class="form-group"><label>Sektörel Deneyim (Yıl)</label><input type="number" id="exp" class="form-control" value="3" oninput="calc()"></div>
@@ -63,11 +63,11 @@
             </div>
         </div>
         <div>
-            <div class="form-card" style="border-color:var(--green); position:sticky; top:20px;">
+            <div class="form-card" style="border-color:var(--green); position:sticky; top:20px;" data-wc-result>
                 <div style="font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size:24px; color:var(--green); margin-bottom:15px;">📊 2026 KARİYER ANALİZİ</div>
                 <div class="res-item"><span>TMMOB Brüt Asgari Ücret (Taban)</span> <strong>45.000 TL</strong></div>
                 <div class="res-item"><span>Deneyim Etkisi</span> <strong id="r_exp_impact">+0 TL</strong></div>
-                <div class="res-item total"><span>TAHMİNİ NET PİYASA MAAŞI</span> <span id="r_total">0 TL</span></div>
+                <div class="res-item total"><span>TAHMİNİ NET PİYASA MAAŞI</span> <span id="r_total" data-wc-price>0 TL</span></div>
                 
                 <div class="ai-box">
                     <div style="color:var(--cyan); font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size:22px; margin-bottom:10px;">🤖 Kariyer Tavsiyesi</div>
@@ -121,6 +121,7 @@
         }
         document.addEventListener('DOMContentLoaded', calc);
     </script>
+<x-calc.kit />
     <x-site.contech-footer />
     <script src="/js/tool-events.js" defer></script>
 </body>

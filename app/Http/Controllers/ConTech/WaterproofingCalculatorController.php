@@ -23,7 +23,48 @@ class WaterproofingCalculatorController extends Controller
         |
         */
 
-        $systems = [
+        $systems = static::catalog();
+
+        foreach ($systems as &$system) {
+
+            $record = $this->prices->byPoz(
+                $system['poz'],
+                '2026-08',
+                'YFK'
+            );
+
+            $found = is_array($record)
+                && isset($record['price'])
+                && is_numeric($record['price']);
+
+            $system['price_found'] = $found;
+
+            $system['unit_price'] = $found
+                ? (float) $record['price']
+                : null;
+
+            $system['unit'] = $record['unit'] ?? 'm²';
+
+            $system['price_source'] = $found
+                ? ($record['source'] ?? 'rayic_prices')
+                : null;
+
+            $system['price_period'] = $found
+                ? '2026-08'
+                : null;
+        }
+
+        unset($system);
+
+        return view('tools.su-yalitimi-calculator', [
+            'systems' => $systems,
+        ]);
+    }
+
+    /** Sistem / katman kataloğu (fiyat içermez; hesap motoru da kullanır) */
+    public static function catalog(): array
+    {
+        return [
 
             'cement_2k' => [
                 'label' => 'Çimento Esaslı İki Bileşenli · 2 Kat / 1,5 mm',
@@ -187,40 +228,5 @@ class WaterproofingCalculatorController extends Controller
                 'note' => 'Polyester keçe taşıyıcılı plastomer esaslı polimer bitümlü örtü.',
             ],
         ];
-
-        foreach ($systems as &$system) {
-
-            $record = $this->prices->byPoz(
-                $system['poz'],
-                '2026-08',
-                'YFK'
-            );
-
-            $found = is_array($record)
-                && isset($record['price'])
-                && is_numeric($record['price']);
-
-            $system['price_found'] = $found;
-
-            $system['unit_price'] = $found
-                ? (float) $record['price']
-                : null;
-
-            $system['unit'] = $record['unit'] ?? 'm²';
-
-            $system['price_source'] = $found
-                ? ($record['source'] ?? 'rayic_prices')
-                : null;
-
-            $system['price_period'] = $found
-                ? '2026-08'
-                : null;
-        }
-
-        unset($system);
-
-        return view('tools.su-yalitimi-calculator', [
-            'systems' => $systems,
-        ]);
     }
 }

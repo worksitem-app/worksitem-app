@@ -101,18 +101,19 @@
     <link rel="manifest" href="/site.webmanifest">
     <meta name="theme-color" content="#ffffff">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <x-calc.head />
 </head>
-<body data-tool-slug="taks-kaks-calculator">
+<body class="wc" data-tool-slug="taks-kaks-calculator">
 
 <x-site.contech-header />
 
-<div class="container">
-    <div class="tool-header">
-        <h1>TAKS / KAKS (Emsal) Hesaplayıcı</h1>
-        <p>Arsanızın imar durum belgesindeki emsal değerlerini girerek taban oturumunu, net/brüt inşaat alanınızı ve kat sayınızı hesaplayın.</p>
-    </div>
+<main class="wc-wrap">
+    <x-calc.hero title="TAKS / KAKS (emsal) hesaplama" crumb="TAKS / KAKS">
+        Arsanızın imar durum belgesindeki emsal değerlerini girerek taban oturumunu, net/brüt inşaat alanınızı ve kat sayınızı hesaplayın.
+    </x-calc.hero>
 
-    <div class="card">
+    <div class="wc-grid">
+    <div class="card wc-panel">
         <div class="form-group">
             <label>Net Arsa Alanı (m²)</label>
             <input type="number" id="plotArea" class="form-control" placeholder="Terkler yapılmış net parsel alanı. Örn: 1000" value="1000" min="50" step="10">
@@ -132,9 +133,14 @@
         <button type="button" class="btn btn-calc" id="calculateBtn">İmar ve Yapı Analizini Getir →</button>
     </div>
 
-    <div class="result-box" id="resultBox">
+    <aside class="wc-aside">
+    <div class="wc-empty" data-wc-empty>
+        <strong>Sonuç burada görünecek</strong>
+        Bilgileri girip hesaplayın; sonuç, döküm ve yaklaşık bütçe burada görünür.
+    </div>
+    <div class="result-box wc-result" data-wc-result id="resultBox">
         <div class="result-label">GERÇEKLEŞECEK BRÜT İNŞAAT ALANI YAKLAŞIK</div>
-        <div class="result-price" id="grossArea">0 m²</div>
+        <div class="result-price" id="grossArea" data-wc-price>0 m²</div>
         
         <p style="font-size: 11px; color: #6b7280; margin-bottom:20px;">
             ⚠️ Planlı Alanlar İmar Yönetmeliği'ne göre emsale dahil edilmeyen (asansör, şaft, ortak alan vb.) %30 pay eklenerek hesaplanmıştır.
@@ -176,6 +182,10 @@
             </div>
         </div>
     </div>
+    </aside>
+    </div>{{-- /wc-grid --}}
+
+    <div class="wc-below">
 
     <!-- ELEME KAPISI -->
     <div class="budget-confirm-box" id="budgetConfirmBox">
@@ -225,11 +235,13 @@
                 <textarea name="notes" class="form-control" style="height: 80px; padding-top:10px;" placeholder="Konut mu yapılacak, ticari mi? Kat karşılığı anlaşma var mı?"></textarea>
             </div>
 
+            <x-lead-consent-fields />
             <button type="submit" class="btn btn-submit">Kainta İnşaat'tan Proje Desteği Al →</button>
         </form>
     </div>
 
-</div>
+    </div>{{-- /wc-below --}}
+</main>
 
 <script>
 document.getElementById('calculateBtn').addEventListener('click', function() {
@@ -295,7 +307,8 @@ document.getElementById('btnNo').addEventListener('click', function() {
 });
 </script>
 
-    <x-site.contech-footer />
+    <x-calc.kit />
+<x-site.contech-footer />
     <script src="/js/tool-events.js" defer></script>
 </body>
 </html>

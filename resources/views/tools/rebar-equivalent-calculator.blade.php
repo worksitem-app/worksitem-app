@@ -33,13 +33,13 @@
     <link rel="manifest" href="/site.webmanifest">
     <meta name="theme-color" content="#ffffff">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <x-calc.head />
 </head>
-<body data-tool-slug="rebar-equivalent-calculator">
+<body class="wc" data-tool-slug="rebar-equivalent-calculator">
     <x-site.contech-header />
     <div class="container">
         <div>
-            <h1>Donatı Tahvil Hesabı</h1>
-            <p style="color:var(--muted); font-size:14px; margin-bottom:30px;">Şantiyede projede istenen demir çapı bulunmadığında, mevcut demiri hangi aralıkla (cm) döşemeniz gerektiğini bulun.</p>
+            <x-calc.hero title="Donatı tahvili (eşdeğer demir) hesaplama" crumb="Donatı tahvili">Şantiyede projede istenen demir çapı bulunmadığında, mevcut demiri hangi aralıkla (cm) döşemeniz gerektiğini bulun.</x-calc.hero>
             <div class="form-card">
                 <div style="border-bottom:1px solid var(--border); padding-bottom:10px; margin-bottom:15px; font-weight:700; color:var(--yellow);">PROJEDE İSTENEN (GEREKEN)</div>
                 <div class="grid-2">
@@ -52,11 +52,11 @@
             </div>
         </div>
         <div>
-            <div class="form-card" style="border-color:var(--cyan); position:sticky; top:20px;">
+            <div class="form-card" style="border-color:var(--cyan); position:sticky; top:20px;" data-wc-result>
                 <div style="font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size:24px; color:var(--cyan); margin-bottom:15px;">📊 STATİK ÇEVRİM SONUCU</div>
                 <div class="res-item"><span>Gereken Donatı Alanı</span> <strong id="r_area_req">0 cm²/m</strong></div>
                 <div class="res-item"><span>Mevcut Demirin Tekil Alanı</span> <strong id="r_area_new">0 cm²</strong></div>
-                <div class="res-item total"><span>YENİ DÖŞEME ARALIĞI</span> <span id="r_s2">0 cm</span></div>
+                <div class="res-item total"><span>YENİ DÖŞEME ARALIĞI</span> <span id="r_s2" data-wc-price>0 cm</span></div>
                 
                 <div class="ai-box">
                     <div style="color:var(--cyan); font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size:22px; margin-bottom:10px;">🤖 Statik Uyarıları</div>
@@ -121,6 +121,7 @@
         }
         document.addEventListener('DOMContentLoaded', calc);
     </script>
+<x-calc.kit />
     <x-site.contech-footer />
     <script src="/js/tool-events.js" defer></script>
 </body>

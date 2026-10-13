@@ -36,17 +36,21 @@
         .sign-line { border-top: 1px solid #111; margin-top: 50px; padding-top: 10px; font-weight: bold; }
     </style>
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <x-calc.head />
 </head>
-<body data-tool-slug="document-builder">
+<body class="wc" data-tool-slug="document-builder">
 
 <x-site.contech-header />
+<div class="wc-wrap" style="padding-bottom:0">
+    <x-calc.hero title="İnşaat sözleşmesi taslağı oluşturucu" crumb="Belge oluşturucu" :facts="['Anahtar teslim, kat karşılığı, taşeron, malzeme', 'PDF ve Word olarak indir']">Sözleşme türünü seçin, tarafları ve bedeli girin; örnek sözleşme taslağını anında görün ve PDF ya da Word olarak indirin. Taslaklar hukuki tavsiye değildir, kullanmadan önce avukatınıza danışın.</x-calc.hero>
+</div>
 
 <div class="container">
     <div class="sidebar">
         <!-- YASAL UYARI KUTUSU -->
         <div class="legal-warning">
             <h4>ÖNEMLİ YASAL UYARI</h4>
-            <p>Burada sunulan tüm belgeler, yalnızca genel bilgi ve örnek amaçlı hazırlanmış taslaklardır. Her inşaat projesi ve hukuki durum kendine özgüdür. Bu taslak metinler, hukuki tavsiye niteliği taşımaz ve tüm yasal gereklilikleri eksiksiz olarak kapsamayabilir.<br><br>Bu belgeleri kullanmadan önce, güncel yasal mevzuata hakim bir <strong>avukata danışmanız</strong> ve belgeleri kendi özel durumunuza göre uyarlatmanız kesinlikle tavsiye edilir.<br><br>Bu taslakların kullanılmasından doğabilecek herhangi bir hukuki sorumluluk kabul edilmez.</p>
+            <p>Burada sunulan tüm belgeler, yalnızca genel bilgi ve örnek amaçlı hazırlanmış taslaklardır. Her inşaat projesi ve hukuki durum kendine özgüdür. Bu taslak metinler, hukuki tavsiye niteliği taşımaz ve tüm yasal gereklilikleri eksiksiz olarak kapsamayabilir.<br><br>Bu belgeleri kullanmadan önce, güncel yasal mevzuata hakim bir <strong>avukata danışmanız</strong> ve belgeleri kendi özel durumunuza göre uyarlatmanız kesinlikle tavsiye edilir.<br><br>Taslakların kendi durumunuza uygunluğunu değerlendirmek sizin sorumluluğunuzdadır; Worksitem, kanunen sınırlandırılamayan haller dışında bu taslakların kullanımından doğan zararlardan sorumlu tutulamaz.</p>
         </div>
 
         <h3 style="margin-bottom:15px; font-weight:900; font-size:16px;">Sözleşme / Belge Türü</h3>
@@ -79,7 +83,7 @@
 
     <div class="document-wrapper" id="contractDoc">
         <div class="doc-header">
-            <h1 class="doc-title" id="outTitle">ANAHTAR TESLİM İNŞAAT SÖZLEŞMESİ</h1>
+            <div class="doc-title" id="outTitle" role="heading" aria-level="2">ANAHTAR TESLİM İNŞAAT SÖZLEŞMESİ</div>
             <p style="font-size:12px; color:#555;">Düzenleme Tarihi: <span id="outDate"></span></p>
         </div>
         <div class="doc-content" id="outContent">
@@ -253,10 +257,8 @@
     }
 
     function exportWord() {
-        var header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Sozlesme Taslagi</title>    <meta name="csrf-token" content="{{ csrf_token() }}">
-</head><body data-tool-slug="document-builder">";
-        var footer = "    <script src="/js/tool-events.js" defer></script>
-</body></html>";
+        var header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'><title>Sozlesme Taslagi</title></he" + "ad><bo" + "dy>";
+        var footer = "</bo" + "dy></ht" + "ml>"; // etiketler bölünür (sunucu katmanları sayfanın kapanış etiketini arar)
         var sourceHTML = header + document.getElementById("contractDoc").innerHTML + footer;
         var source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
         var fileDownload = document.createElement("a");
