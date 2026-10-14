@@ -361,12 +361,43 @@
         $('budgetConfirmBox').innerHTML = '<div class="budget-confirm-title">Sorun değil.</div><div class="budget-confirm-text" style="margin-bottom:0">Bu aşamada iletişim bilgilerinizi almıyoruz. Bütçeniz netleştiğinde tekrar teklif isteyebilirsiniz.</div>';
         $('leadBox').style.display = 'none'; $('qualifiedMessage').style.display = 'none';
     });
+    // Paylaş: telefonda sistem paylaşım menüsü; bilgisayarda (Windows paylaşım penceresi çoğu zaman açılmaz)
+    // bağlantı kopyalanır ve altında Kopyala / WhatsApp / E-posta paneli açılır.
+    function copyLink(t) {
+        if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(t);
+        return new Promise(function (ok, no) {
+            var ta = document.createElement('textarea'); ta.value = t; ta.setAttribute('readonly', ''); ta.style.cssText = 'position:fixed;left:-9999px';
+            document.body.appendChild(ta); ta.select();
+            try { document.execCommand('copy') ? ok() : no(); } catch (e) { no(e); } finally { ta.remove(); }
+        });
+    }
+    function sharePanel(link) {
+        var box = $('kShare');
+        if (!box) {
+            box = document.createElement('div'); box.id = 'kShare'; box.className = 'bt-sharepanel';
+            box.innerHTML = '<div class="bt-sharerow"><input type="text" readonly aria-label="Paylaşım bağlantısı" id="kShareLink"><button type="button" id="kShareCopy">Kopyala</button></div>'
+                + '<div class="bt-sharerow"><a id="kShareWa" target="_blank" rel="noopener">WhatsApp ile gönder</a><a id="kShareMail">E-posta ile gönder</a></div>'
+                + '<small id="kShareMsg" role="status" aria-live="polite"></small>';
+            $('shareBtn').parentNode.appendChild(box);
+            $('kShareCopy').addEventListener('click', function () {
+                copyLink($('kShareLink').value).then(function () { $('kShareMsg').textContent = '✓ Bağlantı kopyalandı'; },
+                    function () { $('kShareLink').select(); $('kShareMsg').textContent = 'Bağlantı seçildi; Ctrl+C ile kopyalayın.'; });
+            });
+        }
+        $('kShareLink').value = link;
+        $('kShareWa').href = 'https://wa.me/?text=' + encodeURIComponent(document.title + ' ' + link);
+        $('kShareMail').href = 'mailto:?subject=' + encodeURIComponent(document.title) + '&body=' + encodeURIComponent(link);
+        box.hidden = false;
+        copyLink(link).then(function () { $('kShareMsg').textContent = '✓ Bağlantı kopyalandı; aynı seçimlerle açılır.'; }, function () { $('kShareMsg').textContent = ''; });
+    }
     $('shareBtn').addEventListener('click', function () {
-        var link = location.href, btn = this;
-        var done = function () { btn.textContent = '✓ Bağlantı kopyalandı'; setTimeout(function () { btn.textContent = '🔗 Bu hesabı paylaş'; }, 2500); };
-        if (navigator.share) { navigator.share({ title: document.title, url: link }).catch(function () {}); return; }
-        if (navigator.clipboard) { navigator.clipboard.writeText(link).then(done, function () { prompt('Bağlantıyı kopyalayın:', link); }); }
-        else { prompt('Bağlantıyı kopyalayın:', link); }
+        var link = location.href;
+        if (window.wsTrack) wsTrack('tool_share', { tool: document.body.getAttribute('data-tool-slug') });
+        if (navigator.share && /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)) {
+            navigator.share({ title: document.title, url: link }).catch(function (e) { if (!e || e.name !== 'AbortError') sharePanel(link); });
+            return;
+        }
+        sharePanel(link);
     });
     $('kDockBtn').addEventListener('click', function () { $('resultCard').scrollIntoView({ behavior: 'smooth', block: 'start' }); });
 

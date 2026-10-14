@@ -1084,14 +1084,21 @@ $('plPrint').addEventListener('click', () => {
     try { history.replaceState(null, '', location.pathname + location.search + '#p=' + encode()); } catch (e) {}
     const esc = v => String(v).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
     const rows = S.items.map((it, i) => { const p = product(it), d = dims(it); return `<tr><td>${label(i)}</td><td>${esc(TYPES[it.type].label)}</td><td>${d.w} × ${d.d} × ${d.h} cm</td><td>${esc(p.name)}${isEl(it) ? '' : ' · ' + esc(p.sponsor || 'Örnek ürün')}</td></tr>`; }).join('');
-    const w = window.open('', '_blank');
-    if (!w) { alert('Açılır pencere engellendi; tarayıcıda bu site için açılır pencerelere izin verin.'); return; }
-    w.document.write(`<!DOCTYPE html><html lang="tr"><head><meta charset="utf-8"><title>Banyo planım · Worksitem</title><style>
+    const kind = C.variant === 'wc' ? 'WC' : 'Banyo';
+    // Açılır pencere yerine gizli çerçevede yazdır: açılır pencere engelleyiciye takılmaz
+    document.getElementById('plPrintFrame')?.remove();
+    const fr = document.createElement('iframe');
+    fr.id = 'plPrintFrame'; fr.setAttribute('aria-hidden', 'true'); fr.tabIndex = -1;
+    fr.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:0;visibility:hidden';
+    document.body.appendChild(fr);
+    const w = fr.contentWindow;
+    w.document.open();
+    w.document.write(`<!DOCTYPE html><html lang="tr"><head><meta charset="utf-8"><title>${kind} planım · Worksitem</title><style>
         body{font-family:Inter,Arial,sans-serif;color:#101318;margin:18mm}h1{font-size:20px;margin:0 0 4px}p{font-size:12px;color:#5B6472;margin:0 0 10px}
         table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}td,th{border-bottom:1px solid #E3E6EA;padding:6px;text-align:left}
         .brand{display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid #FFB800;padding-bottom:8px;margin-bottom:12px}
         .brand b{font-size:18px}.note{border:1px solid #E3E6EA;border-radius:8px;padding:8px;font-size:12px;margin-top:10px;white-space:pre-wrap}
-        </style></head><body><div class="brand"><b>worksitem · Banyo planı</b><span style="font-size:12px">${new Date().toLocaleDateString('tr-TR')}</span></div>
+        </style></head><body><div class="brand"><b>worksitem · ${kind} planı</b><span style="font-size:12px">${new Date().toLocaleDateString('tr-TR')}</span></div>
         <h1>${S.w} × ${S.l} cm · ${(area() / 10000).toLocaleString('tr-TR', { maximumFractionDigits: 2 })} m² · yükseklik ${S.h} cm</h1>
         <p>${esc(C.shapes[S.shape])} oda · zemin: ${esc(C.tiles[S.floor].name)} ${C.tiles[S.floor].size} · duvar: ${S.tileH < 0 ? 'boya' : esc(C.tiles[S.wall].name) + ' ' + C.tiles[S.wall].size + (S.tileH > 0 ? ` (${S.tileH} cm, üstü boya)` : ' (tavana kadar)')}${S.acc.e >= 0 && S.acc.tile ? ` · vurgu duvarı ${wallName(S.acc.e)}: ${esc(C.tiles[S.acc.tile].name)}` : ''} · boya: ${esc((PAINTS.find(p => p[0] === S.paint) || ['', ''])[1])}${S.wins.length ? ` · ${S.wins.filter(w => w.k !== 'nis').length} pencere, ${S.wins.filter(w => w.k === 'nis').length} niş` : ''}</p>
         ${svgHtml}
@@ -1099,8 +1106,10 @@ $('plPrint').addEventListener('click', () => {
         ${S.notes ? `<div class="note"><b>Notlarım:</b> ${esc(S.notes)}</div>` : ''}
         <p style="margin-top:12px;word-break:break-all">Plan bağlantısı: ${esc(location.href)}</p>
         <p>Bu plan yaklaşık bir yerleşim taslağıdır; tesisat, eğim ve uygulama ayrıntıları yerinde keşifte netleşir. Kainta İnşaat · WhatsApp destek 0850 346 49 83</p>
-        <script>window.onload=function(){setTimeout(function(){window.print()},300)}<\/script><\/body><\/html>`);
+        <\/body><\/html>`);
     w.document.close();
+    const go = () => { try { w.focus(); w.print(); } catch (e) { alert('Yazdırma açılamadı. Tarayıcı menüsünden Yazdır\'ı (Ctrl+P) kullanın.'); } };
+    setTimeout(go, 350);
 });
 $('tFloor').addEventListener('change', e => { S.floor = e.target.value; changed(); });
 $('tWall').addEventListener('change', e => { S.wall = e.target.value; changed(); });
