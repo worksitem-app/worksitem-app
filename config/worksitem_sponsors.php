@@ -291,6 +291,15 @@ return [
                 'genel' => 'Genel',
             ],
         ],
+        'mutfak-planlayici' => [
+            'label' => '2D / 3D mutfak planlayıcı',
+            'categories' => [
+                'dolap' => 'Mutfak dolabı',
+                'tezgah' => 'Tezgah',
+                'ankastre' => 'Ankastre ve beyaz eşya',
+                'armatur' => 'Eviye ve batarya',
+            ],
+        ],
         'klima-btu-hesaplayici' => [
             'label' => 'Klima BTU hesaplayıcı',
             'categories' => [

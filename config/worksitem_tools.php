@@ -424,6 +424,12 @@ return array (
       'title' => 'TAKS / KAKS Hesaplayıcı',
       'cat' => 'yatirim',
     ),
+    'mutfak-planlayici' =>
+    array (
+      'title' => '2D / 3D Mutfak Planlayıcı',
+      'cat' => 'ince',
+      'desc' => 'Mutfağınızın ölçülerini girin; dolapları, eviyeyi, ocağı ve buzdolabını yerleştirin, 2D plan ve 3D görünümde deneyin.',
+    ),
     'wc-planlayici' =>
     array (
       'title' => '2D / 3D WC Planlayıcı',

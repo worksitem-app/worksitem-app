@@ -169,4 +169,12 @@ class PriceRobotTest extends TestCase
         $this->assertStringContainsString('Fiyat tarihi: '.$label, $html);
         $this->assertSame(1, substr_count($html, 'class="ws-print-head"'));
     }
+
+    public function test_piyasa_karsilastirmasi_sapmayi_isaretler(): void
+    {
+        Http::fake(['generativelanguage.googleapis.com/*' => Http::response($this->gemini([20000, 25000, 30000]))]);
+        $this->artisan('prices:compare', ['--tool' => 'boya-hesaplayici'])
+            ->expectsOutputToContain('YÜKSEK')->assertSuccessful();   // bizim örnek ~49–69 bin, piyasa ortanca 25 bin
+        $this->artisan('schedule:list')->expectsOutputToContain('prices:compare')->assertSuccessful();
+    }
 }

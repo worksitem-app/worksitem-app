@@ -245,6 +245,7 @@ Route::prefix('araclar')->name('tools.')->group(function () {
     Route::view('/banyo-maliyet-hesaplayici', 'tools.banyo-calculator')->name('banyo_calculator');
     Route::get('/banyo-planlayici', [\App\Http\Controllers\Tools\BathPlannerController::class, 'show'])->name('banyo_planner');
     Route::get('/wc-planlayici', [\App\Http\Controllers\Tools\BathPlannerController::class, 'wc'])->name('wc_planner');
+    Route::get('/mutfak-planlayici', [\App\Http\Controllers\Tools\BathPlannerController::class, 'kitchen'])->name('kitchen_planner');
     Route::post('/banyo-planlayici/render', [\App\Http\Controllers\Tools\BathPlannerController::class, 'render'])
         ->middleware(['ai.spend', 'ai.quota', 'throttle:ai'])->name('banyo_planner_render');
     Route::get('/banyo-maliyet-hesaplayici/rapor.pdf', [\App\Http\Controllers\Reports\BathroomReportController::class, 'pdf'])

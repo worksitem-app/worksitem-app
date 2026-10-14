@@ -77,6 +77,13 @@ Schedule::command('fx:update')
 
 // Fiyat robotu: önce resmî poz, yoksa Google fiyatı × çarpan; uzman beklenmeden yayına girer,
 // şüpheli sonuç admin › Fiyat Robotu'nda onay bekler. Sabah raporundan önce çalışır.
+// Haftalık: araç örnek sonuçları piyasayla karşılaştırılır, sapmalar e-postayla gelir
+Schedule::command('prices:compare --mail')
+    ->weeklyOn(1, '07:00')
+    ->timezone('Europe/Istanbul')
+    ->withoutOverlapping()
+    ->onOneServer();
+
 Schedule::command('prices:robot')
     ->dailyAt('06:30')
     ->timezone('Europe/Istanbul')

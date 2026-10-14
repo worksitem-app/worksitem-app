@@ -63,6 +63,17 @@ class KitchenEstimator extends KitEstimator
         return 'dolap metresi başına';
     }
 
+    public function planner(): ?array
+    {
+        return [
+            'url' => route('tools.kitchen_planner'),
+            'label' => 'Mutfağımı 2D / 3D gör',
+            'hint' => 'Dolap uzunluğunuz plana otomatik aktarılır; ücretsiz',
+            'map' => ['length' => 'run', 'scope' => 'scope', 'quality' => 'quality', 'counter' => 'counter'],
+            'checks' => ['extras' => ['boy_dolabi', 'ada']],
+        ];
+    }
+
     public function steps(): array
     {
         return [

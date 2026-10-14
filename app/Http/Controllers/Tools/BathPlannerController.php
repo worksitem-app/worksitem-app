@@ -24,11 +24,21 @@ class BathPlannerController extends Controller
         return $this->show($request, 'wc');
     }
 
+    /** Mutfak: aynı planlayıcı; dolap dizisi, tezgah, ankastre ve buzdolabı parçalarıyla */
+    public function kitchen(Request $request)
+    {
+        return $this->show($request, 'mutfak');
+    }
+
     public function show(Request $request, string $variant = 'banyo')
     {
         $cfg = (array) config('worksitem_planner');
         $lim = $cfg['limits'];
-        $def = $variant === 'wc' ? array_merge($cfg['defaults'], (array) ($cfg['wc_defaults'] ?? [])) : $cfg['defaults'];
+        $def = match ($variant) {
+            'wc' => array_merge($cfg['defaults'], (array) ($cfg['wc_defaults'] ?? [])),
+            'mutfak' => array_merge($cfg['defaults'], (array) ($cfg['kitchen_defaults'] ?? [])),
+            default => $cfg['defaults'],
+        };
 
         // metre → cm, sınırlar içinde
         $cm = function (string $key, int $fallback, int $min, int $max) use ($request): int {
@@ -55,23 +65,35 @@ class BathPlannerController extends Controller
             'rezervuar' => $request->boolean('ex_rezervuar'),
             'fromCalc' => $request->hasAny(['width', 'length']),
         ];
+        if ($variant === 'mutfak') {
+            // mutfak hesabından: alt dolap uzunluğu (m) ve ekstralar
+            $initial['shower'] = null;
+            $initial['run'] = (int) min(1500, max(0, round((float) str_replace(',', '.', (string) $request->query('run', '0')) * 100)));
+            $initial['boy'] = $request->boolean('boy_dolabi');
+            $initial['ada'] = $request->boolean('ada');
+        }
 
         $tiles = self::tiles();   // sponsor seramikleri önce
 
         // Banyo hesabına dönüş bağlantısı: aynı girdiler
-        $back = $variant === 'wc'
+        $back = $variant === 'mutfak'
+            ? route('tools.mutfak_calculator', array_filter($request->only(['scope', 'quality', 'counter']), fn ($v) => is_string($v) && $v !== ''))
+            : ($variant === 'wc'
             ? route('tools.wc_calculator', array_filter($request->only(['scope', 'quality']), fn ($v) => is_string($v) && $v !== ''))
             : route('tools.banyo_calculator', array_filter($request->only([
                 'bathType', 'width', 'length', 'height', 'scope', 'quality', 'shower', 'ex_dolap', 'ex_rezervuar', 'ex_havlupan', 'ex_tavan', 'ex_elektrik',
-            ]), fn ($v) => $v !== null && $v !== ''));
+            ]), fn ($v) => $v !== null && $v !== '')));
+
+        // Varyanta göre parça türleri: mutfakta mutfak parçaları, banyo/WC'de banyo parçaları (yapı elemanları her ikisinde)
+        $types = array_filter((array) $cfg['types'], fn ($t) => ! empty($t['element']) || (($variant === 'mutfak') === ! empty($t['kitchen'])));
 
         return view('tools.banyo-planlayici', [
             'plannerCfg' => [
                 'limits' => $lim,
                 'shapes' => $cfg['shapes'],
                 'doorW' => (int) $def['door_w'],
-                'types' => $cfg['types'],
-                'products' => self::mergeProducts((array) $cfg['products'], PlannerProduct::forPlanner()) + (array) $cfg['elements'],
+                'types' => $types,
+                'products' => array_intersect_key(self::mergeProducts((array) $cfg['products'], PlannerProduct::forPlanner()) + (array) $cfg['elements'], $types),
                 'window' => $cfg['window'],
                 'tiles' => $tiles,
                 'tileDefaults' => $cfg['tiles'],

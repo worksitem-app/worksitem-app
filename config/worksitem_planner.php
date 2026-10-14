@@ -18,6 +18,8 @@ return [
     'defaults' => ['w' => 180, 'l' => 240, 'h' => 260, 'door_w' => 80],
     // WC planlayıcı (/araclar/wc-planlayici) başlangıç ölçüleri
     'wc_defaults' => ['w' => 110, 'l' => 160, 'door_w' => 70],
+    // Mutfak planlayıcı (/araclar/mutfak-planlayici) başlangıç ölçüleri
+    'kitchen_defaults' => ['w' => 300, 'l' => 350, 'h' => 260, 'door_w' => 80],
 
     // Oda şekilleri: dikdörtgen, dört yönde L (köşesi kesik) ve pahlı köşe
     'shapes' => [
@@ -37,6 +39,15 @@ return [
         'lavabo' => ['label' => 'Lavabo', 'short' => 'Lavabo', 'corner' => false, 'order' => 2],
         'klozet' => ['label' => 'Klozet', 'short' => 'Klozet', 'corner' => false, 'order' => 3],
         'havlupan' => ['label' => 'Havlupan', 'short' => 'Havlupan', 'corner' => false, 'order' => 4],
+        // Mutfak (variant: mutfak). wall: true → duvara asılı (zemindeki parçalarla çakışma sayılmaz)
+        'buzdolabi' => ['label' => 'Buzdolabı', 'short' => 'Buzdolabı', 'corner' => true, 'order' => 1, 'kitchen' => true],
+        'eviye' => ['label' => 'Eviye dolabı', 'short' => 'Eviye', 'corner' => false, 'order' => 2, 'kitchen' => true],
+        'bulasik' => ['label' => 'Bulaşık makinesi', 'short' => 'Bulaşık', 'corner' => false, 'order' => 3, 'kitchen' => true],
+        'ocak' => ['label' => 'Ocak + fırın dolabı', 'short' => 'Ocak', 'corner' => false, 'order' => 4, 'kitchen' => true],
+        'altdolap' => ['label' => 'Alt dolap', 'short' => 'Alt dolap', 'corner' => false, 'order' => 5, 'kitchen' => true],
+        'boydolap' => ['label' => 'Boy dolabı', 'short' => 'Boy dolabı', 'corner' => true, 'order' => 1, 'kitchen' => true],
+        'ustdolap' => ['label' => 'Üst dolap', 'short' => 'Üst dolap', 'corner' => false, 'order' => 6, 'kitchen' => true, 'wall' => true],
+        'ada' => ['label' => 'Mutfak adası', 'short' => 'Ada', 'corner' => false, 'order' => 7, 'kitchen' => true, 'free' => true],
         // Oda elemanları (yapı): yükseklik oda yüksekliği kadar
         'icduvar' => ['label' => 'İç duvar', 'short' => 'İç duvar', 'corner' => false, 'order' => 5, 'element' => true],
         'engel' => ['label' => 'Kolon / şaft', 'short' => 'Kolon', 'corner' => true, 'order' => 0, 'element' => true],
@@ -46,6 +57,36 @@ return [
     'shower_map' => ['kabin' => 'kabin', 'kuvet' => 'kuvet', 'gomme' => 'gomme'],
 
     'products' => [
+        'buzdolabi' => [
+            ['id' => 'buz-60', 'name' => 'Solo buzdolabı 60 cm (inox)', 'w' => 60, 'd' => 65, 'h' => 185, 'color' => '#C9CDD2', 'wr' => [55, 70], 'dr' => [60, 75], 'sponsor' => null],
+            ['id' => 'buz-90', 'name' => 'Gardırop tipi buzdolabı 90 cm', 'w' => 90, 'd' => 70, 'h' => 180, 'color' => '#C9CDD2', 'wr' => [80, 95], 'dr' => [65, 75], 'sponsor' => null],
+        ],
+        'eviye' => [
+            ['id' => 'eviye-80', 'name' => 'Eviye dolabı 80 cm (tek göz)', 'w' => 80, 'd' => 60, 'h' => 90, 'color' => '#F2EEE8', 'wr' => [60, 120], 'dr' => [55, 65], 'sponsor' => null],
+            ['id' => 'eviye-120', 'name' => 'Eviye dolabı 120 cm (çift göz)', 'w' => 120, 'd' => 60, 'h' => 90, 'color' => '#F2EEE8', 'wr' => [100, 140], 'dr' => [55, 65], 'sponsor' => null],
+        ],
+        'bulasik' => [
+            ['id' => 'bulasik-60', 'name' => 'Ankastre bulaşık makinesi 60 cm', 'w' => 60, 'd' => 60, 'h' => 90, 'color' => '#F2EEE8', 'wr' => [45, 60], 'dr' => [55, 65], 'sponsor' => null],
+        ],
+        'ocak' => [
+            ['id' => 'ocak-60', 'name' => 'Ocak + ankastre fırın dolabı 60 cm', 'w' => 60, 'd' => 60, 'h' => 90, 'color' => '#F2EEE8', 'wr' => [60, 90], 'dr' => [55, 65], 'sponsor' => null],
+            ['id' => 'ocak-90', 'name' => 'Ocak + fırın dolabı 90 cm', 'w' => 90, 'd' => 60, 'h' => 90, 'color' => '#F2EEE8', 'wr' => [80, 100], 'dr' => [55, 65], 'sponsor' => null],
+        ],
+        'altdolap' => [
+            ['id' => 'alt-60', 'name' => 'Alt dolap 60 cm (beyaz)', 'w' => 60, 'd' => 60, 'h' => 90, 'color' => '#F2EEE8', 'wr' => [30, 120], 'dr' => [55, 65], 'sponsor' => null],
+            ['id' => 'alt-60-ahsap', 'name' => 'Alt dolap 60 cm (ahşap desen)', 'w' => 60, 'd' => 60, 'h' => 90, 'color' => '#B08A5B', 'wr' => [30, 120], 'dr' => [55, 65], 'sponsor' => null],
+            ['id' => 'alt-60-antrasit', 'name' => 'Alt dolap 60 cm (antrasit)', 'w' => 60, 'd' => 60, 'h' => 90, 'color' => '#3A3F47', 'wr' => [30, 120], 'dr' => [55, 65], 'sponsor' => null],
+        ],
+        'boydolap' => [
+            ['id' => 'boy-60', 'name' => 'Boy dolabı 60 cm', 'w' => 60, 'd' => 60, 'h' => 220, 'color' => '#F2EEE8', 'wr' => [40, 90], 'dr' => [55, 65], 'sponsor' => null],
+        ],
+        'ustdolap' => [
+            ['id' => 'ust-80', 'name' => 'Üst dolap 80 cm', 'w' => 80, 'd' => 35, 'h' => 70, 'color' => '#F2EEE8', 'wr' => [30, 160], 'dr' => [30, 40], 'sponsor' => null],
+            ['id' => 'ust-120', 'name' => 'Üst dolap 120 cm', 'w' => 120, 'd' => 35, 'h' => 70, 'color' => '#F2EEE8', 'wr' => [30, 160], 'dr' => [30, 40], 'sponsor' => null],
+        ],
+        'ada' => [
+            ['id' => 'ada-120', 'name' => 'Mutfak adası 120×80', 'w' => 120, 'd' => 80, 'h' => 90, 'color' => '#F2EEE8', 'wr' => [90, 240], 'dr' => [60, 120], 'sponsor' => null],
+        ],
         'kabin' => [
             ['id' => 'kabin-90', 'name' => 'Kare duşakabin 90×90', 'w' => 90, 'd' => 90, 'h' => 200, 'color' => '#FFFFFF', 'wr' => [70, 120], 'dr' => [70, 120], 'sponsor' => null],
             ['id' => 'kabin-80', 'name' => 'Kare duşakabin 80×80', 'w' => 80, 'd' => 80, 'h' => 200, 'color' => '#FFFFFF', 'wr' => [70, 120], 'dr' => [70, 120], 'sponsor' => null],

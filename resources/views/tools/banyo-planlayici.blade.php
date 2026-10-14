@@ -1,13 +1,18 @@
 @php
     $year = now()->year;
-    $isWc = ($variant ?? 'banyo') === 'wc';
-    $title = $isWc ? "WC Planlama $year: 2D / 3D Tuvalet Tasarımı, Ücretsiz"
-        : "Banyo Planlama $year: 2D / 3D Banyo Tasarımı, Ücretsiz";
+    $variant = $variant ?? 'banyo';
+    $isWc = $variant === 'wc';
+    $isKitchen = $variant === 'mutfak';
+    $slug = $isKitchen ? 'mutfak-planlayici' : ($isWc ? 'wc-planlayici' : 'banyo-planlayici');
+    $title = $isKitchen ? "Mutfak Planlama $year: 2D / 3D Mutfak Tasarımı, Ücretsiz"
+        : ($isWc ? "WC Planlama $year: 2D / 3D Tuvalet Tasarımı, Ücretsiz"
+        : "Banyo Planlama $year: 2D / 3D Banyo Tasarımı, Ücretsiz");
     $title = \App\Support\ToolSeo::title($title);
-    $desc = $isWc ? 'WC veya misafir tuvaletinizin ölçülerini girin; lavabo ve klozet otomatik yerleşsin. 2D planda sürükleyin, 3D görünümde seramik ve boya deneyin, maliyetini hesaplayın. Ücretsiz.'
-        : 'Banyonuzun şeklini ve ölçülerini girin; lavabo, klozet, duşakabin veya küvet otomatik yerleşsin. 2D planda sürükleyin, kapıyı taşıyın, 3D görünümde seramikleri deneyin. Ücretsiz.';
-    $url = $isWc ? 'https://worksitem.com/araclar/wc-planlayici' : 'https://worksitem.com/araclar/banyo-planlayici';
-    $name = $isWc ? 'WC' : 'Banyo';
+    $desc = $isKitchen ? 'Mutfağınızın ölçülerini girin; alt ve üst dolaplar, eviye, ocak, bulaşık makinesi ve buzdolabı otomatik yerleşsin. 2D planda sürükleyin, 3D görünümde deneyin, maliyetini hesaplayın. Ücretsiz.'
+        : ($isWc ? 'WC veya misafir tuvaletinizin ölçülerini girin; lavabo ve klozet otomatik yerleşsin. 2D planda sürükleyin, 3D görünümde seramik ve boya deneyin, maliyetini hesaplayın. Ücretsiz.'
+        : 'Banyonuzun şeklini ve ölçülerini girin; lavabo, klozet, duşakabin veya küvet otomatik yerleşsin. 2D planda sürükleyin, kapıyı taşıyın, 3D görünümde seramikleri deneyin. Ücretsiz.');
+    $url = 'https://worksitem.com/araclar/'.$slug;
+    $name = $isKitchen ? 'Mutfak' : ($isWc ? 'WC' : 'Banyo');
     $desc = \App\Support\ToolSeo::desc($desc);
     $jsonFlags = JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP;
     $importMap = ['imports' => ['three' => $three['module'], 'three/addons/' => $three['addons']]];
@@ -177,7 +182,7 @@
         @media (max-width:560px){.pl-bar .pl-btn{flex:1;justify-content:center}.pl-spacer{display:none}.pl-table th:nth-child(3),.pl-table td:nth-child(3){display:none}}
     </style>
 </head>
-<body data-tool-slug="banyo-planlayici">
+<body data-tool-slug="{{ $slug }}">
 
 <x-site.contech-header />
 
@@ -185,8 +190,12 @@
     <nav class="pl-crumb" aria-label="Sayfa yolu"><a href="/">Ana sayfa</a> / <a href="/araclar">Araçlar</a> / <a href="{{ $back }}">{{ $name }} tadilat maliyeti</a> / <span>{{ $name }} planlayıcı</span></nav>
 
     <header class="pl-head">
-        <h1>2D / 3D {{ $isWc ? 'WC' : 'banyo' }} planlayıcı</h1>
+        <h1>2D / 3D {{ $isKitchen ? 'mutfak' : ($isWc ? 'WC' : 'banyo') }} planlayıcı</h1>
+        @if ($isKitchen)
+        <p class="pl-lede">Mutfağınızın şeklini ve ölçülerini girin; alt dolaplar, eviye, ocak, bulaşık makinesi ve buzdolabı duvar boyunca otomatik yerleşsin. Parçaya dokunun: döndürün, genişliğini ve rengini değiştirin; üst dolapları ekleyin. 3D görünümde zemin ve tezgah arası kaplamayı deneyin.</p>
+        @else
         <p class="pl-lede">{{ $isWc ? 'WC\'nizin' : 'Banyonuzun' }} şeklini ve ölçülerini girin; lavabo, klozet{{ $isWc ? '' : ' ve duş' }} otomatik yerleşsin. Parçaya dokunun: araç çubuğundan döndürün, ölçüsünü ve ürününü değiştirin. Kapıyı tutup duvar boyunca kaydırın; 3D görünümde seramikleri deneyin.</p>
+        @endif
     </header>
 
     <div class="pl-bar">
@@ -196,7 +205,7 @@
         </div>
         <div class="pl-dims" id="plDims"></div>
         <div class="pl-spacer"></div>
-        <button type="button" class="pl-btn" id="plAi">✨ Gerçekçi görsel</button>
+        <button type="button" class="pl-btn" id="plAi" @if ($isKitchen) hidden @endif>✨ Gerçekçi görsel</button>
         <button type="button" class="pl-btn" id="plPrint">PDF / yazdır</button>
         <button type="button" class="pl-btn" id="plCopy">Bağlantıyı kopyala</button>
         <a class="pl-btn" id="plBack" href="{{ $back }}" title="Planın ölçüleri, duş tipi ve seçimleri maliyet hesabına aktarılır">Maliyeti hesapla</a>
@@ -270,7 +279,7 @@
 
             <section class="pl-sec">
                 <h2><i>4</i>Notlarım</h2>
-                <textarea class="pl-notes" id="plNotes" maxlength="300" placeholder="Örn: lavabo pencerenin altında olsun, gömme rezervuar istiyorum"></textarea>
+                <textarea class="pl-notes" id="plNotes" maxlength="300" placeholder="{{ $isKitchen ? 'Örn: eviye pencerenin önünde olsun, ankastre fırın göz hizasında' : 'Örn: lavabo pencerenin altında olsun, gömme rezervuar istiyorum' }}"></textarea>
                 <p class="pl-note">Notunuz plan bağlantısına ve PDF'e eklenir; teklif isterken ustaya iletilir.</p>
             </section>
         </aside>
@@ -302,8 +311,8 @@
         <p class="pl-legal">Plan yaklaşık bir yerleşim taslağıdır; tesisat yerleri, eğim ve uygulama ayrıntıları yerinde keşifte netleşir. "Örnek ürün" etiketli ürünler temsilîdir; sponsor markaların ürünleri eklendikçe burada listelenir.</p>
     </section>
 
-    <div style="margin-top:18px"><x-sponsor.slot :tool="$isWc ? 'wc-planlayici' : 'banyo-planlayici'" :title="$isWc ? 'WC\'niz için markalar' : 'Banyonuz için markalar'" /></div>
-    <x-sponsor.brand-cta :tool="$isWc ? 'wc-planlayici' : 'banyo-planlayici'" />
+    <div style="margin-top:18px"><x-sponsor.slot :tool="$slug" :title="$isKitchen ? 'Mutfağınız için markalar' : ($isWc ? 'WC\'niz için markalar' : 'Banyonuz için markalar')" /></div>
+    <x-sponsor.brand-cta :tool="$slug" />
 </main>
 
 <dialog class="pl-dlg" id="plDlg">
@@ -468,8 +477,20 @@ function dims(it) { const p = product(it); return { w: it.w || p.w, d: it.d || p
 const isEl = it => !!(TYPES[it.type] && TYPES[it.type].element);
 function foot(it) { const s = dims(it), flat = it.rot % 180 === 0; return { x: it.x, y: it.y, w: flat ? s.w : s.d, d: flat ? s.d : s.w }; }
 function mk(type, pid) { const list = C.products[type] || []; return { uid: ++uid, type, pid: pid || (list[0] && list[0].id), x: 0, y: 0, rot: 0, w: 0, d: 0, bad: false }; }
+const onWall = it => !!(TYPES[it.type] && TYPES[it.type].wall);
+const layer = (a, b) => onWall(a) === onWall(b);   // asılı dolap zemindeki parçalarla çakışmaz
 function defaultItems() {
     const it = [], i = C.initial;
+    if (C.variant === 'mutfak') {
+        // tek sıra mutfak: buzdolabı, eviye, bulaşık, ocak + kalan uzunluk kadar 60'lık alt dolap; üstte asılı dolaplar
+        it.push(mk('buzdolabi'), mk('eviye'), mk('bulasik'), mk('ocak'));
+        const run = i.run || 300, used = 80 + 60 + 60;
+        for (let r = run - used; r >= 45; r -= 60) it.push(mk('altdolap'));
+        if (i.boy) it.push(mk('boydolap'));
+        it.push(mk('ustdolap'), mk('ustdolap'));
+        if (i.ada) it.push(mk('ada'));
+        return it;
+    }
     if (i.shower) it.push(mk(i.shower));
     // sponsor ürünü varsa varsayılan o (liste sponsorlu önce sıralı)
     const pick = (type, ok) => ((C.products[type] || []).find(ok) || {}).id;
@@ -522,7 +543,7 @@ function addWindow(kind) {
 }
 
 /* ================= yerleşim ================= */
-const PREF = { kabin: ['N', 'W', 'E', 'S'], kuvet: ['N', 'W', 'E', 'S'], gomme: ['N', 'W', 'E', 'S'], lavabo: ['N', 'E', 'W', 'S'], klozet: ['E', 'W', 'N', 'S'], havlupan: ['W', 'E', 'S', 'N'] };
+const PREF = { buzdolabi: ['N', 'W', 'E', 'S'], boydolap: ['N', 'W', 'E', 'S'], eviye: ['N', 'E', 'W', 'S'], bulasik: ['N', 'E', 'W', 'S'], ocak: ['N', 'E', 'W', 'S'], altdolap: ['N', 'E', 'W', 'S'], ustdolap: ['N', 'E', 'W', 'S'], ada: ['S', 'N', 'E', 'W'], kabin: ['N', 'W', 'E', 'S'], kuvet: ['N', 'W', 'E', 'S'], gomme: ['N', 'W', 'E', 'S'], lavabo: ['N', 'E', 'W', 'S'], klozet: ['E', 'W', 'N', 'S'], havlupan: ['W', 'E', 'S', 'N'] };
 const ROT = { N: 0, E: 90, S: 180, W: 270 };
 const hit = (a, b, g = 0) => a.x < b.x + b.w + g && b.x < a.x + a.w + g && a.y < b.y + b.d + g && b.y < a.y + a.d + g;
 function placeOn(it, e, t) {
@@ -535,8 +556,8 @@ function placeOn(it, e, t) {
 }
 function fits(it, others) {
     const f = foot(it);
-    if (!rectInRoom(f) || hit(f, doorZone())) return false;
-    return others.every(o => o === it || !hit(f, foot(o), 4));
+    if (!rectInRoom(f) || (!onWall(it) && hit(f, doorZone()))) return false;
+    return others.every(o => o === it || !layer(it, o) || !hit(f, foot(o), 4));
 }
 function autoPlace(it, placed) {
     const order = PREF[it.type] || ['N', 'E', 'S', 'W'];
@@ -564,7 +585,7 @@ function autoLayout() {
 function check() {
     S.items.forEach(it => {
         const f = foot(it);
-        it.bad = !rectInRoom(f) || hit(f, doorZone()) || S.items.some(o => o !== it && hit(f, foot(o)));
+        it.bad = !rectInRoom(f) || (!onWall(it) && hit(f, doorZone())) || S.items.some(o => o !== it && layer(it, o) && hit(f, foot(o)));
     });
     $('plWarn').hidden = !S.items.some(it => it.bad);
 }
@@ -652,6 +673,26 @@ function glyph(g, it, s) {
         case 'engel':
             el('rect', { x: 0, y: 0, width: W, height: D, ...st, fill: '#C9CED6' }, g);
             el('path', { d: `M0 0L${W} ${D}M${W} 0L0 ${D}`, stroke: '#8B929C', 'stroke-width': 1, fill: 'none' }, g); break;
+        case 'altdolap': case 'boydolap': case 'ada':
+            el('rect', { x: 0, y: 0, width: W, height: D, ...st, fill: p.color || '#F2EEE8' }, g);
+            el('line', { x1: 0, y1: D - 4, x2: W, y2: D - 4, stroke: '#9aa1ab', 'stroke-width': 1 }, g);
+            if (it.type === 'boydolap') el('path', { d: `M0 0L${W} ${D}M${W} 0L0 ${D}`, stroke: '#C2C6CC', 'stroke-width': 1, fill: 'none' }, g);
+            break;
+        case 'ustdolap':
+            el('rect', { x: 0, y: 0, width: W, height: D, ...st, fill: 'rgba(242,238,232,.55)', 'stroke-dasharray': '5 3' }, g); break;
+        case 'eviye':
+            el('rect', { x: 0, y: 0, width: W, height: D, ...st, fill: '#F2EEE8' }, g);
+            el('rect', { x: W * 0.18, y: D * 0.22, width: W * 0.64, height: D * 0.56, rx: 5, fill: '#EAF3F8', stroke: '#9CC3D8', 'stroke-width': 1 }, g);
+            el('rect', { x: W / 2 - 2, y: 3, width: 4, height: 9, fill: '#9aa1ab' }, g); break;
+        case 'ocak':
+            el('rect', { x: 0, y: 0, width: W, height: D, ...st, fill: '#F2EEE8' }, g);
+            [[0.3, 0.32], [0.7, 0.32], [0.3, 0.7], [0.7, 0.7]].forEach(([a, b]) => el('circle', { cx: W * a, cy: D * b, r: Math.min(W, D) * 0.13, fill: 'none', stroke: '#3A3F47', 'stroke-width': 1.4 }, g)); break;
+        case 'bulasik':
+            el('rect', { x: 0, y: 0, width: W, height: D, ...st, fill: '#E9ECEF' }, g);
+            el('text', { x: W / 2, y: D / 2 + 4, 'text-anchor': 'middle', 'font-size': 11, fill: '#5B6472' }, g).textContent = 'BM'; break;
+        case 'buzdolabi':
+            el('rect', { x: 0, y: 0, width: W, height: D, ...st, fill: '#DDE1E6' }, g);
+            el('text', { x: W / 2, y: D / 2 + 4, 'text-anchor': 'middle', 'font-size': 11, fill: '#5B6472' }, g).textContent = 'BZ'; break;
         case 'havlupan':
             el('rect', { x: 0, y: 0, width: W, height: D, rx: 2, ...st, fill: '#F1F3F5' }, g);
             for (let i = 1; i < 5; i++) el('line', { x1: i * W / 5, y1: 1, x2: i * W / 5, y2: D - 1, stroke: '#9aa1ab', 'stroke-width': 1 }, g);
@@ -681,7 +722,7 @@ function draw2d() {
     const bb = bbox(), m = 70;
     VB = { x: bb.x0 - m, y: bb.y0 - m, w: bb.x1 - bb.x0 + 2 * m, h: bb.y1 - bb.y0 + 2 * m };
     sc = Math.min((box.clientWidth || 700) / VB.w, (box.clientHeight || 560) / VB.h) || 1;
-    svg = el('svg', { viewBox: `${VB.x} ${VB.y} ${VB.w} ${VB.h}`, role: 'img', 'aria-label': `Banyo planı ${S.w} × ${S.l} cm` }, box);
+    svg = el('svg', { viewBox: `${VB.x} ${VB.y} ${VB.w} ${VB.h}`, role: 'img', 'aria-label': `${C.variant === 'mutfak' ? 'Mutfak' : 'Banyo'} planı ${S.w} × ${S.l} cm` }, box);
     const defs = el('defs', {}, svg), cp = el('clipPath', { id: 'roomClip' }, defs); el('polygon', { points: ptsStr(P) }, cp);
     // duvarlar ve zemin
     el('polygon', { points: ptsStr(offsetPoly(P, T)), fill: '#8B929C' }, svg);
@@ -1049,9 +1090,12 @@ function fillTileSelects() {
     });
 }
 function addButtons() {
-    [['kabin', '+ Duşakabin'], ['gomme', '+ Gömme duş'], ['kuvet', '+ Küvet'], ['lavabo', '+ Lavabo'], ['klozet', '+ Klozet'], ['havlupan', '+ Havlupan']].forEach(([t, s]) => {
+    const list = C.variant === 'mutfak'
+        ? [['altdolap', '+ Alt dolap'], ['ustdolap', '+ Üst dolap'], ['eviye', '+ Eviye'], ['ocak', '+ Ocak / fırın'], ['bulasik', '+ Bulaşık mak.'], ['buzdolabi', '+ Buzdolabı'], ['boydolap', '+ Boy dolabı'], ['ada', '+ Ada']]
+        : [['kabin', '+ Duşakabin'], ['gomme', '+ Gömme duş'], ['kuvet', '+ Küvet'], ['lavabo', '+ Lavabo'], ['klozet', '+ Klozet'], ['havlupan', '+ Havlupan']];
+    list.forEach(([t, s]) => {
         const b = document.createElement('button'); b.type = 'button'; b.textContent = s;
-        b.addEventListener('click', () => { if (S.items.length >= 12) return; const it = mk(t); autoPlace(it, S.items); S.items.push(it); S.sel = it.uid; changed(); });
+        b.addEventListener('click', () => { if (S.items.length >= (C.variant === 'mutfak' ? 24 : 12)) return; const it = mk(t); autoPlace(it, S.items); S.items.push(it); S.sel = it.uid; changed(); });
         $('plAdd').appendChild(b);
     });
 }
@@ -1084,7 +1128,7 @@ $('plPrint').addEventListener('click', () => {
     try { history.replaceState(null, '', location.pathname + location.search + '#p=' + encode()); } catch (e) {}
     const esc = v => String(v).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
     const rows = S.items.map((it, i) => { const p = product(it), d = dims(it); return `<tr><td>${label(i)}</td><td>${esc(TYPES[it.type].label)}</td><td>${d.w} × ${d.d} × ${d.h} cm</td><td>${esc(p.name)}${isEl(it) ? '' : ' · ' + esc(p.sponsor || 'Örnek ürün')}</td></tr>`; }).join('');
-    const kind = C.variant === 'wc' ? 'WC' : 'Banyo';
+    const kind = C.variant === 'wc' ? 'WC' : (C.variant === 'mutfak' ? 'Mutfak' : 'Banyo');
     // Açılır pencere yerine gizli çerçevede yazdır: açılır pencere engelleyiciye takılmaz
     document.getElementById('plPrintFrame')?.remove();
     const fr = document.createElement('iframe');
@@ -1136,6 +1180,21 @@ function tileCosts() {   // m² fiyatı olan sponsor seramikleri × alan (%10 fi
 
 /* ================= maliyet hesabına aktarım ================= */
 function planLinks() {
+    if (C.variant === 'mutfak') {
+        // plan → mutfak hesap motoru: alt dolap uzunluğu (m), zemin alanı ve ekstralar
+        const k = new URLSearchParams(C.back.split('?')[1] || '');
+        const base = ['altdolap', 'eviye', 'ocak', 'bulasik'];
+        const run = S.items.filter(it => base.includes(it.type)).reduce((a, it) => a + dims(it).w, 0) / 100;
+        k.set('length', Math.max(1, run).toFixed(1)); k.set('floor', (area() / 10000).toFixed(1));
+        k.delete('extras[]');
+        if (S.items.some(it => it.type === 'ocak')) k.append('extras[]', 'ankastre');
+        if (S.items.some(it => it.type === 'boydolap')) k.append('extras[]', 'boy_dolabi');
+        if (S.items.some(it => it.type === 'ada')) k.append('extras[]', 'ada');
+        if (S.acc && S.acc.e >= 0) k.append('extras[]', 'tezgah_arasi');
+        const base0 = C.back.split('?')[0];
+        $('plBack').href = base0 + '?' + k.toString(); $('plQuote').href = base0 + '?' + k.toString() + '#teklif';
+        return;
+    }
     // plan → banyo hesaplayıcısı: gerçek alan, duş tipi ve seçimler
     const bb = bbox(), W = (bb.x1 - bb.x0), A = area();
     const q = new URLSearchParams(C.query || {});
@@ -1375,6 +1434,27 @@ async function build3d() {
             case 'engel': {
                 const m = new THREE.Mesh(new THREE.BoxGeometry(w, H, d), tiled(S.wall, Math.max(w, d), H));
                 m.position.set(w / 2, H / 2, d / 2); g.add(m);
+                break;
+            }
+            case 'altdolap': case 'eviye': case 'ocak': case 'bulasik': case 'ada': {
+                const body = mat(new THREE.Color(p.color || '#F2EEE8')), top = mat(0x8f949b);
+                boxAt(g, w, 0.1, d - 0.05, 0, 0, 0.05, mat(0x2a2e33));   // baza
+                boxAt(g, w, 0.76, d - 0.02, 0, 0.1, 0, it.type === 'bulasik' ? mat(0xd5d9de) : body);
+                boxAt(g, w, 0.04, d, 0, 0.86, 0, top);                   // tezgah
+                if (it.type === 'eviye') boxAt(g, Math.min(w * 0.6, 0.5), 0.006, d * 0.5, (w - Math.min(w * 0.6, 0.5)) / 2, 0.9, d * 0.25, chrome);
+                if (it.type === 'ocak') { boxAt(g, Math.min(w * 0.85, 0.6), 0.006, d * 0.85, (w - Math.min(w * 0.85, 0.6)) / 2, 0.9, d * 0.08, mat(0x15171a)); boxAt(g, w * 0.9, 0.45, 0.01, w * 0.05, 0.25, d - 0.012, mat(0x1d2024)); }
+                if (it.type !== 'ada') for (let k = 1; k < Math.round(w / 0.6); k++) boxAt(g, 0.004, 0.72, 0.004, k * 0.6, 0.12, d - 0.022, mat(0xb9bec6));
+                break;
+            }
+            case 'boydolap': case 'buzdolabi': {
+                const hh = (p.h || 200) / 100, c = it.type === 'buzdolabi' ? mat(0xc9cdd2) : mat(new THREE.Color(p.color || '#F2EEE8'));
+                if (it.type === 'buzdolabi') { c.metalness = 0.4; c.roughness = 0.35; }
+                boxAt(g, w, hh, d, 0, 0, 0, c);
+                boxAt(g, 0.02, 0.3, 0.02, w - 0.06, hh * 0.55, d, chrome);
+                break;
+            }
+            case 'ustdolap': {
+                boxAt(g, w, (p.h || 70) / 100, d, 0, 1.45, 0, mat(new THREE.Color(p.color || '#F2EEE8')));
                 break;
             }
             case 'havlupan': {
