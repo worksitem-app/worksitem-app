@@ -149,8 +149,11 @@
     /* ── Hak bitti penceresi ── */
     function creditsDialog(data) {
         track('ai_gate_view', { gate: 'credits' });
-        var pk = (C.packages || []).map(function (p) {
-            return '<div class="' + (p.badge ? 'rec' : '') + '"><span>' + nf.format(p.credits) + ' kredi' + (p.badge ? '<small>' + esc(p.badge) + '</small>' : '') + '</span><span>' + nf.format(p.price) + ' TL</span></div>';
+        var pay = !!C.payUrl;
+        var pk = (C.packages || []).map(function (p, i) {
+            var inner = '<span>' + nf.format(p.credits) + ' kredi' + (p.badge ? '<small>' + esc(p.badge) + '</small>' : '') + '</span><span>' + nf.format(p.price) + ' TL' + (pay ? ' · Kartla öde →' : '') + '</span>';
+            return pay ? '<button type="button" data-pk="' + i + '" class="' + (p.badge ? 'rec' : '') + '">' + inner + '</button>'
+                : '<div class="' + (p.badge ? 'rec' : '') + '">' + inner + '</div>';
         }).join('');
         var waText = 'Merhaba, Worksitem yapay zekâ kredisi almak istiyorum.' + (data.phone ? ' Giriş telefonum: ' + data.phone : '');
         open(
@@ -158,13 +161,23 @@
             '<h2 id="wsagTitle">Bugünkü ücretsiz hakkınız bitti</h2>' +
             '<p>' + esc(data.message || '') + '</p>' +
             '<div class="wsag-pk">' + pk + '</div>' +
-            '<a class="wsag-btn y" target="_blank" rel="noopener" id="wsagWa" href="https://wa.me/' + esc(C.whatsapp) + '?text=' + encodeURIComponent(waText) + '">WhatsApp ile kredi al</a>' +
-            '<p class="wsag-note">1 kredi = 1 yapay zekâ işlemi. Fiyatlara KDV dahildir. Online kartla ödeme yakında; şimdilik kredi talebiniz Kurumsal Çağrı Merkezi üzerinden alınır ve hesabınıza yüklenir. Yarın yine ' + C.freePerDay + ' ücretsiz hakkınız olacak.' +
+            '<p class="wsag-note" id="wsagPayMsg" role="status"></p>' +
+            '<a class="wsag-btn ' + (pay ? '' : 'y') + '" target="_blank" rel="noopener" id="wsagWa" href="https://wa.me/' + esc(C.whatsapp) + '?text=' + encodeURIComponent(waText) + '">WhatsApp ile kredi al</a>' +
+            '<p class="wsag-note">1 kredi = 1 yapay zekâ işlemi. Fiyatlara KDV dahildir. ' + (pay ? 'Kartla ödeme iyzico güvenli ödeme sayfasında yapılır; kredi ödemeden hemen sonra hesabınıza yüklenir.' : 'Online kartla ödeme yakında; şimdilik kredi talebiniz Kurumsal Çağrı Merkezi üzerinden alınır ve hesabınıza yüklenir.') + ' Yarın yine ' + C.freePerDay + ' ücretsiz hakkınız olacak.' +
             (data.phone ? '<br>Giriş: ' + esc(data.phone) + ' · <button type="button" class="wsag-link" id="wsagOut">Çıkış yap</button>' : '') + '</p>'
         );
         box.querySelector('[data-close]').addEventListener('click', close);
         back.onclick = function (e) { if (e.target === back) close(); };
         box.querySelector('#wsagWa').addEventListener('click', function () { track('ai_credit_request', {}); });
+        box.querySelectorAll('[data-pk]').forEach(function (b) {
+            b.addEventListener('click', function () {
+                var m = box.querySelector('#wsagPayMsg'); m.textContent = 'Ödeme sayfası açılıyor…';
+                track('ai_credit_checkout', { package: b.getAttribute('data-pk') });
+                post(C.payUrl, { package: +b.getAttribute('data-pk') }).then(function (j) {
+                    if (j && j.ok && j.url) { location.href = j.url; } else { m.textContent = (j && j.message) || 'Ödeme başlatılamadı.'; }
+                }).catch(function () { m.textContent = 'Bağlantı hatası.'; });
+            });
+        });
         var out = box.querySelector('#wsagOut');
         if (out) out.addEventListener('click', function () { post(C.logoutUrl).then(function () { close(); toast('Çıkış yapıldı'); }); });
     }

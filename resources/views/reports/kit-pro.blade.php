@@ -59,7 +59,9 @@
 <main class="pr">
     <section class="card">
         <div class="crumb"><a href="/araclar">Araçlar</a> › <a href="{{ $back }}">{{ $page['title'] }}</a> › Pro rapor</div>
-        <span class="tag">Pro rapor · şimdilik ücretsiz</span>
+        @php($proPaid = config('worksitem_pro_report.mode') === 'paid')
+        @php($proPrice = round((float) config('worksitem_pro_report.price', 149) * (1 + (float) config('worksitem_payments.vat_rate', 0.20)), 2))
+        <span class="tag">Pro rapor · {{ $proPaid ? number_format($proPrice, 2, ',', '.').' TL (KDV dahil)' : 'şimdilik ücretsiz' }}</span>
         <h1>{{ $page['title'] }}: detaylı Pro rapor</h1>
         <p class="sub">Hesapladığınız iş için usta ile konuşurken elinizde olacak, logolu ve çok sayfalı bir PDF. Telefonunuzu SMS koduyla doğrulamanız yeterli.</p>
 
@@ -80,6 +82,9 @@
     </section>
 
     <aside class="card">
+        @if (session('pro_paid'))<div class="sum" role="status" style="border-color:#047857;background:#ECFDF3"><b>✓ {{ session('pro_paid') }}</b></div>@endif
+        @if ($errors->has('pay'))<div class="sum" role="alert" style="border-color:#B42318;background:#FEF3F2"><b>{{ $errors->first('pay') }}</b></div>@endif
+        @if ($proPaid)<p class="sub" style="margin-top:10px">Telefon doğrulamasından sonra iyzico güvenli ödeme sayfasına yönlendirilirsiniz; ödeme sonrası rapor aynı hesap için {{ config('worksitem_payments.pro_report_days', 30) }} gün boyunca yeniden indirilebilir.</p>@endif
         <form method="POST" action="{{ route('tools.kit.pro_download', ['kit' => $e->slug()]) }}" id="proForm" novalidate>
             @csrf
             @foreach ($query as $k => $v)

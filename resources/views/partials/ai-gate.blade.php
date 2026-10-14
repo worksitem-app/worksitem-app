@@ -9,6 +9,7 @@
     'freePerDay' => (int) config('worksitem_ai_credits.free_per_day', 1),
     'packages' => config('worksitem_ai_credits.packages'),
     'whatsapp' => config('worksitem_inspection.whatsapp'),
+    'payUrl' => app(\App\Services\Payments\OnlinePayment::class)->enabled() ? route('odeme.kredi') : null,
     'csrf' => csrf_token(),
 ])
 <script type="application/json" id="wsag-config">{!! json_encode($wsagCfg, JSON_HEX_TAG | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}</script>
@@ -38,6 +39,9 @@
     .wsag-pk { display: grid; gap: 8px; margin: 6px 0 4px; }
     .wsag-pk div { display: flex; justify-content: space-between; align-items: center; border: 1.5px solid var(--line); border-radius: 12px; padding: 11px 14px; font-weight: 700; }
     .wsag-pk div.rec { border-color: var(--y); background: var(--y50); }
+    .wsag-pk button { display: flex; width: 100%; justify-content: space-between; align-items: center; border: 1.5px solid var(--line); border-radius: 12px; padding: 11px 14px; font: inherit; font-weight: 700; background: var(--paper); color: inherit; cursor: pointer; }
+    .wsag-pk button.rec { border-color: var(--y); background: var(--y50); }
+    .wsag-pk button:hover { border-color: var(--ink); }
     .wsag-pk small { font-weight: 800; font-size: 11px; background: var(--y); color: #101318; border-radius: 999px; padding: 2px 8px; margin-left: 6px; }
     .wsag-note { font-size: 12.5px; color: var(--muted); margin-top: 10px; line-height: 1.5; }
     .wsag-note a, .wsag-link { color: inherit; }

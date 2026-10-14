@@ -13,10 +13,10 @@ class PlannerProduct extends Model
 {
     protected $fillable = [
         'type', 'name', 'brand', 'sku', 'sponsor_id', 'image_path', 'model_path', 'width', 'depth', 'height', 'width_min', 'width_max', 'depth_min', 'depth_max',
-        'color', 'cabinet_color', 'tank', 'image_url', 'product_url', 'price_min', 'price_max', 'active', 'priority',
+        'color', 'cabinet_color', 'tank', 'variants', 'image_url', 'product_url', 'price_min', 'price_max', 'active', 'priority',
     ];
 
-    protected $casts = ['active' => 'boolean', 'tank' => 'boolean'];
+    protected $casts = ['active' => 'boolean', 'tank' => 'boolean', 'variants' => 'array'];
 
     public function sponsor(): BelongsTo
     {
@@ -48,7 +48,30 @@ class PlannerProduct extends Model
             'model' => $this->model_path ? Storage::disk('public')->url($this->model_path) : null,
             'link' => $this->product_url ? route('planner.product', $this->id) : null,
             'price' => $this->price_min ? [(int) $this->price_min, (int) ($this->price_max ?: $this->price_min)] : null,
+            'variants' => self::plannerVariants((array) ($this->variants ?? [])),
         ], fn ($v) => $v !== null);
+    }
+
+    /** Renk / model seçenekleri planlayıcı biçiminde (boş alanlar ürünün kendi değerini korur) */
+    public static function plannerVariants(array $rows): ?array
+    {
+        $out = [];
+        foreach (array_values($rows) as $i => $v) {
+            if (! is_array($v) || trim((string) ($v['name'] ?? '')) === '') {
+                continue;
+            }
+            $out[] = array_filter([
+                'id' => 'v'.$i,
+                'name' => mb_substr((string) $v['name'], 0, 60),
+                'color' => $v['color'] ?? null,
+                'cabinet' => $v['cabinet_color'] ?? null,
+                'image' => $v['image_url'] ?? null,
+                'sku' => $v['sku'] ?? null,
+                'price' => ! empty($v['price_min']) ? [(int) $v['price_min'], (int) ($v['price_max'] ?: $v['price_min'])] : null,
+            ], fn ($x) => $x !== null && $x !== '');
+        }
+
+        return $out ?: null;
     }
 
     /** @return array<string, array<int, array>> tür → ürünler (sponsorlu önce) */

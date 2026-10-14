@@ -97,6 +97,14 @@ Route::post('/kesif/odeme/kart', [\App\Http\Controllers\InspectionController::cl
 Route::post('/kesif/odeme/iyzico/sonuc', [\App\Http\Controllers\InspectionController::class, 'iyzicoCallback'])
     ->withoutMiddleware([\Illuminate\Session\Middleware\StartSession::class, \Illuminate\View\Middleware\ShareErrorsFromSession::class, \Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class, \Illuminate\Foundation\Http\Middleware\PreventRequestForgery::class])
     ->middleware('throttle:public-write')->name('kesif.iyzico.callback');
+// Online satış: yapay zekâ kredisi ve ücretli Pro rapor (iyzico)
+Route::post('/odeme/kredi', [\App\Http\Controllers\OrderController::class, 'buyCredits'])
+    ->middleware('throttle:public-write')->name('odeme.kredi');
+Route::post('/odeme/iyzico/sonuc', [\App\Http\Controllers\OrderController::class, 'callback'])
+    ->withoutMiddleware([\Illuminate\Session\Middleware\StartSession::class, \Illuminate\View\Middleware\ShareErrorsFromSession::class, \Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class, \Illuminate\Foundation\Http\Middleware\PreventRequestForgery::class])
+    ->middleware('throttle:public-write')->name('odeme.iyzico.callback');
+Route::get('/odeme/sonuc/{order}', [\App\Http\Controllers\OrderController::class, 'result'])
+    ->middleware(['signed', 'throttle:public-read'])->name('odeme.sonuc');
 Route::get('/kesif/odeme/sonuc/{lead}', [\App\Http\Controllers\InspectionController::class, 'result'])
     ->middleware('signed')->name('kesif.result');
 Route::get('/kesif/sozlesme.pdf', [\App\Http\Controllers\InspectionController::class, 'contractPdf'])

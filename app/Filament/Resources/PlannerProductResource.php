@@ -62,6 +62,17 @@ class PlannerProductResource extends Resource
                 Forms\Components\ColorPicker::make('cabinet_color')->label('Dolap rengi (dolaplı lavabo)'),
                 Forms\Components\Toggle::make('tank')->label('Rezervuarlı (klozet)'),
             ])->columns(4),
+            Forms\Components\Section::make('Renk / model seçenekleri')->description('Kullanıcı planlayıcıda bu ürünün rengini veya modelini seçebilir. Boş bırakılan alan ürünün kendi değerini kullanır.')->schema([
+                Forms\Components\Repeater::make('variants')->label('')->schema([
+                    Forms\Components\TextInput::make('name')->label('Seçenek adı')->required()->maxLength(60)->placeholder('Örn: Mat siyah'),
+                    Forms\Components\ColorPicker::make('color')->label('Renk'),
+                    Forms\Components\ColorPicker::make('cabinet_color')->label('Dolap rengi'),
+                    Forms\Components\TextInput::make('sku')->label('Stok kodu')->maxLength(80),
+                    Forms\Components\TextInput::make('image_url')->label('Görsel (https)')->url()->maxLength(500),
+                    Forms\Components\TextInput::make('price_min')->label('Fiyat en az')->numeric(),
+                    Forms\Components\TextInput::make('price_max')->label('Fiyat en çok')->numeric(),
+                ])->columns(4)->addActionLabel('Seçenek ekle')->maxItems(12)->collapsible()->defaultItems(0),
+            ])->collapsed(),
             Forms\Components\Section::make('Fiyat ve yayın')->schema([
                 Forms\Components\TextInput::make('price_min')->label('Fiyat en az (TL, KDV dahil)')->numeric(),
                 Forms\Components\TextInput::make('price_max')->label('Fiyat en çok (TL)')->numeric(),

@@ -40,4 +40,21 @@ class KitchenPlannerTest extends TestCase
         $this->assertStringNotContainsString('"eviye"', $html);
         $this->get('/araclar/mutfak-maliyet-hesaplayici')->assertOk()->assertSee('Mutfağımı 2D / 3D gör')->assertSee('/araclar/mutfak-planlayici', false);
     }
+
+    public function test_urun_renk_model_secenekleri_planlayiciya_gelir(): void
+    {
+        $p = \App\Models\PlannerProduct::query()->create([
+            'type' => 'havlupan', 'name' => 'Havlupan Pro', 'brand' => 'Örnek Marka', 'width' => 50, 'depth' => 8, 'height' => 80, 'active' => true,
+            'variants' => [['name' => 'Mat siyah', 'color' => '#111111', 'price_min' => 3000, 'price_max' => 3500], ['name' => ''], ['name' => 'Krom', 'color' => '#DDDDDD']],
+        ]);
+        $v = $p->toPlanner()['variants'];
+        $this->assertCount(2, $v);
+        $this->assertSame(['id' => 'v0', 'name' => 'Mat siyah', 'color' => '#111111', 'price' => [3000, 3500]], $v[0]);
+
+        preg_match('#<script type="application/json" id="plCfg">(.*?)</script>#s', $this->get('/araclar/banyo-planlayici')->getContent(), $m);
+        $cfg = json_decode($m[1], true);
+        $this->assertSame('Örnek Marka', $cfg['products']['havlupan'][0]['sponsor']);
+        $this->assertNotEmpty($cfg['products']['havlupan'][0]['variants']);
+        $this->assertNotEmpty(collect($cfg['products']['lavabo'])->firstWhere('id', 'lavabo-dolap-80')['variants']);
+    }
 }

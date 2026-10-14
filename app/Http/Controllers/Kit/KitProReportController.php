@@ -96,8 +96,25 @@ class KitProReportController extends Controller
             }
             $phone = (string) NetgsmSms::normalize($data['phone']);
             // Banyo Pro raporuyla aynı oturum anahtarı: bir kez doğrulayan diğer raporları da indirir
-            $request->session()->put('pro_report', ['phone' => $phone, 'until' => now()->addMinutes((int) config('worksitem_pro_report.session_minutes', 120))->timestamp]);
+            $request->session()->put('pro_report', ['phone' => $phone, 'name' => $data['name'], 'until' => now()->addMinutes((int) config('worksitem_pro_report.session_minutes', 120))->timestamp]);
             $this->recordLead($request, $e, $data['name'], $phone, $in);
+        }
+
+        // Ücretli mod: bu hesap için ödeme yoksa iyzico ödeme sayfasına gider; ödeme sonrası aynı sayfaya dönülür
+        if (config('worksitem_pro_report.mode') === 'paid') {
+            $ref = 'pro:'.$e->slug().':'.md5(json_encode($in));
+            if (! \App\Services\Payments\OnlinePayment::reportPaid($ref, $phone)) {
+                $pay = app(\App\Services\Payments\OnlinePayment::class);
+                if (! $pay->enabled()) {
+                    return back()->withErrors(['pay' => 'Pro rapor satışı şu an kapalı. Lütfen daha sonra tekrar deneyin.']);
+                }
+                $query = http_build_query($request->except(['_token', 'name', 'phone', 'code', 'kvkk', 'call_ok']));
+                $name = (string) ($request->input('name') ?: ($request->session()->get('pro_report')['name'] ?? 'Worksitem Müşterisi'));
+                $order = $pay->reportOrder($ref, 'Worksitem Pro rapor · '.($e->page()['title'] ?? $e->slug()), $name, $phone, url('/araclar/'.$e->slug().'/pro-rapor').($query !== '' ? '?'.$query : ''));
+                $r = $pay->start($order, $request->ip());
+
+                return $r['ok'] ? redirect()->away($r['url']) : back()->withErrors(['pay' => $r['error']]);
+            }
         }
 
         $content = $e->proReport($in);

@@ -73,15 +73,13 @@ return [
             ['id' => 'ocak-90', 'name' => 'Ocak + fırın dolabı 90 cm', 'w' => 90, 'd' => 60, 'h' => 90, 'color' => '#F2EEE8', 'wr' => [80, 100], 'dr' => [55, 65], 'sponsor' => null],
         ],
         'altdolap' => [
-            ['id' => 'alt-60', 'name' => 'Alt dolap 60 cm (beyaz)', 'w' => 60, 'd' => 60, 'h' => 90, 'color' => '#F2EEE8', 'wr' => [30, 120], 'dr' => [55, 65], 'sponsor' => null],
-            ['id' => 'alt-60-ahsap', 'name' => 'Alt dolap 60 cm (ahşap desen)', 'w' => 60, 'd' => 60, 'h' => 90, 'color' => '#B08A5B', 'wr' => [30, 120], 'dr' => [55, 65], 'sponsor' => null],
-            ['id' => 'alt-60-antrasit', 'name' => 'Alt dolap 60 cm (antrasit)', 'w' => 60, 'd' => 60, 'h' => 90, 'color' => '#3A3F47', 'wr' => [30, 120], 'dr' => [55, 65], 'sponsor' => null],
+            ['id' => 'alt-60', 'name' => 'Alt dolap 60 cm', 'w' => 60, 'd' => 60, 'h' => 90, 'color' => '#F2EEE8', 'wr' => [30, 120], 'dr' => [55, 65], 'sponsor' => null, 'variants' => [['id' => 'beyaz', 'name' => 'Parlak beyaz', 'color' => '#F2EEE8'], ['id' => 'ahsap', 'name' => 'Meşe desen', 'color' => '#B08A5B'], ['id' => 'antrasit', 'name' => 'Antrasit', 'color' => '#3A3F47'], ['id' => 'yesil', 'name' => 'Adaçayı yeşili', 'color' => '#9DB09A'], ['id' => 'lacivert', 'name' => 'Lacivert', 'color' => '#2F3E57']]],
         ],
         'boydolap' => [
-            ['id' => 'boy-60', 'name' => 'Boy dolabı 60 cm', 'w' => 60, 'd' => 60, 'h' => 220, 'color' => '#F2EEE8', 'wr' => [40, 90], 'dr' => [55, 65], 'sponsor' => null],
+            ['id' => 'boy-60', 'name' => 'Boy dolabı 60 cm', 'w' => 60, 'd' => 60, 'h' => 220, 'color' => '#F2EEE8', 'wr' => [40, 90], 'dr' => [55, 65], 'sponsor' => null, 'variants' => [['id' => 'beyaz', 'name' => 'Parlak beyaz', 'color' => '#F2EEE8'], ['id' => 'ahsap', 'name' => 'Meşe desen', 'color' => '#B08A5B'], ['id' => 'antrasit', 'name' => 'Antrasit', 'color' => '#3A3F47'], ['id' => 'yesil', 'name' => 'Adaçayı yeşili', 'color' => '#9DB09A'], ['id' => 'lacivert', 'name' => 'Lacivert', 'color' => '#2F3E57']]],
         ],
         'ustdolap' => [
-            ['id' => 'ust-80', 'name' => 'Üst dolap 80 cm', 'w' => 80, 'd' => 35, 'h' => 70, 'color' => '#F2EEE8', 'wr' => [30, 160], 'dr' => [30, 40], 'sponsor' => null],
+            ['id' => 'ust-80', 'name' => 'Üst dolap 80 cm', 'w' => 80, 'd' => 35, 'h' => 70, 'color' => '#F2EEE8', 'wr' => [30, 160], 'dr' => [30, 40], 'sponsor' => null, 'variants' => [['id' => 'beyaz', 'name' => 'Parlak beyaz', 'color' => '#F2EEE8'], ['id' => 'ahsap', 'name' => 'Meşe desen', 'color' => '#B08A5B'], ['id' => 'antrasit', 'name' => 'Antrasit', 'color' => '#3A3F47'], ['id' => 'yesil', 'name' => 'Adaçayı yeşili', 'color' => '#9DB09A'], ['id' => 'lacivert', 'name' => 'Lacivert', 'color' => '#2F3E57']]],
             ['id' => 'ust-120', 'name' => 'Üst dolap 120 cm', 'w' => 120, 'd' => 35, 'h' => 70, 'color' => '#F2EEE8', 'wr' => [30, 160], 'dr' => [30, 40], 'sponsor' => null],
         ],
         'ada' => [
@@ -102,7 +100,8 @@ return [
         ],
         'lavabo' => [
             ['id' => 'lavabo-60', 'name' => 'Duvara monte lavabo 60 cm', 'w' => 60, 'd' => 45, 'h' => 85, 'color' => '#FFFFFF', 'cabinet' => false, 'wr' => [40, 80], 'dr' => [35, 50], 'sponsor' => null],
-            ['id' => 'lavabo-dolap-80', 'name' => 'Dolaplı lavabo 80 cm', 'w' => 80, 'd' => 46, 'h' => 85, 'color' => '#FFFFFF', 'cabinet' => '#B08A5B', 'wr' => [60, 160], 'dr' => [40, 55], 'sponsor' => null],
+            ['id' => 'lavabo-dolap-80', 'name' => 'Dolaplı lavabo 80 cm', 'w' => 80, 'd' => 46, 'h' => 85, 'color' => '#FFFFFF', 'cabinet' => '#B08A5B', 'wr' => [60, 160], 'dr' => [40, 55], 'sponsor' => null,
+                'variants' => [['id' => 'mese', 'name' => 'Meşe', 'cabinet' => '#B08A5B'], ['id' => 'beyaz', 'name' => 'Parlak beyaz', 'cabinet' => '#F4F4F2'], ['id' => 'antrasit', 'name' => 'Antrasit', 'cabinet' => '#3A3F47'], ['id' => 'ceviz', 'name' => 'Ceviz', 'cabinet' => '#6B4A33']]],
             ['id' => 'lavabo-dolap-60', 'name' => 'Dolaplı lavabo 60 cm (antrasit)', 'w' => 60, 'd' => 46, 'h' => 85, 'color' => '#FFFFFF', 'cabinet' => '#3A3F47', 'wr' => [50, 100], 'dr' => [40, 55], 'sponsor' => null],
         ],
         'klozet' => [
@@ -110,7 +109,8 @@ return [
             ['id' => 'klozet-yer', 'name' => 'Yere oturan klozet (rezervuarlı)', 'w' => 38, 'd' => 65, 'h' => 78, 'color' => '#FFFFFF', 'tank' => true, 'wr' => [36, 40], 'dr' => [60, 70], 'sponsor' => null],
         ],
         'havlupan' => [
-            ['id' => 'havlupan-50', 'name' => 'Havlupan 50×80', 'w' => 50, 'd' => 8, 'h' => 80, 'color' => '#D9DDE2', 'wr' => [40, 70], 'dr' => [8, 8], 'sponsor' => null],
+            ['id' => 'havlupan-50', 'name' => 'Havlupan 50×80', 'w' => 50, 'd' => 8, 'h' => 80, 'color' => '#D9DDE2', 'wr' => [40, 70], 'dr' => [8, 8], 'sponsor' => null,
+                'variants' => [['id' => 'krom', 'name' => 'Krom', 'color' => '#D9DDE2'], ['id' => 'siyah', 'name' => 'Mat siyah', 'color' => '#1E2126'], ['id' => 'altin', 'name' => 'Fırçalı altın', 'color' => '#C9A55A'], ['id' => 'beyaz', 'name' => 'Beyaz', 'color' => '#F4F4F2']]],
             ['id' => 'havlupan-siyah', 'name' => 'Havlupan 50×80 (mat siyah)', 'w' => 50, 'd' => 8, 'h' => 80, 'color' => '#1E2126', 'wr' => [40, 70], 'dr' => [8, 8], 'sponsor' => null],
         ],
     ],

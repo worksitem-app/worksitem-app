@@ -55,6 +55,10 @@
         button,input,select{font:inherit;color:inherit}
         :focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
         .pl-wrap{max-width:1280px;margin:0 auto;padding:20px 16px 40px}
+        .pl-vars{display:flex;flex-wrap:wrap;gap:6px}
+        .pl-var{display:inline-flex;align-items:center;gap:6px;padding:5px 9px 5px 5px;border:1.5px solid var(--line);border-radius:999px;background:#fff;font-size:12.5px;font-weight:600;cursor:pointer}
+        .pl-var i{width:20px;height:20px;border-radius:50%;border:1px solid rgba(0,0,0,.15)}
+        .pl-var.is-on{border-color:var(--ink);box-shadow:0 0 0 2px var(--yellow)}
         .pl-crumb{font-size:13px;color:var(--muted);margin-bottom:14px}
         .pl-crumb a{text-decoration:none}
         .pl-head h1{font-size:clamp(26px,5vw,38px);line-height:1.12;letter-spacing:-.02em;font-weight:900}
@@ -320,6 +324,7 @@
         <h3 id="dlgTitle">Parçayı düzenle</h3>
         <p id="dlgText">Ölçüyü ve ürünü değiştirin; parça yerinde kalır.</p>
         <div class="pl-f" id="dlgProdF"><label for="dlgProd">Ürün</label><div class="pl-in"><select id="dlgProd"></select></div></div>
+        <div class="pl-f" id="dlgVarF" hidden><label>Renk / model</label><div class="pl-vars" id="dlgVars" role="radiogroup" aria-label="Renk / model"></div></div>
         <div class="pl-info" id="dlgInfo" hidden><img id="dlgImg" alt=""><div><b id="dlgBrand"></b><div id="dlgPrice"></div><a id="dlgLink" target="_blank" rel="sponsored nofollow noopener">Ürünü incele ↗</a></div></div>
         <div class="pl-fields c2">
             <div class="pl-f"><label for="dlgW">Genişlik</label><div class="pl-in"><input type="number" id="dlgW" step="5"><span>cm</span></div><small id="dlgWr"></small><button type="button" class="pl-fill" id="dlgFillW">↔ Boşluğu doldur</button></div>
@@ -472,11 +477,16 @@ function ray(x, y, dx, dy) {           // (x,y)'den duvara kadar mesafe
 }
 
 /* ================= parçalar ================= */
-function product(it) { const list = C.products[it.type] || []; return list.find(p => p.id === it.pid) || list[0]; }
+function product(it) {
+    const list = C.products[it.type] || [], b = list.find(p => p.id === it.pid) || list[0];
+    if (!b || !it.vid || !b.variants) return b;
+    const v = b.variants.find(x => x.id === it.vid);   // renk / model seçeneği ürünün üzerine yazılır
+    return v ? { ...b, ...v, id: b.id, name: b.name + ' · ' + v.name, variants: b.variants } : b;
+}
 function dims(it) { const p = product(it); return { w: it.w || p.w, d: it.d || p.d, h: p.h || S.h }; }
 const isEl = it => !!(TYPES[it.type] && TYPES[it.type].element);
 function foot(it) { const s = dims(it), flat = it.rot % 180 === 0; return { x: it.x, y: it.y, w: flat ? s.w : s.d, d: flat ? s.d : s.w }; }
-function mk(type, pid) { const list = C.products[type] || []; return { uid: ++uid, type, pid: pid || (list[0] && list[0].id), x: 0, y: 0, rot: 0, w: 0, d: 0, bad: false }; }
+function mk(type, pid, vid) { const list = C.products[type] || []; return { uid: ++uid, type, pid: pid || (list[0] && list[0].id), vid: vid || '', x: 0, y: 0, rot: 0, w: 0, d: 0, bad: false }; }
 const onWall = it => !!(TYPES[it.type] && TYPES[it.type].wall);
 const layer = (a, b) => onWall(a) === onWall(b);   // asılı dolap zemindeki parçalarla çakışmaz
 function defaultItems() {
@@ -593,7 +603,7 @@ function check() {
 /* ================= bağlantı ================= */
 function encode() {
     const o = { v: 2, s: S.shape, w: S.w, l: S.l, h: S.h, cw: S.cw, cl: S.cl, d: [S.door.e, Math.round(doorOff()), S.door.w], f: S.floor, t: S.wall,
-        i: S.items.map(it => [it.type, it.pid, Math.round(it.x), Math.round(it.y), it.rot, it.w || 0, it.d || 0]),
+        i: S.items.map(it => [it.type, it.pid, Math.round(it.x), Math.round(it.y), it.rot, it.w || 0, it.d || 0, it.vid || '']),
         wn: S.wins.map(w => [w.e, Math.round(w.off || 0), w.w, w.sill, w.h, w.k === 'nis' ? 1 : 0]), n: S.notes || undefined,
         st: [S.tileH, S.paint, S.acc.e, S.acc.tile] };
     return btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
@@ -616,7 +626,7 @@ function decode(s) {
         }
         S.notes = String(o.n || '').slice(0, 300);
         S.items = (o.i || []).filter(a => C.products[a[0]]).slice(0, 20).map(a => {
-            const it = mk(a[0], a[1]); it.x = +a[2] || 0; it.y = +a[3] || 0; it.rot = [0, 90, 180, 270].includes(+a[4]) ? +a[4] : 0;
+            const it = mk(a[0], a[1], typeof a[7] === 'string' ? a[7].slice(0, 20) : ''); it.x = +a[2] || 0; it.y = +a[3] || 0; it.rot = [0, 90, 180, 270].includes(+a[4]) ? +a[4] : 0;
             const p = product(it); it.w = a[5] ? clamp(+a[5], p.wr[0], p.wr[1]) : 0; it.d = a[6] ? clamp(+a[6], p.dr[0], p.dr[1]) : 0; return it;
         });
         return true;
@@ -974,8 +984,22 @@ function openEdit(it) {
     const sel = $('dlgProd'); sel.innerHTML = '';
     (C.products[it.type] || []).forEach(q => { const o = document.createElement('option'); o.value = q.id; o.textContent = q.name + (q.sponsor ? ' · ' + q.sponsor : ' · Örnek ürün'); o.selected = q.id === it.pid; sel.appendChild(o); });
     $('dlgProdF').hidden = isEl(it);
-    setRanges(p, s); prodInfo(p);
+    dlgVid = it.vid || '';
+    setRanges(p, s); prodInfo(p); renderVars((C.products[it.type] || []).find(x => x.id === it.pid));
     $('plDlg').showModal();
+}
+let dlgVid = '';
+function renderVars(q) {
+    const box = $('dlgVars'), vs = (q && q.variants) || [];
+    $('dlgVarF').hidden = !vs.length; box.innerHTML = '';
+    if (vs.length && !vs.some(v => v.id === dlgVid)) dlgVid = '';
+    vs.forEach(v => {
+        const b = document.createElement('button'); b.type = 'button'; b.className = 'pl-var' + (v.id === dlgVid ? ' is-on' : '');
+        b.setAttribute('role', 'radio'); b.setAttribute('aria-checked', v.id === dlgVid ? 'true' : 'false');
+        b.innerHTML = '<i></i><span></span>'; b.querySelector('i').style.background = v.cabinet || v.color || '#ccc'; b.querySelector('span').textContent = v.name;
+        b.addEventListener('click', () => { dlgVid = v.id; renderVars(q); prodInfo({ ...q, ...v }); });
+        box.appendChild(b);
+    });
 }
 function prodInfo(p) {
     const box = $('dlgInfo'); box.hidden = !p.sponsor;
@@ -990,13 +1014,13 @@ function setRanges(p, s) {
     $('dlgD').value = s.d; $('dlgD').min = p.dr[0]; $('dlgD').max = p.dr[1]; $('dlgDr').textContent = `${p.dr[0]}–${p.dr[1]} cm`;
     $('dlgFillD').hidden = p.dr[0] === p.dr[1];
 }
-$('dlgProd').addEventListener('change', e => { if (!editIt) return; const q = (C.products[editIt.type] || []).find(x => x.id === e.target.value); if (q) { setRanges(q, { w: q.w, d: q.d }); prodInfo(q); } });
+$('dlgProd').addEventListener('change', e => { if (!editIt) return; const q = (C.products[editIt.type] || []).find(x => x.id === e.target.value); if (q) { dlgVid = ''; setRanges(q, { w: q.w, d: q.d }); prodInfo(q); renderVars(q); } });
 $('dlgFillW').addEventListener('click', () => { if (!editIt) return; const keep = editIt.pid; editIt.pid = $('dlgProd').value; editIt.d = +$('dlgD').value || 0; $('dlgW').value = fillSpan(editIt, 'w'); editIt.pid = keep; });
 $('dlgFillD').addEventListener('click', () => { if (!editIt) return; const keep = editIt.pid; editIt.pid = $('dlgProd').value; editIt.w = +$('dlgW').value || 0; $('dlgD').value = fillSpan(editIt, 'd'); editIt.pid = keep; });
 $('dlgCancel').addEventListener('click', () => $('plDlg').close());
 $('dlgForm').addEventListener('submit', () => {
     const it = editIt; if (!it) return;
-    it.pid = $('dlgProd').value;
+    it.pid = $('dlgProd').value; it.vid = dlgVid;
     const p = product(it);
     it.w = clamp(Math.round(+$('dlgW').value || p.w), p.wr[0], p.wr[1]);
     it.d = clamp(Math.round(+$('dlgD').value || p.d), p.dr[0], p.dr[1]);
