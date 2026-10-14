@@ -20,7 +20,7 @@ abstract class CatalogPozEstimator extends PozEstimator
     {
         $opts = [];
         foreach ($this->catalog() as $k => $s) {
-            $opts[$k] = ['label' => $s['label'], 'hint' => $s['poz'] ? 'YFK '.$s['poz'] : 'Resmî fiyat yok'];
+            $opts[$k] = ['label' => $s['label'], 'hint' => $s['poz'] ? 'YFK '.$s['poz'] : 'Piyasa fiyatı'];
         }
 
         return [
@@ -33,7 +33,29 @@ abstract class CatalogPozEstimator extends PozEstimator
 
     protected function system(array $in): ?array
     {
-        return $this->catalog()[$in['system']] ?? null;
+        $s = $this->catalog()[$in['system']] ?? null;
+        if ($s && empty($s['poz'])) {
+            $s['poz'] = $this->webKey($in['system']);   // resmî pozu olmayan sistem: fiyat robotunun piyasa fiyatı
+        }
+
+        return $s;
+    }
+
+    /** Resmî pozu olmayan sistemin fiyat robotu anahtarı */
+    public function webKey(string $system): string
+    {
+        return 'WEB-'.str(class_basename(static::class))->before('Estimator')->kebab().'-'.$system;
+    }
+
+    /** Fiyat robotu için sistemler: [key (poz no ya da WEB-...), label, official] */
+    public function robotSystems(): array
+    {
+        $out = [];
+        foreach ($this->catalog() as $k => $s) {
+            $out[] = ['key' => $s['poz'] ?: $this->webKey($k), 'label' => $s['label'], 'official' => (bool) $s['poz']];
+        }
+
+        return $out;
     }
 
     protected function compute(array $in): array
@@ -48,11 +70,13 @@ abstract class CatalogPozEstimator extends PozEstimator
         $days = [max(1, (int) ceil($a / $fast)), max(1, (int) ceil($a / $slow))];
 
         return $this->withVat([
-            'imalat' => ['label' => $sys['label'].' · YFK '.$sys['poz'], 'mid' => $a * $p['price'], 'color' => '#FFB800'],
+            'imalat' => ['label' => $sys['label'].(($p['source'] ?? 'YFK') === 'WEB' ? ' · piyasa fiyatı' : ' · YFK '.$sys['poz']), 'mid' => $a * $p['price'], 'color' => '#FFB800'],
         ], [
             'per_unit' => $a, 'days' => $days,
             'meta' => [['Birim fiyat (KDV hariç)', '₺'.number_format($p['price'], 2, ',', '.').' / '.$p['unit']], ['Tahmini süre', $days[0].'–'.$days[1].' iş günü']],
-            'notes' => array_filter([$sys['note'] ?? null]),
+            'notes' => ($p['source'] ?? 'YFK') === 'WEB'
+                ? ['Bu sistemin resmî birim fiyatı yok; güncel piyasa fiyatı (web araştırması, Kainta İnşaat Uzmanları kontrolünde) kullanıldı.']
+                : array_filter([$sys['note'] ?? null]),
         ]);
     }
 }

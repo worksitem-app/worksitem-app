@@ -50,6 +50,10 @@ class SendDailyMaterialPriceReport extends Command
             $to->format('d.m.Y'),
             $rows->count()
         );
+        if (\Illuminate\Support\Facades\Schema::hasTable('price_robot_items')) {
+            $pending = \App\Models\PriceRobotItem::query()->whereNotNull('proposed_value')->count();
+            $subject .= $pending ? ' | '.$pending.' fiyat onay bekliyor' : '';
+        }
 
         Mail::send(
             'emails.daily-material-prices',
@@ -59,6 +63,9 @@ class SendDailyMaterialPriceReport extends Command
                 'to' => $to,
                 'approvedCount' => $approvedCount,
                 'reviewCount' => $reviewCount,
+                'robot' => \Illuminate\Support\Facades\Schema::hasTable('price_robot_items')
+                    ? \App\Models\PriceRobotItem::query()->where('researched_at', '>=', $from)->orderByDesc('proposed_value')->orderBy('label')->get()
+                    : collect(),
             ],
             function ($message) use (
                 $recipient,

@@ -26,6 +26,8 @@ class AppServiceProvider extends ServiceProvider
         // (ToolQaGate, sitemap, araç listesi aynı kaynağı okur)
         if (! $this->app->runningUnitTests()) {
             \App\Models\ToolStatus::applyToConfig();
+            // Fiyat robotunun yayındaki fiyatları hesap motoru varsayılanlarının üzerine yazılır
+            \App\Services\Pricing\PriceRobotOverrides::apply();
         }
 
         // Yalnızca production'da: local/test ortamında https zorlamak

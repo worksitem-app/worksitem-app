@@ -33,7 +33,7 @@ abstract class PozEstimator extends KitEstimator
         return 'YFK '.$this->period().' (ÇŞB birim fiyatları)';
     }
 
-    /** @return array{price: float, unit: string, period: string}|null */
+    /** @return array{price: float, unit: string, period: string, source: string}|null */
     protected function poz(?string $no): ?array
     {
         if (! $no) {
@@ -42,12 +42,19 @@ abstract class PozEstimator extends KitEstimator
         if (! array_key_exists($no, self::$cache)) {
             try {
                 $svc = app(PriceService::class);
-                $r = $svc->byPoz($no, $this->period(), 'YFK') ?? $svc->byPoz($no, null, 'YFK');
+                $r = str_starts_with($no, 'WEB-') ? null : ($svc->byPoz($no, $this->period(), 'YFK') ?? $svc->byPoz($no, null, 'YFK'));
+                $src = 'YFK';
+                if (! $r) {
+                    // Önce poz; resmî fiyat yoksa fiyat robotunun piyasa fiyatı (web ortancası × 1,40, KDV hariç)
+                    $r = $svc->byPoz($no, null, 'WEB');
+                    $src = 'WEB';
+                }
             } catch (\Throwable) {
                 $r = null;
+                $src = 'YFK';
             }
             self::$cache[$no] = is_array($r) && is_numeric($r['price'] ?? null) && (float) $r['price'] > 0
-                ? ['price' => (float) $r['price'], 'unit' => (string) ($r['unit'] ?? 'm²'), 'period' => (string) ($r['period'] ?? $this->period())]
+                ? ['price' => (float) $r['price'], 'unit' => (string) ($r['unit'] ?? 'm²'), 'period' => (string) ($r['period'] ?? $this->period()), 'source' => $src]
                 : null;
         }
 

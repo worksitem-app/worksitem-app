@@ -152,6 +152,31 @@ Kaynağı aç
 </td>
 </tr>
 
+@if (! empty($robot) && count($robot))
+<tr>
+<td style="padding:18px 28px;border-top:1px solid #e5e7eb;">
+<div style="font-size:15px;font-weight:800;color:#111827;margin-bottom:8px;">Fiyat robotu · son 24 saat</div>
+<table width="100%" cellpadding="0" cellspacing="0" style="font-size:12px;color:#374151;">
+@foreach ($robot as $r)
+<tr>
+<td style="padding:5px 0;border-bottom:1px solid #f3f4f6;">{{ $r->label }} <span style="color:#9ca3af">· {{ $r->tool_slug }}</span></td>
+<td style="padding:5px 0;border-bottom:1px solid #f3f4f6;text-align:right;white-space:nowrap;">
+@if ($r->proposed_value)
+<b style="color:#b45309">Onay bekliyor: {{ \App\Models\PriceRobotItem::fmt($r->proposed_value) }} TL</b>
+@elseif ($r->status === 'live')
+<b style="color:#047857">{{ \App\Models\PriceRobotItem::fmt($r->value) }} TL</b> <span style="color:#9ca3af">(önce {{ \App\Models\PriceRobotItem::fmt($r->previous_value) }})</span>
+@else
+<span style="color:#b91c1c">Bulunamadı</span>
+@endif
+</td>
+</tr>
+@endforeach
+</table>
+<div style="margin-top:8px;font-size:12px;color:#6b7280;">Kontrol ve düzeltme: Admin › Fiyat Merkezi › Fiyat Robotu</div>
+</td>
+</tr>
+@endif
+
 <tr>
 <td style="padding:17px 28px;background:#f9fafb;color:#6b7280;font-size:11px;">
 Bu rapor yalnız son 24 saatte WORKSITEM malzeme fiyat geçmişine eklenen kayıtları içerir.

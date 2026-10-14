@@ -75,6 +75,14 @@ Schedule::command('fx:update')
 
 // prices:research-paint-web disabled: external Gemini quota dependency.
 
+// Fiyat robotu: önce resmî poz, yoksa Google fiyatı × çarpan; uzman beklenmeden yayına girer,
+// şüpheli sonuç admin › Fiyat Robotu'nda onay bekler. Sabah raporundan önce çalışır.
+Schedule::command('prices:robot')
+    ->dailyAt('06:30')
+    ->timezone('Europe/Istanbul')
+    ->withoutOverlapping()
+    ->onOneServer();
+
 
 // Keşif randevusu hatırlatma SMS'i (randevudan bir gün önce)
 Schedule::command('sms:appointment-reminders')
