@@ -59,7 +59,7 @@ class SystemHealth
             $prices ? 'Son güncelleme: '.Carbon::parse($prices)->locale('tr')->translatedFormat('j F Y').' ('.$age.' gün önce)' : 'Admin fiyatı yok — dosyadaki varsayılanlar kullanılıyor');
 
         // ── Altyapı
-        $beat = (int) Cache::get(Preflight::HEARTBEAT_KEY, 0);
+        $beat = Preflight::lastBeat();
         $add('Altyapı', 'Zamanlayıcı (cron)', $beat > 0 && time() - $beat <= 300 ? 'ok' : 'fail',
             $beat > 0 ? 'Son çalışma: '.Carbon::createFromTimestamp($beat)->locale('tr')->diffForHumans() : 'Hiç çalışmamış — SMS hatırlatma ve kur güncellemesi durur');
         $add('Altyapı', 'Ortam', app()->environment('production') ? 'ok' : 'warn',

@@ -22,7 +22,7 @@ class PriceStatus extends Command
     public function handle(Schedule $schedule, ToolPriceService $prices): int
     {
         $this->line('<options=bold>1) Zamanlama</>');
-        $beat = (int) Cache::get(Preflight::HEARTBEAT_KEY, 0);
+        $beat = Preflight::lastBeat();
         $this->line('  Zamanlayıcı kalp atışı: '.($beat ? (time() - $beat).' sn önce' : 'YOK (cron çalışmıyor)'));
         $research = collect($schedule->events())->map(fn ($e) => (string) ($e->command ?? $e->description ?? ''))->filter(fn ($c) => str_contains($c, 'prices:'));
         foreach (['prices:research-paint-web', 'prices:research-tile-web', 'prices:research-paint', 'prices:research-materials', 'prices:daily-material-report'] as $cmd) {

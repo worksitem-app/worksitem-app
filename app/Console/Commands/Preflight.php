@@ -19,6 +19,20 @@ class Preflight extends Command
 {
     public const HEARTBEAT_KEY = 'scheduler:heartbeat';
 
+    /** Son zamanlayıcı çalışması (unix). Önbellek temizlense de dosyadan okunur. */
+    public static function lastBeat(): int
+    {
+        $f = storage_path('app/scheduler-heartbeat');
+
+        return max((int) Cache::get(self::HEARTBEAT_KEY, 0), is_file($f) ? (int) @filemtime($f) : 0);
+    }
+
+    public static function beat(): void
+    {
+        Cache::put(self::HEARTBEAT_KEY, time(), 3600);
+        @touch(storage_path('app/scheduler-heartbeat'));
+    }
+
     protected $signature = 'app:preflight';
 
     protected $description = 'Canlı ortam yapılandırmasını denetler (debug, https, mail, DB, migration, cron...)';
@@ -75,7 +89,7 @@ class Preflight extends Command
         $this->warnUnless($ga === '' || preg_match('/^G-[A-Z0-9]{4,20}$/', $ga), 'GA4 ID biçimi', "GA4_MEASUREMENT_ID geçersiz: $ga");
 
         // ── Zamanlayıcı (cron) ─────────────────────────────────
-        $beat = (int) Cache::get(self::HEARTBEAT_KEY, 0); // unix zaman damgası (Laravel 13 önbellekte nesne okumaz)
+        $beat = self::lastBeat();
         $this->warnUnless($beat > 0 && (time() - $beat) <= 300, 'Zamanlayıcı (cron) çalışıyor',
             'Son 5 dk zamanlayıcı kalp atışı yok. Cron: * * * * * cd '.base_path().' && php artisan schedule:run >> /dev/null 2>&1');
 

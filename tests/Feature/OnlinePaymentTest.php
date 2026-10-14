@@ -20,7 +20,7 @@ class OnlinePaymentTest extends TestCase
     {
         parent::setUp();
         config([
-            'worksitem_payments.online_enabled' => true,
+            'worksitem_payments.online_enabled' => true, 'services.ai_spend_enabled' => true,
             'services.iyzico.api_key' => 'k', 'services.iyzico.secret_key' => 's', 'services.iyzico.base_url' => self::IYZ,
             'services.netgsm.usercode' => '8501234567', 'services.netgsm.password' => 'x', 'services.netgsm.header' => 'worksitem',
         ]);
@@ -107,5 +107,23 @@ class OnlinePaymentTest extends TestCase
         $pdf = $this->post('/araclar/'.$slug.'/pro-rapor', $q);
         $pdf->assertOk();
         $this->assertStringContainsString('application/pdf', (string) $pdf->headers->get('Content-Type'));
+    }
+
+    public function test_ai_kapaliyken_kredi_satilmaz(): void
+    {
+        config(['services.ai_spend_enabled' => false]);
+        $this->postJson(route('odeme.kredi'), ['package' => 0])->assertStatus(409);
+    }
+
+    public function test_doviz_kuru_ve_kalp_atisi_onbellek_temizlense_de_kalir(): void
+    {
+        Http::fake(['*' => Http::response('<Tarih_Date Tarih="14.10.2026"><Currency CurrencyCode="USD"><ForexSelling>41.50</ForexSelling></Currency><Currency CurrencyCode="EUR"><ForexSelling>48.10</ForexSelling></Currency><Currency CurrencyCode="GBP"><ForexSelling>55.20</ForexSelling></Currency></Tarih_Date>')]);
+        $fx = app(\App\Services\FxRates::class);
+        $this->assertNotNull($fx->refresh());
+        \App\Console\Commands\Preflight::beat();
+        \Illuminate\Support\Facades\Cache::flush();
+        $this->assertNotNull($fx->current());
+        $this->assertGreaterThan(time() - 5, \App\Console\Commands\Preflight::lastBeat());
+        @unlink(storage_path('app/fx-tcmb.json'));
     }
 }

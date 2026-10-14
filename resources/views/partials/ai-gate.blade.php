@@ -9,7 +9,7 @@
     'freePerDay' => (int) config('worksitem_ai_credits.free_per_day', 1),
     'packages' => config('worksitem_ai_credits.packages'),
     'whatsapp' => config('worksitem_inspection.whatsapp'),
-    'payUrl' => app(\App\Services\Payments\OnlinePayment::class)->enabled() ? route('odeme.kredi') : null,
+    'payUrl' => app(\App\Services\Payments\OnlinePayment::class)->creditsEnabled() ? route('odeme.kredi') : null,
     'csrf' => csrf_token(),
 ])
 <script type="application/json" id="wsag-config">{!! json_encode($wsagCfg, JSON_HEX_TAG | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}</script>

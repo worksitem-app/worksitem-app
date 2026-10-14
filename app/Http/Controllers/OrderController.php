@@ -16,7 +16,7 @@ class OrderController extends Controller
 {
     public function buyCredits(Request $request, AiCredits $credits, OnlinePayment $pay): JsonResponse
     {
-        if (! $pay->enabled()) {
+        if (! $pay->creditsEnabled()) {
             return response()->json(['ok' => false, 'message' => 'Kartla ödeme şu an kapalı.'], 409);
         }
         $w = $credits->current($request);

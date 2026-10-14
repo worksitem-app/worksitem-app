@@ -22,6 +22,12 @@ class OnlinePayment
         return (bool) config('worksitem_payments.online_enabled') && $this->iyzico->configured();
     }
 
+    /** Kredi satışı: online ödeme açık VE yapay zekâ harcama kilidi açık olmalı (aksi halde kredi kullanılamaz) */
+    public function creditsEnabled(): bool
+    {
+        return $this->enabled() && (bool) config('services.ai_spend_enabled');
+    }
+
     /** Kredi paketi siparişi (paket dizini config/worksitem_ai_credits.php) */
     public function creditOrder(AiWallet $w, int $package): ?Order
     {

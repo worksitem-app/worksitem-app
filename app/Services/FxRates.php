@@ -21,6 +21,14 @@ class FxRates
     public function current(): ?array
     {
         $v = Cache::get(self::CACHE_KEY);
+        if (! is_array($v) || empty($v['rates'])) {
+            // Canlıya geçişte önbellek temizlenir; son kur dosyada da tutulur (10 günden eskisi kullanılmaz)
+            $f = self::file();
+            $v = is_file($f) && filemtime($f) > time() - 10 * 86400 ? json_decode((string) file_get_contents($f), true) : null;
+            if (is_array($v) && ! empty($v['rates'])) {
+                Cache::put(self::CACHE_KEY, $v, now()->addDays(10));
+            }
+        }
 
         return is_array($v) && ! empty($v['rates']) ? $v : null;
     }
@@ -42,8 +50,14 @@ class FxRates
         }
 
         Cache::put(self::CACHE_KEY, $parsed, now()->addDays(10));
+        @file_put_contents(self::file(), json_encode($parsed), LOCK_EX);
 
         return $parsed;
+    }
+
+    private static function file(): string
+    {
+        return storage_path('app/fx-tcmb.json');
     }
 
     /** @return array{date:string,rates:array<string,float>}|null */
