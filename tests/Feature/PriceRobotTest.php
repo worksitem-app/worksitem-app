@@ -125,4 +125,16 @@ class PriceRobotTest extends TestCase
         $this->actingAs($admin)->get('/admin/price-robot-items')->assertOk()->assertSee('Fiyat Robotu')->assertSee('Şimdi 5 kalem araştır');
         $this->assertGreaterThan(30, PriceRobotItem::query()->count());
     }
+
+    public function test_turkce_fiyat_yazimi_ve_baglantisiz_kaynak_arama_sonucundan_tamamlanir(): void
+    {
+        $body = ['candidates' => [[
+            'content' => ['parts' => [['text' => 'Sonuç: {"sources":[{"name":"Koçtaş","price_tl":"12.500 TL"},{"name":"Bauhaus","url":"","price_tl":"13.000,00"},{"name":"X","price_tl":"bilinmiyor"}],"note":""}']]],
+            'groundingMetadata' => ['webSearchQueries' => ['mutfak dolabı metre fiyatı'], 'groundingChunks' => [['web' => ['uri' => 'https://a.example/1', 'title' => 'a.example']], ['web' => ['uri' => 'https://b.example/2', 'title' => 'b.example']]]],
+        ]]];
+        Http::fake(['generativelanguage.googleapis.com/*' => Http::response($body)]);
+        $found = app(PriceRobot::class)->search(['q' => 'mutfak dolabı', 'unit' => 'mtül']);
+        $this->assertSame([12500.0, 13000.0], array_column($found['sources'], 'price_tl'));
+        $this->assertSame('https://a.example/1', $found['sources'][0]['url']);
+    }
 }

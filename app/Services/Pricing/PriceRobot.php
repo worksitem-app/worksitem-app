@@ -19,6 +19,30 @@ use RuntimeException;
  */
 class PriceRobot
 {
+    /** Son Gemini cevabı (teşhis için: prices:robot --debug) */
+    public array $lastRaw = [];
+
+    /** "12.500 TL", "12.500,50", "1,250.00", 12500 → float */
+    public static function parsePrice(mixed $v): float
+    {
+        if (is_int($v) || is_float($v)) {
+            return (float) $v;
+        }
+        $t = preg_replace('/[^\d.,]/u', '', (string) $v);
+        if ($t === '' || $t === null) {
+            return 0.0;
+        }
+        if (str_contains($t, ',') && str_contains($t, '.')) {
+            $t = strrpos($t, ',') > strrpos($t, '.') ? str_replace(['.', ','], ['', '.'], $t) : str_replace(',', '', $t);
+        } elseif (str_contains($t, ',')) {
+            $t = preg_match('/,\d{3}$/', $t) ? str_replace(',', '', $t) : str_replace(',', '.', $t);
+        } elseif (preg_match('/^\d{1,3}(\.\d{3})+$/', $t)) {
+            $t = str_replace('.', '', $t);   // Türkçe binlik ayırıcı
+        }
+
+        return is_numeric($t) ? round((float) $t, 2) : 0.0;
+    }
+
     /** Araştırılacak tüm kalemler (config kalemleri + resmî fiyatı olmayan poz sistemleri) */
     public function catalog(): array
     {
@@ -125,7 +149,7 @@ class PriceRobot
                 'note' => 'Onay bekliyor: '.implode('; ', $reasons).($found['note'] ? ' · '.$found['note'] : '')]);
             $dryRun || $row->save();
 
-            return ['status' => $proposed ? 'needs_review' : 'error', 'proposed' => $proposed, 'reasons' => $reasons, 'row' => $row];
+            return ['status' => $proposed ? 'needs_review' : 'error', 'proposed' => $proposed, 'reasons' => array_merge($reasons, array_filter([$found['note'] ?? null])), 'row' => $row];
         }
 
         $row->fill(['status' => 'live', 'previous_value' => $row->value ?? $current, 'value' => $proposed, 'proposed_value' => null,
@@ -255,15 +279,31 @@ class PriceRobot
             throw new RuntimeException('Gemini HTTP '.$res->status().': '.mb_substr((string) $res->body(), 0, 200));
         }
         $text = collect(Arr::get($res->json(), 'candidates.0.content.parts', []))->pluck('text')->filter()->implode("\n");
-        $grounded = collect(Arr::get($res->json(), 'candidates.0.groundingMetadata.groundingChunks', []))->pluck('web.uri')->filter()->count();
+        $chunks = collect(Arr::get($res->json(), 'candidates.0.groundingMetadata.groundingChunks', []))
+            ->map(fn ($c) => ['url' => (string) Arr::get($c, 'web.uri', ''), 'title' => (string) Arr::get($c, 'web.title', '')])
+            ->filter(fn ($c) => $c['url'] !== '')->values();
+        $queries = (array) Arr::get($res->json(), 'candidates.0.groundingMetadata.webSearchQueries', []);
+        $this->lastRaw = ['text' => mb_substr($text, 0, 3000), 'grounding' => $chunks->count(), 'queries' => $queries,
+            'finish' => Arr::get($res->json(), 'candidates.0.finishReason')];
         if (! preg_match('/\{.*\}/s', $text, $m) || ! is_array($j = json_decode($m[0], true))) {
-            throw new RuntimeException('Cevap okunamadı');
+            throw new RuntimeException('Cevap okunamadı: '.mb_substr(trim($text), 0, 160));
         }
         $sources = collect($j['sources'] ?? [])
-            ->filter(fn ($s) => is_array($s) && is_numeric($s['price_tl'] ?? null) && (float) $s['price_tl'] > 0 && str_starts_with((string) ($s['url'] ?? ''), 'http'))
-            ->map(fn ($s) => ['name' => mb_substr((string) ($s['name'] ?? ''), 0, 80), 'url' => mb_substr((string) $s['url'], 0, 500), 'price_tl' => round((float) $s['price_tl'], 2)])
-            ->unique('url')->values()->all();
-        if ($grounded === 0) {
+            ->filter(fn ($s) => is_array($s))
+            ->values()
+            ->map(function ($s, $i) use ($chunks) {
+                $price = self::parsePrice($s['price_tl'] ?? ($s['price'] ?? null));
+                $url = (string) ($s['url'] ?? '');
+                if (! str_starts_with($url, 'http')) {
+                    $url = $chunks->get($i)['url'] ?? '';   // model bağlantı yazmadıysa arama sonucunun bağlantısı
+                }
+                $name = trim((string) ($s['name'] ?? '')) ?: ($chunks->get($i)['title'] ?? '');
+
+                return ['name' => mb_substr($name, 0, 80), 'url' => mb_substr($url, 0, 500), 'price_tl' => $price];
+            })
+            ->filter(fn ($s) => $s['price_tl'] > 0 && ($s['url'] !== '' || $s['name'] !== ''))
+            ->unique(fn ($s) => $s['url'] ?: $s['name'])->values()->all();
+        if ($chunks->isEmpty() && $queries === []) {
             return ['sources' => [], 'note' => 'Google araması yapılmadı; sonuç kullanılmadı'];
         }
 

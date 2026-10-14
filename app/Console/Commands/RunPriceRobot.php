@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Schema;
  */
 class RunPriceRobot extends Command
 {
-    protected $signature = 'prices:robot {--limit= : Bu çalıştırmada en fazla kaç kalem} {--path= : Yalnız bu kalem (kilitli olsa bile)} {--dry-run : Kaydetmeden göster} {--list : Kalemleri listele}';
+    protected $signature = 'prices:robot {--limit= : Bu çalıştırmada en fazla kaç kalem} {--path= : Yalnız bu kalem (kilitli olsa bile)} {--dry-run : Kaydetmeden göster} {--list : Kalemleri listele} {--debug : Gemini cevabını göster}';
 
     protected $description = 'Fiyat robotu: önce resmî poz, yoksa Google fiyatı (× çarpan); şüpheli sonuç onaya düşer';
 
@@ -63,6 +63,14 @@ class RunPriceRobot extends Command
                 default => '✘ '.mb_substr($r['message'] ?? implode('; ', $r['reasons'] ?? []), 0, 120),
             };
             $this->line($line);
+            if ($this->option('debug')) {
+                $raw = $robot->lastRaw;
+                $this->line('    arama sorguları: '.implode(' | ', $raw['queries'] ?? []).' · arama sonucu: '.($raw['grounding'] ?? 0).' · bitiş: '.($raw['finish'] ?? '-'));
+                $this->line('    model cevabı: '.str_replace("\n", ' ', mb_substr((string) ($raw['text'] ?? ''), 0, 900)));
+                foreach (($r['row']->sources ?? []) as $src) {
+                    $this->line('    · '.number_format((float) $src['price_tl'], 0, ',', '.').' TL  '.$src['name'].'  '.mb_substr($src['url'], 0, 80));
+                }
+            }
         }
         $this->newLine();
         $this->info("Bitti: {$sum['live']} yayında · {$sum['needs_review']} onay bekliyor · {$sum['error']} hata".($this->option('dry-run') ? ' (deneme, kaydedilmedi)' : ''));
