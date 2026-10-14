@@ -1,5 +1,8 @@
 @extends('poz._layout')
 
+@if (config('worksitem_seo.poz_index_only_enriched', true) && ! $poz->seo_enriched)
+@section('robots', 'noindex,follow')
+@endif
 @section('title', $poz->poz_no . ' — ' . \Illuminate\Support\Str::limit($poz->description, 55) . ' | WORKSİTEM')
 @section('description', $poz->meta_description ?: ($poz->poz_no . ' pozunun birim fiyatı ' . $priceFormatted . ' TL/' . $poz->unit . '. Kaynak: ' . $poz->institution . '.'))
 @section('canonical', \App\Support\PozUrl::absolute($poz->poz_no))

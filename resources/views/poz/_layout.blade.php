@@ -6,7 +6,7 @@
 
   <title>@yield('title', 'WORKSİTEM')</title>
   <meta name="description" content="@yield('description', 'WORKSİTEM — inşaat ve tadilat maliyeti, poz ve birim fiyat platformu')">
-  <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+  <meta name="robots" content="@yield('robots', 'index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1')">
   <link rel="canonical" href="@yield('canonical', url('/'))">
 
   @hasSection('keywords')

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>İş Makinesi & Ekipman Kiralama Maliyeti | WORKSİTEM</title>
+    <meta name="description" content="Ekskavatör, kepçe, vinç ve diğer iş makinelerinin saatlik ve günlük kiralama maliyetini, yakıt ve operatör dahil hesaplayın. Ücretsiz.">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>

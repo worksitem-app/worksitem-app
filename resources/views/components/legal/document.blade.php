@@ -172,7 +172,7 @@ html[data-theme="dark"] .lg-filled{color:#fff}
   .lg-paper{border:0;box-shadow:none;border-radius:0}
   .lg-paper-top{padding:0 0 10px;background:none;border-bottom:2px solid #111}
   .lg-print-head{display:block;margin:14px 0 4px}
-  .lg-print-head h1{font-size:22px;margin:0 0 4px}
+  .lg-print-head .lg-print-title{font-size:22px;font-weight:800;margin:0 0 4px;color:#101318}
   .lg-print-head p{margin:0;font-size:11px;color:#555}
   .lg-body{padding:0;font-size:11.5pt}
   .lg-body h2{break-after:avoid;font-size:14pt}
@@ -247,7 +247,7 @@ html[data-theme="dark"] .lg-filled{color:#fff}
                 <span>{{ $type }} · {{ $docNo }}@if ($version)<br>Sürüm {{ $version }}@endif</span>
             </div>
             <div class="lg-print-head">
-                <h1>{{ $title }}</h1>
+                <p class="lg-print-title">{{ $title }}</p>
                 <p>@if ($version)Sürüm {{ $version }} · @endif @if ($effective)Yürürlük {{ $effective }} · @endif{{ url($path) }}</p>
             </div>
             <div class="lg-body">

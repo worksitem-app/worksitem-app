@@ -51,6 +51,13 @@ Schedule::command('app:prune-ai-inputs --days=30')
     ->timezone('Europe/Istanbul')
     ->withoutOverlapping();
 
+// Günlük veritabanı yedeği (storage/app/backups, son 14 gün; Hostinger yedeğine ek)
+Schedule::command('app:backup-db --keep=14')
+    ->dailyAt('03:45')
+    ->timezone('Europe/Istanbul')
+    ->withoutOverlapping()
+    ->onOneServer();
+
 // Banyo vb. araçlarda $/€/£ karşılığı için TCMB kuru (TCMB ~15:30'da yayımlar)
 Schedule::command('fx:update')
     ->twiceDaily(10, 16)

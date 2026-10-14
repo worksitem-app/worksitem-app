@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kurumsal Sözleşme & Belge Oluşturucu | WORKSİTEM</title>
+    <meta name="description" content="Anahtar teslim, kat karşılığı, taşeron sözleşmesi, teklif mektubu, kabul tutanağı gibi inşaat belgelerini şablondan hazırlayın ve indirin. Ücretsiz.">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>

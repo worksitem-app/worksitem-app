@@ -92,6 +92,8 @@ class SitemapController extends Controller
          */
         TenderPoz::query()
             ->where('is_active', true)
+            // İçeriği zenginleştirilmemiş (yalnızca poz no + fiyat) sayfalar dizine girmez; bkz. config/worksitem_seo.php
+            ->when(config('worksitem_seo.poz_index_only_enriched', true), fn ($q) => $q->where('seo_enriched', true))
             ->select('poz_no', 'updated_at')
             ->orderBy('poz_no')
             ->chunk(1000, function ($pozs) use (&$xml, $baseUrl) {
