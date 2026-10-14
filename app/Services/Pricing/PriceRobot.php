@@ -160,6 +160,7 @@ class PriceRobot
                 if (($it['kind'] ?? '') === 'poz') {
                     $this->writeWebPoz($it, (float) $proposed);
                 }
+                $this->writeUnitPrices($it, $proposed);
             });
         }
 
@@ -178,6 +179,27 @@ class PriceRobot
         if (str_starts_with($row->path, 'poz.')) {
             $this->writeWebPoz(['poz' => substr($row->path, 4), 'label' => $row->label, 'unit' => $row->unit], (float) $value);
         }
+        $this->writeUnitPrices($this->catalog()[$row->path] ?? [], $value);
+    }
+
+    /** Kalem admin fiyat defterine bağlıysa (unit_keys) yeni fiyatı oraya da yazar: ekonomik/orta/premium sırasıyla */
+    private function writeUnitPrices(array $it, mixed $value): void
+    {
+        $keys = (array) ($it['unit_keys'] ?? []);
+        if (! $keys || ! Schema::hasTable('unit_prices')) {
+            return;
+        }
+        $vals = is_array($value) ? array_values($value) : [$value];
+        foreach (array_values($keys) as $i => $key) {
+            if (! isset($vals[$i]) || ! is_numeric($vals[$i])) {
+                continue;
+            }
+            DB::table('unit_prices')->where('key', $key)->update([
+                'price' => round((float) $vals[$i], 2), 'source_name' => 'Fiyat robotu (Google, ortanca)',
+                'source_date' => now()->toDateString(), 'updated_at' => now(),
+            ]);
+        }
+        \Illuminate\Support\Facades\Cache::forget(\App\Services\BathroomPriceBook::CACHE_KEY);
     }
 
     // ── yardımcılar ──────────────────────────────────────────────
@@ -186,6 +208,12 @@ class PriceRobot
     {
         if (($it['kind'] ?? '') === 'poz') {
             return $this->webPozPrice($it['poz']);
+        }
+        if (! empty($it['unit_keys']) && str_starts_with($it['path'], 'worksitem_bathroom.')) {
+            // Banyo fiyatları admin fiyat defterinde (unit_prices) tutulur; geçerli değer oradan okunur
+            $cfg = app(\App\Services\BathroomPriceBook::class)->apply((array) config('worksitem_bathroom'));
+
+            return Arr::get($cfg, substr($it['path'], strlen('worksitem_bathroom.')));
         }
         $live = PriceRobotOverrides::map()[$it['path']] ?? null;
 

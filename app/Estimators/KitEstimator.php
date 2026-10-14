@@ -53,8 +53,7 @@ abstract class KitEstimator
 
     public function pricesLabel(): string
     {
-        return \Illuminate\Support\Carbon::parse((string) config('worksitem_estimators.prices_reviewed', now()->toDateString()))
-            ->locale('tr')->translatedFormat('j F Y');
+        return \App\Support\PriceDate::for($this->slug())->locale('tr')->translatedFormat('j F Y');
     }
 
     /** Sponsor kategorileri (config/worksitem_sponsors.php ile aynı) */

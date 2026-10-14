@@ -82,6 +82,23 @@ class ToolPageEnhancer
             }
         }
 
+        // 4) Yazdır / PDF: her araçta aynı Worksitem logolu başlık ve alt bilgi (yalnız çıktıda görünür)
+        if (! str_contains($html, 'ws-print-head') && preg_match('#<body[^>]*>#i', $html, $bm, PREG_OFFSET_CAPTURE)) {
+            $title = e($tool['title'] ?? $slug);
+            $priceDate = \App\Support\PriceDate::for($slug)->locale('tr')->translatedFormat('j F Y');
+            $today = now('Europe/Istanbul')->locale('tr')->translatedFormat('j F Y H:i');
+            $head = '<div class="ws-print-head" aria-hidden="true"><img src="/brand/worksitem-logo.png" alt="Worksitem" height="30">'
+                .'<div><b>'.$title.'</b><span>Rapor tarihi: '.e($today).' · Fiyat tarihi: '.e($priceDate).'</span></div></div>'
+                .'<div class="ws-print-foot" aria-hidden="true">worksitem.com/araclar/'.e($slug).' · Kainta İnşaat · Yaklaşık hesaptır, teklif değildir.</div>'
+                .'<style>.ws-print-head,.ws-print-foot{display:none}@media print{'
+                .'.ws-print-head{display:flex!important;align-items:center;gap:14px;padding:0 0 10px;margin:0 0 14px;border-bottom:3px solid #FFB800;font-family:Inter,Arial,sans-serif;color:#101318}'
+                .'.ws-print-head img{height:30px;width:auto}.ws-print-head b{display:block;font-size:15px}.ws-print-head span{display:block;font-size:11px;color:#5B6472}'
+                .'.ws-print-foot{display:block!important;position:fixed;bottom:0;left:0;right:0;font:10px Inter,Arial,sans-serif;color:#8b93a0;text-align:center;padding-top:4px;border-top:1px solid #E3E6EA;background:#fff}'
+                .'.ws-bc-wrap,.ws-bc,.ws-sp{display:none!important}}</style>';
+            $at = $bm[0][1] + strlen($bm[0][0]);
+            $html = substr($html, 0, $at).$head.substr($html, $at);
+        }
+
         $response->setContent($html);
 
         return $response;

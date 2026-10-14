@@ -254,7 +254,15 @@
             html2canvas: { scale: 2 },
             jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
         };
-        html2pdf().set(opt).from(element).save();
+        // Tüm araç çıktılarında aynı Worksitem logolu başlık ve alt bilgi
+        const wrap = document.createElement('div');
+        const d = new Date().toLocaleDateString('tr-TR');
+        wrap.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;padding:0 18mm 8px;margin-bottom:10px;border-bottom:3px solid #FFB800;font-family:Inter,Arial,sans-serif">'
+            + '<img src="' + location.origin + '/brand/worksitem-logo.png" style="height:28px" alt="Worksitem">'
+            + '<span style="font-size:11px;color:#5B6472">Taslak · ' + d + '</span></div>';
+        wrap.appendChild(element.cloneNode(true));
+        wrap.insertAdjacentHTML('beforeend', '<div style="margin-top:12px;padding:6px 18mm 0;border-top:1px solid #E3E6EA;font:10px Inter,Arial,sans-serif;color:#8b93a0;text-align:center">worksitem.com ile hazırlanan taslaktır; imzadan önce hukuki kontrol önerilir.</div>');
+        html2pdf().set(opt).from(wrap).save();
     }
 
     function exportWord() {

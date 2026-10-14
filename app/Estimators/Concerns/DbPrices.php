@@ -61,9 +61,13 @@ trait DbPrices
         }
     }
 
+    /**
+     * Fiyatların son güncellenme tarihi: kod tarihi, fiyat robotunun bu araç için son araştırması
+     * ve admin fiyat kayıtlarından (unit_prices / pricing_settings) en yenisi.
+     */
     protected function reviewedLabel(): string
     {
-        return \Illuminate\Support\Carbon::parse((string) config('worksitem_estimators.prices_reviewed', now()->toDateString()))
-            ->locale('tr')->translatedFormat('j F Y');
+        return \App\Support\PriceDate::for(method_exists($this, 'slug') ? $this->slug() : null)->locale('tr')->translatedFormat('j F Y');
     }
+
 }

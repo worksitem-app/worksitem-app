@@ -142,4 +142,31 @@ class PriceRobotTest extends TestCase
         $this->assertSame([12500.0, 13000.0], array_column($found['sources'], 'price_tl'));
         $this->assertSame('https://a.example/1', $found['sources'][0]['url']);
     }
+
+    public function test_banyo_kalemi_fiyat_defterine_yazar_ve_fiyat_tarihi_guncellenir(): void
+    {
+        $book = app(\App\Services\BathroomPriceBook::class);
+        DB::table('unit_prices')->where('category', 'banyo_tadilati')->update(['source_date' => '2026-10-12']);   // migration ile gelen satırlar
+        Http::fake(['generativelanguage.googleapis.com/*' => Http::response($this->gemini([24000, 26000, 25000]))]);
+        $r = app(PriceRobot::class)->run($this->item('worksitem_bathroom.unit.fixtures'));
+        $this->assertSame('live', $r['status']);
+        $this->assertEquals(25000, DB::table('unit_prices')->where('key', 'banyo_vitrifiye_orta')->value('price'));
+        $this->assertSame(now()->toDateString(), (string) DB::table('unit_prices')->where('key', 'banyo_vitrifiye_eko')->value('source_date'));
+        $this->assertSame(now()->toDateString(), $book->overrides()['latest']);
+    }
+
+    public function test_arac_fiyat_tarihi_robot_arastirmasini_gosterir_ve_yazdir_basligi_var(): void
+    {
+        config(['worksitem_estimators.prices_reviewed' => '2026-10-01', 'worksitem_tools.tool_status.default' => 'active']);
+        Http::fake(['generativelanguage.googleapis.com/*' => Http::response($this->gemini([600, 640, 700]))]);
+        app(PriceRobot::class)->run($this->item('worksitem_estimators.parke.material_m2.laminat'));
+        $label = now()->locale('tr')->translatedFormat('j F Y');
+        $this->assertSame($label, KitRegistry::get('parke-maliyet-hesaplayici')->pricesLabel());
+
+        $html = $this->get('/araclar/parke-maliyet-hesaplayici')->assertOk()->getContent();
+        $this->assertStringContainsString('class="ws-print-head"', $html);
+        $this->assertStringContainsString('/brand/worksitem-logo.png', $html);
+        $this->assertStringContainsString('Fiyat tarihi: '.$label, $html);
+        $this->assertSame(1, substr_count($html, 'class="ws-print-head"'));
+    }
 }

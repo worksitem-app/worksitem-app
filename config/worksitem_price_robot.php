@@ -82,5 +82,11 @@ return [
         ['path' => 'worksitem_estimators.saha.pump', 'tool' => 'saha-betonu-hesaplayici', 'label' => 'Beton pompası (döküm başına)', 'q' => 'beton pompası kiralama fiyatı döküm başına', 'unit' => 'döküm'],
         ['path' => 'worksitem_estimators.saha.finish_m2.helikopter', 'tool' => 'saha-betonu-hesaplayici', 'label' => 'Helikopter perdah (m²)', 'q' => 'helikopter perdah m2 fiyatı', 'unit' => 'm²'],
         ['path' => 'worksitem_estimators.saha.mesh_m2.tek', 'tool' => 'saha-betonu-hesaplayici', 'label' => 'Çelik hasır (Q131, m²)', 'q' => 'Q131 çelik hasır m2 fiyatı', 'unit' => 'm²'],
+        // Banyo ve WC (admin fiyat defteri: unit_prices) — unit_keys sırası: ekonomik, orta, premium
+        ['path' => 'worksitem_bathroom.unit.fixtures', 'tool' => 'banyo-maliyet-hesaplayici', 'label' => 'Banyo vitrifiye + armatür seti', 'q' => 'banyo vitrifiye seti fiyatı klozet lavabo batarya', 'unit' => 'set', 'unit_keys' => ['banyo_vitrifiye_eko', 'banyo_vitrifiye_orta', 'banyo_vitrifiye_premium']],
+        ['path' => 'worksitem_bathroom.unit.tile_m2', 'tool' => 'banyo-maliyet-hesaplayici', 'label' => 'Banyo seramiği (malzeme + işçilik)', 'q' => 'banyo seramik döşeme m2 fiyatı malzeme ve işçilik dahil', 'unit' => 'm²', 'unit_keys' => ['banyo_seramik_m2_eko', 'banyo_seramik_m2_orta', 'banyo_seramik_m2_premium']],
+        ['path' => 'worksitem_bathroom.showers.kabin.price', 'tool' => 'banyo-maliyet-hesaplayici', 'label' => 'Duşakabin (montaj dahil)', 'q' => 'duşakabin fiyatı 90x90 montaj dahil', 'unit' => 'adet', 'unit_keys' => ['banyo_dus_kabin_eko', 'banyo_dus_kabin_orta', 'banyo_dus_kabin_premium']],
+        ['path' => 'worksitem_bathroom.extras.ex_dolap.price', 'tool' => 'banyo-maliyet-hesaplayici', 'label' => 'Banyo dolabı + lavabo + ayna', 'q' => 'lavabolu banyo dolabı aynalı fiyatı 80 cm', 'unit' => 'takım', 'unit_keys' => ['banyo_dolap_eko', 'banyo_dolap_orta', 'banyo_dolap_premium']],
+        ['path' => 'worksitem_bathroom.unit.waterproof_m2', 'tool' => 'banyo-maliyet-hesaplayici', 'label' => 'Banyo zemin su yalıtımı', 'q' => 'banyo su yalıtımı m2 fiyatı işçilik dahil', 'unit' => 'm²', 'unit_keys' => ['banyo_yalitim_m2']],
     ],
 ];

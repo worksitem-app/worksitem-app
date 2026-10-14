@@ -1098,7 +1098,7 @@ $('plPrint').addEventListener('click', () => {
         table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}td,th{border-bottom:1px solid #E3E6EA;padding:6px;text-align:left}
         .brand{display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid #FFB800;padding-bottom:8px;margin-bottom:12px}
         .brand b{font-size:18px}.note{border:1px solid #E3E6EA;border-radius:8px;padding:8px;font-size:12px;margin-top:10px;white-space:pre-wrap}
-        </style></head><body><div class="brand"><b>worksitem · ${kind} planı</b><span style="font-size:12px">${new Date().toLocaleDateString('tr-TR')}</span></div>
+        </style></head><body><div class="brand"><span style="display:flex;align-items:center;gap:10px"><img src="${location.origin}/brand/worksitem-logo.png" alt="Worksitem" style="height:28px"><b>${kind} planı</b></span><span style="font-size:12px">${new Date().toLocaleDateString('tr-TR')}</span></div>
         <h1>${S.w} × ${S.l} cm · ${(area() / 10000).toLocaleString('tr-TR', { maximumFractionDigits: 2 })} m² · yükseklik ${S.h} cm</h1>
         <p>${esc(C.shapes[S.shape])} oda · zemin: ${esc(C.tiles[S.floor].name)} ${C.tiles[S.floor].size} · duvar: ${S.tileH < 0 ? 'boya' : esc(C.tiles[S.wall].name) + ' ' + C.tiles[S.wall].size + (S.tileH > 0 ? ` (${S.tileH} cm, üstü boya)` : ' (tavana kadar)')}${S.acc.e >= 0 && S.acc.tile ? ` · vurgu duvarı ${wallName(S.acc.e)}: ${esc(C.tiles[S.acc.tile].name)}` : ''} · boya: ${esc((PAINTS.find(p => p[0] === S.paint) || ['', ''])[1])}${S.wins.length ? ` · ${S.wins.filter(w => w.k !== 'nis').length} pencere, ${S.wins.filter(w => w.k === 'nis').length} niş` : ''}</p>
         ${svgHtml}
