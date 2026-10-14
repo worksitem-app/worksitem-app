@@ -70,7 +70,7 @@ Schedule::command('fx:update')
 |--------------------------------------------------------------------------
 | Önce piyasa araştırılır.
 | Büyük fiyat değişimleri otomatik uygulanmaz;
-| Kainta mühendis kontrolüne gönderilir.
+| Kainta İnşaat Uzmanları kontrolüne gönderilir.
 */
 
 // prices:research-paint-web disabled: external Gemini quota dependency.

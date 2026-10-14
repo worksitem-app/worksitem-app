@@ -94,7 +94,8 @@ class InspectionOffer
      */
     public static function docVars(?\App\Models\Lead $lead): array
     {
-        $co = (array) config('worksitem_company');
+        // Alıcıya özel belge (siparişli) tam künye; herkese açık sayfa maskeli
+        $co = CompanyIdentity::display(full: $lead !== null);
         $o = self::orderData($lead);
 
         return [
@@ -111,7 +112,7 @@ class InspectionOffer
             'seller' => array_filter([
                 'Ticari unvan' => $co['legal_name'] ?? null,
                 'MERSİS no' => $co['mersis'] ?? null,
-                'Vergi dairesi / no' => trim(($co['tax_office'] ?? '').' / '.($co['tax_no'] ?? ''), ' /') ?: null,
+                'Vergi dairesi / no' => $co['tax_line'] ?? null,
                 'Adres' => $co['address'] ?? null,
                 'Telefon' => $co['phone'] ?? null,
                 'E-posta' => $co['email'] ?? null,

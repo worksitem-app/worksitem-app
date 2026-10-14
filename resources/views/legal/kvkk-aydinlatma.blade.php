@@ -19,7 +19,7 @@
 
 <p>
     Kişisel verileriniz, 6698 sayılı KVKK kapsamında veri sorumlusu sıfatıyla
-    <strong>Kainta İnşaat Mimarlık & Mühendislik</strong> tarafından işlenmektedir.
+    <strong>Kainta İnşaat</strong> tarafından işlenmektedir.
 </p>
 
 <p>

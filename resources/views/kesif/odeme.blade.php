@@ -76,7 +76,7 @@
         <span class="chip">✓ {{ $paid ? 'Ödeme alındı' : 'Sipariş alındı' }} · {{ $lead->displayNo() }}</span>
         <h1 id="odTitle">{{ $paid ? 'Keşif ödemeniz alındı' : ($havale ? 'Havale / EFT ile ödeme' : 'Kartla güvenli ödeme') }}</h1>
         @if (session('iyzico_ok') || $paid)
-            <p class="msg ok" role="status">Teşekkürler, {{ $tl($amounts['total']) }} ödemeniz alındı. Kainta İnşaat mühendisi randevu için sizi arayacak; SMS ile de bilgilendirildiniz.</p>
+            <p class="msg ok" role="status">Teşekkürler, {{ $tl($amounts['total']) }} ödemeniz alındı. Kainta İnşaat Uzmanı randevu için sizi arayacak; SMS ile de bilgilendirildiniz.</p>
         @elseif (session('iyzico_error'))
             <p class="msg err" role="alert">{{ session('iyzico_error') }}</p>
         @endif
@@ -115,7 +115,7 @@
             @else
             <li><div class="n now">2</div><div><b>{{ $havale ? 'Havale / EFT ve dekont' : ($online ? 'Kartla ödeme (iyzico)' : 'Kart ödeme bağlantısı') }}</b><span>{{ $havale ? 'Ödemeniz hesabımıza geçince size WhatsApp ile onay gönderilir.' : ($online ? 'Aşağıdaki düğmeyle güvenli ödeme sayfasına geçin.' : 'Bağlantı çağrı merkezi çalışma saatlerinde en kısa sürede gönderilir.') }}</span></div></li>
             @endif
-            <li><div class="n {{ $paid ? 'now' : '' }}">3</div><div><b>Mühendis sizi arar</b><span>Ödeme onaylanınca Kainta İnşaat mühendisi arayıp keşif randevusunu birlikte belirler{{ $early ? '' : ' (cayma süresi içinde keşif talep etmediğiniz için keşif, 14 günlük süre dolduktan sonra yapılır)' }}.</span></div></li>
+            <li><div class="n {{ $paid ? 'now' : '' }}">3</div><div><b>Uzmanımız sizi arar</b><span>Ödeme onaylanınca Kainta İnşaat Uzmanı arayıp keşif randevusunu birlikte belirler{{ $early ? '' : ' (cayma süresi içinde keşif talep etmediğiniz için keşif, 14 günlük süre dolduktan sonra yapılır)' }}.</span></div></li>
         </ol>
 
         @if ($online)

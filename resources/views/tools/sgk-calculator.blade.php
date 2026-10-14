@@ -200,7 +200,7 @@
     <!-- ONAY MESAJI -->
     <div class="qualified-message" id="qualifiedMessage">
         <strong>Harika. Resmi evrak süreçleriniz güvende!</strong>
-        <span>Aşağıdaki formu doldurduğunuzda SGK uzmanlarımız ve mühendislerimiz iskan takibi için sizinle iletişime geçecektir.</span>
+        <span>Aşağıdaki formu doldurduğunuzda SGK ve Kainta İnşaat Uzmanları iskan takibi için sizinle iletişime geçecektir.</span>
     </div>
 
     <!-- B2B LEAD FORM -->

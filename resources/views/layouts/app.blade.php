@@ -92,7 +92,7 @@
     </main>
 
     <footer class="footer">
-        <div>&copy; {{ date('Y') }} Kainta İnşaat Mimarlık & Mühendislik. Tüm hakları saklıdır.</div>
+        <div>&copy; {{ date('Y') }} Kainta İnşaat. Tüm hakları saklıdır.</div>
         <div style="font-size: 12px; margin-top: 8px; opacity: 0.7;">
             Yapay zeka destekli ön maliyet hesaplama motoru.
         </div>

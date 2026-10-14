@@ -171,7 +171,7 @@
     <div class="budget-confirm-box" id="budgetConfirmBox">
         <div class="budget-confirm-title">Kainta İnşaat'tan profesyonel uygulama desteği ister misiniz?</div>
         <div class="budget-confirm-text">
-            Hesapladığınız bu alan için kazı (hafriyat), beton dökümü veya yalıtım/havuz uygulamaları gerekiyorsa, mühendislerimizden destek alabilirsiniz.
+            Hesapladığınız bu alan için kazı (hafriyat), beton dökümü veya yalıtım/havuz uygulamaları gerekiyorsa, Kainta İnşaat Uzmanlarından destek alabilirsiniz.
         </div>
         <div class="budget-confirm-actions">
             <button type="button" class="budget-btn budget-yes" id="btnYes">✓ Evet, uzman ekipten teklif istiyorum.</button>

@@ -129,13 +129,13 @@
         <section class="ty-card" aria-labelledby="tyTitle">
             <div class="ty-ok" aria-hidden="true">✓</div>
             <h1 id="tyTitle">Talebiniz başarıyla alındı</h1>
-            <p>Proje bilgileriniz Kainta İnşaat mühendislerine iletildi. Ön değerlendirmeden sonra sizi arayacağız.</p>
+            <p>Proje bilgileriniz Kainta İnşaat Uzmanlarına iletildi. Ön değerlendirmeden sonra sizi arayacağız.</p>
             @if ($kesifLead)
                 <div class="ty-no">Talep no <b>{{ $kesifLead->displayNo() }}</b></div>
             @endif
             <ol class="ty-steps">
                 <li><div class="n done">✓</div><div><b>Talebiniz alındı</b><span>Hesaplama ve iletişim bilgileriniz kaydedildi.</span></div></li>
-                <li><div class="n now">2</div><div><b>Mühendis ön değerlendirmesi</b><span>Genellikle 1 iş günü içinde telefonla dönüş yapılır.</span></div></li>
+                <li><div class="n now">2</div><div><b>Uzman ön değerlendirmesi</b><span>Genellikle 1 iş günü içinde telefonla dönüş yapılır.</span></div></li>
                 <li><div class="n">3</div><div><b>Yerinde keşif ve kesin teklif</b><span>Ölçüm ve metraj yerinde yapılır, yazılı teklif hazırlanır.</span></div></li>
             </ol>
             <div class="ty-actions">
@@ -151,7 +151,7 @@
             <div class="kesif-price"><strong>{{ \App\Support\InspectionOffer::tl(\App\Support\InspectionOffer::fee()) }}</strong><span>+ KDV</span></div>
             <p class="kesif-total">KDV dahil toplam {{ $tl($amounts['total']) }}</p>
             <ul class="kesif-list">
-                <li><span>Kainta İnşaat mühendisi yerinde ölçer; kesin metraj ve yazılı teklif hazırlar.</span></li>
+                <li><span>Kainta İnşaat Uzmanı yerinde ölçer; kesin metraj ve yazılı teklif hazırlar.</span></li>
                 <li><span>{{ \App\Support\InspectionOffer::creditDays() }} gün içinde Kainta İnşaat ile sözleşme imzalarsanız bedel iş bedelinden <strong>düşülür</strong>.</span></li>
                 <li><span>Keşif raporu her durumda size kalır.</span></li>
             </ul>

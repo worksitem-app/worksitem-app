@@ -51,7 +51,7 @@
 
 <h2>5. Hizmetin İfası ve Randevu</h2>
 <ul>
-    <li>Ödeme onaylandıktan sonra Kainta İnşaat mühendisi Alıcı'yı arayarak keşif randevusunu birlikte belirler.</li>
+    <li>Ödeme onaylandıktan sonra Kainta İnşaat Uzmanı Alıcı'yı arayarak keşif randevusunu birlikte belirler.</li>
     <li>Alıcı, randevudan en az {{ $ic['reschedule_hours'] }} saat önce bildirmek kaydıyla randevuyu ücretsiz olarak yeniden planlayabilir.</li>
     <li>Alıcı veya yetkilendirdiği kişi randevuda adreste bulunmazsa yeni bir randevu belirlenir.</li>
     <li>Hizmet, her durumda sipariş tarihinden itibaren yasal üst sınır olan 30 gün içinde ifa edilir; ifa edilemezse ödenen bedelin tamamı 14 gün içinde iade edilir.</li>

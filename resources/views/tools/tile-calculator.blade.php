@@ -602,10 +602,10 @@ $tileOfficial = collect($tilePrices ?? [])->mapWithKeys(function($p,$role){
 <section
     class="engineer-note"
     id="kaintaEngineerNote"
-    aria-label="Kainta İnşaat mühendisleri notu"
+    aria-label="Kainta İnşaat Uzmanları notu"
 >
     <div class="engineer-note-title">
-        Kainta İnşaat Mühendisleri Notu
+        Kainta İnşaat Uzmanları Notu
     </div>
 
     <p>

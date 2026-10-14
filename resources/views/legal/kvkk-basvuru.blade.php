@@ -9,12 +9,12 @@
 >
 <p>
     6698 sayılı Kişisel Verilerin Korunması Kanunu'nun 11. maddesi kapsamında,
-    veri sorumlusu <strong>Kainta İnşaat Mimarlık & Mühendislik</strong>'e
+    veri sorumlusu <strong>Kainta İnşaat</strong>'e
     aşağıdaki kanallardan başvurabilirsiniz:
 </p>
 
 <div class="info-box">
-    <p><strong>Veri Sorumlusu:</strong> Kainta İnşaat Mimarlık & Mühendislik</p>
+    <p><strong>Veri Sorumlusu:</strong> Kainta İnşaat</p>
     <p><strong>Adres:</strong> Fatih Sultan Mehmet Mahallesi, Poligon Caddesi,
     Buyaka 2 Sitesi, 3 Blok, No: 8 C/1, 34771 Ümraniye/İstanbul</p>
     <p><strong>E-posta:</strong> <a href="mailto:info@worksitem.com">info@worksitem.com</a></p>

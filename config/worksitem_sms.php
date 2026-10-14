@@ -11,7 +11,7 @@
 return [
     'lead_received' => [
         'enabled' => (bool) env('SMS_LEAD_RECEIVED', true),
-        'text' => 'Kainta İnşaat: Talebiniz alındı (:no). Mühendisimiz en geç 1 iş günü içinde sizi arayacak. WhatsApp destek: 0850 346 49 83',
+        'text' => 'Kainta İnşaat: Talebiniz alındı (:no). Uzmanımız en geç 1 iş günü içinde sizi arayacak. WhatsApp destek: 0850 346 49 83',
     ],
     'appointment_set' => [
         'enabled' => (bool) env('SMS_APPOINTMENT_SET', true),

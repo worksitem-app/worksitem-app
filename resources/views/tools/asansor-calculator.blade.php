@@ -204,7 +204,7 @@
     <div class="budget-confirm-box" id="budgetConfirmBox">
         <div class="budget-confirm-title">Kainta İnşaat güvencesiyle asansör teklifi almak ister misiniz?</div>
         <div class="budget-confirm-text">
-            Sertifikalı mühendislerimiz asansör projelendirme, kuyu tasarımı ve CE belgeli anahtar teslim montaj sürecini sizin adınıza yönetir.
+            Kainta İnşaat Uzmanları asansör projelendirme, kuyu tasarımı ve CE belgeli anahtar teslim montaj sürecini sizin adınıza yönetir.
         </div>
         <div class="budget-confirm-actions">
             <button type="button" class="budget-btn budget-yes" id="btnYes">✓ Evet, asansör projesi ve teklif istiyorum.</button>

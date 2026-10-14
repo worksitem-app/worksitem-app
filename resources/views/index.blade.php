@@ -775,7 +775,7 @@ function setBudgetGate(mode){
   : 'Bu bütçe projeniz için uygun mu?';
  $('estBudgetText').textContent=isPartial
   ? (renewal?'Bu sonuç dönüşümün tüm giderlerini kapsamaz. Talebiniz bütçe onayı sayılmadan iletilir.':'Fiyatlandırılamayan kalemler için mühendislik değerlendirmesi talep edebilirsiniz.')
-  : 'Uygunsa projenizi Kainta İnşaat mühendisleri değerlendirsin.';
+  : 'Uygunsa projenizi Kainta İnşaat Uzmanları değerlendirsin.';
  $('estBudgetYes').textContent=isPartial
   ? 'Proje değerlendirmesi iste'
   : '✓ Bütçe uygun';

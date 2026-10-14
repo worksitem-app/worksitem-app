@@ -163,7 +163,7 @@ class InspectionController extends Controller
                 'Tutar: '.$total.' ('.InspectionOffer::feeLabel().')',
                 '',
                 'Onayladığınız Ön Bilgilendirme Formu ve Mesafeli Hizmet Sözleşmesi ektedir; lütfen saklayın.',
-                'Ödeme tamamlandıktan sonra Kainta İnşaat mühendisi randevu için sizi arayacak.',
+                'Ödeme tamamlandıktan sonra Kainta İnşaat Uzmanı randevu için sizi arayacak.',
                 '',
                 'Cayma hakkı: keşif yapılmadan önce 14 gün içinde '.config('worksitem_inspection.cancel_email').' adresine yazabilirsiniz.',
                 'Çağrı merkezi / WhatsApp: '.config('worksitem_inspection.phone'),

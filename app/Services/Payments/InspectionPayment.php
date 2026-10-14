@@ -144,7 +144,7 @@ class InspectionPayment
             ? "Kainta İnşaat: Keşif siparişiniz alındı ({$lead->public_id}). Tutar {$total}."
                 .($iban !== '' ? " IBAN: {$iban} Açıklama: {$lead->public_id}." : ' IBAN bilgisi WhatsApp ile iletilecek.')
                 .' Dekont için WhatsApp: 0850 346 49 83'
-            : "Kainta İnşaat: Keşif siparişiniz alındı ({$lead->public_id}). Tutar {$total}. Ödemeden sonra mühendisimiz sizi arayacak. 0850 346 49 83";
+            : "Kainta İnşaat: Keşif siparişiniz alındı ({$lead->public_id}). Tutar {$total}. Ödemeden sonra uzmanımız sizi arayacak. 0850 346 49 83";
 
         $this->sms->send((string) $lead->phone, $msg);
         $this->teamSms("Worksitem KEŞİF SİPARİŞİ: {$lead->name}, {$lead->phone}, {$lead->city}, ".($lead->inspection_payment_method === 'havale' ? 'HAVALE' : 'KART')." {$lead->public_id}");
@@ -153,7 +153,7 @@ class InspectionPayment
     private function notifyPaid(Lead $lead): void
     {
         $total = InspectionOffer::tl(InspectionOffer::amounts()['total']);
-        $this->sms->send((string) $lead->phone, "Kainta İnşaat: {$total} keşif ödemeniz alındı ({$lead->public_id}). Mühendisimiz randevu için sizi arayacak. 0850 346 49 83");
+        $this->sms->send((string) $lead->phone, "Kainta İnşaat: {$total} keşif ödemeniz alındı ({$lead->public_id}). Uzmanımız randevu için sizi arayacak. 0850 346 49 83");
         $this->teamSms("Worksitem KEŞİF ÖDENDİ: {$lead->name}, {$lead->phone}, {$lead->city}, {$total} {$lead->public_id} - randevu verin");
 
         $to = trim((string) config('worksitem_leads.notification_email'));

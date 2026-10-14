@@ -9,7 +9,7 @@
 >
 <p>
     Bu Çerez Politikası, 6698 sayılı KVKK ve Kişisel Verileri Koruma Kurulu'nun
-    Çerez Rehberi kapsamında <strong>Kainta İnşaat Mimarlık & Mühendislik</strong>
+    Çerez Rehberi kapsamında <strong>Kainta İnşaat</strong>
     tarafından işletilen <strong>worksitem.com</strong> sitesinde kullanılan çerezler
     hakkında bilgilendirme amacıyla hazırlanmıştır.
 </p>

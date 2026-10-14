@@ -213,7 +213,7 @@
     <!-- B2B LEAD FORM -->
     <div class="lead-box" id="leadBox">
         <h3>Yerinde Keşif ve Profesyonel Teklif</h3>
-        <p>Mühendislerimiz projenizi detaylı inceleyip net fiyatlandırma için sizinle iletişime geçecektir.</p>
+        <p>Kainta İnşaat Uzmanları projenizi detaylı inceleyip net fiyatlandırma için sizinle iletişime geçecektir.</p>
 
         <form action="{{ route('lead.store') }}" method="POST">
             @csrf

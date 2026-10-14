@@ -184,7 +184,7 @@
     <div class="budget-confirm-box" id="budgetConfirmBox">
         <div class="budget-confirm-title">Mülkünüz için resmi harita ve aplikasyon desteği ister misiniz?</div>
         <div class="budget-confirm-text">
-            Arsa sınırlarınızın belirlenmesi (aplikasyon krokisi), tevhid/ifraz işlemleri veya plankote (kot) haritaları için uzman mühendislerimizden destek alabilirsiniz.
+            Arsa sınırlarınızın belirlenmesi (aplikasyon krokisi), tevhid/ifraz işlemleri veya plankote (kot) haritaları için Kainta İnşaat Uzmanlarından destek alabilirsiniz.
         </div>
         <div class="budget-confirm-actions">
             <button type="button" class="budget-btn budget-yes" id="btnYes">✓ Evet, harita mühendisliği teklifi istiyorum.</button>

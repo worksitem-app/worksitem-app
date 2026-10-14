@@ -3005,7 +3005,7 @@ summary:focus-visible{
                     <strong>Fiyat kaynakları</strong><br>
 
                     İşçilik m² referansı:
-                    Kainta İnşaat saha mühendisleri · 03.10.2026.<br>
+                    Kainta İnşaat Uzmanları (saha) · 03.10.2026.<br>
 
                     Resmi kontrol:
                     Boyacı Ustası

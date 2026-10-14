@@ -17,7 +17,7 @@
 
 <p>
     Bu açık rıza metni kapsamında veri sorumlusu:
-    <strong>Kainta İnşaat Mimarlık & Mühendislik</strong><br>
+    <strong>Kainta İnşaat</strong><br>
     <strong>Adres:</strong> Fatih Sultan Mehmet Mahallesi, Poligon Caddesi,
     Buyaka 2 Sitesi, 3 Blok, No: 8 C/1, 34771 Ümraniye/İstanbul<br>
     <strong>E-posta:</strong> <a href="mailto:info@worksitem.com">info@worksitem.com</a>

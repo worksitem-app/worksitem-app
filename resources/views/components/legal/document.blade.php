@@ -34,11 +34,11 @@
         '/legal/gizlilik-politikasi' => ['Gizlilik Politikası', 'Politika'],
         '/legal/cerez-politikasi' => ['Çerez Politikası', 'Politika'],
     ];
-    $co = config('worksitem_company');
+    $co = \App\Support\CompanyIdentity::display();
     $identity = array_filter([
         'Hizmet sağlayıcı' => $co['legal_name'] ?? null,
         'MERSİS no' => $co['mersis'] ?? null,
-        'Vergi dairesi / no' => trim(($co['tax_office'] ?? '').' / '.($co['tax_no'] ?? ''), ' /') ?: null,
+        'Vergi dairesi / no' => $co['tax_line'] ?? null,
         'Adres' => $co['address'] ?? null,
         'Telefon' => $co['phone'] ?? null,
         'E-posta' => $co['email'] ?? null,

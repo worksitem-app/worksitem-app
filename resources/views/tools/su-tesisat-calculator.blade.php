@@ -198,7 +198,7 @@
     <div class="budget-confirm-box" id="budgetConfirmBox">
         <div class="budget-confirm-title">Mekanik tesisatınız için profesyonel destek ister misiniz?</div>
         <div class="budget-confirm-text">
-            Kainta İnşaat mühendisleri; doğru boru çapı seçimi, su basıncı hesaplamaları ve garantili sızdırmazlık testleriyle anahtar teslim hizmet verir.
+            Kainta İnşaat Uzmanları; doğru boru çapı seçimi, su basıncı hesaplamaları ve garantili sızdırmazlık testleriyle anahtar teslim hizmet verir.
         </div>
         <div class="budget-confirm-actions">
             <button type="button" class="budget-btn budget-yes" id="btnYes">✓ Evet, keşif ve teklif istiyorum.</button>

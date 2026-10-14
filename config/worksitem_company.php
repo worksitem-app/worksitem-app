@@ -13,7 +13,12 @@
 */
 
 return [
-    'legal_name' => env('COMPANY_LEGAL_NAME', 'Kainta İnşaat Mimarlık & Mühendislik'),
+    'legal_name' => env('COMPANY_LEGAL_NAME', 'Kainta İnşaat'),
+
+    // Herkese açık sayfalarda MERSİS / vergi / KEP "*****" gösterilir (kimlik avına karşı).
+    // Siparişe özel sözleşme belgesinde tam bilgi kullanılır. Kapatmak: COMPANY_MASK_IDS=false
+    'mask_public' => (bool) env('COMPANY_MASK_IDS', true),
+    'mask_note' => 'talep edilmesi halinde verilecektir',
     'brand' => 'Worksitem',
     'mersis' => env('COMPANY_MERSIS'),
     'tax_office' => env('COMPANY_TAX_OFFICE'),

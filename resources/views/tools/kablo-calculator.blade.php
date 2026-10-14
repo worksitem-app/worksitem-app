@@ -208,7 +208,7 @@
     <div class="budget-confirm-box" id="budgetConfirmBox">
         <div class="budget-confirm-title">Elektrik taahhüt işleriniz için destek ister misiniz?</div>
         <div class="budget-confirm-text">
-            Kainta İnşaat mühendisleri, aydınlatma otomasyonundan ana pano kurulumlarına kadar tüm elektrik projelerinizi güvenlik standartlarına uygun olarak anahtar teslim yönetir.
+            Kainta İnşaat Uzmanları, aydınlatma otomasyonundan ana pano kurulumlarına kadar tüm elektrik projelerinizi güvenlik standartlarına uygun olarak anahtar teslim yönetir.
         </div>
         <div class="budget-confirm-actions">
             <button type="button" class="budget-btn budget-yes" id="btnYes">✓ Evet, keşif ve elektrik projesi istiyorum.</button>
@@ -223,7 +223,7 @@
 
     <div class="lead-box" id="leadBox">
         <h3>Profesyonel Elektrik & Otomasyon Teklifi</h3>
-        <p>Hesapladığınız altyapı verilerine göre Kainta İnşaat'ın uzman elektrik mühendislerinden profesyonel destek alın.</p>
+        <p>Hesapladığınız altyapı verilerine göre Kainta İnşaat Uzmanlarından profesyonel destek alın.</p>
 
         <form action="{{ route('lead.store') }}" method="POST">
             @csrf

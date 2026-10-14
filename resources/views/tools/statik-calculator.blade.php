@@ -205,7 +205,7 @@
     <div class="budget-confirm-box" id="budgetConfirmBox">
         <div class="budget-confirm-title">Mühendislik hesaplamalarınızı Kainta İnşaat güvencesine almak ister misiniz?</div>
         <div class="budget-confirm-text">
-            Uzman inşaat mühendislerimiz; depreme dayanıklı, ekonomik ve şantiyede uygulanabilir statik projeleri 3D yapısal analiz programlarıyla çözümler.
+            Kainta İnşaat Uzmanları; depreme dayanıklı, ekonomik ve şantiyede uygulanabilir statik projeleri 3D yapısal analiz programlarıyla çözümler.
         </div>
         <div class="budget-confirm-actions">
             <button type="button" class="budget-btn budget-yes" id="btnYes">✓ Evet, statik proje tasarımı teklifi istiyorum.</button>

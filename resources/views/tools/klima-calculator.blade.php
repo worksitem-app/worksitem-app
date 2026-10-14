@@ -203,7 +203,7 @@
     <div class="budget-confirm-box" id="budgetConfirmBox">
         <div class="budget-confirm-title">Mekanik tesisatınız için profesyonel projelendirme ister misiniz?</div>
         <div class="budget-confirm-text">
-            Kainta İnşaat mühendisleri; doğru cihaz seçimi, elektrik altyapısı ve bakır borulama hatlarının projelendirilmesini anahtar teslim olarak yönetir.
+            Kainta İnşaat Uzmanları; doğru cihaz seçimi, elektrik altyapısı ve bakır borulama hatlarının projelendirilmesini anahtar teslim olarak yönetir.
         </div>
         <div class="budget-confirm-actions">
             <button type="button" class="budget-btn budget-yes" id="btnYes">✓ Evet, keşif ve proje desteği istiyorum.</button>
