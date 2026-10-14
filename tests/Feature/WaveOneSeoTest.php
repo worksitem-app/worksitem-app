@@ -65,6 +65,18 @@ class WaveOneSeoTest extends TestCase
         $this->assertMatchesRegularExpression('/m² başına yaklaşık [\d.]+–[\d.]+ TL tutar/u', $a);
     }
 
+    public function test_asma_tavan_ilk_sistemin_fiyati_yoksa_fiyati_olan_sistemi_adiyla_yazar(): void
+    {
+        $poz = \App\Http\Controllers\ConTech\CeilingCalculatorController::catalog()['alu60_sarkmali']['poz'];
+        DB::table('rayic_prices')->insert(['source' => 'YFK', 'period' => '2026-08', 'poz_no' => $poz, 'description' => 'Test', 'unit' => 'm²', 'price' => 800, 'is_active' => true, 'created_at' => now(), 'updated_at' => now()]);
+        PozEstimator::flushCache();
+        $a = KitRegistry::get('asma-tavan-hesaplayici')->page()['faq'][0][1];
+        $this->assertStringContainsString('60x60 Alüminyum Sarkmalı Sistem KDV dahil m² başına yaklaşık', $a);
+
+        // Sistemi sabit adlandıran metin başka sisteme kaymaz (alçıpan fiyatı yok → yedek metin)
+        $this->assertStringContainsString('resmî YFK birim fiyatından', KitRegistry::get('alcipan-hesaplayici')->page()['faq'][0][1]);
+    }
+
     public function test_markalar_sayfasi_araci_tanir_ve_basvuruya_yazar(): void
     {
         $this->get('/markalar-icin?arac=boya-hesaplayici')->assertOk()

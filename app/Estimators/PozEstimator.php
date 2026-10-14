@@ -55,30 +55,47 @@ abstract class PozEstimator extends KitEstimator
     }
 
     /**
-     * SSS ve "kısa cevap" için örnek m² fiyatı: her seçim adımının ilk seçeneği,
-     * alan 100 m². Fiyat bulunamazsa boş döner (metin uydurulmaz).
+     * SSS ve "kısa cevap" için örnek m² fiyatı: her seçim adımının ilk seçeneği, alan 100 m².
+     * $tryOthers: ilk sistemin resmî fiyatı yoksa ilk adımın sıradaki seçenekleri denenir
+     * (yalnız metin sistemi :sistem ile adlandırıyorsa; aksi halde metin ile fiyat uyuşmaz).
+     * Fiyat bulunamazsa boş döner (metin uydurulmaz).
+     *
+     * @return array{0:string,1:string} [fiyat aralığı, seçilen sistemin adı]
      */
-    protected function typicalPerUnit(array $override = []): string
+    protected function typicalPerUnit(array $override = [], bool $tryOthers = false): array
     {
         $raw = [];
+        $first = null;
         foreach ($this->steps() as $step) {
             if (($step['type'] ?? '') === 'cards' && ! empty($step['options'])) {
                 $raw[$step['key']] = array_key_first($step['options']);
+                $first ??= $step;
             }
             foreach ($step['fields'] ?? [] as $f) {
                 $raw[$f['key']] = $f['default'] ?? 100;
             }
         }
+        $raw = array_merge($raw, $override);
+        $candidates = $first && $tryOthers && ! array_key_exists($first['key'], $override) ? array_keys($first['options']) : [null];
+        foreach ($candidates as $opt) {
+            $try = $opt === null ? $raw : array_merge($raw, [$first['key'] => $opt]);
+            $r = $this->exampleRange($try, true);
+            if ($r !== '') {
+                $o = $opt === null ? null : $first['options'][$opt];
 
-        return $this->exampleRange(array_merge($raw, $override), true);
+                return [$r, (string) (is_array($o) ? ($o['label'] ?? '') : ($o ?? ''))];
+            }
+        }
+
+        return ['', ''];
     }
 
-    /** İlk cümlesi örnek fiyat olan SSS cevabı; fiyat yoksa yedek metin. */
+    /** İlk cümlesi örnek fiyat olan SSS cevabı (:fiyat, :sistem); fiyat yoksa yedek metin. */
     protected function priceAnswer(string $lead, string $fallback, array $override = []): string
     {
-        $r = $this->typicalPerUnit($override);
+        [$r, $label] = $this->typicalPerUnit($override, str_contains($lead, ':sistem'));
 
-        return $r !== '' ? str_replace(':fiyat', $r, $lead) : $fallback;
+        return $r !== '' ? strtr($lead, [':fiyat' => $r, ':sistem' => $label]) : $fallback;
     }
 
     public static function flushCache(): void
