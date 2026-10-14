@@ -24,11 +24,21 @@ return [
             'beton-hesaplayici', 'sap-hesaplayici', 'alci-siva-hesaplama', 'kara-siva-hesaplama', 'duvar-maliyet-hesaplayici',
         ],
 
-        // 2. dalga: kaba inşaat ve teknik maliyet araçları (hesap motoru)
+        // 2. dalga (14.10.2026): yapay zekâ özellikleri dışındaki kalan 48 araç
+        // (havalandirma-kanali eski adres: havalandirma-hesaplayici'ya yönlenir)
         'ikinci-dalga' => [
-            'duvar-orgu', 'bahce-duvari-maliyeti', 'iskele-metraji-maliyeti', 'kalip-plywood-maliyeti', 'hafriyat-kazi-hesabi',
-            'saha-betonu-hesaplayici', 'sandvic-panel-hesaplayici', 'gunes-paneli-hesaplama', 'tahmini-bina-maliyeti',
-            'statik-proje-bedeli', 'deprem-izolator-maliyeti',
+            'asansor-zorunlulugu', 'azami-konut-kredisi', 'bahce-duvari-maliyeti', 'basit-kiris-statigi',
+            'belge-olusturucu', 'bina-agirlik-hesabi', 'birim-fiyat-analiz', 'bombeli-tank-hacmi',
+            'cimento-kum-hesaplama', 'daire-kira-degeri', 'demir-metraji-hesaplayici', 'deprem-izolator-maliyeti',
+            'dijital-metraj', 'donati-tahvil-hesaplayici', 'duvar-orgu', 'enerji-tuketim-hesaplama',
+            'gunes-paneli-hesaplama', 'hafriyat-kazi-hesabi', 'havalandirma-hesaplayici', 'ihale-modulu',
+            'insaat-muhendisi-maas-hesabi', 'is-makinesi-maliyeti', 'iscilik-maliyeti', 'iskele-metraji-maliyeti',
+            'jenerator-hesaplama', 'kablo-kesiti-hesabi', 'kalip-plywood-maliyeti', 'karot-dayanim',
+            'kat-karsiligi-analiz', 'kesim-optimizasyonu', 'kolon-filiz-boyu', 'kolon-tasima-kapasitesi',
+            'lojistik-maliyeti', 'malzeme-agirligi', 'merdiven-basamak-hesabi', 'metrekup-hacim-hesaplama',
+            'pafta-olcu-hesaplayici', 'pompa-gucu-hesabi', 'saha-betonu-hesaplayici', 'sandvic-panel-hesaplayici',
+            'sgk-asgari-iscilik', 'siginak-yonetmeligi', 'statik-proje-bedeli', 'tahmini-bina-maliyeti',
+            'taks-kaks-hesaplayici', 'yagmur-borusu-hesabi', 'yapi-dinamigi', 'yukseltilmis-doseme-hesaplayici',
         ],
 
         // Yapay zekâ özellikleri: AI_SPEND_ENABLED=true ve sağlayıcı bütçe limitleri tanımlandıktan sonra.

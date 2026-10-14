@@ -134,8 +134,8 @@
         <div class="main-content">
             <div class="toolbar">
                 <button class="tab-btn active">Keşif Özeti</button>
-                <button class="tab-btn" type="button" disabled>Metraj Cetveli<small>Yakında</small></button>
-                <button class="tab-btn" type="button" disabled>Birim Fiyat Analizi<small>Yakında</small></button>
+                <a class="tab-btn" href="/araclar/dijital-metraj" style="text-decoration:none">Metraj (plandan ölçüm)<small>ayrı araç →</small></a>
+                <a class="tab-btn" href="/araclar/birim-fiyat-analiz" style="text-decoration:none">Birim Fiyat Analizi<small>ayrı araç →</small></a>
             </div>
 
             <div class="table-container">

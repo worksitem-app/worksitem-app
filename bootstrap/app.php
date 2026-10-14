@@ -24,6 +24,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->append(\App\Http\Middleware\InjectGa4Tag::class);
         $middleware->append(\App\Http\Middleware\SeoDefaults::class);
         $middleware->append(\App\Http\Middleware\BrandShell::class);
+        // En içte: araç sayfası başlık/şema/marka bandı (SeoDefaults og etiketlerini yeni başlıktan üretir)
+        $middleware->append(\App\Http\Middleware\ToolPageEnhancer::class);
 
         // Route middleware alias'lari
         $middleware->alias([

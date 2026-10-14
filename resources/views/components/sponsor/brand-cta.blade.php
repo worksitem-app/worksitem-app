@@ -7,7 +7,7 @@
 @php
     $cfg = (array) config("worksitem_sponsors.tools.$tool", []);
     $cats = array_values(array_filter((array) ($cfg['categories'] ?? []), fn ($l, $k) => $k !== 'genel', ARRAY_FILTER_USE_BOTH));
-    $label = $cfg['label'] ?? 'Bu hesaplayıcı';
+    $label = $cfg['label'] ?? (config("worksitem_tools.tools.$tool.title") ?: 'Bu hesaplayıcı');
     $max = (int) config('worksitem_sponsors.max_cards', 3);
     $live = 0;
     try {
@@ -23,8 +23,13 @@
 <section class="ws-bc" aria-labelledby="wsBc-{{ $tool }}" data-kainta-auto-link="off">
     <div class="ws-bc-copy">
         <span class="ws-bc-kicker">Markalar ve üreticiler için</span>
+        @if ($cfg)
         <h2 id="wsBc-{{ $tool }}">Ürününüz, bütçesini hesaplayan kullanıcının karşısına çıksın</h2>
         <p>{{ $label }} kullanıcıları malzeme ve marka seçmeden hemen önce buradadır. Sonuç ekranında, karar anında görünün. Her kalemde en fazla {{ $max }} marka gösterilir; hesap sonuçları ve fiyatlar sponsorluktan etkilenmez.</p>
+        @else
+        <h2 id="wsBc-{{ $tool }}">Markanız bu araçta görünsün</h2>
+        <p>{{ $label }} aracını inşaat ve yapı sektöründe karar veren kişiler kullanıyor: mal sahipleri, müteahhitler, mühendisler ve ustalar. Bu sayfada markanız için sponsor alanı açılabilir; hesap sonuçları sponsorluktan etkilenmez.</p>
+        @endif
         @if ($cats)
             <ul class="ws-bc-cats" aria-label="Sponsorluk kategorileri">@foreach (array_slice($cats, 0, 5) as $c)<li>{{ $c }}</li>@endforeach</ul>
         @endif

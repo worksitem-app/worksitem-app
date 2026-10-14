@@ -29,7 +29,7 @@ class SlabEstimator extends KitEstimator
             'title' => 'Saha betonu maliyeti',
             'h1' => "Saha betonu (zemin betonu) maliyeti hesaplama ($y)",
             'lede' => 'Alanı ve beton kalınlığını girin, beton sınıfını, hasırı ve yüzey işlemini seçin; hazır beton, çelik hasır, pompa, perdah ve işçilik kalem kalem hesaplansın.',
-            'seo_title' => "Saha Betonu Fiyatı $y: m² Zemin Betonu, Hasır ve Perdah Maliyeti | Worksitem",
+            'seo_title' => "Saha Betonu Fiyatı $y: m² Zemin Betonu ve Perdah | Worksitem",
             'seo_desc' => "$y saha betonu fiyatları: bahçe, otopark ve depo zemin betonunun m² maliyetini hazır beton, çelik hasır, pompa ve helikopter perdah dahil ücretsiz hesaplayın.",
             'service' => 'Saha Betonu',
             'wait' => 'Alanı ve kalınlığı girin, seçimleri yapın; maliyet burada anında hesaplanır.',

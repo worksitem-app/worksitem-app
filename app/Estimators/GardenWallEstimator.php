@@ -20,7 +20,7 @@ class GardenWallEstimator extends KitEstimator
             'title' => 'Bahçe duvarı maliyeti',
             'h1' => "Bahçe duvarı maliyeti hesaplama ($y)",
             'lede' => 'Duvarın uzunluğunu ve yüksekliğini girin, taş, betonarme veya blok duvar seçin; temel, duvar gövdesi, sıva, harpuşta ve üstüne korkuluk kalem kalem hesaplansın.',
-            'seo_title' => "Bahçe Duvarı Fiyatı $y: Metre Başına Taş ve Betonarme Duvar Maliyeti | Worksitem",
+            'seo_title' => "Bahçe Duvarı Fiyatı $y: Metre Başına Duvar Maliyeti | Worksitem",
             'seo_desc' => "$y bahçe duvarı fiyatları: taş, betonarme ve blok bahçe duvarının metre maliyetini temel, sıva, harpuşta ve korkuluk dahil ücretsiz hesaplayın.",
             'service' => 'Bahçe Duvarı',
             'wait' => 'Duvar ölçülerini girin ve tipini seçin; maliyet burada anında hesaplanır.',

@@ -74,5 +74,13 @@ return [
         ['path' => 'worksitem_estimators.tesisat.bath', 'tool' => 'su-tesisat-hesaplama', 'label' => 'Banyo su tesisatı yenileme (temiz + pis su)', 'q' => 'banyo su tesisatı yenileme fiyatı malzeme işçilik dahil', 'unit' => 'banyo'],
         ['path' => 'worksitem_estimators.tesisat.kitchen', 'tool' => 'su-tesisat-hesaplama', 'label' => 'Mutfak su tesisatı yenileme', 'q' => 'mutfak su tesisatı yenileme fiyatı', 'unit' => 'mutfak'],
         ['path' => 'worksitem_estimators.tesisat.booster', 'tool' => 'su-tesisat-hesaplama', 'label' => 'Hidrofor (montaj dahil)', 'q' => 'ev tipi hidrofor fiyatı montaj dahil', 'unit' => 'adet'],
+        // 2. dalga: kaba inşaat
+        ['path' => 'worksitem_estimators.bahce.block_m2', 'tool' => 'bahce-duvari-maliyeti', 'label' => 'Bahçe duvarı briket örgü (m²)', 'q' => 'briket bahçe duvarı örme m2 fiyatı işçilik dahil', 'unit' => 'm²'],
+        ['path' => 'worksitem_estimators.bahce.fence_m', 'tool' => 'bahce-duvari-maliyeti', 'label' => 'Bahçe teli / panel çit (metre)', 'q' => 'panel çit metre fiyatı montaj dahil', 'unit' => 'mtül'],
+        ['path' => 'worksitem_estimators.iskele.m2.cephe', 'tool' => 'iskele-metraji-maliyeti', 'label' => 'Cephe iskelesi (1 ay, kurulum dahil)', 'q' => 'cephe iskelesi m2 kiralama fiyatı kurulum söküm dahil', 'unit' => 'm²'],
+        ['path' => 'worksitem_estimators.hafriyat.truck_trip', 'tool' => 'hafriyat-kazi-hesabi', 'label' => 'Hafriyat kamyonu sefer ücreti', 'q' => 'hafriyat kamyonu sefer fiyatı döküm dahil', 'unit' => 'sefer'],
+        ['path' => 'worksitem_estimators.saha.pump', 'tool' => 'saha-betonu-hesaplayici', 'label' => 'Beton pompası (döküm başına)', 'q' => 'beton pompası kiralama fiyatı döküm başına', 'unit' => 'döküm'],
+        ['path' => 'worksitem_estimators.saha.finish_m2.helikopter', 'tool' => 'saha-betonu-hesaplayici', 'label' => 'Helikopter perdah (m²)', 'q' => 'helikopter perdah m2 fiyatı', 'unit' => 'm²'],
+        ['path' => 'worksitem_estimators.saha.mesh_m2.tek', 'tool' => 'saha-betonu-hesaplayici', 'label' => 'Çelik hasır (Q131, m²)', 'q' => 'Q131 çelik hasır m2 fiyatı', 'unit' => 'm²'],
     ],
 ];
