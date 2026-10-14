@@ -80,6 +80,15 @@ class WaveOneSeoTest extends TestCase
         $this->assertStringContainsString('Araç: boya-hesaplayici', (string) Lead::query()->latest('id')->value('notes'));
     }
 
+    public function test_boya_iscilik_daire_m2_si_basina_hesaplanir(): void
+    {
+        $e = KitRegistry::get('boya-hesaplayici');
+        $r = $e->estimate($e->normalize(['target' => 'daire', 'floor' => 100, 'surfaces' => 'duvar_tavan', 'color' => 'ayni', 'state' => 'iyi', 'quality' => 'orta']));
+        // 250 TL × 100 m² daire ≈ 25.000 TL ustalık (boyanan 370 m² yüzeye 250 TL değil)
+        $this->assertEqualsWithDelta(25000, $r['items']['iscilik']['mid'], 2500);
+        $this->assertLessThan(90000, $r['high']);
+    }
+
     public function test_llms_txt_yalniz_aktif_araclari_listeler(): void
     {
         config(['worksitem_tools.tool_status.default' => 'review', 'worksitem_tools.tool_status.overrides' => ['boya-hesaplayici' => 'active']]);

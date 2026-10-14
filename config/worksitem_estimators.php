@@ -85,7 +85,7 @@ return [
         'primer_15l' => 2990 * 1.2,
         'putty_4_5kg' => 459.9 * 1.2,
         'quality_factor' => [0.65, 1.0, 1.6],
-        'labor_m2' => 250,                          // pricing_settings: paint_labor_standard_m2 (2 kat)
+        'labor_m2' => 250,                          // pricing_settings: paint_labor_standard_m2 — DAİRE m²'si başına ustalık (2 kat, duvar + tavan)
         'coverage_m2_per_l' => 11,
         'wall_factor' => 2.7,                       // daire net m² → duvar alanı (2,6 m tavan)
         'extras' => ['furniture' => 2500, 'door' => 1800, 'radiator' => 900, 'plaster_m2' => 380],
