@@ -40,6 +40,7 @@
         </div>
         <a class="ws-bc-btn" href="{{ $href }}" data-brand-cta="{{ $tool }}">Bu araçta yer alın →</a>
         <a class="ws-bc-link" href="{{ route('sponsor.page') }}#paketler">Paketleri inceleyin</a>
+        <a class="ws-bc-link" href="{{ route('firms.page', ['arac' => $tool]) }}#kayit" data-firm-cta="{{ $tool }}">Usta / firma mısınız? Ücretsiz üye olun</a>
     </div>
 </section>
 @once

@@ -27,6 +27,7 @@ class SitemapController extends Controller
             ['loc' => '/maliyet-hesapla', 'priority' => '0.95', 'changefreq' => 'weekly'],
             ['loc' => '/pozlar', 'priority' => '0.9', 'changefreq' => 'daily'],
 
+            ['loc' => '/firma-uyeligi', 'priority' => '0.7', 'changefreq' => 'monthly'],
             ['loc' => '/legal/kvkk-aydinlatma', 'priority' => '0.4', 'changefreq' => 'monthly'],
             ['loc' => '/legal/acik-riza', 'priority' => '0.4', 'changefreq' => 'monthly'],
             ['loc' => '/legal/cerez-politikasi', 'priority' => '0.4', 'changefreq' => 'monthly'],
@@ -71,6 +72,17 @@ class SitemapController extends Controller
                 'priority' => '0.8',
                 'changefreq' => 'monthly',
             ];
+        }
+
+        // Firma rehberi (yalnız açıkken ve onaylı firmalar)
+        if (config('worksitem_firms.directory_enabled')) {
+            try {
+                $staticPages[] = ['loc' => '/firmalar', 'priority' => '0.7', 'changefreq' => 'weekly'];
+                foreach (\App\Models\Firm::query()->approved()->orderBy('id')->pluck('slug') as $fs) {
+                    $staticPages[] = ['loc' => '/firmalar/'.$fs, 'priority' => '0.5', 'changefreq' => 'monthly'];
+                }
+            } catch (\Throwable) {
+            }
         }
 
         foreach ($staticPages as $page) {

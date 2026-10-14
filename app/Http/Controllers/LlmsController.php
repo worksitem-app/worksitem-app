@@ -44,7 +44,7 @@ class LlmsController extends Controller
         }
         $tools = "## Aktif araçlar\n\nAşağıdaki araçlar şu an kullanıma açıktır. Güncel sonuç için aracın kendi sayfası esas alınmalıdır.\n\n"
             .($lines ? implode("\n", $lines) : '- Şu an listelenecek aktif araç yok.')."\n\n"
-            ."## Markalar için\n\nSponsorluk ve iş birliği: https://worksitem.com/markalar-icin";
+            ."## Markalar için\n\nSponsorluk ve iş birliği: https://worksitem.com/markalar-icin\n\n## Firmalar için\n\nUsta, tadilat firması, müteahhit ve tedarikçiler için ücretsiz firma üyeliği: https://worksitem.com/firma-uyeligi";
 
         return strtr((string) file_get_contents(resource_path('llms/base.txt')), [
             ':updated' => now('Europe/Istanbul')->toDateString(),

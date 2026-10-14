@@ -47,6 +47,18 @@ class OnlinePayment
         ]);
     }
 
+    /** Öne çıkan (Pro) firma üyeliği siparişi: yıllık, fiyat + KDV */
+    public function firmProOrder(\App\Models\Firm $firm): Order
+    {
+        $net = (float) config('worksitem_firms.pro_price', 2400);
+
+        return Order::query()->create([
+            'kind' => 'firm_pro', 'ref' => 'firm:'.$firm->id, 'title' => 'Worksitem öne çıkan firma üyeliği (1 yıl) · '.$firm->name,
+            'amount' => round($net * (1 + (float) config('worksitem_payments.vat_rate', 0.20)), 2),
+            'name' => $firm->contact_name, 'phone' => $firm->phone, 'email' => $firm->email,
+        ]);
+    }
+
     /** Bu hesap için ödenmiş Pro rapor var mı (aynı telefon, son N gün) */
     public static function reportPaid(string $ref, string $phone): bool
     {
@@ -109,6 +121,11 @@ class OnlinePayment
             ]);
             if ($paid && $fresh->kind === 'credits' && $fresh->ai_wallet_id && ($w = AiWallet::query()->find($fresh->ai_wallet_id))) {
                 $this->credits->grant($w, (int) $fresh->credits, 'Online satın alma '.$fresh->public_id);
+            }
+            if ($paid && $fresh->kind === 'firm_pro' && str_starts_with((string) $fresh->ref, 'firm:')
+                && ($f = \App\Models\Firm::query()->find((int) substr((string) $fresh->ref, 5)))) {
+                $from = $f->isPro() ? $f->plan_until : now();
+                $f->update(['plan' => 'pro', 'plan_until' => $from->copy()->addDays((int) config('worksitem_firms.pro_days', 365))]);
             }
         });
 

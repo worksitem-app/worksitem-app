@@ -39,7 +39,7 @@ class OrderResource extends Resource
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('status')->label('Durum')->options(['paid' => 'Ödendi', 'pending' => 'Bekliyor', 'failed' => 'Başarısız']),
-                Tables\Filters\SelectFilter::make('kind')->label('Tür')->options(['credits' => 'Yapay zekâ kredisi', 'pro_report' => 'Pro rapor']),
+                Tables\Filters\SelectFilter::make('kind')->label('Tür')->options(['credits' => 'Yapay zekâ kredisi', 'pro_report' => 'Pro rapor', 'firm_pro' => 'Öne çıkan firma']),
             ])
             ->paginated([25, 50, 100]);
     }

@@ -19,21 +19,27 @@
 <x-site.contech-header />
 <div class="box">
     <img src="/brand/worksitem-logo.png" alt="Worksitem" height="30">
-    @if ($order->isPaid())
+    @if (! $order)
+        <div class="ic no">!</div>
+        <h1>Ödeme şu an yapılamıyor</h1>
+        <p>{{ $message ?? 'Lütfen daha sonra tekrar deneyin.' }} WhatsApp: {{ config('worksitem_inspection.phone') }}</p>
+    @elseif ($order->isPaid())
         <div class="ic ok">✓</div>
         <h1>Ödemeniz alındı</h1>
-        <p>@if ($order->kind === 'credits'){{ number_format($order->credits, 0, ',', '.') }} yapay zekâ kredisi hesabınıza yüklendi.@else Siparişiniz tamamlandı.@endif</p>
+        <p>@if ($order->kind === 'credits'){{ number_format($order->credits, 0, ',', '.') }} yapay zekâ kredisi hesabınıza yüklendi.@elseif ($order->kind === 'firm_pro')Öne çıkan firma üyeliğiniz {{ (int) config('worksitem_firms.pro_days', 365) }} gün için başladı.@else Siparişiniz tamamlandı.@endif</p>
     @else
         <div class="ic no">!</div>
         <h1>Ödeme tamamlanmadı</h1>
         <p>{{ $order->error ?: 'Kart bilgilerinizi kontrol edip yeniden deneyin.' }} Kartınızdan tutar çekildiyse WhatsApp destek hattına yazın: {{ config('worksitem_inspection.phone') }}</p>
     @endif
+    @if ($order)
     <div class="meta">
         <span>Sipariş no</span><b>{{ $order->public_id }}</b>
         <span>Ürün</span><b>{{ $order->title }}</b>
         <span>Tutar</span><b>{{ number_format($order->amount, 2, ',', '.') }} TL (KDV dahil)</b>
         @if ($order->paid_at)<span>Tarih</span><b>{{ $order->paid_at->timezone('Europe/Istanbul')->format('d.m.Y H:i') }}</b>@endif
     </div>
+    @endif
     <a class="btn" href="/araclar">Araçlara dön</a>
 </div>
 </body>

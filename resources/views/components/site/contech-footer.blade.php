@@ -794,6 +794,10 @@ html[data-theme="dark"] .wks-footer{
                     Ekip
                 </a>
 
+                <a href="/firma-uyeligi">
+                    Firma Üyeliği
+                </a>
+
                 <a href="/#fiyatlama">
                     Hesaplama Yöntemi
                 </a>

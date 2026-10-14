@@ -87,6 +87,19 @@ Route::get('/markalar-icin', [\App\Http\Controllers\SponsorController::class, 'p
 Route::post('/markalar-icin', [\App\Http\Controllers\SponsorController::class, 'apply'])
     ->middleware('throttle:public-write')->name('sponsor.apply');
 
+// Firma üyeliği (kayıt herkese açık; rehber FIRMS_DIRECTORY_ENABLED ile açılır)
+Route::controller(\App\Http\Controllers\FirmController::class)->group(function () {
+    Route::get('/firma-uyeligi', 'page')->name('firms.page');
+    Route::post('/firma-uyeligi/kod', 'sendCode')->middleware('throttle:public-write')->name('firms.code');
+    Route::post('/firma-uyeligi', 'register')->middleware('throttle:public-write')->name('firms.register');
+    Route::get('/firma-uyeligi/{firm}/one-cikan', 'pro')->middleware('signed')->name('firms.pro');
+    Route::get('/firmalar', 'index')->middleware('throttle:public-read')->name('firms.index');
+    Route::get('/firmalar/{firm}', 'show')->middleware('throttle:public-read')->name('firms.show');
+    Route::get('/firmalar/{firm}/iletisim/{via}', 'contact')->whereIn('via', ['ara', 'whatsapp'])
+        ->middleware('throttle:public-write')->name('firms.contact');
+});
+Route::view('/legal/firma-uyelik-kosullari', 'legal.firma-uyelik-kosullari')->name('legal.firma_uyelik');
+
 // Yerinde keşif: teşekkür sayfasında kabul → ödeme/iletişim sayfası (oturuma bağlı, indekslenmez)
 Route::post('/kesif/kabul', [\App\Http\Controllers\InspectionController::class, 'accept'])
     ->middleware('throttle:public-write')->name('kesif.accept');

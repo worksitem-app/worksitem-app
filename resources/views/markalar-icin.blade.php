@@ -99,6 +99,10 @@
     </div>
 </div></section>
 
+<section class="mk"><div class="mk-in">
+    <div class="mk-rules" style="background:var(--paper);border:1px solid var(--line)"><strong>Usta, tadilat firması, müteahhit veya bayi misiniz?</strong> Sponsorluk yerine ücretsiz firma üyeliğiyle başlayın: <a href="{{ route('firms.page') }}" style="color:inherit;font-weight:800">Firma üyeliği →</a></div>
+</div></section>
+
 <section class="mk" id="basvuru"><div class="mk-in" style="padding-bottom:48px">
     <h2>Sponsorluk teklifi isteyin</h2>
     @if ($toolCfg)<p class="lead">Seçtiğiniz araç: <strong>{{ $toolCfg['label'] }}</strong>. Bu araçta {{ $toolFree }} / {{ config('worksitem_sponsors.max_cards', 3) }} sponsor alanı boş.</p>@endif
