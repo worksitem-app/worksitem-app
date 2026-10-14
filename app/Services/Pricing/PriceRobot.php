@@ -120,7 +120,7 @@ class PriceRobot
         $prices = array_values(array_filter(array_map(fn ($s) => (float) $s['price_tl'], $found['sources'])));
         $median = $prices ? $this->median($prices) : null;
         $mult = (float) $it['multiplier'];
-        $proposedMid = $median ? round($median / (float) ($it['divide'] ?? 1) * $mult, 2) : null;
+        $proposedMid = $median ? round($median / (float) ($it['divide'] ?? 1) * (float) ($it['factor'] ?? 1) * $mult, 2) : null;
         if ($proposedMid && ($it['kind'] ?? '') === 'poz') {
             $proposedMid = round($proposedMid / 1.2, 2);   // YFK birim fiyatları KDV hariç tutulur
         }
@@ -261,30 +261,49 @@ class PriceRobot
             throw new RuntimeException('GEMINI_API_KEY tanımlı değil');
         }
         $model = (string) config('worksitem_price_robot.model');
-        $prompt = "Türkiye'de bugünkü güncel piyasa fiyatını araştır: \"{$it['q']}\". Birim: {$it['unit']}.\n"
+        $prompt = "ÖNCE MUTLAKA Google'da ara (hafızandan fiyat yazma). Türkiye'de bugünkü güncel piyasa fiyatını araştır: \"{$it['q']}\". Birim: {$it['unit']}.\n"
             ."Google'da ara; satıcı, mağaza, firma veya fiyat listesi sayfalarından en az 3, en fazla 6 farklı kaynak bul.\n"
             ."Kurallar: yalnız Türkiye ve Türk lirası; son 6 ayın fiyatları; aynı birim; kampanya/indirim değil normal satış fiyatı; "
             ."fiyat KDV hariçse 1,20 ile çarpıp KDV dahil yaz; aralık verilmişse ortasını al. Fiyat bulamazsan uydurma, boş liste döndür.\n"
             .'Yalnız şu JSON ile cevap ver, başka metin yazma: '
             .'{"sources":[{"name":"site veya firma adı","url":"https://...","price_tl":0}],"note":"kısa not"}';
 
-        $res = Http::timeout(90)->retry(1, 2000, throw: false)
+        // Google arama (grounding): Interactions API — Google'ın güncel belgelediği yol
+        $res = Http::timeout(120)->retry(1, 2000, throw: false)
             ->withHeaders(['x-goog-api-key' => $key, 'Content-Type' => 'application/json'])
-            ->post('https://generativelanguage.googleapis.com/v1beta/models/'.rawurlencode($model).':generateContent', [
-                'contents' => [['role' => 'user', 'parts' => [['text' => $prompt]]]],
-                'tools' => [['google_search' => (object) []]],
-                'generationConfig' => ['temperature' => 0.1],
+            ->post('https://generativelanguage.googleapis.com/v1beta/interactions', [
+                'model' => $model,
+                'input' => $prompt,
+                'tools' => [['type' => 'google_search']],
             ]);
         if (! $res->successful()) {
             throw new RuntimeException('Gemini HTTP '.$res->status().': '.mb_substr((string) $res->body(), 0, 200));
         }
-        $text = collect(Arr::get($res->json(), 'candidates.0.content.parts', []))->pluck('text')->filter()->implode("\n");
-        $chunks = collect(Arr::get($res->json(), 'candidates.0.groundingMetadata.groundingChunks', []))
-            ->map(fn ($c) => ['url' => (string) Arr::get($c, 'web.uri', ''), 'title' => (string) Arr::get($c, 'web.title', '')])
-            ->filter(fn ($c) => $c['url'] !== '')->values();
-        $queries = (array) Arr::get($res->json(), 'candidates.0.groundingMetadata.webSearchQueries', []);
+        $texts = [];
+        $queries = [];
+        $cites = [];
+        foreach ((array) Arr::get($res->json(), 'steps', []) as $step) {
+            $type = $step['type'] ?? '';
+            if ($type === 'google_search_call') {
+                $queries = array_merge($queries, (array) Arr::get($step, 'arguments.queries', []));
+            }
+            if ($type === 'model_output') {
+                foreach ((array) ($step['content'] ?? []) as $c) {
+                    if (($c['type'] ?? '') === 'text' && isset($c['text'])) {
+                        $texts[] = $c['text'];
+                        foreach ((array) ($c['annotations'] ?? []) as $an) {
+                            if (($an['type'] ?? '') === 'url_citation' && ! empty($an['url'])) {
+                                $cites[] = ['url' => (string) $an['url'], 'title' => (string) ($an['title'] ?? '')];
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        $text = implode('', $texts);
+        $chunks = collect($cites)->unique('url')->values();
         $this->lastRaw = ['text' => mb_substr($text, 0, 3000), 'grounding' => $chunks->count(), 'queries' => $queries,
-            'finish' => Arr::get($res->json(), 'candidates.0.finishReason')];
+            'finish' => (string) Arr::get($res->json(), 'status', '-')];
         if (! preg_match('/\{.*\}/s', $text, $m) || ! is_array($j = json_decode($m[0], true))) {
             throw new RuntimeException('Cevap okunamadı: '.mb_substr(trim($text), 0, 160));
         }
@@ -303,7 +322,7 @@ class PriceRobot
             })
             ->filter(fn ($s) => $s['price_tl'] > 0 && ($s['url'] !== '' || $s['name'] !== ''))
             ->unique(fn ($s) => $s['url'] ?: $s['name'])->values()->all();
-        if ($chunks->isEmpty() && $queries === []) {
+        if ($queries === []) {
             return ['sources' => [], 'note' => 'Google araması yapılmadı; sonuç kullanılmadı'];
         }
 

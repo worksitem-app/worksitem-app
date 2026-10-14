@@ -26,14 +26,14 @@ return [
     'max_jump' => 2.0,     // önceki / yeni oranı bu aralığın dışındaysa onay bekler
     'model' => env('PRICE_ROBOT_MODEL', env('GEMINI_PRICE_RESEARCH_MODEL', 'gemini-3.6-flash')),
 
-    // path: config yolu · q: Google'da aranacak ifade (Türkçe) · unit: fiyatın birimi · divide: bulunan fiyat ÷ (örn. 5 cm levha → cm başına)
+    // path: config yolu · q: Google'da aranacak ifade (Türkçe) · unit: fiyatın birimi · divide: bulunan fiyat ÷ (örn. 5 cm levha → cm başına) · factor: × (örn. m² → 60 cm yükseklikte mtül)
     'items' => [
         // Mutfak
         ['path' => 'worksitem_estimators.mutfak.cabinet_m', 'tool' => 'mutfak-maliyet-hesaplayici', 'label' => 'Mutfak dolabı (alt + üst, montaj dahil)', 'q' => 'mutfak dolabı metre fiyatı alt üst dolap montaj dahil', 'unit' => 'mtül'],
         ['path' => 'worksitem_estimators.mutfak.counter_m.laminat', 'tool' => 'mutfak-maliyet-hesaplayici', 'label' => 'Laminat tezgah', 'q' => 'laminat mutfak tezgahı metre fiyatı montaj dahil', 'unit' => 'mtül'],
         ['path' => 'worksitem_estimators.mutfak.counter_m.granit', 'tool' => 'mutfak-maliyet-hesaplayici', 'label' => 'Granit tezgah', 'q' => 'granit mutfak tezgahı metre fiyatı montaj dahil', 'unit' => 'mtül'],
         ['path' => 'worksitem_estimators.mutfak.counter_m.kuvars', 'tool' => 'mutfak-maliyet-hesaplayici', 'label' => 'Kuvars (çimstone) tezgah', 'q' => 'kuvars çimstone mutfak tezgahı metre fiyatı montaj dahil', 'unit' => 'mtül'],
-        ['path' => 'worksitem_estimators.mutfak.backsplash_m', 'tool' => 'mutfak-maliyet-hesaplayici', 'label' => 'Tezgah arası kaplama', 'q' => 'mutfak tezgah arası seramik kaplama metre fiyatı işçilik dahil', 'unit' => 'mtül'],
+        ['path' => 'worksitem_estimators.mutfak.backsplash_m', 'tool' => 'mutfak-maliyet-hesaplayici', 'label' => 'Tezgah arası kaplama (60 cm yükseklik)', 'q' => 'mutfak tezgah arası seramik kaplama m2 fiyatı malzeme ve işçilik dahil', 'unit' => 'm²', 'factor' => 0.6],
         ['path' => 'worksitem_estimators.mutfak.extras.ankastre', 'tool' => 'mutfak-maliyet-hesaplayici', 'label' => 'Ankastre set (fırın + ocak + davlumbaz)', 'q' => 'ankastre set fiyatı fırın ocak davlumbaz', 'unit' => 'set'],
 
         // Parke ve zemin

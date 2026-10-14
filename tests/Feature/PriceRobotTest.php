@@ -28,11 +28,15 @@ class PriceRobotTest extends TestCase
     private function gemini(array $prices, bool $grounded = true): array
     {
         $sources = array_map(fn ($p, $i) => ['name' => 'Satıcı '.$i, 'url' => 'https://ornek'.$i.'.com.tr/urun', 'price_tl' => $p], $prices, array_keys($prices));
+        $steps = [];
+        if ($grounded) {
+            $steps[] = ['type' => 'google_search_call', 'arguments' => ['queries' => ['test fiyatı']]];
+            $steps[] = ['type' => 'google_search_result', 'call_id' => 'x', 'result' => []];
+        }
+        $steps[] = ['type' => 'model_output', 'content' => [['type' => 'text', 'text' => "```json\n".json_encode(['sources' => $sources, 'note' => 'test'])."\n```",
+            'annotations' => [['type' => 'url_citation', 'url' => 'https://ornek0.com.tr', 'title' => 'ornek0']]]]];
 
-        return ['candidates' => [[
-            'content' => ['parts' => [['text' => "```json\n".json_encode(['sources' => $sources, 'note' => 'test'])."\n```"]]],
-            'groundingMetadata' => ['groundingChunks' => $grounded ? [['web' => ['uri' => 'https://ornek0.com.tr']]] : []],
-        ]]];
+        return ['status' => 'completed', 'steps' => $steps];
     }
 
     private function item(string $path): array
@@ -48,7 +52,7 @@ class PriceRobotTest extends TestCase
 
         $this->assertSame('live', $r['status']);
         $this->assertSame([442.0, 640.0, 989.0], array_map('floatval', $r['value']));   // orta = ortanca 640, diğerleri oranla
-        Http::assertSent(fn ($req) => str_contains($req->url(), ':generateContent') && isset($req['tools'][0]['google_search']));
+        Http::assertSent(fn ($req) => str_ends_with($req->url(), '/v1beta/interactions') && ($req['tools'][0]['type'] ?? '') === 'google_search');
 
         PriceRobotOverrides::flush();
         PriceRobotOverrides::apply();
@@ -128,10 +132,11 @@ class PriceRobotTest extends TestCase
 
     public function test_turkce_fiyat_yazimi_ve_baglantisiz_kaynak_arama_sonucundan_tamamlanir(): void
     {
-        $body = ['candidates' => [[
-            'content' => ['parts' => [['text' => 'Sonuç: {"sources":[{"name":"Koçtaş","price_tl":"12.500 TL"},{"name":"Bauhaus","url":"","price_tl":"13.000,00"},{"name":"X","price_tl":"bilinmiyor"}],"note":""}']]],
-            'groundingMetadata' => ['webSearchQueries' => ['mutfak dolabı metre fiyatı'], 'groundingChunks' => [['web' => ['uri' => 'https://a.example/1', 'title' => 'a.example']], ['web' => ['uri' => 'https://b.example/2', 'title' => 'b.example']]]],
-        ]]];
+        $body = ['steps' => [
+            ['type' => 'google_search_call', 'arguments' => ['queries' => ['mutfak dolabı metre fiyatı']]],
+            ['type' => 'model_output', 'content' => [['type' => 'text', 'text' => 'Sonuç: {"sources":[{"name":"Koçtaş","price_tl":"12.500 TL"},{"name":"Bauhaus","url":"","price_tl":"13.000,00"},{"name":"X","price_tl":"bilinmiyor"}],"note":""}',
+                'annotations' => [['type' => 'url_citation', 'url' => 'https://a.example/1', 'title' => 'a.example'], ['type' => 'url_citation', 'url' => 'https://b.example/2', 'title' => 'b.example']]]]],
+        ]];
         Http::fake(['generativelanguage.googleapis.com/*' => Http::response($body)]);
         $found = app(PriceRobot::class)->search(['q' => 'mutfak dolabı', 'unit' => 'mtül']);
         $this->assertSame([12500.0, 13000.0], array_column($found['sources'], 'price_tl'));
