@@ -33,11 +33,11 @@
                 <span class="ws-sp-cta">{{ $s->cta_label }} →</span>
             </a>
         @empty
-            <a class="ws-sp-card ws-sp-house" href="{{ route('sponsor.page') }}">
+            <a class="ws-sp-card ws-sp-house" href="{{ route('sponsor.page', ['arac' => $tool]) }}#basvuru" data-brand-cta="{{ $tool }}">
                 <span class="ws-sp-cat">Markalar için</span>
                 <strong>Markanız burada görünsün</strong>
                 <span class="ws-sp-body">Tadilat bütçesini hesaplayan, satın almaya hazır kullanıcılara tam bu anda ulaşın.</span>
-                <span class="ws-sp-cta">Sponsorluk paketleri →</span>
+                <span class="ws-sp-cta">Bu araçta yer alın →</span>
             </a>
         @endforelse
     </div>

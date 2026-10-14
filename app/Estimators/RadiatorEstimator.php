@@ -22,7 +22,7 @@ class RadiatorEstimator extends KitEstimator
             'title' => 'Petek (radyatör) maliyeti',
             'h1' => "Petek (radyatör) ihtiyacı ve maliyeti hesaplama ($y)",
             'lede' => 'Alanı ve binanın yalıtım durumunu girin; kaç metre petek gerektiği, petek, vana, montaj ve isterseniz komple tesisat ile kombi maliyeti kalem kalem hesaplansın.',
-            'seo_title' => "Petek Hesabı $y: Kaç Metre Petek Gerekir, Radyatör Maliyeti | Worksitem",
+            'seo_title' => "Petek Hesabı $y: Kaç Metre Petek Gerekir, Kaç TL? | Worksitem",
             'seo_desc' => "$y petek hesaplama: oda veya ev m²'sine göre ısı ihtiyacını, kaç metre panel radyatör gerektiğini ve petek, vana, montaj, tesisat ve kombi maliyetini ücretsiz hesaplayın.",
             'service' => 'Kalorifer / Petek',
             'wait' => 'Alanı girin ve seçimleri yapın; maliyet burada anında hesaplanır.',

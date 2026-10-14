@@ -48,7 +48,7 @@ class DrywallEstimator extends PozEstimator
                 ['Boya', 'Alçıpan üzeri derz bandı, macun ve boya YFK pozuna dahil değildir.'],
             ],
             'faq' => [
-                ['Alçıpan bölme duvar m² fiyatı ne kadar?', 'Fiyat seçilen profil ve levhaya göre resmî YFK birim fiyatından hesaplanır; sistemi seçince m² fiyatı sonuç kartında görünür.'],
+                ['Alçıpan bölme duvar m² fiyatı ne kadar?', $this->priceAnswer(now()->year.' resmî YFK birim fiyatlarıyla standart levhalı C50 bölme duvar KDV dahil m² başına yaklaşık :fiyat tutar; suya veya yangına dayanıklı levha fiyatı artırır.', 'Fiyat seçilen profil ve levhaya göre resmî YFK birim fiyatından hesaplanır; sistemi seçince m² fiyatı sonuç kartında görünür.')],
                 ['Alçıpan duvar ne kadar sürede yapılır?', 'Ustalı bir ekip günde 25–40 m² bölme duvar kurar; derz ve boya ayrıca 2–3 gün sürer.'],
                 ['Hangi levhayı seçmeliyim?', 'Kuru alanlarda standart (beyaz), banyo ve mutfakta suya dayanıklı (yeşil), yangın kaçış koridorlarında yangına dayanıklı (pembe) levha.'],
                 ['Hesaba neler dahil?', 'YFK pozunun tanımındaki malzeme ve işçilik; KDV ayrıca eklenir. Boya ve yalıtım dahil değildir.'],

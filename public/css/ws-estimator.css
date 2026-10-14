@@ -16,6 +16,10 @@
         .bt-head h1{font-size:clamp(26px,5vw,40px);line-height:1.12;letter-spacing:-.02em;font-weight:900;max-width:22ch}
         .bt-lede{margin-top:10px;font-size:16px;color:#363c46;max-width:62ch}
         .bt-lede strong{color:var(--ink)}
+        .bt-answer{margin:14px 0 0;max-width:68ch;padding:12px 14px;border-left:4px solid var(--brand,#FFB800);background:#FFF8E1;border-radius:0 10px 10px 0;font-size:15px;line-height:1.55;color:#262b33}
+        .bt-answer b{color:#101318}
+        html[data-theme="dark"] .bt-answer{background:#2A2410;color:#E6E9EE}
+        html[data-theme="dark"] .bt-answer b{color:#fff}
         .bt-facts{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;font-size:13px;color:var(--muted)}
         .bt-facts span{background:var(--white);border:1px solid var(--line);border-radius:999px;padding:5px 11px}
 

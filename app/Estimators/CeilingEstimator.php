@@ -46,7 +46,7 @@ class CeilingEstimator extends CatalogPozEstimator
                 ['Yükseklik', 'Yüksek tavanlarda iskele gerekir; YFK fiyatına dahil olmayabilir.'],
             ],
             'faq' => [
-                ['Asma tavan m² fiyatı ne kadar?', 'Seçilen sistemin resmî YFK birim fiyatı sonuç kartında görünür; KDV dahil toplam ve m² başına tutar birlikte verilir.'],
+                ['Asma tavan m² fiyatı ne kadar?', $this->priceAnswer(now()->year.' resmî YFK birim fiyatlarıyla alçıpan asma tavan KDV dahil m² başına yaklaşık :fiyat tutar; alüminyum, lamel ve taşyünü sistemlerin fiyatı sonuç kartında görünür.', 'Seçilen sistemin resmî YFK birim fiyatı sonuç kartında görünür; KDV dahil toplam ve m² başına tutar birlikte verilir.')],
                 ['60×60 tavan için kaç panel gerekir?', 'Her panel 0,36 m²\'dir; 100 m² tavan için yaklaşık 278 panel ve %5 fire ile 292 panel gerekir.'],
                 ['Asma tavan kaç günde yapılır?', 'Ustalı bir ekip günde 40–80 m² hazır panel tavan kurar.'],
                 ['Hesaba neler dahil?', 'YFK pozunun tanımındaki malzeme ve işçilik; KDV ayrıca eklenir. Aydınlatma ve iskele dahil değildir.'],

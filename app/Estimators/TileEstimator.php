@@ -36,7 +36,7 @@ class TileEstimator extends KitEstimator
             'title' => 'Seramik metraj ve maliyet',
             'h1' => "Seramik döşeme maliyeti ve metraj hesaplama ($y)",
             'lede' => 'Zemin veya duvar alanını girin, karo ebadını ve kalitesini seçin; seramik malzemesi, yapıştırıcı, derz, işçilik ve fire kalem kalem hesaplansın. Kaç kutu, kaç torba gerektiği Pro raporda.',
-            'seo_title' => "Seramik Maliyeti ve Metraj Hesaplama $y: m², Kutu, Yapıştırıcı | Worksitem",
+            'seo_title' => "Seramik Hesaplama $y: m² Maliyet, Kutu ve Yapıştırıcı | Worksitem",
             'seo_desc' => "$y seramik ve porselen döşeme fiyatı: m², karo ebadı (60×60, 60×120), fire, yapıştırıcı ve derz dahil seramik maliyetini kalem kalem, ücretsiz hesaplayın.",
             'service' => 'Seramik Döşeme',
             'wait' => 'Alanı girin ve seçimleri yapın; maliyet burada anında hesaplanır.',

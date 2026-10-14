@@ -46,7 +46,7 @@ class WaterproofingEstimator extends CatalogPozEstimator
                 ['Koruma', 'Membran üzerine koruma şapı veya kaplama yapılmazsa ömrü kısalır.'],
             ],
             'faq' => [
-                ['Su yalıtımı m² fiyatı ne kadar?', 'Seçilen sistemin resmî YFK birim fiyatı sonuç kartında görünür; KDV dahil toplam ve m² başına tutar birlikte verilir.'],
+                ['Su yalıtımı m² fiyatı ne kadar?', $this->priceAnswer(now()->year.' resmî YFK birim fiyatlarıyla çimento esaslı iki bileşenli sürme yalıtım (2 kat) KDV dahil m² başına yaklaşık :fiyat tutar; membran ve likit sistemler sonuç kartında karşılaştırılır.', 'Seçilen sistemin resmî YFK birim fiyatı sonuç kartında görünür; KDV dahil toplam ve m² başına tutar birlikte verilir.')],
                 ['Banyoda hangi su yalıtımı kullanılır?', 'Seramik altında genellikle iki bileşenli çimento esaslı sürme yalıtım, köşelerde file/bant ile uygulanır.'],
                 ['Yalıtımdan sonra test gerekir mi?', 'Islak hacim ve teraslarda 24–48 saat göllendirme (su) testi önerilir.'],
                 ['Hesaba neler dahil?', 'YFK pozunun tanımındaki malzeme ve işçilik; KDV ayrıca eklenir. Koruma şapı ve kaplama dahil değildir.'],

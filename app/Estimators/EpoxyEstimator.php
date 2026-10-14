@@ -41,7 +41,7 @@ class EpoxyEstimator extends PozEstimator
                 ['Nem', 'Betonda nem yüksekse epoksi kabarır; nem ölçümü yapılmalıdır.'],
             ],
             'faq' => [
-                ['Epoksi zemin m² fiyatı ne kadar?', 'Seçilen katmanların resmî YFK birim fiyatları sonuç kartında katman katman görünür; KDV dahil toplam ve m² tutarı birlikte verilir.'],
+                ['Epoksi zemin m² fiyatı ne kadar?', $this->priceAnswer(now()->year.' resmî YFK birim fiyatlarıyla temel epoksi kaplama KDV dahil m² başına yaklaşık :fiyat tutar; self-leveling tesviye ve UV son kat eklenince fiyat artar.', 'Seçilen katmanların resmî YFK birim fiyatları sonuç kartında katman katman görünür; KDV dahil toplam ve m² tutarı birlikte verilir.')],
                 ['Epoksi kaç günde kurur?', 'Yaya trafiğine 24–48 saat, tam kimyasal dayanıma 7 gün sonra ulaşır.'],
                 ['Konutta epoksi uygulanır mı?', 'Garaj, depo ve modern iç mekânlarda uygulanır; ıslak alanda kaymaz katkı eklenmelidir.'],
                 ['Hesaba neler dahil?', 'YFK pozlarının tanımındaki malzeme ve işçilik; KDV ayrıca eklenir.'],

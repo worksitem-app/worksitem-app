@@ -32,7 +32,7 @@ class FloorEstimator extends KitEstimator
             'title' => 'Zemin kaplama maliyeti',
             'h1' => "Zemin kaplama maliyeti hesaplama ($y)",
             'lede' => 'Laminat, SPC, seramik, mermer veya ahşap: zemin alanını ve kaplama türünü seçin, mevcut zemine göre söküm ve tesviye dahil maliyet kalem kalem hesaplansın. Kaplamaları birbiriyle karşılaştırmak için türü değiştirmeniz yeterli.',
-            'seo_title' => "Zemin Kaplama Fiyatları $y: Laminat, Seramik, Mermer m² Maliyeti | Worksitem",
+            'seo_title' => "Zemin Kaplama Fiyatları $y: Laminat, Seramik m² Maliyeti | Worksitem",
             'seo_desc' => "$y zemin kaplama fiyatı: laminat, SPC, seramik, mermer ve ahşap zemin kaplamanın m² maliyetini söküm, şap, süpürgelik ve işçilik dahil ücretsiz hesaplayın.",
             'service' => 'Zemin Kaplama',
             'wait' => 'Alanı girin ve seçimleri yapın; maliyet burada anında hesaplanır.',

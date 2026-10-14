@@ -1,12 +1,14 @@
 @php
     $year = now()->year;
     $isWc = ($variant ?? 'banyo') === 'wc';
-    $title = $isWc ? "2D / 3D WC Planlayıcı $year: Tuvaletinizi Ölçüsüyle Çizin | Worksitem"
-        : "2D / 3D Banyo Planlayıcı $year: Ölçülerinizle Banyonuzu Çizin | Worksitem";
+    $title = $isWc ? "WC Planlama $year: 2D / 3D Tuvalet Tasarımı, Ücretsiz"
+        : "Banyo Planlama $year: 2D / 3D Banyo Tasarımı, Ücretsiz";
+    $title = \App\Support\ToolSeo::title($title);
     $desc = $isWc ? 'WC veya misafir tuvaletinizin ölçülerini girin; lavabo ve klozet otomatik yerleşsin. 2D planda sürükleyin, 3D görünümde seramik ve boya deneyin, maliyetini hesaplayın. Ücretsiz.'
         : 'Banyonuzun şeklini ve ölçülerini girin; lavabo, klozet, duşakabin veya küvet otomatik yerleşsin. 2D planda sürükleyin, kapıyı taşıyın, 3D görünümde seramikleri deneyin. Ücretsiz.';
     $url = $isWc ? 'https://worksitem.com/araclar/wc-planlayici' : 'https://worksitem.com/araclar/banyo-planlayici';
     $name = $isWc ? 'WC' : 'Banyo';
+    $desc = \App\Support\ToolSeo::desc($desc);
     $jsonFlags = JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP;
     $importMap = ['imports' => ['three' => $three['module'], 'three/addons/' => $three['addons']]];
 @endphp
@@ -32,6 +34,12 @@
         'url' => $url, 'applicationCategory' => 'DesignApplication', 'operatingSystem' => 'Web', 'inLanguage' => 'tr-TR',
         'description' => $desc, 'offers' => ['@type' => 'Offer', 'price' => '0', 'priceCurrency' => 'TRY'],
         'publisher' => ['@type' => 'Organization', 'name' => 'Worksitem', 'url' => 'https://worksitem.com'],
+    ], $jsonFlags) !!}</script>
+    <script type="application/ld+json">{!! json_encode([
+        '@context' => 'https://schema.org', '@type' => 'BreadcrumbList', 'itemListElement' => [
+            ['@type' => 'ListItem', 'position' => 1, 'name' => 'Ana sayfa', 'item' => 'https://worksitem.com/'],
+            ['@type' => 'ListItem', 'position' => 2, 'name' => 'Araçlar', 'item' => 'https://worksitem.com/araclar'],
+            ['@type' => 'ListItem', 'position' => 3, 'name' => '2D / 3D '.$name.' Planlayıcı', 'item' => $url]],
     ], $jsonFlags) !!}</script>
     <script type="importmap">{!! json_encode($importMap, $jsonFlags) !!}</script>
     <style>
@@ -295,6 +303,7 @@
     </section>
 
     <div style="margin-top:18px"><x-sponsor.slot :tool="$isWc ? 'wc-planlayici' : 'banyo-planlayici'" :title="$isWc ? 'WC\'niz için markalar' : 'Banyonuz için markalar'" /></div>
+    <x-sponsor.brand-cta :tool="$isWc ? 'wc-planlayici' : 'banyo-planlayici'" />
 </main>
 
 <dialog class="pl-dlg" id="plDlg">

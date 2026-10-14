@@ -291,6 +291,22 @@ return [
                 'genel' => 'Genel',
             ],
         ],
+        'klima-btu-hesaplayici' => [
+            'label' => 'Klima BTU hesaplayıcı',
+            'categories' => [
+                'klima' => 'Klima ve iklimlendirme',
+                'montaj' => 'Montaj ve servis',
+                'genel' => 'Genel',
+            ],
+        ],
+        'duvar-rengi-gorsellestirici' => [
+            'label' => 'Duvar rengi görselleştirici',
+            'categories' => [
+                'boya' => 'İç cephe boyası',
+                'dekor' => 'Dekoratif kaplama ve duvar kâğıdı',
+                'genel' => 'Genel',
+            ],
+        ],
     ],
 
     // Aynı anda gösterilecek en fazla sponsor kartı

@@ -20,7 +20,7 @@ class RoughPlasterEstimator extends KitEstimator
             'title' => 'Kara sıva maliyeti',
             'h1' => "Kara (kaba) sıva maliyeti hesaplama ($y)",
             'lede' => 'Sıvanacak alanı ve kalınlığı girin, geleneksel ya da makine sıvası seçin; harç, işçilik, file ve iskele kalem kalem hesaplansın. Kaç torba çimento ve sıva gerektiği Pro raporda.',
-            'seo_title' => "Kaba Sıva Fiyatı $y: m² Kara Sıva Maliyeti ve Malzeme Hesabı | Worksitem",
+            'seo_title' => "Kaba Sıva Fiyatı $y: m² Maliyet ve Malzeme Hesabı | Worksitem",
             'seo_desc' => "$y kaba sıva fiyatları: iç ve dış cephe kara sıvanın m² maliyetini geleneksel veya makine sıvası, işçilik, file ve iskele dahil ücretsiz hesaplayın.",
             'service' => 'Kaba Sıva',
             'wait' => 'Alanı girin ve seçimleri yapın; maliyet burada anında hesaplanır.',

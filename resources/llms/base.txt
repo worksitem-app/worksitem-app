@@ -1,6 +1,6 @@
 # WORKSİTEM
 
-Updated: 2026-10-10
+Updated: :updated
 
 ## Amaç
 
@@ -61,6 +61,8 @@ bir proje için kalıcı fiyat cevabı yayınlanmaz.
 Güncel değer için ilgili aktif WORKSİTEM hesaplama aracı veya poz
 sayfası kullanılmalıdır.
 
+:tools
+
 ## Poz ve birim fiyatlar
 
 Poz sayfalarında mevcut kayda göre poz numarası, açıklama, birim,
@@ -93,8 +95,8 @@ birlikte değerlendirilmelidir.
 
 ## Profesyonel uygulama
 
-Ön bütçesi ve kapsamı uygun projelerde profesyonel keşif,
-mühendislik ve teklif süreci Kainta İnşaat ile yürütülebilir.
+Ön bütçesi ve kapsamı uygun projelerde yerinde keşif ve teklif
+süreci Kainta İnşaat Uzmanları ile yürütülebilir.
 
 https://kainta.com/
 

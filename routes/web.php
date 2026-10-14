@@ -281,6 +281,7 @@ Route::get('/pozlar', [PozPublicController::class, 'index'])->name('poz.index');
 Route::redirect('/poz', '/pozlar', 301);
 Route::get('/poz/{pozNo}', [PozPublicController::class, 'show'])->name('poz.show')->where('pozNo', '.+');
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
+Route::get('/llms.txt', \App\Http\Controllers\LlmsController::class)->middleware('throttle:public-read')->name('llms');
 
 Route::post('/api/seramik-gorsellestirici/render', [TileVisualizerController::class, 'render'])
     ->middleware(['ai.spend', 'ai.quota', 'throttle:ai'])->name('api.tile_visualizer.render');

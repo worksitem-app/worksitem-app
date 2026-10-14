@@ -62,7 +62,7 @@ class RoofEstimator extends PozEstimator
                 ['Detaylar', 'Baca, dere, kenar ve yağmur oluğu detayları ayrıca fiyatlandırılır.'],
             ],
             'faq' => [
-                ['Çatı m² fiyatı ne kadar?', 'Seçilen örtü, alt kaplama ve yalıtımın resmî YFK birim fiyatları sonuç kartında kalem kalem görünür; KDV dahil toplam ve m² tutarı birlikte verilir.'],
+                ['Çatı m² fiyatı ne kadar?', $this->priceAnswer(now()->year.' resmî YFK birim fiyatlarıyla alaturka kil kiremit örtü KDV dahil çatı m²\'si başına yaklaşık :fiyat tutar; alt kaplama ve yalıtım eklenince sonuç kartında kalem kalem görünür.', 'Seçilen örtü, alt kaplama ve yalıtımın resmî YFK birim fiyatları sonuç kartında kalem kalem görünür; KDV dahil toplam ve m² tutarı birlikte verilir.', ['length' => 12, 'width' => 10, 'area' => null, 'ridge' => null])],
                 ['Çatı alanı nasıl hesaplanır?', 'Saçaklar dahil yatay izdüşüm alanı eğim katsayısıyla çarpılır; %35 eğimde katsayı yaklaşık 1,06\'dır.'],
                 ['Çatı yenileme kaç gün sürer?', 'Bir apartman çatısının örtü yenilemesi hava koşullarına bağlı olarak genellikle 1–3 hafta sürer.'],
                 ['Hesaba neler dahil?', 'YFK pozlarının tanımındaki malzeme ve işçilik; KDV ayrıca eklenir. Çatı iskeleti (makas), söküm, oluk ve iskele dahil değildir.'],

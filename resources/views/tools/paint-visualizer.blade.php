@@ -5,7 +5,8 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Duvar Rengi Görselleştirici | Renkleri Fotoğrafınızda Deneyin | WORKSİTEM</title>
+    <title>Duvar Rengi Deneme: Boya Rengini Odanızın Fotoğrafında Görün</title>
+    <script type="application/ld+json">{!! json_encode(['@context' => 'https://schema.org', '@type' => 'WebApplication', 'name' => 'Duvar Rengi Görselleştirici', 'url' => 'https://worksitem.com/araclar/duvar-rengi-gorsellestirici', 'applicationCategory' => 'DesignApplication', 'operatingSystem' => 'Web', 'inLanguage' => 'tr-TR', 'offers' => ['@type' => 'Offer', 'price' => '0', 'priceCurrency' => 'TRY'], 'publisher' => ['@type' => 'Organization', 'name' => 'Worksitem', 'url' => 'https://worksitem.com']], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG) !!}</script>
     <meta name="description" content="Doğrulanmış renk kataloglarındaki renkleri inceleyin ve seçtiğiniz tonları oda veya cephe fotoğrafınız üzerinde yaklaşık olarak görselleştirin.">
     <link rel="canonical" href="https://worksitem.com/araclar/duvar-rengi-gorsellestirici">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -1093,6 +1094,7 @@ let currentBrand = 'Tüm';
         }
     </script>
     @unless(request()->boolean('embed'))
+        <div style="max-width:1180px;margin:0 auto;padding:0 20px"><x-sponsor.brand-cta tool="duvar-rengi-gorsellestirici" /></div>
         <x-site.contech-footer />
     @endunless
     <script src="/js/tool-events.js" defer></script>

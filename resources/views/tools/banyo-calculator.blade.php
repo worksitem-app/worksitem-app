@@ -481,6 +481,8 @@
         </ul>
     </section>
 
+    <x-sponsor.brand-cta tool="banyo-maliyet-hesaplayici" />
+
     <section class="bt-sec">
         <h2>İlgili hesaplayıcılar</h2>
         <div class="bt-related">

@@ -24,9 +24,24 @@ class SponsorController extends Controller
     }
 
     /** Markalar için: sponsorluk paketleri ve başvuru formu */
-    public function page(): View
+    public function page(Request $request): View
     {
-        return view('markalar-icin');
+        $slug = (string) $request->query('arac', old('tool', ''));
+        $cfg = $slug !== '' ? config("worksitem_sponsors.tools.$slug") : null;
+        $live = 0;
+        if ($cfg) {
+            try {
+                $live = Sponsor::query()->live()->where('tool_slug', $slug)->count();
+            } catch (\Throwable) {
+                $live = 0;
+            }
+        }
+
+        return view('markalar-icin', [
+            'toolSlug' => $cfg ? $slug : null,
+            'toolCfg' => $cfg ?: null,
+            'toolFree' => max(0, (int) config('worksitem_sponsors.max_cards', 3) - $live),
+        ]);
     }
 
     public function apply(Request $request): RedirectResponse
@@ -37,6 +52,7 @@ class SponsorController extends Controller
             'phone' => ['required', 'string', 'min:10', 'max:30'],
             'email' => ['required', 'email', 'max:150'],
             'interest' => ['nullable', 'string', 'max:150'],
+            'tool' => ['nullable', 'string', 'max:80'],
             'message' => ['nullable', 'string', 'max:2000'],
             'contact_consent' => ['accepted'],
         ], [
@@ -53,7 +69,7 @@ class SponsorController extends Controller
             'email' => $data['email'],
             'source' => 'sponsor_basvurusu',
             'project_type' => 'Marka sponsorluğu: '.($data['interest'] ?: 'genel'),
-            'notes' => 'Firma: '.$data['company']."\n".($data['message'] ?? ''),
+            'notes' => 'Firma: '.$data['company']."\n".(! empty($data['tool']) ? 'Araç: '.$data['tool']."\n" : '').($data['message'] ?? ''),
             'contact_consent' => true,
             'consent_at' => now(),
             'status' => 'yeni',

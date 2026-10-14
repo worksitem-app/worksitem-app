@@ -54,6 +54,33 @@ abstract class PozEstimator extends KitEstimator
         return self::$cache[$no];
     }
 
+    /**
+     * SSS ve "kısa cevap" için örnek m² fiyatı: her seçim adımının ilk seçeneği,
+     * alan 100 m². Fiyat bulunamazsa boş döner (metin uydurulmaz).
+     */
+    protected function typicalPerUnit(array $override = []): string
+    {
+        $raw = [];
+        foreach ($this->steps() as $step) {
+            if (($step['type'] ?? '') === 'cards' && ! empty($step['options'])) {
+                $raw[$step['key']] = array_key_first($step['options']);
+            }
+            foreach ($step['fields'] ?? [] as $f) {
+                $raw[$f['key']] = $f['default'] ?? 100;
+            }
+        }
+
+        return $this->exampleRange(array_merge($raw, $override), true);
+    }
+
+    /** İlk cümlesi örnek fiyat olan SSS cevabı; fiyat yoksa yedek metin. */
+    protected function priceAnswer(string $lead, string $fallback, array $override = []): string
+    {
+        $r = $this->typicalPerUnit($override);
+
+        return $r !== '' ? str_replace(':fiyat', $r, $lead) : $fallback;
+    }
+
     public static function flushCache(): void
     {
         self::$cache = [];

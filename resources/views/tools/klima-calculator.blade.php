@@ -3,9 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Akıllı Klima & BTU Hesaplayıcı | WORKSİTEM</title>
+    <title>Klima BTU Hesaplama {{ now()->year }}: Odama Kaç BTU Klima Gerekir?</title>
     <link rel="canonical" href="https://worksitem.com/araclar/klima-btu-hesaplayici">
-    <meta name="description" content="Kişi sayısı, yalıtım ve cephe durumuna göre mekanınızın ihtiyacı olan doğru klima (BTU) kapasitesini profesyonelce bulun.">
+    <meta name="description" content="Oda m²'si, kişi sayısı, yalıtım ve cephe yönüne göre kaç BTU klima gerektiğini ücretsiz hesaplayın: 9.000, 12.000, 18.000 veya 24.000 BTU seçimi.">
+    <meta property="og:title" content="Klima BTU Hesaplama: Odama Kaç BTU Klima Gerekir?">
+    <meta property="og:description" content="Oda m²'si, kişi sayısı, yalıtım ve cephe yönüne göre kaç BTU klima gerektiğini ücretsiz hesaplayın.">
+    <meta property="og:url" content="https://worksitem.com/araclar/klima-btu-hesaplayici">
+    <meta property="og:image" content="https://worksitem.com/brand/og-image.png">
+    <script type="application/ld+json">{!! json_encode(['@context' => 'https://schema.org', '@type' => 'WebApplication', 'name' => 'Klima BTU Hesaplayıcı', 'url' => 'https://worksitem.com/araclar/klima-btu-hesaplayici', 'applicationCategory' => 'UtilitiesApplication', 'operatingSystem' => 'Web', 'inLanguage' => 'tr-TR', 'offers' => ['@type' => 'Offer', 'price' => '0', 'priceCurrency' => 'TRY'], 'publisher' => ['@type' => 'Organization', 'name' => 'Worksitem', 'url' => 'https://worksitem.com']], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG) !!}</script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -190,7 +195,7 @@
             <div class="cross-sell-title">💡 Klimaları gizlemek ister misiniz?</div>
             <div class="cross-sell-text">Duvar tipi klimalar yerine, asma tavan içerisine gizlenmiş kanallı tip (VRF) sistemler mekana çok daha estetik bir görünüm katar.</div>
             <div class="cross-sell-links">
-                <a href="/araclar/alcipan-hesaplayici">🏗️ Asma Tavan Maliyetini Hesapla</a>
+                <a href="/araclar/asma-tavan-hesaplayici">🏗️ Asma Tavan Maliyetini Hesapla</a>
             </div>
         </div>
     </div>
@@ -251,6 +256,8 @@
             <button type="submit" class="btn btn-submit">Bütçeniz uygunsa Kainta İnşaat'tan net teklif alın →</button>
         </form>
     </div>
+
+    <x-sponsor.brand-cta tool="klima-btu-hesaplayici" />
 
     </div>{{-- /wc-below --}}
 </main>

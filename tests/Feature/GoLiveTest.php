@@ -48,11 +48,11 @@ class GoLiveTest extends TestCase
     public function test_only_secenegi_listede_olmayanlari_incelemeye_alir(): void
     {
         ToolStatus::syncFromConfig();
-        ToolStatus::query()->where('slug', 'cati-maliyet-hesaplayici')->update(['active' => true]);
+        ToolStatus::query()->where('slug', 'statik-proje-bedeli')->update(['active' => true]);
 
         $this->artisan('tools:publish', ['preset' => 'ilk-dalga', '--only' => true])->assertSuccessful();
 
-        $this->assertFalse((bool) ToolStatus::query()->where('slug', 'cati-maliyet-hesaplayici')->value('active'));
+        $this->assertFalse((bool) ToolStatus::query()->where('slug', 'statik-proje-bedeli')->value('active'));
         $this->assertSame(count(config('worksitem_golive.presets.ilk-dalga')), ToolStatus::query()->where('active', true)->count());
     }
 

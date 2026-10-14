@@ -1,3 +1,6 @@
+@php($toolCfg = $toolCfg ?? null)
+@php($toolSlug = $toolSlug ?? null)
+@php($toolFree = $toolFree ?? (int) config('worksitem_sponsors.max_cards', 3))
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -80,7 +83,7 @@
     </div>
 </div></section>
 
-<section class="mk"><div class="mk-in">
+<section class="mk" id="paketler"><div class="mk-in">
     <h2>Paketler</h2>
     <p class="lead">Fiyatlandırma araca, kaleme ve süreye göre belirlenir; aylık sabit ücretlidir. Başvurunuza 2 iş günü içinde teklif iletilir.</p>
     <div class="mk-grid">
@@ -98,6 +101,7 @@
 
 <section class="mk" id="basvuru"><div class="mk-in" style="padding-bottom:48px">
     <h2>Sponsorluk teklifi isteyin</h2>
+    @if ($toolCfg)<p class="lead">Seçtiğiniz araç: <strong>{{ $toolCfg['label'] }}</strong>. Bu araçta {{ $toolFree }} / {{ config('worksitem_sponsors.max_cards', 3) }} sponsor alanı boş.</p>@endif
     <p class="lead">Formu doldurun; ekibimiz yerleşim önerisi ve fiyat teklifiyle size dönsün.</p>
     @if (session('sponsor_ok'))<div class="mk-ok" role="status">Teşekkürler, başvurunuz alındı. En geç 2 iş günü içinde size dönüş yapacağız.</div>@endif
     <form class="mk-form" method="POST" action="{{ route('sponsor.apply') }}#basvuru">
@@ -108,6 +112,11 @@
         <div><label for="mkEmail">E-posta</label><input id="mkEmail" type="email" name="email" value="{{ old('email') }}" required autocomplete="email">@error('email')<div class="mk-err">{{ $message }}</div>@enderror</div>
         <div class="full"><label for="mkInterest">İlgilendiğiniz yerleşim</label>
             <select id="mkInterest" name="interest">
+                @if ($toolCfg)
+                    @foreach ($toolCfg['categories'] as $ck => $cl)
+                        <option value="{{ $toolCfg['label'] }} · {{ $cl }}" @selected(old('interest') === $toolCfg['label'].' · '.$cl)>{{ $toolCfg['label'] }} · {{ $cl }}</option>
+                    @endforeach
+                @endif
                 <option value="Banyo · seramik">Banyo · seramik ve karo</option>
                 <option value="Banyo · vitrifiye">Banyo · vitrifiye ve armatür</option>
                 <option value="Banyo · duşakabin">Banyo · duşakabin, küvet</option>
@@ -115,6 +124,7 @@
                 <option value="Kategori paketi">Kategori paketi (birden fazla araç)</option>
                 <option value="Diğer">Diğer</option>
             </select>
+            @if ($toolCfg)<input type="hidden" name="tool" value="{{ $toolSlug }}">@endif
         </div>
         <div class="full"><label for="mkMsg">Mesajınız (isteğe bağlı)</label><textarea id="mkMsg" name="message" rows="3" maxlength="2000">{{ old('message') }}</textarea></div>
         <label class="mk-check full"><input type="checkbox" name="contact_consent" value="1" required> <span><a href="/legal/kvkk-aydinlatma" target="_blank" rel="noopener">KVKK Aydınlatma Metni</a>'ni okudum; sponsorluk teklifi için benimle iletişime geçilmesini kabul ediyorum.</span></label>

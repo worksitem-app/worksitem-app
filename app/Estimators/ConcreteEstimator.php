@@ -40,7 +40,7 @@ class ConcreteEstimator extends KitEstimator
             'title' => 'Beton hesaplayıcı',
             'h1' => "Beton hesaplama: kaç m³ beton, kaç mikser? ($y)",
             'lede' => 'Eleman tipini ve ölçüleri girin; net beton hacmi, fire dahil sipariş miktarı, mikser sayısı, pompa ve yaklaşık hazır beton bütçesi kalem kalem hesaplansın. Beton fiyatları Worksitem fiyat veritabanından gelir.',
-            'seo_title' => "Beton Hesaplama $y: Kaç m³ Beton, Kaç Mikser? Hazır Beton Fiyatı | Worksitem",
+            'seo_title' => "Beton Hesaplama $y: Kaç m³ Beton, Kaç Mikser, Kaç TL? | Worksitem",
             'seo_desc' => "$y hazır beton hesaplama: döşeme, temel, kolon, kiriş ve perde için beton hacmini, fire ve mikser sayısını, C20–C35 beton ve pompa maliyetini ücretsiz hesaplayın.",
             'service' => 'Hazır Beton',
             'lead_source' => 'worksitem_beton_tedarikci_teklif',

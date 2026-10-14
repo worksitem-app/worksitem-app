@@ -1,4 +1,8 @@
 @php
+    $page['seo_title'] = \App\Support\ToolSeo::title($page['seo_title']);
+    $page['seo_desc'] = \App\Support\ToolSeo::desc($page['seo_desc']);
+    $page['faq'] = \App\Support\ToolSeo::faq($page['faq']);
+    $quick = \App\Support\ToolSeo::quickAnswer($page['faq']);
     $year = now()->year;
     $url = 'https://worksitem.com/araclar/'.$slug;
     $jsonFlags = JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP;
@@ -56,6 +60,9 @@
     <header class="bt-head">
         <h1>{{ $page['h1'] }}</h1>
         <p class="bt-lede">{{ $page['lede'] }}</p>
+        @if ($quick)
+            <p class="bt-answer"><b>Kısa cevap:</b> {{ $quick[1] }}</p>
+        @endif
         <div class="bt-facts">
             @foreach ($page['facts'] ?? [] as $f)<span>{{ $f }}</span>@endforeach
             <span>Fiyatlar: {{ $e->pricesLabel() }}</span>
@@ -214,6 +221,8 @@
         @endforeach
         <p class="bt-small">Fiyatlar: {{ $e->pricesLabel() }} · Hazırlayan: Worksitem / <a href="https://kainta.com" rel="noopener">Kainta İnşaat</a> teknik ekibi</p>
     </section>
+
+    <x-sponsor.brand-cta :tool="$slug" />
 
     <section class="bt-sec">
         <h2>İlgili hesaplayıcılar</h2>
