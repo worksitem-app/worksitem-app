@@ -76,6 +76,19 @@ class ToolPageEnhancer
             $html = preg_replace('#</head>#i', '<script type="application/ld+json">'.$ld.'</script>'."\n</head>", $html, 1);
         }
 
+        // 2b) Gezinti yolu (BreadcrumbList): arama sonucunda "worksitem.com › Araçlar › …" görünümü
+        if (! str_contains($html, '"BreadcrumbList"')) {
+            $bc = json_encode([
+                '@context' => 'https://schema.org', '@type' => 'BreadcrumbList',
+                'itemListElement' => [
+                    ['@type' => 'ListItem', 'position' => 1, 'name' => 'Worksitem', 'item' => 'https://worksitem.com/'],
+                    ['@type' => 'ListItem', 'position' => 2, 'name' => 'Araçlar', 'item' => 'https://worksitem.com/araclar'],
+                    ['@type' => 'ListItem', 'position' => 3, 'name' => $tool['title'] ?? $slug, 'item' => 'https://worksitem.com/araclar/'.$slug],
+                ],
+            ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP);
+            $html = preg_replace('#</head>#i', '<script type="application/ld+json">'.$bc.'</script>'."\n</head>", $html, 1);
+        }
+
         // 3) Markalar için bandı
         if (! str_contains($html, 'class="ws-bc"')) {
             try {

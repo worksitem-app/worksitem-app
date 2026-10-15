@@ -216,14 +216,14 @@ html[data-theme=dark] body .wks-brand img,html[data-theme=dark] body .wks-foot-l
 <div>
 <div class="eyebrow"><span class="dot" aria-hidden="true"></span> İnşaat · Tadilat · Kentsel dönüşüm</div>
 <h1>İnşaat ve tadilat <span>maliyetinizi</span> hesaplayın.</h1>
-<p class="hero-copy">Proje türünüzü, toplam alanınızı ve konumunuzu girin; yaklaşık proje bütçenizi görün. Dosyanız varsa AI ön keşifle iş kalemlerini inceleyin. Kentsel dönüşümde yeni yapının ön bütçesini değerlendirin.</p>
+<p class="hero-copy">Proje türünüzü, alanınızı ve konumunuzu girin; yaklaşık bütçenizi 2026 fiyatlarıyla ücretsiz görün.@if (config('services.ai_spend_enabled')) Dosyanız varsa yapay zekâ ön keşifle iş kalemlerini inceleyin.@endif Banyo, mutfak, boya gibi işler için 70'ten fazla araç tek yerde.</p>
 <div class="hero-actions">
 <a class="btn btn-primary" href="#proje-hesaplayici" {!! \App\Support\Ab::attr('home_hero_cta') !!}>{{ \App\Support\Ab::text('home_hero_cta') }}</a>
 <a class="btn btn-secondary" href="/araclar">Tüm Hesaplama Araçları</a>
 </div>
 <div class="trust">
 <span><b>✓</b> Dosyasız m² hesabı</span>
-<span><b>✓</b> Dosyayla AI ön keşif</span>
+@if (config('services.ai_spend_enabled'))<span><b>✓</b> Dosyayla AI ön keşif</span>@else<span><b>✓</b> Üyelik yok, ücretsiz</span>@endif
 <span><b>✓</b> Eksik kalem uyarısı</span>
 <span><b>✓</b> Proje değerlendirme talebi</span>
 </div>
@@ -449,6 +449,8 @@ Seçtiğiniz yapı türü ve toplam alana göre yaklaşık ön bütçe güvenli 
 
 </div>
 </section>
+
+<x-site.audience-band />
 
 <section class="method-strip">
 <div class="container"><div class="method-grid">

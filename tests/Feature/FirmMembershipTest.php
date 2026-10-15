@@ -59,7 +59,7 @@ class FirmMembershipTest extends TestCase
     public function test_kayit_sayfasi_ve_aractan_gelen_hizmet_secili(): void
     {
         $this->get('/firma-uyeligi?arac=banyo-maliyet-hesaplayici')->assertOk()
-            ->assertSee('Ücretsiz kaydolun')->assertSee('value="ince-insaat" checked', false)->assertSee('Firma Üyelik ve Aracılık Hizmet Sözleşmesi')
+            ->assertSee('data-ab="firm_signup_cta:', false)->assertSee('value="ince-insaat" checked', false)->assertSee('Firma Üyelik ve Aracılık Hizmet Sözleşmesi')
             ->assertSee('Banyo Tadilatı ve Dekorasyonu')->assertSee('Vergi levhası');
         $this->get('/firma-uyeligi?ref=AHMET')->assertSee('value="AHMET"', false);
         $this->get('/legal/firma-uyelik-kosullari')->assertOk()->assertSee('Eşleşme bedeli')->assertSee('ari tutmayı')->assertSee('Kurucu firma programı')

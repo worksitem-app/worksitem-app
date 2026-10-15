@@ -45,6 +45,13 @@
         .mk-form .full { grid-column:1/-1; }
         .mk-ok { background:#DCFCE7; color:#14532D; border:1px solid #86EFAC; padding:14px 16px; border-radius:12px; font-weight:700; margin-bottom:14px; }
         .mk-err { color:#B91C1C; font-size:13px; margin-top:4px; }
+        .mk-sec { font-weight:800; font-size:16px; border-top:1px solid var(--line); padding-top:14px; margin-top:4px; }
+        .mk-sec small, .mk-form label small { font-weight:500; color:var(--muted); }
+        .mk-pills { display:flex; flex-wrap:wrap; gap:6px; }
+        .mk-pills label { display:inline-flex !important; align-items:center; gap:6px; padding:7px 11px; border:1.5px solid var(--line); border-radius:999px; font-size:13px; font-weight:600; margin:0; cursor:pointer; }
+        .mk-pills input { width:auto; padding:0; }
+        .mk-pills label:has(input:checked) { border-color:var(--y); background:var(--y-50); }
+        .mk-form input[type=file] { border-style:dashed; }
         .mk-check { display:flex; gap:10px; align-items:flex-start; font-size:13px; color:var(--muted); }
         .mk-check input { width:18px; height:18px; flex:0 0 18px; }
         @media (max-width: 860px) {
@@ -63,7 +70,7 @@
             <span class="mk-chip">Markalar için</span>
             <h1>Markanızı, bütçesini hesaplayan kullanıcının karar anında gösterin.</h1>
             <p>Worksitem hesaplayıcılarını kullananlar banyosunu, mutfağını ya da evini yenilemek üzere olan kişiler. Sponsor kartınız, hesap sonucunun hemen altında ve ilgili kalemin yanında görünür.</p>
-            <a class="mk-btn" href="#basvuru">Sponsorluk teklifi isteyin →</a>
+            <a class="mk-btn" href="#basvuru">Sponsor firma kaydı (3 dk) →</a>
         </div>
         <div class="mk-mock" aria-hidden="true">
             <small><span>Banyo tadilat maliyeti</span><span>Örnek görünüm</span></small>
@@ -106,36 +113,40 @@
 </div></section>
 
 <section class="mk" id="basvuru"><div class="mk-in" style="padding-bottom:48px">
-    <h2>Sponsorluk teklifi isteyin</h2>
+    <h2>Sponsor firma kaydı</h2>
     @if ($toolCfg)<p class="lead">Seçtiğiniz araç: <strong>{{ $toolCfg['label'] }}</strong>. Bu araçta {{ $toolFree }} / {{ config('worksitem_sponsors.max_cards', 3) }} sponsor alanı boş.</p>@endif
-    <p class="lead">Formu doldurun; ekibimiz yerleşim önerisi ve fiyat teklifiyle size dönsün.</p>
-    @if (session('sponsor_ok'))<div class="mk-ok" role="status">Teşekkürler, başvurunuz alındı. En geç 2 iş günü içinde size dönüş yapacağız.</div>@endif
-    <form class="mk-form" method="POST" action="{{ route('sponsor.apply') }}#basvuru">
+    <p class="lead">3 dakikalık kayıt. Ekibimiz 2 iş günü içinde yerleşim önerisi ve fiyat teklifiyle döner. Kayıt ücretsizdir ve bağlayıcı değildir; kartınız imzalı sözleşmeden sonra yayına alınır.</p>
+    @if (session('sponsor_ok'))<div class="mk-ok" role="status">Teşekkürler, kaydınız alındı{{ is_string(session('sponsor_ok')) ? ' ('.session('sponsor_ok').')' : '' }}. En geç 2 iş günü içinde size dönüş yapacağız.</div>@endif
+    @if ($errors->any())<div class="mk-err" role="alert" style="margin-bottom:12px">{{ $errors->first() }}</div>@endif
+    <form class="mk-form" method="POST" action="{{ route('sponsor.apply') }}#basvuru" enctype="multipart/form-data">
         @csrf
-        <div><label for="mkCompany">Firma / marka</label><input id="mkCompany" name="company" value="{{ old('company') }}" required maxlength="150" autocomplete="organization">@error('company')<div class="mk-err">{{ $message }}</div>@enderror</div>
-        <div><label for="mkName">Yetkili ad soyad</label><input id="mkName" name="name" value="{{ old('name') }}" required maxlength="120" autocomplete="name">@error('name')<div class="mk-err">{{ $message }}</div>@enderror</div>
-        <div><label for="mkPhone">Telefon</label><input id="mkPhone" name="phone" value="{{ old('phone') }}" required inputmode="tel" autocomplete="tel">@error('phone')<div class="mk-err">{{ $message }}</div>@enderror</div>
-        <div><label for="mkEmail">E-posta</label><input id="mkEmail" type="email" name="email" value="{{ old('email') }}" required autocomplete="email">@error('email')<div class="mk-err">{{ $message }}</div>@enderror</div>
-        <div class="full"><label for="mkInterest">İlgilendiğiniz yerleşim</label>
-            <select id="mkInterest" name="interest">
-                @if ($toolCfg)
-                    @foreach ($toolCfg['categories'] as $ck => $cl)
-                        <option value="{{ $toolCfg['label'] }} · {{ $cl }}" @selected(old('interest') === $toolCfg['label'].' · '.$cl)>{{ $toolCfg['label'] }} · {{ $cl }}</option>
-                    @endforeach
-                @endif
-                <option value="Banyo · seramik">Banyo · seramik ve karo</option>
-                <option value="Banyo · vitrifiye">Banyo · vitrifiye ve armatür</option>
-                <option value="Banyo · duşakabin">Banyo · duşakabin, küvet</option>
-                <option value="Banyo · yapı kimyasalları">Banyo · su yalıtımı ve yapı kimyasalları</option>
-                <option value="Kategori paketi">Kategori paketi (birden fazla araç)</option>
-                <option value="Diğer">Diğer</option>
-            </select>
-            @if ($toolCfg)<input type="hidden" name="tool" value="{{ $toolSlug }}">@endif
-        </div>
-        <div class="full"><label for="mkMsg">Mesajınız (isteğe bağlı)</label><textarea id="mkMsg" name="message" rows="3" maxlength="2000">{{ old('message') }}</textarea></div>
+        <input type="text" name="website_url" value="" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px" aria-hidden="true">
+        @if ($toolCfg)<input type="hidden" name="tool" value="{{ $toolSlug }}">@endif
+        <div class="full mk-sec">1. Marka ve iletişim</div>
+        <div><label for="mkCompany">Firma / marka *</label><input id="mkCompany" name="company" value="{{ old('company') }}" required maxlength="150" autocomplete="organization">@error('company')<div class="mk-err">{{ $message }}</div>@enderror</div>
+        <div><label for="mkWeb">Web sitesi</label><input id="mkWeb" type="url" name="website" value="{{ old('website') }}" maxlength="200" placeholder="https://">@error('website')<div class="mk-err">{{ $message }}</div>@enderror</div>
+        <div><label for="mkName">Yetkili ad soyad *</label><input id="mkName" name="name" value="{{ old('name') }}" required maxlength="120" autocomplete="name">@error('name')<div class="mk-err">{{ $message }}</div>@enderror</div>
+        <div><label for="mkTitle">Görevi</label><input id="mkTitle" name="contact_title" value="{{ old('contact_title') }}" maxlength="100" placeholder="ör. Pazarlama Müdürü"></div>
+        <div><label for="mkPhone">Telefon *</label><input id="mkPhone" name="phone" value="{{ old('phone') }}" required inputmode="tel" autocomplete="tel">@error('phone')<div class="mk-err">{{ $message }}</div>@enderror</div>
+        <div><label for="mkEmail">E-posta *</label><input id="mkEmail" type="email" name="email" value="{{ old('email') }}" required autocomplete="email">@error('email')<div class="mk-err">{{ $message }}</div>@enderror</div>
+
+        <div class="full mk-sec">2. Nerede görünmek istersiniz?</div>
+        <div class="full"><label>Ürün grupları</label>
+            <div class="mk-pills">@foreach (\App\Models\SponsorApplication::categoryOptions() as $k => $l)<label><input type="checkbox" name="categories[]" value="{{ $k }}" @checked(in_array($k, old('categories', []), true))> {{ $l }}</label>@endforeach</div></div>
+        <div class="full"><label>Araçlar <small>(boş bırakırsanız ürün grubunuza uygun araçları biz öneririz)</small></label>
+            <div class="mk-pills">@foreach (\App\Models\SponsorApplication::toolOptions() as $k => $l)<label><input type="checkbox" name="tools[]" value="{{ $k }}" @checked(in_array($k, old('tools', $toolSlug ? [$toolSlug] : []), true))> {{ $l }}</label>@endforeach</div></div>
+        <div><label for="mkBudget">Aylık bütçe</label><select id="mkBudget" name="budget"><option value="">Seçin</option>@foreach (\App\Models\SponsorApplication::BUDGETS as $k => $l)<option value="{{ $k }}" @selected(old('budget') === $k)>{{ $l }}</option>@endforeach</select></div>
+        <div><label for="mkStart">Ne zaman başlamak istersiniz?</label><select id="mkStart" name="start"><option value="">Seçin</option>@foreach (\App\Models\SponsorApplication::STARTS as $k => $l)<option value="{{ $k }}" @selected(old('start') === $k)>{{ $l }}</option>@endforeach</select></div>
+
+        <div class="full mk-sec">3. İsteğe bağlı: fatura ve logo <small>(teklif aşamasında boş bırakabilirsiniz)</small></div>
+        <div><label for="mkLegal">Unvan</label><input id="mkLegal" name="legal_name" value="{{ old('legal_name') }}" maxlength="200"></div>
+        <div><label for="mkTax">Vergi no</label><input id="mkTax" name="tax_no" value="{{ old('tax_no') }}" inputmode="numeric" maxlength="11">@error('tax_no')<div class="mk-err">{{ $message }}</div>@enderror</div>
+        <div><label for="mkTaxOffice">Vergi dairesi</label><input id="mkTaxOffice" name="tax_office" value="{{ old('tax_office') }}" maxlength="80"></div>
+        <div><label for="mkLogo">Logo (PNG, SVG; en çok 2 MB)</label><input id="mkLogo" type="file" name="logo" accept=".png,.jpg,.jpeg,.svg,.webp">@error('logo')<div class="mk-err">{{ $message }}</div>@enderror</div>
+        <div class="full"><label for="mkMsg">Mesajınız</label><textarea id="mkMsg" name="message" rows="3" maxlength="2000" placeholder="Kampanya dönemi, öne çıkarmak istediğiniz koleksiyon…">{{ old('message') }}</textarea></div>
         <label class="mk-check full"><input type="checkbox" name="contact_consent" value="1" required> <span><a href="/legal/kvkk-aydinlatma" target="_blank" rel="noopener">KVKK Aydınlatma Metni</a>'ni okudum; sponsorluk teklifi için benimle iletişime geçilmesini kabul ediyorum.</span></label>
         @error('contact_consent')<div class="mk-err full">{{ $message }}</div>@enderror
-        <div class="full"><button class="mk-btn" type="submit">Teklif iste</button></div>
+        <div class="full"><button class="mk-btn" type="submit">Sponsor kaydımı gönder →</button></div>
     </form>
 </div></section>
 

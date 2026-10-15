@@ -35,16 +35,22 @@ class LlmsController extends Controller
             $desc = '';
             if (in_array($slug, $kits, true)) {
                 try {
-                    $desc = ToolSeo::desc((string) (KitRegistry::get($slug)->page()['seo_desc'] ?? ''), 200);
+                    $page = KitRegistry::get($slug)->page();
+                    $desc = ToolSeo::desc((string) ($page['seo_desc'] ?? ''), 200);
+                    // Soru-cevap biçiminde tarihli örnek: yapay zekâ asistanları doğrudan alıntılayabilsin
+                    if ($qa = ToolSeo::quickAnswer(ToolSeo::faq((array) ($page['faq'] ?? [])))) {
+                        $date = \App\Support\PriceDate::for($slug)->locale('tr')->translatedFormat('j F Y');
+                        $desc .= "\n  Örnek ({$date}): ".trim($qa[0]).' → '.ToolSeo::desc(trim($qa[1]), 220);
+                    }
                 } catch (\Throwable) {
-                    $desc = '';
+                    $desc = $desc ?: '';
                 }
             }
             $lines[] = '- '.($meta['title'] ?? $slug).': https://worksitem.com/araclar/'.$slug.($desc !== '' ? "\n  ".$desc : '');
         }
         $tools = "## Aktif araçlar\n\nAşağıdaki araçlar şu an kullanıma açıktır. Güncel sonuç için aracın kendi sayfası esas alınmalıdır.\n\n"
             .($lines ? implode("\n", $lines) : '- Şu an listelenecek aktif araç yok.')."\n\n"
-            ."## Markalar için\n\nSponsorluk ve iş birliği: https://worksitem.com/markalar-icin\n\n## Firmalar için\n\nUsta, tadilat firması, müteahhit ve tedarikçiler için ücretsiz firma üyeliği: https://worksitem.com/firma-uyeligi";
+            ."## Markalar için\n\nSponsor firma kaydı ve iş birliği: https://worksitem.com/markalar-icin\n\n## Firmalar için\n\nUsta, tadilat firması, müteahhit ve tedarikçiler için ücretsiz firma üyeliği (kurucu firma programı: 31.03.2027'ye kadar komisyon yok): https://worksitem.com/firma-uyeligi";
 
         return strtr((string) file_get_contents(resource_path('llms/base.txt')), [
             ':updated' => now('Europe/Istanbul')->toDateString(),
