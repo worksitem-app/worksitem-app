@@ -69,7 +69,7 @@ $csrfToken = csrf_token();
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Tadilat Maliyeti Hesapla 2026: m², Şehir ve Kaliteye Göre | WORKSİTEM</title>
+<title>Tadilat Maliyeti Hesapla 2026: m² ve Kaliteye Göre | Worksitem</title>
 <meta name="description" content="İnşaat veya tadilat projenizin yaklaşık bütçesini proje tipi, konum, alan ve kalite seviyesine göre hesaplayın. Yaklaşık 1 dakikada ön bütçenizi görün.">
 <meta name="robots" content="index,follow,max-image-preview:large">
 <link rel="canonical" href="https://worksitem.com/maliyet-hesapla">

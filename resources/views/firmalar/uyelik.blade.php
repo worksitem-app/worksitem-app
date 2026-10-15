@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Ücretsiz Firma Üyeliği: Usta, Müteahhit ve Tedarikçiler | WORKSİTEM</title>
-    <meta name="description" content="Usta, tadilat firması, müteahhit, mimar ve yapı malzemesi tedarikçileri için ücretsiz Worksitem firma üyeliği. Maliyetini hesaplayan, işi yaptırmaya hazır kullanıcılara ulaşın.">
+    <title>Usta ve Firmalara İş: Ücretsiz Firma Kaydı | Worksitem</title>
+    <meta name="description" content="Bölgenizde maliyetini hesaplamış müşteriler firma arıyor. Ücretsiz kayıt, ücretsiz teklif; kurucu firma programında 31.03.2027'ye kadar komisyon yok.">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="{{ url('/firma-uyeligi') }}">
     @include('firmalar._style')
@@ -18,7 +18,7 @@
         <span class="fm-chip">Firmalar için · ücretsiz</span>
         <h1>Maliyetini hesaplayan müşteri, işi yapacak firmayı arıyor. O firma siz olun.</h1>
         <p>Worksitem'de her gün banyo, mutfak, boya, seramik ve inşaat maliyeti hesaplanıyor. Firmanızı ücretsiz kaydedin; bölgenizdeki ve iş kolunuzdaki teklif talepleri size SMS ile gelsin.@if (\App\Services\Market\Marketplace::isFree()) Kurucu firma programında {{ \App\Services\Market\Marketplace::freeUntil()->format('d.m.Y') }} tarihine kadar komisyon yok.@else Yalnızca kazandığınız iş için ödeme yaparsınız.@endif</p>
-        <a class="fm-btn" href="#kayit">Ücretsiz kaydolun →</a>
+        <a class="fm-btn" href="#kayit" {!! \App\Support\Ab::attr('firm_signup_cta') !!}>{{ \App\Support\Ab::text('firm_signup_cta') }}</a>
         @if ($directory)<a class="fm-btn o" style="color:#fff;margin-left:8px" href="{{ route('firms.index') }}">Firma rehberi</a>@endif
     </div>
 </header>
@@ -97,7 +97,11 @@
                 @php($on = in_array($k, old('trades', $preTrades), true))
                 <details class="fm-trade" @if ($on) open @endif>
                     <summary><label><input type="checkbox" name="trades[]" value="{{ $k }}" @checked($on)> {{ $t['label'] }}</label> <small>{{ count($t['services']) }} hizmet</small></summary>
+                    @if ($on)
                     <div class="fm-subs">@foreach ($t['services'] as $sv)<label><input type="checkbox" name="subservices[]" value="{{ $sv }}" @checked(in_array($sv, old('subservices', []), true))> {{ $sv }}</label>@endforeach</div>
+                    @else
+                    <div class="fm-subs"></div><template>@foreach ($t['services'] as $sv)<label><input type="checkbox" name="subservices[]" value="{{ $sv }}"> {{ $sv }}</label>@endforeach</template>
+                    @endif
                 </details>
             @endforeach
             @error('trades')<div class="fm-err">{{ $message }}</div>@enderror
@@ -161,8 +165,18 @@
         i.addEventListener('change', function () { var d = i.closest('details'); if (i.checked) d.open = true; else d.querySelectorAll('.fm-subs input').forEach(function (x) { x.checked = false; }); capTrades(); });
         i.addEventListener('click', function (e) { e.stopPropagation(); });
     });
-    document.querySelectorAll('.fm-subs input').forEach(function (x) {
-        x.addEventListener('change', function () { if (x.checked) { var t = x.closest('details').querySelector('input[name="trades[]"]'); if (!t.checked && !t.disabled) { t.checked = true; capTrades(); } } });
+    // Alt hizmetler (1.300+ kutu) ancak iş kolu açılınca sayfaya eklenir: mobilde hızlı açılış
+    document.querySelectorAll('details.fm-trade').forEach(function (d) {
+        d.addEventListener('toggle', function () {
+            var box = d.querySelector('.fm-subs'), tpl = d.querySelector('template');
+            if (d.open && tpl && !box.children.length) { box.appendChild(tpl.content.cloneNode(true)); }
+        });
+    });
+    document.addEventListener('change', function (e) {
+        var x = e.target;
+        if (!x.matches || !x.matches('.fm-subs input') || !x.checked) return;
+        var t = x.closest('details').querySelector('input[name="trades[]"]');
+        if (!t.checked && !t.disabled) { t.checked = true; capTrades(); }
     });
     capTrades();
     document.querySelectorAll('.fm-cities').forEach(function (box) {
@@ -174,6 +188,7 @@
     });
 })();
 </script>
+<x-site.ab-script />
 <x-site.contech-footer />
 </body>
 </html>

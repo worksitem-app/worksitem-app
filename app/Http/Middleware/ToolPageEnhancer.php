@@ -47,10 +47,18 @@ class ToolPageEnhancer
                 $html = preg_replace('#(<meta\s+property=["\']og:title["\']\s+content=["\'])[^"\']*#i', '${1}'.e($new), $html, 1);
             }
         }
+        // Hesap motoru araçlarında açıklama, güncel örnek fiyatla otomatik yazılır (yalnız config'te elle açıklama yoksa)
+        if (empty($seo['desc']) && in_array($slug, \App\Estimators\KitRegistry::slugs(), true)) {
+            try {
+                $seo['desc'] = ToolSeo::priceSnippet((array) (\App\Estimators\KitRegistry::get($slug)->page()['faq'] ?? [])) ?? '';
+            } catch (\Throwable) {
+            }
+        }
         if (! empty($seo['desc'])) {
             $desc = e(ToolSeo::desc(str_replace(':yil', $year, $seo['desc'])));
             if (preg_match('#<meta\s+name=["\']description["\'][^>]*>#i', $html)) {
                 $html = preg_replace('#(<meta\s+name=["\']description["\']\s+content=["\'])[^"\']*#i', '${1}'.$desc, $html, 1);
+                $html = preg_replace('#(<meta\s+property=["\']og:description["\']\s+content=["\'])[^"\']*#i', '${1}'.$desc, $html, 1);
             } else {
                 $html = preg_replace('#</head>#i', '<meta name="description" content="'.$desc.'">'."\n</head>", $html, 1);
             }

@@ -172,6 +172,7 @@ class FirmController extends Controller
         }
 
         $request->session()->put('firm_onboard', ['id' => $firm->id, 'until' => now()->addHours(2)->timestamp]);
+        \App\Support\Ab::convert('firm_signup_cta');
 
         return redirect()->route('market.panel.info')->with('firm_new', $firm->public_id);
     }

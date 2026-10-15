@@ -100,6 +100,9 @@ Route::controller(\App\Http\Controllers\FirmController::class)->group(function (
 });
 Route::view('/legal/firma-uyelik-kosullari', 'legal.firma-uyelik-kosullari')->name('legal.firma_uyelik');
 Route::view('/legal/teklif-alma-kosullari', 'legal.teklif-alma-kosullari')->name('legal.teklif_alma');
+Route::post('/ab', [\App\Http\Controllers\AbController::class, 'store'])
+    ->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class, \Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class])
+    ->middleware('throttle:public-write')->name('ab.track');
 
 // Teklif pazaryeri: kullanıcı talebi ve teklifleri (bağlantıdaki gizli anahtarla), firma paneli (SMS ile giriş)
 Route::controller(\App\Http\Controllers\Market\RequestController::class)->group(function () {

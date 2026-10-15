@@ -26,7 +26,17 @@ class BrandShell
         }
 
         $html = $response->getContent();
-        if (! is_string($html) || stripos($html, '</head>') === false || str_contains($html, '/css/ws-brand.css')) {
+        if (! is_string($html) || stripos($html, '</head>') === false) {
+            return $response;
+        }
+        // Mobil hız: Google Fonts kullanan sayfada bağlantıyı erkenden aç (preconnect yoksa <head> başına)
+        if (str_contains($html, 'fonts.googleapis.com/css') && ! str_contains($html, 'preconnect" href="https://fonts.gstatic.com')
+            && preg_match('#<head[^>]*>#i', $html, $hm, PREG_OFFSET_CAPTURE)) {
+            $at = $hm[0][1] + strlen($hm[0][0]);
+            $html = substr($html, 0, $at).'<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'.substr($html, $at);
+            $response->setContent($html);
+        }
+        if (str_contains($html, '/css/ws-brand.css')) {
             return $response;
         }
 

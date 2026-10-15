@@ -29,4 +29,19 @@ class HowItWorksTest extends TestCase
         $this->get('/markalar-icin')->assertOk()->assertSee('Ürününüz, malzeme seçilmeden hemen önce görünsün.');
         $this->get('/firma-paneli/giris')->assertOk()->assertSee('Hazırlıklı müşteri');
     }
+
+    public function test_arama_sonucu_aciklamalari(): void
+    {
+        $h = $this->get('/araclar/boya-hesaplayici')->getContent();
+        preg_match('#<meta\s+name="description"\s+content="([^"]*)#', $h, $m);
+        $d = html_entity_decode($m[1], ENT_QUOTES);
+        $this->assertStringStartsWith('100 m² ev boyası kaç TL? '.now()->year.' fiyatlarıyla yaklaşık', $d);
+        $this->assertLessThanOrEqual(158, mb_strlen($d));
+        $this->assertStringContainsString('ücretsiz hesaplayın', $d);
+
+        // Kısmi kapsamlı / birim uymayan örnek fiyat otomatik yazılmaz; elle yazılan açıklama kullanılır
+        $h = $this->get('/araclar/pvc-dograma-hesaplayici')->getContent();
+        $this->assertStringContainsString('PVC pencere kaç TL?', html_entity_decode($h, ENT_QUOTES));
+        $this->assertStringContainsString('<title>Usta ve Firmalara İş: Ücretsiz Firma Kaydı | Worksitem</title>', $this->get('/firma-uyeligi')->getContent());
+    }
 }

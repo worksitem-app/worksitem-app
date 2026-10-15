@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>İnşaat ve Tadilat Maliyeti Hesaplama 2026 – Ücretsiz | WORKSİTEM</title>
-<meta name="description" content="İnşaat ve tadilat maliyetinizi m² üzerinden hesaplayın. Kentsel dönüşüm için yeni yapı ön bütçesini görün; PDF, görsel veya CSV ile AI ön keşif yapın.">
+<title>Tadilat ve İnşaat Maliyeti Hesapla 2026: Ücretsiz | Worksitem</title>
+<meta name="description" content="Banyo, mutfak, boya veya bina: maliyetini 2026 fiyatlarıyla ücretsiz hesapla, kalem kalem PDF al, uzmandan teklif iste. 70'ten fazla araç, üyelik yok.">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
 <link rel="canonical" href="https://worksitem.com/">
 <meta property="og:type" content="website">
@@ -218,7 +218,7 @@ html[data-theme=dark] body .wks-brand img,html[data-theme=dark] body .wks-foot-l
 <h1>İnşaat ve tadilat <span>maliyetinizi</span> hesaplayın.</h1>
 <p class="hero-copy">Proje türünüzü, toplam alanınızı ve konumunuzu girin; yaklaşık proje bütçenizi görün. Dosyanız varsa AI ön keşifle iş kalemlerini inceleyin. Kentsel dönüşümde yeni yapının ön bütçesini değerlendirin.</p>
 <div class="hero-actions">
-<a class="btn btn-primary" href="#proje-hesaplayici">Ön Bütçemi Hesapla →</a>
+<a class="btn btn-primary" href="#proje-hesaplayici" {!! \App\Support\Ab::attr('home_hero_cta') !!}>{{ \App\Support\Ab::text('home_hero_cta') }}</a>
 <a class="btn btn-secondary" href="/araclar">Tüm Hesaplama Araçları</a>
 </div>
 <div class="trust">
@@ -509,6 +509,7 @@ Seçtiğiniz yapı türü ve toplam alana göre yaklaşık ön bütçe güvenli 
 </section>
 
 <x-site.why audience="all" />
+<x-site.ab-script />
 
 <section class="block" id="sss">
 <div class="container">

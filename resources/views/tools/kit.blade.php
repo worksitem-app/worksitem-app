@@ -196,7 +196,8 @@
                 <div class="form-group"><label for="ld_loc">Şehir / ilçe</label><input type="text" id="ld_loc" name="location" value="{{ old('location') }}" class="form-control" required placeholder="Örn: İzmir, Karşıyaka"></div>
                 <div class="form-group"><label for="ld_notes">Notunuz (isteğe bağlı)</label><textarea id="ld_notes" name="notes" class="form-control" rows="3">{{ old('notes') }}</textarea></div>
                 <x-lead-consent-fields />
-                <button type="submit" class="btn-submit">Teklif talebini gönder</button>
+                <button type="submit" class="btn-submit" {!! \App\Support\Ab::attr('tool_lead_submit') !!}>{{ \App\Support\Ab::text('tool_lead_submit') }}</button>
+                <x-site.ab-script />
             </form>
         </div>
     </div>

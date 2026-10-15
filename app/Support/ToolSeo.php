@@ -54,4 +54,38 @@ class ToolSeo
 
         return null;
     }
+
+    /**
+     * Arama sonucu açıklaması (yüksek tıklama oranı için): "Soru? Yaklaşık fiyat. Ücretsiz hesapla."
+     * Fiyat, aracın "Kısa cevap"ından gelir (fiyat robotu güncelledikçe kendiliğinden değişir). Fiyat bulunamazsa null.
+     */
+    public static function priceSnippet(array $faq, string $tail = 'Kendi ölçünüzle ücretsiz hesaplayın, dökümü PDF alın.'): ?string
+    {
+        $qa = self::quickAnswer(self::faq($faq));
+        if (! $qa || ! preg_match('/(kaç TL|fiyat|ne kadar|maliyet)/iu', $qa[0])) {
+            return null;
+        }
+        if (! preg_match('/((?:m²|m³|metre) başına\s+)?yaklaşık\s+[\d.,]+(?:\s*[–-]\s*[\d.,]+)?\s*(?:bin\s*)?TL(?:\s*\/\s*m²)?/u', $qa[1], $m, PREG_OFFSET_CAPTURE)) {
+            return null;
+        }
+        // Yanıltmasın: kısmi kapsam ("yalnız işçilik"), iki uçlu ifade ("X TL ile Y TL") veya birim uyuşmazlığı varsa otomatik yazılmaz
+        $before = mb_substr(substr($qa[1], 0, $m[0][1]), -40);
+        $after = substr($qa[1], $m[0][1] + strlen($m[0][0]), 12);
+        $unitQ = (bool) preg_match('/m²\s*fiyat|^1 m²/u', $qa[0]);   // birim fiyat soruluyor
+        $unitP = (bool) preg_match('/m²/u', $m[0][0]);
+        if (str_contains(mb_strtolower($before), 'yalnız') || preg_match('/^\s*(\(|ile)/u', $after) || ($unitQ && ! $unitP)) {
+            return null;
+        }
+        $m[0] = $m[0][0];
+        $year = (string) now()->year;
+        $price = trim($m[0]);
+        $q = rtrim(trim($qa[0]), '?').'?';
+        foreach ([$q.' '.$year.' fiyatlarıyla '.$price.'. '.$tail, $q.' '.$year.' fiyatlarıyla '.$price.'. Ücretsiz hesaplayın.', $q.' '.$year.': '.$price.'.'] as $d) {
+            if (mb_strlen($d) <= 155) {
+                return $d;
+            }
+        }
+
+        return null;
+    }
 }

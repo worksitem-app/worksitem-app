@@ -6,8 +6,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Markalar İçin Sponsorluk | Tadilat Bütçesi Hesaplayan Kullanıcılara Ulaşın | WORKSİTEM</title>
-    <meta name="description" content="Seramik, vitrifiye, yapı kimyasalları ve inşaat malzemesi markaları için Worksitem hesaplayıcılarında sponsorluk: bütçe hesaplayan, satın almaya hazır kullanıcılara sonuç ekranında ulaşın.">
+    <title>Markalar İçin: Karar Anında Görünün | Worksitem Sponsorluk</title>
+    <meta name="description" content="Ürününüz, kullanıcı malzeme seçmeden hemen önce görünsün: banyo, mutfak ve seramik hesaplayıcılarında kalem bazlı sponsorluk, aylık tıklama raporu.">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="{{ url('/markalar-icin') }}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
