@@ -6,6 +6,9 @@ Allow: /
 Disallow: /admin/
 Disallow: /api/internal/
 Disallow: /filament/
+Disallow: /firma-paneli/
+Disallow: /teklif/
+Disallow: /odeme/
 Disallow: /*?*utm_
 Disallow: /*?*fbclid
 Disallow: /*?*gclid
@@ -21,6 +24,9 @@ User-agent: Googlebot
 Allow: /
 Disallow: /admin/
 Disallow: /api/internal/
+Disallow: /firma-paneli/
+Disallow: /teklif/
+Disallow: /odeme/
 
 # Bing
 User-agent: Bingbot
