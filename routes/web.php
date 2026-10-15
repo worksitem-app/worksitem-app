@@ -113,6 +113,12 @@ Route::controller(\App\Http\Controllers\Market\RequestController::class)->group(
     Route::post('/teklif/{job}/kabul/{offer}', 'accept')->middleware('throttle:public-write')->name('market.request.accept');
     Route::post('/teklif/{job}/kapat', 'close')->middleware('throttle:public-write')->name('market.request.close');
 });
+// Uygulama (PWA + Google Play TWA) ve firma paneli web bildirimleri
+Route::get('/cevrimdisi', [\App\Http\Controllers\AppController::class, 'offline'])->name('app.offline');
+Route::get('/.well-known/assetlinks.json', [\App\Http\Controllers\AppController::class, 'assetlinks'])->name('app.assetlinks');
+Route::post('/firma-paneli/bildirim/abone', [\App\Http\Controllers\AppController::class, 'subscribe'])->middleware('throttle:public-write')->name('app.push.subscribe');
+Route::post('/firma-paneli/bildirim/iptal', [\App\Http\Controllers\AppController::class, 'unsubscribe'])->middleware('throttle:public-write')->name('app.push.unsubscribe');
+Route::get('/firma-paneli/bildirim', [\App\Http\Controllers\AppController::class, 'message'])->middleware('throttle:public-read')->name('app.push.message');
 Route::prefix('firma-paneli')->controller(\App\Http\Controllers\Market\FirmPanelController::class)->group(function () {
     Route::get('/giris', 'login')->name('market.panel.login');
     Route::post('/giris/kod', 'sendCode')->middleware('throttle:public-write')->name('market.panel.code');

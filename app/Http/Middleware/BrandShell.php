@@ -36,6 +36,11 @@ class BrandShell
             $html = substr($html, 0, $at).'<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'.substr($html, $at);
             $response->setContent($html);
         }
+        // Uygulama (PWA): manifest, ana ekran simgesi ve servis çalışanı her sayfada
+        if (! str_contains($html, '/sw.js')) {
+            $html = self::injectApp($html);
+            $response->setContent($html);
+        }
         if (str_contains($html, '/css/ws-brand.css')) {
             return $response;
         }
@@ -52,5 +57,26 @@ class BrandShell
         $response->setContent(substr($html, 0, $pos).$tags."\n".substr($html, $pos));
 
         return $response;
+    }
+
+    public static function injectApp(string $html): string
+    {
+        $tags = '';
+        if (! preg_match('/rel=["\']manifest["\']/i', $html)) {
+            $tags .= '<link rel="manifest" href="/site.webmanifest">';
+        }
+        if (! str_contains($html, 'name="theme-color"')) {
+            $tags .= '<meta name="theme-color" content="#ffffff">';
+        }
+        if (! str_contains($html, 'apple-touch-icon')) {
+            $tags .= '<link rel="apple-touch-icon" href="/apple-touch-icon.png">';
+        }
+        if (! str_contains($html, 'apple-mobile-web-app-title')) {
+            $tags .= '<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Worksitem">';
+        }
+        $tags .= '<script>if("serviceWorker"in navigator){addEventListener("load",function(){navigator.serviceWorker.register("/sw.js").catch(function(){})})}</script>';
+        $pos = stripos($html, '</head>');
+
+        return $pos === false ? $html : substr($html, 0, $pos).$tags."\n".substr($html, $pos);
     }
 }

@@ -42,3 +42,15 @@ Options -Indexes
     ExpiresByType image/svg+xml "access plus 30 days"
     ExpiresByType font/woff2 "access plus 1 year"
 </IfModule>
+# Uygulama (PWA): servis çalışanı ve manifest her zaman güncel istenir
+<FilesMatch "^(sw\.js|site\.webmanifest)$">
+    <IfModule mod_expires.c>
+        ExpiresActive Off
+    </IfModule>
+    <IfModule mod_headers.c>
+        Header set Cache-Control "no-cache"
+    </IfModule>
+</FilesMatch>
+<IfModule mod_mime.c>
+    AddType application/manifest+json .webmanifest
+</IfModule>

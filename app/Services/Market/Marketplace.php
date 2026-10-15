@@ -81,6 +81,7 @@ class Marketplace
             JobInvite::query()->create(['job_request_id' => $job->id, 'firm_id' => $f->id]);
             $f->forceFill(['last_invited_at' => now()])->save();
             $url = route('market.panel.job', $job);
+            $this->push($f, 'Yeni iş: '.$job->tradeLabel(), $job->location().($job->range() ? ' · yaklaşık '.$job->range() : '').'. Teklif vermek için dokunun.', $url);
             $this->sms($f->phone, "Worksitem: {$job->location()} bölgesinde yeni iş: {$job->tradeLabel()}".($job->range() ? ', yaklaşık '.$job->range() : '').". Teklif vermek için: $url");
             $this->mail($f->email, 'Yeni iş: '.$job->title.' · '.$job->location(),
                 "Merhaba {$f->contact_name},\n\nBölgenizde yeni bir iş talebi var.\n\nİş: {$job->title}\nİş kolu: {$job->tradeLabel()}\nYer: {$job->location()}\n"
@@ -133,6 +134,7 @@ class Marketplace
         $offer->refresh();
         $url = route('market.panel.job', $job);
         $h = (int) config('worksitem_market.fee_hours', 48);
+        $this->push($f, 'Teklifiniz kabul edildi', "{$job->title} · $h saat içinde panelden tamamlayın; müşteri bilgileri açılsın.", $url);
         if ((float) $offer->fee_net <= 0) {
             $this->sms($f->phone, "Worksitem: Müşteri {$job->public_id} işinde teklifinizi KABUL ETTİ. $h saat içinde panelden eşleşmeyi onaylayın (kurucu firma programı: ücretsiz), müşteri iletişim bilgileri açılsın: $url");
             $this->mail($f->email, 'Teklifiniz kabul edildi · '.$job->title,
@@ -221,6 +223,15 @@ class Marketplace
         $n['requests_expired'] = JobRequest::query()->where('status', 'open')->where('expires_at', '<', now())->update(['status' => 'expired']);
 
         return $n;
+    }
+
+    private function push(\App\Models\Firm $firm, string $title, string $body, string $url): void
+    {
+        try {
+            app(\App\Services\Push\WebPush::class)->toFirm($firm, $title, $body, $url);
+        } catch (\Throwable $e) {
+            Log::warning('Pazaryeri web bildirimi gönderilemedi', ['error' => $e->getMessage()]);
+        }
     }
 
     private function sms(?string $phone, string $msg): void

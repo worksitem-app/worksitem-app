@@ -16,7 +16,7 @@ class LlmsController extends Controller
 {
     public function __invoke(): Response
     {
-        $body = Cache::remember('llms-txt:'.md5(json_encode(config('worksitem_tools.tool_status'))), 3600, fn () => $this->build());
+        $body = Cache::remember('llms-txt:'.md5(json_encode(config('worksitem_tools.tool_status')).@filemtime(resource_path('llms/base.txt')).config('worksitem_market.enabled')), 3600, fn () => $this->build());
 
         return response($body, 200, ['Content-Type' => 'text/plain; charset=UTF-8']);
     }

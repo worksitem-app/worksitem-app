@@ -24,6 +24,12 @@ n=$(curl -s "$URL/sitemap.xml" | grep -c '<loc>'); [ "$n" -gt 50 ] && ok "Site h
 curl -s "$URL/llms.txt" | grep -q 'Kimler için' && ok "llms.txt güncel" || no "llms.txt eski"
 curl -sI -H 'Accept-Encoding: gzip' "$URL/" | grep -qi 'content-encoding' && ok "Sıkıştırma açık" || no "Sıkıştırma yok"
 
+echo "▶ Uygulama (PWA / Google Play)"
+curl -s "$URL/sw.js" | grep -q 'cevrimdisi' && ok "Servis çalışanı (sw.js)" || no "sw.js yok"
+curl -s "$URL/site.webmanifest" | grep -q '"maskable"' && ok "Uygulama manifesti" || no "Manifest eski"
+curl -s "$URL/" | grep -q 'serviceWorker.register' && ok "Sayfalarda uygulama kaydı" || no "Sayfalarda sw kaydı yok"
+a=$(curl -s "$URL/.well-known/assetlinks.json"); [ "$a" != "[]" ] && echo "$a" | grep -q 'sha256' && ok "Google Play bağlantısı (assetlinks)" || echo "  · Google Play bağlantısı henüz yok (TWA_SHA256 boş)"
+
 echo "▶ Sistem"
 php artisan app:preflight 2>/dev/null | grep -E "Sonuç|FAIL|WARN" | sed 's/^/  /'
 php artisan about 2>/dev/null | grep -i "queue" | sed 's/^ */  Kuyruk: /'
@@ -37,6 +43,7 @@ echo "  Firma: ".($q("firms") ? \App\Models\Firm::query()->count()." (onay bekle
 echo "  Sponsor kaydı: ".($q("sponsor_applications") ? \App\Models\SponsorApplication::query()->count()." (yeni ".\App\Models\SponsorApplication::query()->where("status","new")->count().")" : "-").PHP_EOL;
 echo "  Son 7 gün teklif talebi (lead): ".\App\Models\Lead::query()->where("created_at", ">", now()->subDays(7))->count().PHP_EOL;
 echo "  Fiyat robotu onay bekleyen: ".($q("price_robot_items") ? \App\Models\PriceRobotItem::query()->where("status","needs_review")->count() : "-").PHP_EOL;
+echo "  Bildirim: ".(\App\Services\Push\WebPush::enabled() ? "açık" : "anahtar yok").($q("push_subscriptions") ? " · bildirim açan cihaz: ".\App\Models\PushSubscription::query()->count() : "").PHP_EOL;
 echo "  Kesilecek fatura: ".($q("orders") ? \App\Models\Order::query()->where("status","paid")->whereNull("invoiced_at")->count() : "-").PHP_EOL;
 echo "  Online ödeme: ".(app(\App\Services\Payments\OnlinePayment::class)->enabled() ? "açık" : "kapalı")." · Yapay zekâ: ".(config("services.ai_spend_enabled") ? "açık" : "kapalı")." · Teklif pazaryeri (kullanıcı): ".(config("worksitem_market.enabled") ? "açık" : "kapalı").PHP_EOL;
 ' 2>/dev/null

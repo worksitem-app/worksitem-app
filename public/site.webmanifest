@@ -1,22 +1,27 @@
 {
-    "name": "WORKSITEM",
-    "short_name": "WORKSITEM",
-    "description": "Insaat, tadilat, metraj ve maliyet hesaplama araclari.",
-    "start_url": "/",
+    "id": "/",
+    "name": "Worksitem — Tadilat ve İnşaat Maliyeti",
+    "short_name": "Worksitem",
+    "description": "Banyo, mutfak, boya, seramik ve inşaat maliyetini güncel fiyatlarla anında hesaplayın. Firmalar için iş davetleri ve teklif paneli.",
+    "lang": "tr",
+    "dir": "ltr",
+    "start_url": "/?kaynak=uygulama",
     "scope": "/",
     "display": "standalone",
+    "orientation": "portrait-primary",
     "background_color": "#ffffff",
     "theme_color": "#ffffff",
+    "categories": ["business", "productivity", "utilities"],
     "icons": [
-        {
-            "src": "/icons/icon-192.png",
-            "sizes": "192x192",
-            "type": "image/png"
-        },
-        {
-            "src": "/icons/icon-512.png",
-            "sizes": "512x512",
-            "type": "image/png"
-        }
-    ]
+        {"src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+        {"src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+        {"src": "/icons/maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable"},
+        {"src": "/icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+    ],
+    "shortcuts": [
+        {"name": "Maliyet hesapla", "short_name": "Hesapla", "url": "/maliyet-hesapla?kaynak=uygulama", "icons": [{"src": "/icons/icon-192.png", "sizes": "192x192"}]},
+        {"name": "Tüm araçlar", "short_name": "Araçlar", "url": "/araclar?kaynak=uygulama", "icons": [{"src": "/icons/icon-192.png", "sizes": "192x192"}]},
+        {"name": "Firma paneli", "short_name": "Panel", "url": "/firma-paneli?kaynak=uygulama", "icons": [{"src": "/icons/icon-192.png", "sizes": "192x192"}]}
+    ],
+    "prefer_related_applications": false
 }

@@ -11,6 +11,7 @@
 @include('market._layout-top')
 <main class="mk-wrap">
     @include('market._panel-head')
+    <x-market.app-card />
     <div class="mk-card" style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center">
         <div class="mk-kv">
             <span>İş kolları</span><b>{{ implode(', ', $firm->serviceLabels()) ?: '—' }}</b>
@@ -27,7 +28,7 @@
     <div class="mk-card">
         <h2>Size gelen işler</h2>
         @if ($invites->isEmpty())
-            <p style="color:var(--muted);margin:0">Henüz davet yok. İş kolunuzda ve bölgenizde bir kullanıcı teklif istediğinde SMS ile haber vereceğiz.</p>
+            <p style="color:var(--muted);margin:0">Henüz davet yok. İş kolunuzda ve bölgenizde bir kullanıcı teklif istediğinde SMS ile (bildirimleri açtıysanız uygulamadan da) haber vereceğiz.</p>
         @else
             <table class="mk-table">
                 <thead><tr><th>İş</th><th>Yer</th><th>Yaklaşık</th><th>Durum</th></tr></thead>
