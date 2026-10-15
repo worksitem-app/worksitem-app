@@ -99,6 +99,33 @@ Route::controller(\App\Http\Controllers\FirmController::class)->group(function (
         ->middleware('throttle:public-write')->name('firms.contact');
 });
 Route::view('/legal/firma-uyelik-kosullari', 'legal.firma-uyelik-kosullari')->name('legal.firma_uyelik');
+Route::view('/legal/teklif-alma-kosullari', 'legal.teklif-alma-kosullari')->name('legal.teklif_alma');
+
+// Teklif pazaryeri: kullanıcı talebi ve teklifleri (bağlantıdaki gizli anahtarla), firma paneli (SMS ile giriş)
+Route::controller(\App\Http\Controllers\Market\RequestController::class)->group(function () {
+    Route::get('/teklif-al', 'create')->middleware('throttle:public-read')->name('market.request.create');
+    Route::post('/teklif-al/kod', 'sendCode')->middleware('throttle:public-write')->name('market.request.code');
+    Route::post('/teklif-al', 'store')->middleware('throttle:public-write')->name('market.request.store');
+    Route::get('/teklif/{job}', 'show')->middleware('throttle:public-read')->name('market.request.show');
+    Route::post('/teklif/{job}/kabul/{offer}', 'accept')->middleware('throttle:public-write')->name('market.request.accept');
+    Route::post('/teklif/{job}/kapat', 'close')->middleware('throttle:public-write')->name('market.request.close');
+});
+Route::prefix('firma-paneli')->controller(\App\Http\Controllers\Market\FirmPanelController::class)->group(function () {
+    Route::get('/giris', 'login')->name('market.panel.login');
+    Route::post('/giris/kod', 'sendCode')->middleware('throttle:public-write')->name('market.panel.code');
+    Route::post('/giris', 'verify')->middleware('throttle:public-write')->name('market.panel.verify');
+    Route::post('/cikis', 'logout')->name('market.panel.logout');
+    Route::get('/', 'dashboard')->name('market.panel');
+    Route::post('/davetler', 'toggle')->name('market.panel.toggle');
+    Route::get('/is/{job}', 'job')->name('market.panel.job');
+    Route::post('/is/{job}/teklif', 'offer')->middleware('throttle:public-write')->name('market.panel.offer');
+    Route::post('/is/{job}/ilgilenmiyorum', 'decline')->name('market.panel.decline');
+    Route::post('/is/{job}/geri-cek', 'withdraw')->name('market.panel.withdraw');
+    Route::post('/is/{job}/ode', 'pay')->middleware('throttle:public-write')->name('market.panel.pay');
+    Route::post('/is/{job}/onayla', 'confirm')->middleware('throttle:public-write')->name('market.panel.confirm');
+    Route::get('/hizmet-bilgileri', 'info')->name('market.panel.info');
+    Route::post('/hizmet-bilgileri', 'saveInfo')->middleware('throttle:public-write')->name('market.panel.info.save');
+});
 
 // Yerinde keşif: teşekkür sayfasında kabul → ödeme/iletişim sayfası (oturuma bağlı, indekslenmez)
 Route::post('/kesif/kabul', [\App\Http\Controllers\InspectionController::class, 'accept'])

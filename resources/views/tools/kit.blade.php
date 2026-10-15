@@ -165,6 +165,7 @@
                 <ul>@foreach ($errors->all() as $err)<li>{{ $err }}</li>@endforeach</ul>
             </div>
         @endif
+        <x-market.choice :tool="$slug" />
         <div class="budget-confirm-box" id="budgetConfirmBox">
             <div class="budget-confirm-title">Bu bütçe aralığı projeniz için gerçekçi mi?</div>
             <div class="budget-confirm-text">Kainta İnşaat'a başvurmadan önce bütçenizin bu seviyede olduğunu onaylayın. Böylece yalnızca gerçekten uygulanabilir projeleri değerlendirmeye alabiliriz.</div>

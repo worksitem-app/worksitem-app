@@ -1,6 +1,5 @@
 @php
-    $svc = (array) config('worksitem_firms.services');
-    $tools = collect((array) $firm->services)->flatMap(fn ($k) => $svc[$k][1] ?? [])->unique()
+    $tools = collect((array) config('worksitem_market.tools'))->filter(fn ($m) => in_array($m[0], (array) $firm->trades, true))->keys()
         ->filter(fn ($s) => config("worksitem_tools.tools.$s"))->take(4);
     $desc = \Illuminate\Support\Str::limit($firm->description ?: $firm->name.': '.$firm->typeLabel().', '.implode(', ', (array) $firm->cities).'. '.implode(', ', $firm->serviceLabels()).'.', 155);
     $ld = array_filter([
@@ -50,7 +49,7 @@
             </ul>
         </div>
     </div>
-    <p class="lead" style="margin-top:22px;font-size:13px">Firma bilgileri firmanın beyanıdır; Kainta İnşaat Uzmanları kayıt sırasında kontrol eder ancak firmanın işçiliği ve teklifleri için garanti vermez. Sözleşme yapmadan önce yazılı teklif, fatura ve garanti koşullarını isteyin.</p>
+    <p class="lead" style="margin-top:22px;font-size:13px">Firma bilgileri firmanın beyanıdır; Worksitem kayıt sırasında kontrol eder ancak firmanın işçiliği ve teklifleri için garanti vermez. Sözleşme yapmadan önce yazılı teklif, fatura ve garanti koşullarını isteyin.</p>
 </div></section>
 <x-site.contech-footer />
 </body>

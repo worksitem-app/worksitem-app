@@ -128,6 +128,9 @@ class OnlinePayment
             if ($paid && $fresh->kind === 'credits' && $fresh->ai_wallet_id && ($w = AiWallet::query()->find($fresh->ai_wallet_id))) {
                 $this->credits->grant($w, (int) $fresh->credits, 'Online satın alma '.$fresh->public_id);
             }
+            if ($paid && $fresh->kind === 'match_fee') {
+                app(\App\Services\Market\Marketplace::class)->matched($fresh);
+            }
             if ($paid && $fresh->kind === 'firm_pro' && str_starts_with((string) $fresh->ref, 'firm:')
                 && ($f = \App\Models\Firm::query()->find((int) substr((string) $fresh->ref, 5)))) {
                 $from = $f->isPro() ? $f->plan_until : now();

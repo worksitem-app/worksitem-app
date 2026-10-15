@@ -35,11 +35,36 @@ class OrderResource extends Resource
                     ->color(fn (string $state) => ['paid' => 'success', 'failed' => 'danger'][$state] ?? 'gray'),
                 Tables\Columns\TextColumn::make('name')->label('Müşteri')->description(fn (Order $r) => $r->phone ? '0'.$r->phone : null),
                 Tables\Columns\TextColumn::make('paid_at')->label('Ödeme')->dateTime('d.m.Y H:i')->sortable(),
+                Tables\Columns\TextColumn::make('invoice')->label('Fatura')
+                    ->state(fn (Order $r) => $r->isPaid() ? ($r->invoice_no ?: 'KESİLECEK') : '—')
+                    ->description(fn (Order $r) => $r->isPaid() ? $r->buyer()['type'].' · '.$r->buyer()['title'] : null)
+                    ->color(fn (Order $r) => $r->isPaid() && ! $r->invoice_no ? 'danger' : null),
                 Tables\Columns\TextColumn::make('error')->label('Hata')->limit(40)->toggleable(isToggledHiddenByDefault: true),
+            ])
+            ->headerActions([
+                Tables\Actions\Action::make('export')->label('Kesilecek faturalar (Excel)')->icon('heroicon-o-arrow-down-tray')
+                    ->action(fn () => response()->streamDownload(function () {
+                        $out = fopen('php://output', 'w');
+                        fwrite($out, "\xEF\xBB\xBF");
+                        fputcsv($out, ['Sipariş', 'Ödeme tarihi', 'Belge türü', 'Alıcı unvan / ad', 'VKN / TCKN', 'Vergi dairesi', 'Adres', 'E-posta', 'Telefon', 'Hizmet', 'Tutar (KDV hariç)', 'KDV %20', 'Toplam', 'iyzico ödeme no'], ';');
+                        foreach (Order::query()->where('status', 'paid')->whereNull('invoiced_at')->orderBy('paid_at')->get() as $o) {
+                            $b = $o->buyer();
+                            fputcsv($out, [$o->public_id, $o->paid_at?->timezone('Europe/Istanbul')->format('d.m.Y H:i'), $b['type'], $b['title'], $b['tax_no'], $b['tax_office'], $b['address'], $b['email'], $b['phone'],
+                                $o->title, number_format($o->net(), 2, ',', ''), number_format($o->vat(), 2, ',', ''), number_format($o->amount, 2, ',', ''), $o->payment_id], ';');
+                        }
+                        fclose($out);
+                    }, 'worksitem-kesilecek-faturalar-'.now()->format('Y-m-d').'.csv', ['Content-Type' => 'text/csv; charset=UTF-8'])),
+            ])
+            ->actions([
+                Tables\Actions\Action::make('invoiced')->label('Fatura kesildi')->icon('heroicon-o-document-check')->color('success')
+                    ->visible(fn (Order $r) => $r->isPaid() && ! $r->invoice_no)
+                    ->form([\Filament\Forms\Components\TextInput::make('invoice_no')->label('Fatura / e-Arşiv numarası')->required()->maxLength(40)])
+                    ->action(fn (Order $r, array $data) => $r->update(['invoice_no' => $data['invoice_no'], 'invoiced_at' => now()])),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('status')->label('Durum')->options(['paid' => 'Ödendi', 'pending' => 'Bekliyor', 'failed' => 'Başarısız']),
-                Tables\Filters\SelectFilter::make('kind')->label('Tür')->options(['credits' => 'Yapay zekâ kredisi', 'pro_report' => 'Pro rapor', 'firm_pro' => 'Öne çıkan firma']),
+                Tables\Filters\SelectFilter::make('kind')->label('Tür')->options(Order::KINDS),
+                Tables\Filters\Filter::make('to_invoice')->label('Kesilecek faturalar')->query(fn ($q) => $q->where('status', 'paid')->whereNull('invoiced_at')),
             ])
             ->paginated([25, 50, 100]);
     }

@@ -52,6 +52,12 @@ Schedule::command('app:prune-ai-inputs --days=30')
     ->withoutOverlapping();
 
 // Günlük veritabanı yedeği (storage/app/backups, son 14 gün; Hostinger yedeğine ek)
+// Teklif pazaryeri: ödenmeyen eşleşme bedelleri, süresi dolan talepler
+Schedule::command('market:tick')
+    ->hourly()
+    ->withoutOverlapping()
+    ->onOneServer();
+
 Schedule::command('app:backup-db --keep=14')
     ->dailyAt('03:45')
     ->timezone('Europe/Istanbul')

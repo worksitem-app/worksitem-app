@@ -51,6 +51,9 @@ class OrderController extends Controller
         if ($order->isPaid() && $order->kind === 'pro_report' && $order->return_url) {
             return redirect()->to($order->return_url)->with('pro_paid', 'Ödemeniz alındı. Pro raporunuzu şimdi indirebilirsiniz.');
         }
+        if ($order->isPaid() && $order->kind === 'match_fee' && $order->return_url) {
+            return redirect()->to($order->return_url)->with('panel_ok', 'Ödemeniz alındı. Müşterinin iletişim bilgileri açıldı.');
+        }
 
         return view('odeme-sonuc', ['order' => $order]);
     }

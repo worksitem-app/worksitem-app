@@ -24,26 +24,48 @@ class FirmMembershipTest extends TestCase
 
     private function code(string $phone = '05327654321'): string
     {
+        \Illuminate\Support\Facades\Cache::flush();   // SMS gönderim sınırı (testte çok kod isteniyor)
         $this->postJson(route('firms.code'), ['phone' => $phone])->assertOk()->assertJson(['ok' => true]);
         preg_match('/(\d{6})/', Http::recorded()->last()[0]['messages'][0]['msg'], $m);
 
         return $m[1];
     }
 
+    /** Kayıt formu (POST) */
     private function form(array $over = []): array
     {
         return $over + [
-            'name' => 'Demir Yapı Tadilat', 'type' => 'tadilat', 'services' => ['banyo', 'seramik'], 'cities' => ['İstanbul', 'Kocaeli'],
-            'district' => 'Kadıköy', 'contact_name' => 'Ayşe Demir', 'phone' => '0532 765 43 21', 'email' => 'info@example.com',
-            'tax_no' => '1234567890', 'description' => 'Banyo ve seramik işleri.', 'terms' => '1', 'kvkk' => '1',
+            'name' => 'Demir Yapı Tadilat', 'type' => 'tadilat', 'legal_type' => 'sirket', 'legal_name' => 'Demir Yapı Tadilat İnşaat Ltd. Şti.',
+            'tax_no' => '1234567890', 'tax_office' => 'Kadıköy', 'efatura' => 'unknown', 'invoice_city' => 'İstanbul', 'invoice_district' => 'Kadıköy',
+            'invoice_address' => 'Caferağa Mah. Moda Cad. No: 10', 'tax_doc' => \Illuminate\Http\UploadedFile::fake()->create('levha.pdf', 100, 'application/pdf'),
+            'trades' => ['ince-insaat', 'zemin-kaplama'], 'subservices' => ['Banyo Tadilatı ve Dekorasyonu', 'Parke Döşeme'],
+            'cities' => ['İstanbul', 'Kocaeli'], 'districts' => 'Kadıköy, Ataşehir',
+            'contact_name' => 'Ayşe Demir', 'phone' => '0532 765 43 21', 'email' => 'info@example.com',
+            'description' => 'Banyo ve seramik işleri.', 'ref' => 'SAHA01', 'terms' => '1', 'declare' => '1', 'kvkk' => '1',
         ];
+    }
+
+    /** Doğrudan veritabanı kaydı */
+    private function firm(array $over = []): Firm
+    {
+        return Firm::query()->create($over + [
+            'name' => 'Demir Yapı Tadilat', 'type' => 'tadilat', 'legal_type' => 'sirket', 'legal_name' => 'Demir Yapı Tadilat İnşaat Ltd. Şti.',
+            'tax_no' => '1234567890', 'tax_office' => 'Kadıköy', 'efatura' => 'yes', 'invoice_city' => 'İstanbul', 'invoice_district' => 'Kadıköy',
+            'invoice_address' => 'Caferağa Mah. Moda Cad. No: 10', 'trades' => ['ince-insaat'], 'cities' => ['İstanbul'],
+            'contact_name' => 'Ayşe Demir', 'phone' => '5327654321', 'email' => 'info@example.com', 'description' => 'Banyo ve seramik işleri.',
+        ]);
     }
 
     public function test_kayit_sayfasi_ve_aractan_gelen_hizmet_secili(): void
     {
         $this->get('/firma-uyeligi?arac=banyo-maliyet-hesaplayici')->assertOk()
-            ->assertSee('Ücretsiz kaydolun')->assertSee('value="banyo" checked', false)->assertSee('Firma Üyelik Koşulları');
-        $this->get('/legal/firma-uyelik-kosullari')->assertOk()->assertSee('Öne çıkan üyelik');
+            ->assertSee('Ücretsiz kaydolun')->assertSee('value="ince-insaat" checked', false)->assertSee('Firma Üyelik ve Aracılık Hizmet Sözleşmesi')
+            ->assertSee('Banyo Tadilatı ve Dekorasyonu')->assertSee('Vergi levhası');
+        $this->get('/firma-uyeligi?ref=AHMET')->assertSee('value="AHMET"', false);
+        $this->get('/legal/firma-uyelik-kosullari')->assertOk()->assertSee('Eşleşme bedeli')->assertSee('ari tutmayı')->assertSee('Kurucu firma programı')
+            ->assertSee('künyede yer alan hizmet sağlayıcı')->assertSee('platformu devralan');
+        $this->get('/firma-uyeligi')->assertSee('komisyon yok');
+        $this->get('/legal/teklif-alma-kosullari')->assertOk()->assertSee('yalnızca o Firma ile paylaşılır');
     }
 
     public function test_sms_dogrulamali_kayit_onay_bekler_rehberde_gorunmez(): void
@@ -51,14 +73,34 @@ class FirmMembershipTest extends TestCase
         $this->post(route('firms.register'), $this->form(['code' => '000000']))->assertSessionHasErrors('code');
         $this->post(route('firms.register'), $this->form(['code' => $this->code(), 'terms' => null]))->assertSessionHasErrors('terms');
 
-        $this->post(route('firms.register'), $this->form(['code' => $this->code()]))->assertRedirect(route('firms.page'))->assertSessionHas('firm_ok');
+        $this->post(route('firms.register'), $this->form(['code' => $this->code(), 'tax_no' => '1234567891']))->assertSessionHasErrors('tax_no');
+        $this->post(route('firms.register'), $this->form(['code' => $this->code(), 'tax_no' => '10000000146']))->assertSessionHasErrors('tax_no'); // şirket için TCKN olmaz
+        $this->post(route('firms.register'), $this->form(['code' => $this->code(), 'trades' => ['ince-insaat'], 'subservices' => ['Banyo Tadilatı ve Dekorasyonu', 'Parke Döşeme']]))
+            ->assertRedirect(route('market.panel.info'))->assertSessionHas('firm_new');
         $f = Firm::query()->firstOrFail();
         $this->assertSame('pending', $f->status);
+        $this->assertSame(['Banyo Tadilatı ve Dekorasyonu'], $f->subservices);   // seçilmeyen iş kolunun alt hizmeti alınmaz
+        $this->assertSame(['Kadıköy', 'Ataşehir'], $f->districts);
+        $this->assertSame('SAHA01', $f->referrer);
+
+        // Kayıt sonrası kısa sorular (isteğe bağlı): iş koluna göre fiyat soruları, cevaplar müşteriye gösterilmez
+        $this->get(route('market.panel.info'))->assertOk()->assertSee('Başvurunuz alındı')->assertSee('En küçük kaç TL')
+            ->assertSee('Alçıpan bölme duvar')->assertDontSee('50 kg çimento');
+        $this->post(route('market.panel.info.save'), ['a' => ['min_job' => 'abc']])->assertSessionHasErrors();
+        $this->post(route('market.panel.info.save'), ['a' => ['min_job' => '20000', 'team' => '2-5', 'p_alcipan_bolme' => '1450', 'p_banyo' => '']])
+            ->assertRedirect(route('firms.page'))->assertSessionHas('firm_ok');
+        $f->refresh();
+        $this->assertSame(20000, $f->min_job);
+        $this->assertSame(['min_job' => 20000, 'team' => '2-5', 'p_alcipan_bolme' => 1450], $f->answers);
+        $this->get(route('market.panel.info'))->assertRedirect(route('market.panel.login'));   // oturum tek seferlik
+        $this->assertTrue(\Illuminate\Support\Facades\Storage::disk('local')->exists($f->tax_doc_path));
+        \Illuminate\Support\Facades\Storage::disk('local')->delete($f->tax_doc_path);
         $this->assertSame('5327654321', $f->phone);
         $this->assertSame('demir-yapi-tadilat', $f->slug);
 
-        // aynı numarayla ikinci başvuru açılmaz
+        // aynı numara veya vergi no ile ikinci başvuru açılmaz
         $this->post(route('firms.register'), $this->form(['code' => $this->code()]))->assertSessionHas('firm_ok', 'exists');
+        $this->post(route('firms.register'), $this->form(['code' => $this->code('05321112233'), 'phone' => '05321112233']))->assertSessionHas('firm_ok', 'exists');
         $this->assertSame(1, Firm::query()->count());
 
         config(['worksitem_firms.directory_enabled' => true]);
@@ -68,13 +110,13 @@ class FirmMembershipTest extends TestCase
 
     public function test_rehber_kapaliyken_404_acikken_onayli_firma_listelenir_numara_gizli(): void
     {
-        $f = Firm::query()->create($this->form(['phone' => '5327654321', 'status' => 'approved', 'approved_at' => now()]));
+        $f = $this->firm(['status' => 'approved', 'approved_at' => now()]);
         $this->get('/firmalar')->assertNotFound();
         $this->get('/firmalar/'.$f->slug)->assertNotFound();
         $this->assertStringNotContainsString('/firmalar/', $this->get('/sitemap.xml')->getContent());
 
         config(['worksitem_firms.directory_enabled' => true]);
-        $this->get('/firmalar?hizmet=banyo&il=İstanbul')->assertOk()->assertSee('Demir Yapı Tadilat')->assertSee('İstanbul Banyo tadilatı Firmaları');
+        $this->get('/firmalar?hizmet=ince-insaat&il=İstanbul')->assertOk()->assertSee('Demir Yapı Tadilat')->assertSee('İstanbul İnce İnşaat İşleri Firmaları');
         $this->get('/firmalar?il=Ankara')->assertOk()->assertDontSee('Demir Yapı Tadilat');
         $this->get('/firmalar/'.$f->slug)->assertOk()->assertSee('Demir Yapı Tadilat')->assertSee('0532 *** ** 21')
             ->assertDontSee('5327654321')->assertDontSee('1234567890')->assertSee('HomeAndConstructionBusiness');
@@ -93,7 +135,7 @@ class FirmMembershipTest extends TestCase
             $base.'/payment/iyzipos/checkoutform/auth/ecom/detail' => fn () => Http::response(['status' => 'success', 'paymentStatus' => 'SUCCESS',
                 'basketId' => Order::query()->first()->public_id, 'paidPrice' => Order::query()->first()->amount, 'paymentId' => 'P']),
         ]);
-        $f = Firm::query()->create($this->form(['phone' => '5327654321', 'status' => 'approved']));
+        $f = $this->firm(['status' => 'approved']);
 
         $this->get(route('firms.pro', ['firm' => $f->slug]))->assertForbidden();   // imzasız bağlantı
         $this->get(URL::temporarySignedRoute('firms.pro', now()->addDay(), ['firm' => $f->slug]))->assertRedirect('https://pay.test/FT');
@@ -115,15 +157,17 @@ class FirmMembershipTest extends TestCase
     public function test_admin_onaylar_ve_sms_gider(): void
     {
         $admin = \App\Models\User::factory()->create(['is_admin' => true]);
-        $f = Firm::query()->create($this->form(['phone' => '5327654321']));
+        $f = $this->firm(['efatura' => 'unknown']);
         $o = Order::query()->create(['kind' => 'credits', 'title' => 'x', 'amount' => 1]);
         $this->actingAs($admin)->get('/admin/firms')->assertOk()->assertSee('Demir Yapı Tadilat');
         $this->actingAs($admin)->get('/admin/firms/'.$f->slug.'/edit')->assertOk();
         $this->actingAs($admin)->get('/admin/orders')->assertOk()->assertSee($o->public_id);
 
         \Livewire\Livewire::actingAs($admin)->test(\App\Filament\Resources\FirmResource\Pages\ListFirms::class)
-            ->callTableAction('approve', $f);
+            ->callTableAction('approve', $f, ['efatura' => 'no', 'checked' => true])->assertHasNoTableActionErrors();
         $this->assertSame('approved', $f->fresh()->status);
+        $this->assertSame('no', $f->fresh()->efatura);
+        $this->assertNotNull($f->fresh()->tax_verified_at);
         $this->assertStringContainsString('onaylandı', Http::recorded()->last()[0]['messages'][0]['msg']);
     }
 }

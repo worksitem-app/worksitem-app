@@ -8,7 +8,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $title }} | Onaylı Firma Rehberi | WORKSİTEM</title>
-    <meta name="description" content="{{ $title }}: Kainta İnşaat Uzmanları tarafından onaylanmış usta, tadilat firması, müteahhit ve tedarikçiler. Maliyetinizi hesaplayın, firmayla doğrudan iletişime geçin.">
+    <meta name="description" content="{{ $title }}: Worksitem tarafından vergi kaydı doğrulanmış usta, tadilat firması, müteahhit ve tedarikçiler. Maliyetinizi hesaplayın, firmayla doğrudan iletişime geçin.">
     <meta name="robots" content="{{ $firms->total() > 0 ? 'index, follow' : 'noindex, follow' }}">
     <link rel="canonical" href="{{ $firms->currentPage() > 1 ? $firms->url($firms->currentPage()) : request()->fullUrlWithQuery(['page' => null]) }}">
     @include('firmalar._style')
@@ -18,7 +18,7 @@
 <header class="fm-hero" data-kainta-auto-link="off"><div class="fm-in">
     <span class="fm-chip">Onaylı firma rehberi</span>
     <h1>{{ $title }}</h1>
-    <p>Listelenen her firma Kainta İnşaat Uzmanları tarafından incelenip onaylanmıştır. Önce maliyetinizi <a href="/araclar" style="color:var(--y)">hesaplayın</a>, sonra firmalardan teklif alın.</p>
+    <p>Listelenen her firmanın vergi kaydı Worksitem ekibi tarafından incelenip onaylanmıştır. Önce maliyetinizi <a href="/araclar" style="color:var(--y)">hesaplayın</a>, sonra firmalardan teklif alın.</p>
 </div></header>
 <section class="fm"><div class="fm-in" style="padding-bottom:48px">
     <form class="fm-filter" method="GET" action="{{ route('firms.index') }}">
