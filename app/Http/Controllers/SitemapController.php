@@ -31,6 +31,7 @@ class SitemapController extends Controller
             ['loc' => '/markalar-icin', 'priority' => '0.6', 'changefreq' => 'monthly'],
             ['loc' => '/hakkimizda', 'priority' => '0.5', 'changefreq' => 'monthly'],
             ['loc' => '/ekip', 'priority' => '0.4', 'changefreq' => 'monthly'],
+            ['loc' => '/uygulama', 'priority' => '0.6', 'changefreq' => 'monthly'],
             ['loc' => '/vizyon', 'priority' => '0.4', 'changefreq' => 'monthly'],
             ['loc' => '/legal/kvkk-aydinlatma', 'priority' => '0.4', 'changefreq' => 'monthly'],
             ['loc' => '/legal/acik-riza', 'priority' => '0.4', 'changefreq' => 'monthly'],

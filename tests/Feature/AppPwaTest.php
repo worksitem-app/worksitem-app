@@ -169,4 +169,27 @@ class AppPwaTest extends TestCase
             }
         }
     }
+
+    public function test_uygulama_sayfasi_ve_yukleme_bandi(): void
+    {
+        $this->get('/uygulama')->assertOk()->assertSee('Nasıl yüklenir?')->assertSee('Ana Ekrana Ekle')
+            ->assertDontSee("Google Play'den indir", false);
+        config(['worksitem_app.twa.play_url' => 'https://play.google.com/store/apps/details?id=com.worksitem.app']);
+        $this->get('/uygulama')->assertOk()->assertSee("Google Play'den indir", false);
+
+        $home = $this->get('/')->assertOk();
+        $home->assertSee('id="wsAppBanner"', false)->assertSee('data-play="https://play.google.com', false);
+        $this->assertSame(1, substr_count($home->getContent(), 'id="wsAppBanner"'));
+        $this->get('/araclar/boya-hesaplayici')->assertOk()->assertSee('id="wsAppBanner"', false);
+        $this->get('/sitemap.xml')->assertSee('https://worksitem.com/uygulama');
+        $this->get('/llms.txt')->assertSee('https://worksitem.com/uygulama');
+    }
+
+    public function test_firma_panelinde_band_yerine_kart(): void
+    {
+        $this->login($this->firm());
+        $html = $this->get(route('market.panel'))->assertOk()->getContent();
+        $this->assertStringContainsString('id="wsApp"', $html);
+        $this->assertStringNotContainsString('id="wsAppBanner"', $html);
+    }
 }

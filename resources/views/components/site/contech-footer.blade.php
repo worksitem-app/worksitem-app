@@ -798,6 +798,10 @@ html[data-theme="dark"] .wks-footer{
                     Firma Üyeliği
                 </a>
 
+                <a href="/uygulama">
+                    Uygulamayı İndir
+                </a>
+
                 <a href="/#fiyatlama">
                     Hesaplama Yöntemi
                 </a>

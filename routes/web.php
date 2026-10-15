@@ -114,6 +114,7 @@ Route::controller(\App\Http\Controllers\Market\RequestController::class)->group(
     Route::post('/teklif/{job}/kapat', 'close')->middleware('throttle:public-write')->name('market.request.close');
 });
 // Uygulama (PWA + Google Play TWA) ve firma paneli web bildirimleri
+Route::view('/uygulama', 'uygulama')->name('app.page');
 Route::get('/cevrimdisi', [\App\Http\Controllers\AppController::class, 'offline'])->name('app.offline');
 Route::get('/.well-known/assetlinks.json', [\App\Http\Controllers\AppController::class, 'assetlinks'])->name('app.assetlinks');
 Route::post('/firma-paneli/bildirim/abone', [\App\Http\Controllers\AppController::class, 'subscribe'])->middleware('throttle:public-write')->name('app.push.subscribe');

@@ -41,6 +41,11 @@ class BrandShell
             $html = self::injectApp($html);
             $response->setContent($html);
         }
+        // "Uygulamayı yükle" bandı (yalnız telefonda, kuralları bileşende); panelde kendi kartı var
+        if (! str_contains($html, 'id="wsAppBanner"') && ! str_contains($html, 'id="wsApp"') && ($b = strripos($html, '</body>')) !== false) {
+            $html = substr($html, 0, $b).view('components.site.app-banner')->render().substr($html, $b);
+            $response->setContent($html);
+        }
         if (str_contains($html, '/css/ws-brand.css')) {
             return $response;
         }
