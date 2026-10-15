@@ -1,6 +1,6 @@
 @php($title = 'Firma paneli girişi')
 @include('market._layout-top')
-<main class="mk-wrap" style="max-width:520px">
+<main class="mk-wrap" style="max-width:760px">
     <div class="mk-card">
         <h1 style="font-size:24px;margin:0 0 6px">Firma paneli</h1>
         <p style="color:var(--muted);margin:0 0 16px;line-height:1.6">Onaylı firma üyeliğinizdeki cep telefonunuzla giriş yapın; şifre yok, SMS kodu yeterli.</p>
@@ -15,6 +15,7 @@
         </form>
         <p style="margin:16px 0 0;font-size:14px;color:var(--muted)">Üye değil misiniz? <a href="{{ route('firms.page') }}" style="color:inherit;font-weight:700">Ücretsiz firma üyeliği</a></p>
     </div>
+    <div style="margin-top:20px"><x-site.why audience="firms" /></div>
 </main>
 @include('market._otp-script', ['url' => route('market.panel.code'), 'btn' => 'pSend', 'phone' => 'pPhone', 'msg' => 'pMsg', 'code' => 'pCode'])
 <x-site.contech-footer />

@@ -48,7 +48,7 @@
 </head>
 <body>
 
-<div class="foot">worksitem.com · Kainta İnşaat · Pro rapor {{ $reportNo }} · {{ now()->format('d.m.Y H:i') }} · Yaklaşık hesaptır, teklif değildir.</div>
+<div class="foot">worksitem.com · Pro rapor {{ $reportNo }} · {{ now()->format('d.m.Y H:i') }} · Yaklaşık hesaptır, teklif değildir.</div>
 
 <table class="head">
     <tr>

@@ -54,6 +54,7 @@
     @if ($tool)
         <p class="lead" style="margin-top:18px">İşi firmalarla tek tek görüşmek yerine Kainta İnşaat Uzmanlarının üstlenmesini mi istersiniz? <a href="/araclar/{{ $tool }}#teklif" style="color:inherit;font-weight:800">Kainta İnşaat'tan keşif ve teklif isteyin →</a></p>
     @endif
+    <div style="margin-top:28px"><x-site.why audience="users" /></div>
 </main>
 @include('market._otp-script', ['url' => route('market.request.code'), 'btn' => 'rSend', 'phone' => 'rPhone', 'msg' => 'rMsg', 'code' => 'rCode'])
 <x-site.contech-footer />

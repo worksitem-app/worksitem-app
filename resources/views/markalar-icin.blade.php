@@ -83,6 +83,8 @@
     </div>
 </div></section>
 
+<section class="mk"><div class="mk-in"><x-site.why audience="brands" /></div></section>
+
 <section class="mk" id="paketler"><div class="mk-in">
     <h2>Paketler</h2>
     <p class="lead">Fiyatlandırma araca, kaleme ve süreye göre belirlenir; aylık sabit ücretlidir. Başvurunuza 2 iş günü içinde teklif iletilir.</p>

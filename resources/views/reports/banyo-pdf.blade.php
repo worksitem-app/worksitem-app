@@ -123,7 +123,7 @@
 </div>
 
 <div class="foot">
-    worksitem.com · Kainta İnşaat · Bu rapor {{ now()->format('d.m.Y H:i') }} tarihinde oluşturuldu. Aynı hesabı açmak için: {{ \Illuminate\Support\Str::limit($shareUrl, 120) }}
+    worksitem.com · Bu rapor {{ now()->format('d.m.Y H:i') }} tarihinde oluşturuldu. Aynı hesabı açmak için: {{ \Illuminate\Support\Str::limit($shareUrl, 120) }}
 </div>
 </body>
 </html>

@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
  *  - arama başlığı ve açıklaması (config/worksitem_tool_seo.php; yoksa "| WORKSİTEM" eki düzeltilir)
  *  - WebApplication yapılandırılmış verisi yoksa eklenir
  *  - "Markalar ve üreticiler için" sponsorluk bandı yoksa alt bilginin hemen üstüne eklenir
+ *  - "Nasıl çalışır? / Neden Worksitem?" bandı (tüm araçlar) markalar bandının üstüne eklenir
  * Yeni şablonlar (kit, banyo, planlayıcı) bunları zaten içerdiği için atlanır.
  */
 class ToolPageEnhancer
@@ -82,6 +83,20 @@ class ToolPageEnhancer
             }
         }
 
+        // 3b) "Nasıl çalışır? / Neden Worksitem?" bandı: markalar bandının hemen üstüne
+        if (! str_contains($html, 'class="ws-how"')) {
+            try {
+                $how = \Illuminate\Support\Facades\Blade::render('<x-tools.how :tool="$tool" />', ['tool' => $slug]);
+                if (($p = strpos($html, '<div class="ws-bc-wrap"')) !== false) {
+                    $html = substr($html, 0, $p).'<div class="ws-how-wrap" style="max-width:1180px;margin:0 auto;padding:0 20px 8px">'.$how.'</div>'."\n".substr($html, $p);
+                } elseif (($p = strpos($html, '<section class="ws-bc"')) !== false) {
+                    $html = substr($html, 0, $p).$how."\n".substr($html, $p);
+                }
+            } catch (\Throwable) {
+                // bant eklenemezse sayfa olduğu gibi kalır
+            }
+        }
+
         // 4) Yazdır / PDF: her araçta aynı Worksitem logolu başlık ve alt bilgi (yalnız çıktıda görünür)
         if (! str_contains($html, 'ws-print-head') && preg_match('#<body[^>]*>#i', $html, $bm, PREG_OFFSET_CAPTURE)) {
             $title = e($tool['title'] ?? $slug);
@@ -89,7 +104,7 @@ class ToolPageEnhancer
             $today = now('Europe/Istanbul')->locale('tr')->translatedFormat('j F Y H:i');
             $head = '<div class="ws-print-head" aria-hidden="true"><img src="/brand/worksitem-logo.png" alt="Worksitem" height="30">'
                 .'<div><b>'.$title.'</b><span>Rapor tarihi: '.e($today).' · Fiyat tarihi: '.e($priceDate).'</span></div></div>'
-                .'<div class="ws-print-foot" aria-hidden="true">worksitem.com/araclar/'.e($slug).' · Kainta İnşaat · Yaklaşık hesaptır, teklif değildir.</div>'
+                .'<div class="ws-print-foot" aria-hidden="true">worksitem.com/araclar/'.e($slug).' · Worksitem · Yaklaşık hesaptır, teklif değildir.</div>'
                 .'<style>.ws-print-head,.ws-print-foot{display:none}@media print{'
                 .'.ws-print-head{display:flex!important;align-items:center;gap:14px;padding:0 0 10px;margin:0 0 14px;border-bottom:3px solid #FFB800;font-family:Inter,Arial,sans-serif;color:#101318}'
                 .'.ws-print-head img{height:30px;width:auto}.ws-print-head b{display:block;font-size:15px}.ws-print-head span{display:block;font-size:11px;color:#5B6472}'

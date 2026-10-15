@@ -49,6 +49,8 @@
     </div>
 </div></section>
 
+<section class="fm"><div class="fm-in"><x-site.why audience="firms" /></div></section>
+
 <section class="fm" id="kayit"><div class="fm-in" style="padding-bottom:48px">
     <h2>Firma kaydı</h2>
     @if (session('firm_ok') === 'exists')

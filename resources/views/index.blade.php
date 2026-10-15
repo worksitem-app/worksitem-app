@@ -499,14 +499,16 @@ Seçtiğiniz yapı türü ve toplam alana göre yaklaşık ön bütçe güvenli 
 
 <section class="block" id="nasil-calisir">
 <div class="container"><div class="definition"><div class="definition-grid">
-<div><div class="kicker">WORKSİTEM nedir?</div><h2>Proje planlaması için maliyet ve metraj platformu.</h2><p>WORKSİTEM, inşaat ve tadilat projelerinde yaklaşık bütçe ve metraj çalışmasına yardımcı olur. Sonuçları inceleyip iletişim onayı verdiğinizde Kainta İnşaat'tan projeniz için profesyonel değerlendirme talep edebilirsiniz.</p></div>
+<div><div class="kicker">WORKSİTEM nedir?</div><h2>İnşaat ve tadilatta bütçe, plan ve teklif tek yerde.</h2><p>WORKSİTEM; ev sahiplerinin, ustaların, firmaların ve mühendislerin maliyet, metraj ve planlama hesaplarını ücretsiz yaptığı bir platformdur. Fiyatlar resmî birim fiyatlar ve piyasa araştırmasıyla her sabah güncellenir. Sonucu beğenen kullanıcı tek formla keşif ve teklif ister.</p></div>
 <div class="definition-points">
-<div class="definition-point"><strong>1. Ölç / tanımla</strong><span>Alan, proje tipi, kalite veya dosya üzerinden metraj girdisi oluşturulur.</span></div>
-<div class="definition-point"><strong>2. Yöntemi seç</strong><span>Dosyasız ön bütçe veya dosyadan iş kalemi analiziyle ilerleyin.</span></div>
-<div class="definition-point"><strong>3. Kapsamı kontrol et</strong><span>Yaklaşık sonucu ve dosya analizindeki fiyatlandırılamayan kalemleri inceleyin.</span></div>
-<div class="definition-point"><strong>4. Teklife dönüştür</strong><span>Bütçesi uygun kullanıcı Kainta İnşaat ile profesyonel keşif ve teklif sürecine geçer.</span></div>
+<div class="definition-point"><strong>1. Hesapla</strong><span>Banyo, mutfak, boya, seramik, çatı veya bina: aracı seçin, birkaç soruyu yanıtlayın, sonucu anında görün.</span></div>
+<div class="definition-point"><strong>2. Planla ve raporla</strong><span>2D / 3D planlayıcıda ürünleri yerleştirin; kalem kalem dökümü PDF olarak indirip paylaşın.</span></div>
+<div class="definition-point"><strong>3. Teklif al</strong><span>Kainta İnşaat Uzmanlarından keşif ve yazılı teklif isteyin. Kayıtlı firmalardan teklif alma çok yakında.</span></div>
+<div class="definition-point"><strong>4. Karar ver</strong><span>Bütçe, kapsam ve teklif elinizde; telefonunuz izniniz olmadan kimseyle paylaşılmaz.</span></div>
 </div></div></div></div>
 </section>
+
+<x-site.why audience="all" />
 
 <section class="block" id="sss">
 <div class="container">
