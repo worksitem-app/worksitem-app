@@ -109,6 +109,31 @@ sync_vendor() {
     while IFS= read -r f; do rm -f "$2/$f"; done < "$TMPD/vendor.del"
 }
 
+# Yayın klasörü (public_html) uygulamanın public/ klasörüne tek tek kısayollarla bağlıdır.
+# Yeni eklenen dosya/klasörün kısayolu otomatik kurulur; var olan bir şeye dokunulmaz (yalnız uyarı).
+# Uygulamanın ürettiği adresleri (llms.txt, sitemap.xml) gölgeleyen elle konmuş dosyalar da uyarılır.
+docroot_links() {
+    local host doc n p
+    host="$(env_val "$LIVE/.env" APP_URL | sed -E 's#^https?://##; s#/.*$##; s#^www\.##')"
+    doc="${GOLIVE_DOCROOT:-$HOME/domains/$host/public_html}"
+    [[ -n "$host" && -d "$doc" ]] || { warn "yayın klasörü bulunamadı ($doc); kısayol kontrolü atlandı"; return 0; }
+    local added=0
+    for p in "$LIVE"/public/* "$LIVE"/public/.well-known; do
+        [[ -e "$p" ]] || continue; n="$(basename "$p")"
+        case "$n" in index.php|.htaccess|storage|hot|robots.txt|llms.txt|sitemap.xml) continue;; esac
+        if [[ ! -e "$doc/$n" && ! -L "$doc/$n" ]]; then
+            ln -s "$p" "$doc/$n" && added=$((added+1)) && ok "kısayol eklendi: $n"
+        elif [[ ! -L "$doc/$n" ]]; then
+            warn "$n yayın klasöründe elle kopyalanmış (kısayol değil); güncellenmez: $doc/$n"
+        fi
+    done
+    for n in llms.txt sitemap.xml; do
+        [[ -e "$LIVE/public/$n" || -e "$doc/$n" ]] && warn "$n statik dosya olarak duruyor; uygulamanın güncel sürümünü gölgeler (yedeğe alıp silin)"
+    done
+    [[ $added -eq 0 ]] && ok "yayın klasörü kısayolları tam"
+    return 0
+}
+
 clear_bootstrap_cache() { rm -f "$1"/bootstrap/cache/{config,routes-v7,routes,events,packages,services}.php; }
 
 # ───────────────────────────── check ─────────────────────────────
@@ -261,6 +286,7 @@ cmd_deploy() {
         "$LIVE/storage/framework/sessions" "$LIVE/storage/framework/views" "$LIVE/storage/logs"
     clear_bootstrap_cache "$LIVE"
     art "$LIVE" optimize:clear >/dev/null
+    docroot_links
 
     step "7/10 Migration"
     art "$LIVE" migrate --pretend --force > "$dir/migrate-pretend.sql" 2>&1 || true

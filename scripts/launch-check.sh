@@ -30,6 +30,14 @@ curl -s "$URL/site.webmanifest" | grep -q '"maskable"' && ok "Uygulama manifesti
 curl -s "$URL/" | grep -q 'serviceWorker.register' && ok "Sayfalarda uygulama kaydı" || no "Sayfalarda sw kaydı yok"
 a=$(curl -s "$URL/.well-known/assetlinks.json"); [ "$a" != "[]" ] && echo "$a" | grep -q 'sha256' && ok "Google Play bağlantısı (assetlinks)" || echo "  · Google Play bağlantısı henüz yok (TWA_SHA256 boş)"
 
+D=~/domains/worksitem.com/public_html; miss=""
+for p in "$LIVE"/public/*; do n=$(basename "$p"); case "$n" in index.php|.htaccess|storage|hot|robots.txt|llms.txt|sitemap.xml) continue;; esac; [ -e "$D/$n" ] || miss="$miss $n"; done
+[ -z "$miss" ] && ok "Yayın klasörü kısayolları tam" || no "Yayın klasöründe eksik:$miss (çözüm: bash scripts/link-public.sh $D $LIVE --url $URL --apply)"
+for n in llms.txt sitemap.xml; do [ -e "$LIVE/public/$n" ] || [ -e "$D/$n" ] && no "$n statik dosya, güncel sürümü gölgeliyor"; done
+
+curl -s "$URL/robots.txt" | grep -q 'firma-paneli' && ok "robots.txt güncel" || no "robots.txt eski (yayın klasöründeki kopya)"
+curl -sI "$URL/sw.js" | grep -qi 'cache-control: no-cache' && ok "sw.js önbelleğe alınmıyor" || echo "  · sw.js için no-cache başlığı yok (yayın klasörü .htaccess)"
+
 echo "▶ Sistem"
 php artisan app:preflight 2>/dev/null | grep -E "Sonuç|FAIL|WARN" | sed 's/^/  /'
 php artisan about 2>/dev/null | grep -i "queue" | sed 's/^ */  Kuyruk: /'

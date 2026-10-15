@@ -33,7 +33,7 @@ if [ -z "$URL" ] && grep -q "APP_URL=" "$APP/.env" 2>/dev/null; then URL="$(grep
 : > /tmp/lp.$$
 for p in "$APP"/public/* "$APP"/public/.well-known; do
   [ -e "$p" ] || continue; n="$(basename "$p")"
-  case "$n" in index.php|.htaccess|storage|hot|robots.txt) continue;; esac   # robots.txt: her ortamın kendi dosyası (staging: Disallow)
+  case "$n" in index.php|.htaccess|storage|hot|robots.txt|llms.txt|sitemap.xml) continue;; esac   # llms.txt, sitemap.xml: uygulama üretir; robots.txt: her ortamın kendi dosyası (staging: Disallow)
   printf '%s\t%s\n' "$n" "$p" >> /tmp/lp.$$
 done
 printf '%s\t%s\n' storage "$APP/storage/app/public" >> /tmp/lp.$$
