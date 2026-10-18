@@ -119,7 +119,7 @@
     </div>
 
     <div class="card">
-        <!-- ANA METRAJLAR -->
+        {{-- ANA METRAJLAR --}}
         <div class="form-grid">
             <div class="form-group">
                 <label>Mutfak Zemin Alanı (m²)</label>
@@ -131,7 +131,7 @@
             </div>
         </div>
 
-        <!-- KALİTE SEÇİMLERİ -->
+        {{-- KALİTE SEÇİMLERİ --}}
         <div class="form-grid">
             <div class="form-group">
                 <label>Dolap Gövde & Kapak Kalitesi</label>
@@ -159,7 +159,7 @@
             </select>
         </div>
 
-        <!-- YENİ: İNCE İŞÇİLİK VE EKİPMAN (DEMOLITION) -->
+        {{-- YENİ: İNCE İŞÇİLİK VE EKİPMAN (DEMOLITION) --}}
         <div class="permits-box">
             <div class="permits-title">🚧 Kırım, Ekipman ve İnce İşçilik Katmanı</div>
             <div class="checkbox-grid">
@@ -170,7 +170,7 @@
             </div>
         </div>
 
-        <!-- TİCARİ MODÜL -->
+        {{-- TİCARİ MODÜL --}}
         <div class="commercial-box">
             <div class="commercial-title">💼 Ticari Müteahhitlik Modülü (Tadilat)</div>
             <div class="form-grid" style="margin-bottom:0;">
@@ -217,7 +217,7 @@
             <div class="break-item profit"><span>4. Ticari Kâr + KDV Tutarı</span><strong id="taxCost">0 TL</strong></div>
         </div>
         
-        <!-- YENİ: HAFTALIK NAKİT AKIŞI GRAFİĞİ -->
+        {{-- YENİ: HAFTALIK NAKİT AKIŞI GRAFİĞİ --}}
         <div class="chart-container" id="chartBox">
             <div class="chart-header">
                 <span style="font-weight:900; font-size:16px;">📊 Haftalık Nakit Akışı (Tadilat S-Curve)</span>
@@ -234,7 +234,7 @@
         </button>
     </div>
 
-    <!-- LEAD FORMU -->
+    {{-- LEAD FORMU --}}
     <div class="budget-confirm-box" id="budgetConfirmBox">
         <div style="font-size: 18px; font-weight: 900;">Mutfağınızı yenilemeye hazır mısınız?</div>
         <div class="budget-confirm-actions">

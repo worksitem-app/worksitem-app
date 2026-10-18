@@ -70,7 +70,7 @@
                 <div class="res-item total"><span>TAHMİNİ NET PİYASA MAAŞI</span> <span id="r_total" data-wc-price>0 TL</span></div>
                 
                 <div class="ai-box">
-                    <div style="color:var(--cyan); font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size:22px; margin-bottom:10px;">🤖 Kariyer Tavsiyesi</div>
+                    <div style="color:var(--cyan); font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size:22px; margin-bottom:10px;">💡 Kariyer Tavsiyesi</div>
                     <ul id="ai_notes" style="font-size:13px; margin:0; padding-left:15px; line-height:1.6;"></ul>
                 </div>
             </div>

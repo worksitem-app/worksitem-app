@@ -76,7 +76,7 @@
                 <div class="res-item"><span>Tesisat & Montaj</span> <strong id="r_plumb">0 TL</strong></div>
                 <div class="res-item total"><span>ANAHTAR TESLİM</span> <strong id="r_total">0 TL</strong></div>
                 
-                <!-- MERKEZİ SATIŞ HUNİSİ (LEAD CTA COMPONENT) -->
+                {{-- MERKEZİ SATIŞ HUNİSİ (LEAD CTA COMPONENT) --}}
                 <x-tools.lead-cta service="mutfak-tadilat" />
             </div>
         </div>

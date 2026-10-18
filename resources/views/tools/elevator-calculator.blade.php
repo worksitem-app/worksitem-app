@@ -26,7 +26,7 @@
                 <div class="res-item total" style="justify-content:center; text-align:center;">
                     <span id="r_result" style="color:var(--green); font-size:32px;">ZORUNLU DEĞİL</span>
                 </div>
-                <div class="ai-box"><div style="color:#8a6200; font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size:22px;">🤖 Yönetmelik Yorumu</div><ul id="ai_notes" style="font-size:13px; color:#0f172a; margin:0; padding-left:15px; line-height:1.6;"></ul></div>
+                <div class="ai-box"><div style="color:#8a6200; font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size:22px;">💡 Yönetmelik Yorumu</div><ul id="ai_notes" style="font-size:13px; color:#0f172a; margin:0; padding-left:15px; line-height:1.6;"></ul></div>
             </div>
         </div>
     </div>

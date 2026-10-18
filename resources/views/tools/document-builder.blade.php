@@ -48,7 +48,7 @@
 
 <div class="container">
     <div class="sidebar">
-        <!-- YASAL UYARI KUTUSU -->
+        {{-- YASAL UYARI KUTUSU --}}
         <div class="legal-warning">
             <h4>ÖNEMLİ YASAL UYARI</h4>
             <p>Burada sunulan tüm belgeler, yalnızca genel bilgi ve örnek amaçlı hazırlanmış taslaklardır. Her inşaat projesi ve hukuki durum kendine özgüdür. Bu taslak metinler, hukuki tavsiye niteliği taşımaz ve tüm yasal gereklilikleri eksiksiz olarak kapsamayabilir.<br><br>Bu belgeleri kullanmadan önce, güncel yasal mevzuata hakim bir <strong>avukata danışmanız</strong> ve belgeleri kendi özel durumunuza göre uyarlatmanız kesinlikle tavsiye edilir.<br><br>Taslakların kendi durumunuza uygunluğunu değerlendirmek sizin sorumluluğunuzdadır; Worksitem, kanunen sınırlandırılamayan haller dışında bu taslakların kullanımından doğan zararlardan sorumlu tutulamaz.</p>
@@ -88,7 +88,7 @@
             <p style="font-size:12px; color:#555;">Düzenleme Tarihi: <span id="outDate"></span></p>
         </div>
         <div class="doc-content" id="outContent">
-            <!-- Dinamik Şablon İçeriği -->
+            {{-- Dinamik Şablon İçeriği --}}
         </div>
         <div class="doc-signatures">
             <div class="sign-box"><div class="sign-line"><span id="outSign1">İŞVEREN</span><br><br><span class="dynamic-text" id="outClientSign">Örnek Yatırım A.Ş.</span></div></div>

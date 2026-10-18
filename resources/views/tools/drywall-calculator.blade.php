@@ -158,7 +158,7 @@
         </div>
     </div>
 
-    <!-- ELEME KAPISI -->
+    {{-- ELEME KAPISI --}}
     <div class="budget-confirm-box" id="budgetConfirmBox">
         <div class="budget-confirm-title">Bu bütçe aralığı projeniz için gerçekçi mi?</div>
         <div class="budget-confirm-text">
@@ -170,13 +170,13 @@
         </div>
     </div>
 
-    <!-- ONAY MESAJI -->
+    {{-- ONAY MESAJI --}}
     <div class="qualified-message" id="qualifiedMessage">
         <strong>Projeniz Kainta İnşaat değerlendirmesine uygun görünüyor.</strong>
         <span>Aşağıdaki formu doldurduğunuzda detaylı teklif süreci için sizinle iletişime geçilecektir.</span>
     </div>
 
-    <!-- B2B LEAD FORM -->
+    {{-- B2B LEAD FORM --}}
     <div class="lead-box" id="leadBox">
         <h3>Alçıpan ve Tadilat Teklifi Alın</h3>
         <p>Hesaplanan bu veriler ışığında Kainta İnşaat uzmanlarından yerinde keşif ve asma tavan/bölme duvar teklifi talep edin.</p>

@@ -123,7 +123,7 @@ document.getElementById('calcBtn').onclick = () => {
     
     const ai = document.getElementById('aiText');
     if(key==='dis') ai.innerText="Dış cephe mantolaması bina kabuğunu komple sararak ısı köprülerini yok eder. Kışın doğalgaz, yazın klima faturanızda %40'a varan kalıcı tasarruf sağlar.";
-    else if(key==='ic') ai.innerText="Apartman veya site yönetimi dış cepheye izin vermiyorsa, odalarınızın dışarıya bakan iç duvarlarına Straforlu Alçıpan kaplayarak harika bir ısı yalıtımı sağlayabilirsiniz. Oda metrajınız sadece 5-6 cm daralır.";
+    else if(key==='ic') ai.innerText="Apartman veya site yönetimi dış cepheye izin vermiyorsa, odalarınızın dışarıya bakan iç duvarlarına Straforlu Alçıpan kaplayarak iyi bir ısı yalıtımı sağlayabilirsiniz. Oda metrajınız sadece 5-6 cm daralır.";
     else ai.innerText="Su yalıtımı, betonarmenin demir donatılarını korozyondan (pastan) koruyan en hayati katmandır. Poliüretan veya çift kompenantlı sürme malzemelerle teras ve ıslak hacimleriniz koruma altına alınır.";
 
     document.getElementById('resBox').style.display = 'block';

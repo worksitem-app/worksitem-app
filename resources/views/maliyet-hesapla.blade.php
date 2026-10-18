@@ -425,7 +425,7 @@ a{color:inherit;text-decoration:none;}
 
     </div>
 
-    <!-- STEPS 1-7 (Same HTML as previously established) -->
+    {{-- STEPS 1-7 (Same HTML as previously established) --}}
 
     <div class="step active" data-step="1">
         <div class="question">Ne yapmak istiyorsunuz?</div>
@@ -524,9 +524,9 @@ a{color:inherit;text-decoration:none;}
     </div>
 
 
-    <!-- ========================================================= -->
-    <!-- RESULT -->
-    <!-- ========================================================= -->
+    {{-- ========================================================= --}}
+    {{-- RESULT --}}
+    {{-- ========================================================= --}}
     <div class="result" id="result">
 
         <div class="result-head">
@@ -535,14 +535,14 @@ a{color:inherit;text-decoration:none;}
             <p>Bu sonuç teklif değildir. Keşif öncesi bütçe planlaması için seçtiğiniz bilgiler ve piyasa verileriyle oluşturulmuştur.</p>
         </div>
 
-        <!-- PRICE -->
+        {{-- PRICE --}}
         <div class="price-card">
             <div class="price-label">Tahmini toplam proje bütçesi</div>
             <div class="price" id="resultPrice">0 TL</div>
             <div class="price-note" id="resultRange">Yaklaşık fiyat aralığı</div>
         </div>
 
-        <!-- BREAKDOWN -->
+        {{-- BREAKDOWN --}}
         <div class="breakdown">
             <div class="breakdown-title">Bütçenin ana dağılımı</div>
             <div class="breakdown-grid">
@@ -572,10 +572,10 @@ a{color:inherit;text-decoration:none;}
     </div>
 </div>
 
-<!-- WORKSITEM AI RENDER MODÜLÜ -->
+{{-- WORKSITEM AI RENDER MODÜLÜ --}}
         <div class="ai-render-box" id="aiRenderBox">
             <div class="ai-badge">✨ Worksitem AI Vision</div>
-            <h3>Hayalinizdeki projeyi görselleştirin</h3>
+            <h3>Projenizi görselleştirin</h3>
             <p>
                 Seçtiğiniz <strong id="renderParamText">Kalite</strong> standartlarına uygun
                 konsept bir 3D render oluşturmak için yapay zekayı tetikleyin.
@@ -603,7 +603,7 @@ a{color:inherit;text-decoration:none;}
             </div>
         </div>
 
-        <!-- QUALIFICATION GATE -->
+        {{-- QUALIFICATION GATE --}}
         <div class="qualification" id="qualificationBox">
             <h3>Bu bütçe aralığı projeniz için gerçekçi mi?</h3>
             <p>Kainta İnşaat'a başvurmadan önce bütçenizin bu seviyede olduğunu onaylayın. Böylece sadece gerçekten uygulanabilir projeleri değerlendirmeye alabiliriz.</p>
@@ -618,7 +618,7 @@ a{color:inherit;text-decoration:none;}
             <span>Bilgilerinizi bıraktığınızda projenizin kapsamı ve tahmini bütçesi Kainta İnşaat ekibine iletilir. Uygun projelerde sonraki adım için iletişime geçilir.</span>
         </div>
 
-        <!-- LEAD -->
+        {{-- LEAD --}}
         <div class="lead-box" id="leadBox" style="display:none;">
             <h3>Projenizi Kainta İnşaat'a değerlendirmeye gönderin.</h3>
             <p>Telefonunuzu bırakın. Projenizin bilgileri, yaklaşık bütçesi ve başlangıç zamanı Kainta İnşaat ekibine iletilsin. <strong>Uygun projelerde detaylı teklif süreci başlatılır.</strong></p>
@@ -1316,7 +1316,7 @@ updateProgress();
 <x-site.kainta-linker />
 <script src="/js/p1-product-events.js" defer></script>
 
-<!-- P1_SERAMIK_INTERNAL_LINK -->
+{{-- P1_SERAMIK_INTERNAL_LINK --}}
 <div style="max-width:1120px;margin:24px auto;padding:0 20px;text-align:center">
     <a
         href="/araclar/seramik-maliyet-hesaplayici"

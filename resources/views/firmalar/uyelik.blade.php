@@ -129,7 +129,7 @@
 
         <label class="fm-check full"><input type="checkbox" name="terms" value="1" @checked(old('terms'))> <span><a href="{{ route('legal.firma_uyelik') }}" target="_blank" rel="noopener">Firma Üyelik ve Aracılık Hizmet Sözleşmesi</a>'ni okudum, kabul ediyorum. Kurucu firma programı sonrasında, kabul edilen tekliflerim için eşleşme bedelini ödemeyi kabul ederim.</span></label>
         @error('terms')<div class="fm-err full">{{ $message }}</div>@enderror
-        <label class="fm-check full"><input type="checkbox" name="declare" value="1" @checked(old('declare'))> <span>Bilgilerin ve vergi levhasının doğru ve güncel olduğunu; üstlendiğim işlerde müşteriye kendi adıma fatura düzenleyeceğimi, işin kusursuz yapılmasından, iş güvenliği ve yasal yükümlülüklerden yalnız firmamın sorumlu olduğunu beyan ederim.</span></label>
+        <label class="fm-check full"><input type="checkbox" name="declare" value="1" @checked(old('declare'))> <span>Bilgilerin ve vergi levhasının doğru ve güncel olduğunu; üstlendiğim işlerde müşteriye kendi adıma fatura düzenleyeceğimi, işin eksiksiz ve kurallara uygun yapılmasından, iş güvenliği ve yasal yükümlülüklerden yalnız firmamın sorumlu olduğunu beyan ederim.</span></label>
         @error('declare')<div class="fm-err full">{{ $message }}</div>@enderror
         <label class="fm-check full"><input type="checkbox" name="kvkk" value="1" @checked(old('kvkk'))> <span><a href="/legal/kvkk-aydinlatma" target="_blank" rel="noopener">KVKK Aydınlatma Metni</a>'ni okudum. Firma ve yetkili bilgilerim üyelik, fatura ve teklif süreçleri için işlenir.</span></label>
         @error('kvkk')<div class="fm-err full">{{ $message }}</div>@enderror

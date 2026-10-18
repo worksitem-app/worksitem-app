@@ -167,7 +167,7 @@
 
     <div class="wc-below">
 
-    <!-- ELEME KAPISI -->
+    {{-- ELEME KAPISI --}}
     <div class="budget-confirm-box" id="budgetConfirmBox">
         <div class="budget-confirm-title">Kainta İnşaat'tan profesyonel uygulama desteği ister misiniz?</div>
         <div class="budget-confirm-text">
@@ -179,13 +179,13 @@
         </div>
     </div>
 
-    <!-- ONAY MESAJI -->
+    {{-- ONAY MESAJI --}}
     <div class="qualified-message" id="qualifiedMessage">
-        <strong>Harika. Metraj bilgileriniz sisteme kaydedildi.</strong>
+        <strong>Son bir adım kaldı.</strong>
         <span>Aşağıdaki formu doldurduğunuzda teknik ekibimiz saha uygulaması ve teklif için iletişime geçecektir.</span>
     </div>
 
-    <!-- B2B LEAD FORM -->
+    {{-- B2B LEAD FORM --}}
     <div class="lead-box" id="leadBox">
         <h3>Profesyonel Saha Uygulaması Teklifi Alın</h3>
         <p>Hesapladığınız hacme özel hafriyat, havuz veya betonarme işlemleri için Kainta İnşaat'tan destek alın.</p>

@@ -188,7 +188,7 @@
         </div>
 
         <div class="ai-insight" id="aiInsight">
-            <div class="ai-insight-icon">🤖</div>
+            <div class="ai-insight-icon">💡</div>
             <div class="ai-insight-text">
                 <strong>Elektrik Mühendisi Notu</strong>
                 <p id="insightText">Hesaplamalar yapılıyor...</p>
@@ -217,7 +217,7 @@
     </div>
 
     <div class="qualified-message" id="qualifiedMessage">
-        <strong>Harika. Doğru elektrik altyapısı hayat kurtarır.</strong>
+        <strong>Son bir adım kaldı.</strong>
         <span>Aşağıdaki formu doldurduğunuzda teknik ekibimiz elektrik projelendirmesi için sizinle iletişime geçecektir.</span>
     </div>
 
@@ -311,7 +311,7 @@ document.getElementById('calculateBtn').addEventListener('click', function() {
     document.getElementById('cableSize').innerText = chosen_s + (chosen_s >= 240 ? ' mm² veya üzeri' : ' mm²');
     document.getElementById('unitPrice').innerText = money.format(unitPrice) + ' TL/m';
 
-    // AI Insight / Mühendislik Notu
+    // Uzman notu / Mühendislik Notu
     const insightText = document.getElementById('insightText');
     if (s_voltage > s_current) {
         insightText.innerHTML = `Dikkat: Girdiğiniz hat mesafesi (${l}m) çok uzun olduğu için, kablo kesiti cihazın çektiği akımdan ziyade <strong>gerilim düşümü (voltaj kaybı)</strong> sınırlarına göre büyütülerek <strong>${chosen_s} mm²</strong> seçilmiştir. Aksi halde cihazlarınız düşük voltajdan dolayı zarar görebilirdi.`;

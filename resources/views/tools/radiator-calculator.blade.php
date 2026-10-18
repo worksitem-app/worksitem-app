@@ -70,7 +70,7 @@
                 <div class="res-item total"><span>ÖNERİLEN PETEK BOYU</span> <span id="r_len" data-wc-price>0 Metre</span></div>
                 
                 <div class="ai-box">
-                    <div style="color:var(--cyan); font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size:22px; margin-bottom:10px;">🤖 Mühendis Yorumu</div>
+                    <div style="color:var(--cyan); font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size:22px; margin-bottom:10px;">💡 Mühendis Yorumu</div>
                     <ul id="ai_notes" style="font-size:13px; margin:0; padding-left:15px;"></ul>
                 </div>
             </div>

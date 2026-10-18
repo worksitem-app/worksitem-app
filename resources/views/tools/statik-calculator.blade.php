@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Statik Proje Bedeli Hesaplayıcı (TMMOB & AI) | WORKSİTEM</title>
+    <title>Statik Proje Bedeli Hesaplayıcı (TMMOB & ) | WORKSİTEM</title>
     <link rel="canonical" href="https://worksitem.com/araclar/statik-proje-bedeli">
-    <meta name="description" content="TMMOB katsayıları ve araçtaki AI endeksine göre yaklaşık minimum statik proje mühendislik hizmet bedelini hesaplayın ve bütçenizi planlayın.">
+    <meta name="description" content="TMMOB katsayıları ve araçtaki güncel maliyet endeksine göre yaklaşık minimum statik proje mühendislik hizmet bedelini hesaplayın ve bütçenizi planlayın.">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -139,9 +139,9 @@
                 </select>
             </div>
             <div class="form-group">
-                <label>🤖 AI Tahmini 2026 ÇŞB Rayici (TL/m²)</label>
+                <label>Tahmini 2026 birim maliyet (TL/m²)</label>
                 <input type="number" id="unitPrice" class="form-control" value="16000" min="1000" step="500">
-                <p style="font-size: 11px; color: #6b7280; margin-top: 5px;">Yapay zeka 2026 sektörel enflasyonuna göre taban rayici 16.000 TL olarak öngörmektedir. Değiştirebilirsiniz.</p>
+                <p style="font-size: 11px; color: #6b7280; margin-top: 5px;">Varsayılan taban değer 16.000 TL/m²'dir; projenize göre değiştirebilirsiniz. Değiştirebilirsiniz.</p>
             </div>
         </div>
 
@@ -181,7 +181,7 @@
         </div>
 
         <div class="ai-insight" id="aiInsight">
-            <div class="ai-insight-icon">🤖</div>
+            <div class="ai-insight-icon">💡</div>
             <div class="ai-insight-text">
                 <strong>Deprem Yönetmeliği (TBDY-2018) Notu</strong>
                 <p id="insightText">Hesaplanıyor...</p>
@@ -201,7 +201,7 @@
 
     <div class="wc-below">
 
-    <!-- ELEME KAPISI -->
+    {{-- ELEME KAPISI --}}
     <div class="budget-confirm-box" id="budgetConfirmBox">
         <div class="budget-confirm-title">Mühendislik hesaplamalarınızı Kainta İnşaat güvencesine almak ister misiniz?</div>
         <div class="budget-confirm-text">
@@ -213,13 +213,13 @@
         </div>
     </div>
 
-    <!-- ONAY MESAJI -->
+    {{-- ONAY MESAJI --}}
     <div class="qualified-message" id="qualifiedMessage">
-        <strong>Harika. Güvenli yapılar doğru mühendislikle başlar.</strong>
+        <strong>Son bir adım kaldı.</strong>
         <span>Aşağıdaki formu doldurduğunuzda Kainta İnşaat Proje Ofisi detaylı teknik teklif için sizinle iletişime geçecektir.</span>
     </div>
 
-    <!-- B2B LEAD FORM -->
+    {{-- B2B LEAD FORM --}}
     <div class="lead-box" id="leadBox">
         <h3>Profesyonel Statik Tasarım Teklifi</h3>
         <p>Mimari projenizi sisteme uygun hale getirecek, demir ve beton optimizasyonunu sağlayacak Kainta İnşaat statik tasarım teklifini alın.</p>
@@ -288,7 +288,7 @@ document.getElementById('calculateBtn').addEventListener('click', function() {
     document.getElementById('classValueShow').innerText = bClass.toFixed(2);
     document.getElementById('engRatio').innerText = '%' + (finalRatio * 100).toFixed(2);
 
-    // AI Insight / Mühendislik Notu Dinamik Değişimi
+    // Uzman notu / Mühendislik Notu Dinamik Değişimi
     let insightStr = `TBDY-2018 kurallarına göre projelendirme maliyetleri belirlenirken yapının resmi maliyeti (<strong>${money.format(officialCost)} TL</strong>) baz alınmıştır.<br><br>`;
     
     if (pType > 1) {

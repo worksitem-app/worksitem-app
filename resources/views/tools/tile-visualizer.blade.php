@@ -39,7 +39,7 @@
 }
 @media(max-width:420px){.custom-tile-size{grid-template-columns:1fr}.stats{grid-template-columns:1fr!important}#catalogTiles .tile-item{min-height:122px!important}.watermark span{font-size:34px}}
 </style>
-<!-- VISUALIZER_SEO_V1 -->
+{{-- VISUALIZER_SEO_V1 --}}
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
 <meta property="og:title" content="Seramik Görselleştirici | Seramiği Mekânında Gör – WORKSİTEM">
 <meta property="og:description" content="Fotoğrafınızı yükleyin, seramik desenini ve karo ebadını seçin; Worki ile mekânınızda AI seramik önizlemesi oluşturun.">
@@ -609,7 +609,7 @@
 <style id="FILTER_HIDDEN_FIX">#catalogTiles .tile-item[hidden]{display:none!important}</style>
 <style id="WATERMARK_CENTER_V7">.watermark{display:flex;align-items:center;justify-content:center!important}.watermark span{position:absolute!important;left:50%!important;top:50%!important;width:max-content!important;max-width:none!important;white-space:nowrap!important;text-align:center!important;transform:translate(-50%,-50%) rotate(-18deg)!important;font-size:clamp(30px,6vw,72px)!important;line-height:1!important;letter-spacing:2px!important}.photo-stage:fullscreen .watermark span{font-size:clamp(48px,8vw,120px)!important}</style>
 
-<!-- FUNNEL_WATERMARK_V3 -->
+{{-- FUNNEL_WATERMARK_V3 --}}
 <style id="WATERMARK_IMAGE_CENTER_V8">
 .photo-stage .watermark{
     inset:auto!important;

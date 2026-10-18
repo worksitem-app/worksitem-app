@@ -251,10 +251,10 @@ body{
             </button>
         </div>
 
-        <!-- FILTERS & SWATCHES -->
+        {{-- FILTERS & SWATCHES --}}
         <div class="filter-section">
             
-            <!-- Brand Selection -->
+            {{-- Brand Selection --}}
             <div class="filter-row">
                 <span class="filter-label">Üretici / Standart:</span>
                 <div class="pill-group" id="brandPills">
@@ -281,7 +281,7 @@ body{
 </div>
             </div>
 
-            <!-- Category Selection -->
+            {{-- Category Selection --}}
             <div class="filter-row">
                 <span class="filter-label">Renk Grubu:</span>
                 <div class="pill-group" id="categoryPills">
@@ -312,20 +312,20 @@ body{
 </div>
             </div>
 
-            <!-- Search Bar -->
+            {{-- Search Bar --}}
             <div class="search-box">
                 <span class="search-icon">🔍</span>
                 <input type="text" id="searchInput" class="search-input" placeholder="Renk adı veya kodu ara..." oninput="renderSwatches()">
             </div>
 
-            <!-- Color Swatches Grid -->
+            {{-- Color Swatches Grid --}}
             <div class="swatch-grid" id="swatchGrid">
-                <!-- Dynamic Swatches -->
+                {{-- Dynamic Swatches --}}
             </div>
 
         </div>
 
-        <!-- SELECTED COLOR BANNER -->
+        {{-- SELECTED COLOR BANNER --}}
         <div class="selected-banner" id="selectedBanner" hidden>
             <div class="selected-info">
                 <div class="selected-preview" id="bannerPreview" style="background-color: #383E42;"></div>
@@ -364,13 +364,13 @@ body{
         Bayi bul →
     </a>
 </div>
-<!-- VISUALIZER CARD -->
+{{-- VISUALIZER CARD --}}
         <div class="visualizer-card" id="visualizerSection">
             <h2 class="visualizer-title">
                 <span>Fotoğraf Üzerinde Görselleştirme</span>
             </h2>
 
-            <!-- TOOLBAR -->
+            {{-- TOOLBAR --}}
             <div class="toolbar">
                 <button class="tool-btn btn-primary" onclick="triggerUpload()">
                     📤 Fotoğraf Yükle
@@ -404,7 +404,7 @@ body{
                 Akıllı Alan Seçimi deneysel bir yardımcıdır; bazı fotoğraflarda
                 tavan, zemin veya diğer benzer yüzeylere taşabilir.
             </div>
-            <!-- SETTINGS BAR -->
+            {{-- SETTINGS BAR --}}
             <div class="settings-bar">
                 <div class="setting-item" id="smartToleranceSetting" hidden>
                     <span>Hassasiyet (Tolerans):</span>
@@ -435,7 +435,7 @@ body{
                 </div>
             </div>
 
-            <!-- CANVAS EDITOR -->
+            {{-- CANVAS EDITOR --}}
             <div class="editor-container" id="editorContainer">
                 <div class="drop-placeholder" id="dropPlaceholder" onclick="triggerUpload()">
                     <div style="font-size: 3rem; margin-bottom: 10px;">📸</div>
@@ -448,7 +448,7 @@ body{
                 </div>
             </div>
 
-            <!-- LEAD CONVERSION BANNER -->
+            {{-- LEAD CONVERSION BANNER --}}
             <div class="lead-banner" id="leadBanner" style="display: none;">
                 <div class="lead-text">
                     <h4>Bu Rengi Odanızda Çok Beğendiniz Mi?</h4>

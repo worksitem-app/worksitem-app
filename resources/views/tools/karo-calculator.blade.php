@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Destekli Karo & Seramik Optimizasyonu | WORKSİTEM</title>
+    <title>Karo ve Seramik Yerleşim Hesabı | WORKSİTEM</title>
     <link rel="canonical" href="https://worksitem.com/araclar/karo-hesaplayici">
-    <meta name="description" content="Mekan ölçülerinizi ve karo ebatlarını girin, yapay zeka en düşük fireli yerleşim senaryosunu ve maliyetini çıkarsın.">
+    <meta name="description" content="Mekan ölçülerinizi ve karo ebatlarını girin, en düşük fireli yerleşim senaryosu ve maliyeti hesaplansın.">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -38,7 +38,7 @@
         .btn-ai { background: linear-gradient(135deg, #111, #222); color: #fff; margin-top: 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.15); }
         .btn-ai:hover { transform: translateY(-2px); box-shadow: 0 15px 25px rgba(0,0,0,0.2); }
 
-        /* AI PROCESSING OVERLAY */
+        /* HESAP OVERLAY */
         .processing-box { display: none; text-align: center; padding: 40px 20px; }
         .processing-box.active { display: block; animation: fadeIn 0.3s ease; }
         .loader { width: 50px; height: 50px; border: 4px solid #f3f3f3; border-top: 4px solid var(--accent); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 20px; }
@@ -106,7 +106,7 @@
 
 <div class="container">
     <div class="tool-header">
-        <div class="badge">AI Optimizasyon Motoru</div>
+        <div class="badge">Yerleşim Hesabı</div>
         <h1>Akıllı Karo Hesaplayıcı</h1>
         <p>Mekan ve karo ebatlarını girin, algoritmamız yatay ve dikey döşeme senaryolarını test ederek en düşük fire oranını ve maliyeti bulsun.</p>
     </div>
@@ -145,17 +145,17 @@
             </select>
         </div>
 
-        <button type="button" class="btn btn-ai" id="btnAnalyze">✨ AI ile Yerleşimi ve Bütçeyi Optimize Et</button>
+        <button type="button" class="btn btn-ai" id="btnAnalyze">Yerleşimi ve Bütçeyi Hesapla</button>
     </div>
 
-    <!-- AI PROCESSING SIMULATION -->
+    {{-- HESAP SIMULATION --}}
     <div class="card processing-box" id="processingBox">
         <div class="loader"></div>
         <div class="process-text" id="processText">Zemin gridi (ızgarası) oluşturuluyor...</div>
         <div class="process-sub">Yatay ve dikey döşeme senaryoları test ediliyor.</div>
     </div>
 
-    <!-- RESULT SECTION -->
+    {{-- RESULT SECTION --}}
     <div class="result-box" id="resultBox">
         <div class="result-label">ANAHTAR TESLİM OPTİMİZE BÜTÇE</div>
         <div class="result-price" id="totalPrice">0 TL</div>
@@ -192,7 +192,7 @@
         </div>
     </div>
 
-    <!-- ELEME KAPISI -->
+    {{-- ELEME KAPISI --}}
     <div class="budget-confirm-box" id="budgetConfirmBox">
         <div class="budget-confirm-title">Bu bütçe aralığı projeniz için uygun mu?</div>
         <div class="budget-confirm-text">
@@ -204,20 +204,20 @@
         </div>
     </div>
 
-    <!-- ONAY MESAJI -->
+    {{-- ONAY MESAJI --}}
     <div class="qualified-message" id="qualifiedMessage">
         <strong>Projeniz Kainta İnşaat standartlarına uygun görünüyor.</strong>
         <span>Kainta İnşaat uzmanlarının sizinle iletişime geçmesi için bilgilerinizi doğrulayın.</span>
     </div>
 
-    <!-- B2B LEAD FORM -->
+    {{-- B2B LEAD FORM --}}
     <div class="lead-box" id="leadBox">
         <h3>Yerinde Keşif ve Profesyonel Teklif</h3>
         <p>Kainta İnşaat Uzmanları projenizi detaylı inceleyip net fiyatlandırma için sizinle iletişime geçecektir.</p>
 
         <form action="{{ route('lead.store') }}" method="POST">
             @csrf
-            <input type="hidden" name="calculated_service" value="AI Karo Optimizasyon Motoru">
+            <input type="hidden" name="calculated_service" value="Karo Yerleşim Hesabı">
             <input type="hidden" name="calculated_area" id="leadCalculatedData" value="">
             
             <div class="form-group">
@@ -255,7 +255,7 @@ document.getElementById('btnAnalyze').addEventListener('click', function() {
         return;
     }
 
-    // UI Değişimi: AI Simülasyonu
+    // UI Değişimi: Hesap animasyonu
     document.getElementById('inputCard').style.display = 'none';
     document.getElementById('processingBox').classList.add('active');
 

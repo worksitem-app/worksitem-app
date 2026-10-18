@@ -91,28 +91,28 @@
 </head>
 <body>
 
-    <!-- 1. HEADER: ANTETLİ KAĞIT FORMATI -->
+    {{-- 1. HEADER: ANTETLİ KAĞIT FORMATI --}}
     <div class="pdf-header">
         <table class="header-table">
             <tr>
                 <td style="width: 30%; text-align: left;">
-                    <!-- KAİNTA LOGO -->
+                    {{-- KAİNTA LOGO --}}
                     <img src="{{ public_path('brand/kainta-logo.jpg') }}" class="logo-kainta" alt="Kainta İnşaat">
                 </td>
                 <td style="width: 40%;" class="doc-title-box">
-                    <div class="doc-title">RESMİ KEŞİF VE METRAJ TEKLİFİ</div>
+                    <div class="doc-title">KEŞİF VE METRAJ ÖN RAPORU</div>
                     <div class="doc-subtitle">2026 ÇŞB Rayiç Bedelleri Baz Alınmıştır</div>
-                    <div class="badge-ai">🤖 YAPAY ZEKA DESTEKLİ ANALİZ</div>
+                    <div class="badge-ai">Ön fizibilite · yaklaşık değerler</div>
                 </td>
                 <td style="width: 30%; text-align: right;">
-                    <!-- WORKSITEM LOGO -->
+                    {{-- WORKSITEM LOGO --}}
                     <img src="{{ public_path('brand/worksitem-logo.png') }}" class="logo-worksitem" alt="Worksitem">
                 </td>
             </tr>
         </table>
     </div>
 
-    <!-- 2. PROJE KÜNYESİ -->
+    {{-- 2. PROJE KÜNYESİ --}}
     <table class="info-grid">
         <tr>
             <td class="label">Proje Adı</td>
@@ -138,7 +138,7 @@
         </tr>
     </table>
 
-    <!-- 3. TOPLAM MALİYET ÖZETİ (GÖSTERGE) -->
+    {{-- 3. TOPLAM MALİYET ÖZETİ (GÖSTERGE) --}}
     <div class="grand-total-box">
         <div class="gt-left">
             <div class="gt-title">ANAHTAR TESLİM YAKLAŞIK MALİYET (KDV HARİÇ)</div>
@@ -157,7 +157,7 @@
         </div>
     </div>
 
-    <!-- 4. METRAJ VE KIRILIM TABLOSU -->
+    {{-- 4. METRAJ VE KIRILIM TABLOSU --}}
     <div class="section-title">DETAYLI METRAJ VE MALİYET KIRILIMI</div>
     <table class="cost-table">
         <thead>
@@ -189,7 +189,7 @@
         </tbody>
     </table>
 
-    <!-- 5. YASAL UYARI VE İMZA BLOĞU -->
+    {{-- 5. YASAL UYARI VE İMZA BLOĞU --}}
     <div class="signature-section">
         <div class="sig-left">
             <strong>YASAL UYARI VE BİLGİLENDİRME:</strong><br>
@@ -205,7 +205,7 @@
         </div>
     </div>
 
-    <!-- SAYFA ALTI BİLGİSİ -->
+    {{-- SAYFA ALTI BİLGİSİ --}}
     <div class="footer-strip">
         Bu belge elektronik olarak üretilmiştir. Barkod No: WKS-{{ date('Ymd-His') }} | İletişim: info@worksitem.com - www.worksitem.com
     </div>

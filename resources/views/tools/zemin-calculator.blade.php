@@ -143,7 +143,7 @@ document.getElementById('bNo').onclick = () => { document.getElementById('bConf'
     <script src="/js/tool-events.js" defer></script>
 <script src="/js/p1-product-events.js" defer></script>
 
-<!-- P1_SERAMIK_INTERNAL_LINK -->
+{{-- P1_SERAMIK_INTERNAL_LINK --}}
 <div style="max-width:1120px;margin:24px auto;padding:0 20px;text-align:center">
     <a
         href="/araclar/seramik-maliyet-hesaplayici"

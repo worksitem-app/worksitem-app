@@ -200,7 +200,7 @@
 
     <div class="wc-below">
 
-    <!-- ELEME KAPISI -->
+    {{-- ELEME KAPISI --}}
     <div class="budget-confirm-box" id="budgetConfirmBox">
         <div class="budget-confirm-title">Kainta İnşaat güvencesiyle asansör teklifi almak ister misiniz?</div>
         <div class="budget-confirm-text">
@@ -212,13 +212,13 @@
         </div>
     </div>
 
-    <!-- ONAY MESAJI -->
+    {{-- ONAY MESAJI --}}
     <div class="qualified-message" id="qualifiedMessage">
-        <strong>Harika. Güvenli ve sertifikalı asansör çözümleri yolda.</strong>
+        <strong>Son bir adım kaldı.</strong>
         <span>Aşağıdaki formu doldurduğunuzda teknik ekibimiz asansör kuyu rölövesi ve teklif için sizinle iletişime geçecektir.</span>
     </div>
 
-    <!-- B2B LEAD FORM -->
+    {{-- B2B LEAD FORM --}}
     <div class="lead-box" id="leadBox">
         <h3>Profesyonel Asansör ve Taahhüt Teklifi</h3>
         <p>Hesapladığınız durak sayısına göre Kainta İnşaat'ın çözüm ortaklarından TSE ve CE sertifikalı asansör kurulum teklifi alın.</p>

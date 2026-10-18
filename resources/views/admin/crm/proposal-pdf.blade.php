@@ -40,12 +40,12 @@
 <body onload="window.print()">
 
     <div class="no-print" style="background:#fefce8; border:1px solid #fde047; padding:15px; text-align:center; font-family:sans-serif; margin-bottom:30px; color:#854d0e;">
-        <h2>🤖 Yapay Zeka Teklifi Hazırladı!</h2>
+        <h2>Teklif hazır</h2>
         <p>Google Gemini AI, müşterinin web sitesindeki eylemlerini ve notlarını analiz ederek aşağıdaki kurumsal niyet mektubunu yazdı.<br>Hedef olarak <b>"PDF Olarak Kaydet"</b> seçeneğini seçin ve müşterinize WhatsApp veya Mail ile iletin.</p>
         <button class="print-btn" onclick="window.print()">Teklif PDF'ini Al</button>
     </div>
 
-    <!-- Letterhead -->
+    {{-- Letterhead --}}
     <div class="header">
         <div class="logo-area">
             <img src="/brand/kainta-logo.jpg" alt="Kainta İnşaat" style="height:60px; border-radius:6px;">
@@ -67,7 +67,7 @@
         Konu: {{ strtoupper($lead->calculated_service ?: 'Tadilat/İnşaat') }} Ön Teklif Mektubu Hk.
     </div>
 
-    <!-- AI TARAFINDAN ÜRETİLEN İÇERİK -->
+    {{-- AI TARAFINDAN ÜRETİLEN İÇERİK --}}
     <div class="ai-content">
         {!! \App\Support\SafeHtml::clean($aiProposalHtml) !!}
     </div>

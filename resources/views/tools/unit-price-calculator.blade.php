@@ -38,7 +38,7 @@
                 <div class="res-item"><span>Ara Toplam (Çıplak Maliyet)</span> <strong id="r_raw">0 TL</strong></div>
                 <div class="res-item"><span>Müteahhit Kârı ve Genel Gider</span> <strong id="r_prof">0 TL</strong></div>
                 <div class="res-item total"><span>ANALİZLİ BİRİM FİYAT</span> <span id="r_total" data-wc-price>0 TL</span></div>
-                <div class="ai-box"><div style="color:#8a6200; font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size:22px;">🤖 İhale Notu</div><ul id="ai_notes" style="font-size:13px; color:#0f172a; margin:0; padding-left:15px;"></ul></div>
+                <div class="ai-box"><div style="color:#8a6200; font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size:22px;">💡 İhale Notu</div><ul id="ai_notes" style="font-size:13px; color:#0f172a; margin:0; padding-left:15px;"></ul></div>
             </div>
         </div>
     </div>

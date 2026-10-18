@@ -27,7 +27,7 @@
 </head>
 <body>
     <div class="box">
-        <h1>🤖 AI Poz & Fiyat Okuyucu</h1>
+        <h1>Poz ve fiyat okuyucu</h1>
         <p>Bakanlık veya tedarikçi fiyat listesini (PDF) yükleyin. Yapay zeka tüm pozları okuyup veritabanınızı otomatik güncellesin.</p>
         
         @if(session('success')) <div class="alert alert-success">{{ session('success') }}</div> @endif

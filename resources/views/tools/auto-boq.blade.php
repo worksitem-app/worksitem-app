@@ -90,7 +90,7 @@
         <p class="subtitle">PDF, Excel, JPG dosyanızı veya yazılı metraj listenizi yükleyin. Yapay zeka iş kalemlerini çıkarır, doğrulanmış rayiçlerle fiyatlandırır.</p>
     </div>
 
-    <!-- YÜKLEME FORMU -->
+    {{-- YÜKLEME FORMU --}}
     <div class="card" id="uploadCard">
         <div class="tabs">
             <button type="button" class="tab active" data-tab="file">📄 Dosya Yükle</button>
@@ -146,7 +146,7 @@
         </form>
     </div>
 
-    <!-- YÜKLEME EKRANI -->
+    {{-- YÜKLEME EKRANI --}}
     <div class="card loader-box" id="loaderBox">
         <div class="loader-icon">🚜</div>
         <div class="loader-title" id="loaderTitle">Yapay Zeka Dosyayı Okuyor...</div>
@@ -154,10 +154,10 @@
         <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
     </div>
 
-    <!-- HATA KUTUSU -->
+    {{-- HATA KUTUSU --}}
     <div class="card error-box" id="errorBox"></div>
 
-    <!-- SONUÇ KARTI -->
+    {{-- SONUÇ KARTI --}}
     <div class="card result-card" id="resultCard">
         <div class="result-header">
             <h2>📊 Fiyatlandırılmış Keşif Özeti</h2>

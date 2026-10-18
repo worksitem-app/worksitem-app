@@ -172,7 +172,7 @@
 
     <div class="wc-below">
 
-    <!-- ELEME KAPISI -->
+    {{-- ELEME KAPISI --}}
     <div class="budget-confirm-box" id="budgetConfirmBox">
         <div class="budget-confirm-title">Kainta İnşaat'tan malzeme ve işçilik teklifi almak ister misiniz?</div>
         <div class="budget-confirm-text">
@@ -184,13 +184,13 @@
         </div>
     </div>
 
-    <!-- ONAY MESAJI -->
+    {{-- ONAY MESAJI --}}
     <div class="qualified-message" id="qualifiedMessage">
-        <strong>Harika. Metrajlarınız Kainta İnşaat ekibine aktarılmaya hazır.</strong>
+        <strong>Son bir adım kaldı.</strong>
         <span>Aşağıdaki formu doldurduğunuzda teknik ekibimiz anahtar teslim uygulama teklifi için iletişime geçecektir.</span>
     </div>
 
-    <!-- B2B LEAD FORM -->
+    {{-- B2B LEAD FORM --}}
     <div class="lead-box" id="leadBox">
         <h3>Profesyonel Uygulama Teklifi Alın</h3>
         <p>Kaba inşaat, şap veya sıva işlemleriniz için profesyonel Kainta İnşaat ekibinden destek alın.</p>

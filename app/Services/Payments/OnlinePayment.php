@@ -96,7 +96,7 @@ class OnlinePayment
 
         if (($res['status'] ?? '') !== 'success' || empty($res['token']) || empty($res['paymentPageUrl'])) {
             $order->update(['status' => 'failed', 'error' => mb_substr((string) ($res['errorMessage'] ?? 'Ödeme sayfası açılamadı.'), 0, 500)]);
-            Log::warning('iyzico online ödeme başlatılamadı', ['order' => $order->public_id, 'error' => $res['errorMessage'] ?? null]);
+            Log::warning('iyzico online ödeme başlatılamadı', ['order' => $order->public_id, 'error' => $res['errorMessage'] ?? null, 'code' => $res['errorCode'] ?? null, 'group' => $res['errorGroup'] ?? null]);
 
             return ['ok' => false, 'error' => (string) ($res['errorMessage'] ?? 'Ödeme sayfası açılamadı.')];
         }

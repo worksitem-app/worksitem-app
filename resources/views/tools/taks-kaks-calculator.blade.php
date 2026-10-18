@@ -166,7 +166,7 @@
         </div>
 
         <div class="ai-insight" id="aiInsight">
-            <div class="ai-insight-icon">🤖</div>
+            <div class="ai-insight-icon">💡</div>
             <div class="ai-insight-text">
                 <strong>Mimari Proje Notu</strong>
                 <p>Emsal (KAKS) hesabına asansör boşlukları, yangın merdivenleri, tesisat şaftları ve açık çıkmalar yönetmelikteki sınırlar dahilinde girmez. Bu sebeple inşa edeceğiniz ve kaba inşaat maliyetine girecek olan gerçek brüt alanınız her zaman KAKS'tan daha büyük çıkacaktır.</p>
@@ -187,7 +187,7 @@
 
     <div class="wc-below">
 
-    <!-- ELEME KAPISI -->
+    {{-- ELEME KAPISI --}}
     <div class="budget-confirm-box" id="budgetConfirmBox">
         <div class="budget-confirm-title">Mimari proje ve anahtar teslim inşaat teklifi ister misiniz?</div>
         <div class="budget-confirm-text">
@@ -199,13 +199,13 @@
         </div>
     </div>
 
-    <!-- ONAY MESAJI -->
+    {{-- ONAY MESAJI --}}
     <div class="qualified-message" id="qualifiedMessage">
-        <strong>Harika. Doğru mimari planlama yatırımınızı katlar.</strong>
+        <strong>Son bir adım kaldı.</strong>
         <span>Aşağıdaki formu doldurduğunuzda mimari tasarım ekibimiz arsanıza özel fizibilite için sizinle iletişime geçecektir.</span>
     </div>
 
-    <!-- B2B LEAD FORM -->
+    {{-- B2B LEAD FORM --}}
     <div class="lead-box" id="leadBox">
         <h3>Profesyonel Mimari Fizibilite ve Taahhüt</h3>
         <p>Arsanızın imar durum belgesini (çap) inceleyerek Kainta İnşaat güvencesiyle ruhsat projesi ve kaba/ince inşaat teklifleri hazırlayalım.</p>

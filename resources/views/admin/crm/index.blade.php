@@ -84,7 +84,7 @@
                         </td>
                         <td>
                             <a href="{{ route('admin.leads.proposal', $lead->id) }}" class="btn-ai" target="_blank">
-                                🤖 Teklif Üret (PDF)
+                                Teklif üret (PDF)
                             </a>
                         </td>
                     </tr>

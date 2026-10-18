@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- YÜKSEK SEO & CTR ODAKLI ETİKETLER -->
+    {{-- YÜKSEK SEO & CTR ODAKLI ETİKETLER --}}
     <title>Müteahhitler İçin İnşaat Keşif ve Maliyet Hesaplayıcı (2026) | WORKSİTEM</title>
     <meta name="description" content="Müteahhitler ve mühendisler için geliştirilmiş B2B inşaat maliyet hesaplama aracı. Güncel piyasa rayiçleriyle malzeme, işçilik, ekipman ve resmî harç bütçenizi çıkarın, profesyonel fizibilite raporunuzu anında indirin.">
     <meta name="keywords" content="inşaat maliyeti hesaplama, müteahhit keşif aracı, şantiye bütçesi, B2B inşaat fizibilite, 2026 inşaat maliyetleri, worksitem pro">
@@ -64,9 +64,9 @@
 
 <x-site.contech-header />
 
-<!-- YENİ: SEO ODAKLI H1 BAŞLIK ALANI -->
+{{-- YENİ: SEO ODAKLI H1 BAŞLIK ALANI --}}
 <div class="page-header">
-    <span class="ai-badge">🏢 AI Destekli B2B İnşaat Simülatörü</span>
+    <span class="ai-badge">🏢 B2B İnşaat Maliyet Simülatörü</span>
     <x-calc.hero title="İnşaat maliyeti hesaplama" crumb="İnşaat maliyeti">Müteahhitler, mimarlar ve proje yöneticileri için tasarlanmış kapsamlı keşif aracı. Malzeme sarfiyatlarını, işçilik yevmiyelerini ve resmî harçları hesaplayın; ticari kârınızı netleştirin.</x-calc.hero>
 </div>
 
@@ -82,7 +82,7 @@
 
     <div class="content-area">
         
-        <!-- SEKM 1 -->
+        {{-- SEKM 1 --}}
         <div id="tab-proje" class="tab-content active">
             <h2>İnşaat Projesi Bilgileri</h2>
             <p class="desc">Toplam inşaat alanını ve ticari çarpanları girin. Diğer tüm sekmeler bu metrekareye göre standart tüketim miktarlarını otomatik hesaplayacaktır.</p>
@@ -105,7 +105,7 @@
             <button class="btn-action" onclick="openTab('tab-hukuki')" style="width:auto; float:right;">İleri: Hukuki Belgeler →</button>
         </div>
 
-        <!-- SEKM 2 -->
+        {{-- SEKM 2 --}}
         <div id="tab-hukuki" class="tab-content">
             <h2>Resmî Harçlar ve Proje Giderleri</h2>
             <p class="desc">Ruhsat, yapı denetim ve mimari/statik tasarım bedelleri gibi yasal maliyetleri girin.</p>
@@ -134,7 +134,7 @@
             <div style="text-align:right; margin-top:20px; font-size:18px; font-weight:800;">Hukuki Toplam: <span id="catTot-leg" style="color:var(--accent);">0 TL</span></div>
         </div>
 
-        <!-- SEKM 3 -->
+        {{-- SEKM 3 --}}
         <div id="tab-malzeme" class="tab-content">
             <h2>Malzeme Miktarı ve Maliyet Tahmincisi</h2>
             <p class="desc">Türkiye standartlarında betonarme bir yapı için m² bazlı sarfiyatlar otomatik hesaplanmıştır. Piyasadan aldığınız güncel birim fiyatları girin.</p>
@@ -163,7 +163,7 @@
             <div style="text-align:right; margin-top:20px; font-size:18px; font-weight:800;">Malzeme Toplamı: <span id="catTot-mat" style="color:var(--accent);">0 TL</span></div>
         </div>
 
-        <!-- SEKM 4 -->
+        {{-- SEKM 4 --}}
         <div id="tab-isgucu" class="tab-content">
             <h2>İş Gücü (Taşeron) Yönetimi</h2>
             <p class="desc">Kaba ve ince işler için gerekli personel sayısını ve günlük yevmiyeleri/taşeron bedellerini girin.</p>
@@ -185,7 +185,7 @@
             <div style="text-align:right; margin-top:20px; font-size:18px; font-weight:800;">İşçilik Toplamı: <span id="catTot-lab" style="color:var(--accent);">0 TL</span></div>
         </div>
 
-        <!-- SEKM 5 -->
+        {{-- SEKM 5 --}}
         <div id="tab-ekipman" class="tab-content">
             <h2>İnşaat Ekipmanları ve Makine Kiraları</h2>
             <p class="desc">Ağır makine ve ekipman kiralama giderlerini (Operatör ve yakıt dâhil veya hariç) hesaplayın.</p>
@@ -207,7 +207,7 @@
             <div style="text-align:right; margin-top:20px; font-size:18px; font-weight:800;">Ekipman Toplamı: <span id="catTot-eq" style="color:var(--accent);">0 TL</span></div>
         </div>
 
-        <!-- SEKM 6 -->
+        {{-- SEKM 6 --}}
         <div id="tab-ozet" class="tab-content">
             <h2>İnşaat Maliyet Özeti ve Bütçe Dağılımı</h2>
             <p class="desc">Tüm sekmelerdeki verileriniz toplanmış, üzerine genel giderler ve kâr marjınız eklenmiştir.</p>

@@ -174,7 +174,7 @@
         </div>
 
         <div class="ai-insight" id="aiInsight">
-            <div class="ai-insight-icon">🤖</div>
+            <div class="ai-insight-icon">💡</div>
             <div class="ai-insight-text">
                 <strong>Algoritma Notu</strong>
                 <p id="insightText">WC zeminlerine çift kompenantlı sürme su yalıtımı (ÇŞB Poz: 15.270.1005) dahil edilmiştir.</p>
@@ -194,7 +194,7 @@
 
     <div class="wc-below">
 
-    <!-- ELEME KAPISI -->
+    {{-- ELEME KAPISI --}}
     <div class="budget-confirm-box" id="budgetConfirmBox">
         <div class="budget-confirm-title">Bu bütçe aralığı projeniz için gerçekçi mi?</div>
         <div class="budget-confirm-text">
@@ -206,13 +206,13 @@
         </div>
     </div>
 
-    <!-- ONAY MESAJI -->
+    {{-- ONAY MESAJI --}}
     <div class="qualified-message" id="qualifiedMessage">
         <strong>Projeniz Kainta İnşaat değerlendirmesine uygun görünüyor.</strong>
         <span>Aşağıdaki formu doldurduğunuzda iç mimari tasarım ve teklif süreci için sizinle iletişime geçilecektir.</span>
     </div>
 
-    <!-- B2B LEAD FORM -->
+    {{-- B2B LEAD FORM --}}
     <div class="lead-box" id="leadBox">
         <h3>İç Mimari ve Tadilat Teklifi Alın</h3>
         <p>Hesaplanan bu veriler ışığında Kainta İnşaat uzmanlarından yerinde rölöve ve anahtar teslim ıslak hacim teklifi talep edin.</p>
@@ -287,7 +287,7 @@ document.getElementById('calculateBtn').addEventListener('click', function() {
     document.getElementById('vitriCost').innerText = money.format(vitriPrice) + ' TL';
     document.getElementById('netArea').innerText = floorArea.toFixed(2) + ' m²';
 
-    // AI INSIGHT LOGIC
+    // UZMAN NOTU MANTIĞI
     let insightStr = '';
     if(vitriPrice > 10000) {
         insightStr += `Gömme rezervuar için duvarda kırım yapılması veya arkasına alçıpan kutu örülmesi gerekecektir. Alanınız ${floorArea.toFixed(1)} m² olduğu için daralmaya dikkat ediniz.<br><br>`;
@@ -332,7 +332,7 @@ document.getElementById('btnNo').addEventListener('click', function() {
     <script src="/js/tool-events.js" defer></script>
 <script src="/js/p1-product-events.js" defer></script>
 
-<!-- P1_SERAMIK_INTERNAL_LINK -->
+{{-- P1_SERAMIK_INTERNAL_LINK --}}
 <div style="max-width:1120px;margin:24px auto;padding:0 20px;text-align:center">
     <a
         href="/araclar/seramik-maliyet-hesaplayici"

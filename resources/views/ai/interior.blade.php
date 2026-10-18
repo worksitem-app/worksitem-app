@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>AI İç Mekan Tasarımı: Odanın Fotoğrafını Yükle, Yeni Halini Gör | WORKSİTEM</title>
-    <meta name="description" content="Odanızın fotoğrafını yükleyin, yapay zekâ ile modern, minimalist veya klasik stilde yeni tasarımını saniyeler içinde görün ve tahmini tadilat bütçesini öğrenin. Ücretsiz.">
+    <meta name="description" content="Odanızın fotoğrafını yükleyin, yapay zekâ ile modern, minimalist veya klasik stilde yeni tasarımını hemen görün ve tahmini tadilat bütçesini öğrenin. Ücretsiz.">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -348,7 +348,7 @@
 
     <div class="container">
         <h1>AI İç Mekan Tasarımcısı</h1>
-        <p class="subtitle">Odanızın fotoğrafını yükleyin, hayalinizdeki tasarımı yazın, yapay zeka gerçeğe dönüştürsün.</p>
+        <p class="subtitle">Odanızın fotoğrafını yükleyin, nasıl bir değişiklik istediğinizi yazın, yeni hâlini görün.</p>
 
         <div id="errorContainer"></div>
         <div id="loadingContainer"></div>

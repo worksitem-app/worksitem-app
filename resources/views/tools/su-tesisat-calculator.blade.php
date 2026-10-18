@@ -173,7 +173,7 @@
         </div>
 
         <div class="ai-insight" id="aiInsight">
-            <div class="ai-insight-icon">🤖</div>
+            <div class="ai-insight-icon">💡</div>
             <div class="ai-insight-text">
                 <strong>Mekanik Uzmanı Notu</strong>
                 <p id="insightText">Hesaplamalar yapılıyor...</p>
@@ -194,7 +194,7 @@
 
     <div class="wc-below">
 
-    <!-- ELEME KAPISI -->
+    {{-- ELEME KAPISI --}}
     <div class="budget-confirm-box" id="budgetConfirmBox">
         <div class="budget-confirm-title">Mekanik tesisatınız için profesyonel destek ister misiniz?</div>
         <div class="budget-confirm-text">
@@ -206,13 +206,13 @@
         </div>
     </div>
 
-    <!-- ONAY MESAJI -->
+    {{-- ONAY MESAJI --}}
     <div class="qualified-message" id="qualifiedMessage">
-        <strong>Harika. Doğru tesisat, yapının ömrünü uzatır.</strong>
+        <strong>Son bir adım kaldı.</strong>
         <span>Aşağıdaki formu doldurduğunuzda Kainta İnşaat mekanik birimi sistem çözümleri için iletişime geçecektir.</span>
     </div>
 
-    <!-- B2B LEAD FORM -->
+    {{-- B2B LEAD FORM --}}
     <div class="lead-box" id="leadBox">
         <h3>Profesyonel Tesisat ve Mekanik Teklifi</h3>
         <p>Projeniz için doğru borulama, vitrifiye altyapısı ve kaçak testli tesisat hizmetini Kainta İnşaat güvencesiyle alın.</p>
@@ -298,10 +298,10 @@ document.getElementById('calculateBtn').addEventListener('click', function() {
     document.getElementById('materialCost').innerText = money.format(materialCost) + ' TL';
     document.getElementById('laborCost').innerText = money.format(laborCost) + ' TL';
 
-    // AI Insight Mantığı
+    // Uzman notu Mantığı
     const insightText = document.getElementById('insightText');
     if (pipeType === 'silent') {
-        insightText.innerHTML = `Mükemmel seçim! <strong>Sessiz pimaş borular</strong> özellikle üst katlardan gelen sifon ve su seslerini yalıtarak yatak odası ve koridorlarda üst düzey akustik konfor sağlar.`;
+        insightText.innerHTML = `<strong>Sessiz pimaş borular</strong> özellikle üst katlardan gelen sifon ve su seslerini yalıtarak yatak odası ve koridorlarda üst düzey akustik konfor sağlar.`;
     } else {
         insightText.innerHTML = `Tesisatta standart malzeme seçimi yapılmıştır. Eğer banyonuz yatak odası gibi sessizlik gerektiren alanlara komşuysa, <strong>Sessiz Boru (Pimaş)</strong> kullanımını değerlendirmenizi tavsiye ederiz.`;
     }

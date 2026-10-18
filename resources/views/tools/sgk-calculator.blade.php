@@ -185,7 +185,7 @@
 
     <div class="wc-below">
 
-    <!-- ELEME KAPISI -->
+    {{-- ELEME KAPISI --}}
     <div class="budget-confirm-box" id="budgetConfirmBox">
         <div class="budget-confirm-title">İskan sürecinizi riske atmak istemezsiniz, değil mi?</div>
         <div class="budget-confirm-text">
@@ -197,13 +197,13 @@
         </div>
     </div>
 
-    <!-- ONAY MESAJI -->
+    {{-- ONAY MESAJI --}}
     <div class="qualified-message" id="qualifiedMessage">
-        <strong>Harika. Resmi evrak süreçleriniz güvende!</strong>
+        <strong>Son bir adım kaldı.</strong>
         <span>Aşağıdaki formu doldurduğunuzda SGK ve Kainta İnşaat Uzmanları iskan takibi için sizinle iletişime geçecektir.</span>
     </div>
 
-    <!-- B2B LEAD FORM -->
+    {{-- B2B LEAD FORM --}}
     <div class="lead-box" id="leadBox">
         <h3>SGK Danışmanlığı ve İskan Takibi Teklifi</h3>
         <p>Bürokratik engellere takılmadan, iskan ruhsatınızı en uygun maliyetle ve hızla almanız için profesyonel destek sunuyoruz.</p>

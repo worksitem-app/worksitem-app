@@ -87,7 +87,7 @@
 
             <button class="btn-calc" onclick="calculateKainta()">Maliyeti Hesapla</button>
 
-            <!-- HESAPLAMA SONUCU -->
+            {{-- HESAPLAMA SONUCU --}}
             <div id="resultArea">
                 <div class="result-box">
                     <div class="result-badge">Kainta İnşaat Anahtar Teslim Bütçesi</div>
@@ -104,7 +104,7 @@
                     </div>
                 </div>
 
-                <!-- CRM LEAD FORMU -->
+                {{-- CRM LEAD FORMU --}}
                 <div class="lead-form">
                     <h3>Bu Fiyatı Teklife Dönüştürün</h3>
                     <form action="/leads/store" method="POST">

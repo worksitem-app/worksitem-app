@@ -191,7 +191,7 @@
 
     <div class="wc-below">
 
-    <!-- ELEME KAPISI -->
+    {{-- ELEME KAPISI --}}
     <div class="budget-confirm-box" id="budgetConfirmBox">
         <div class="budget-confirm-title">Hesaplanan maliyet bütçenize uygun mu?</div>
         <div class="budget-confirm-text">
@@ -203,13 +203,13 @@
         </div>
     </div>
 
-    <!-- ONAY MESAJI -->
+    {{-- ONAY MESAJI --}}
     <div class="qualified-message" id="qualifiedMessage">
-        <strong>Harika. Bireysel risklerden kurtuldunuz!</strong>
+        <strong>Son bir adım kaldı.</strong>
         <span>Aşağıdaki formu doldurduğunuzda teknik ekibimiz projenize özel anahtar teslim teklif için iletişime geçecektir.</span>
     </div>
 
-    <!-- B2B LEAD FORM -->
+    {{-- B2B LEAD FORM --}}
     <div class="lead-box" id="leadBox">
         <h3>Profesyonel Taşeron & Uygulama Teklifi</h3>
         <p>Yasal yükümlülükleri ve SGK risklerini Kainta İnşaat'a devredin, anahtar teslim sözleşme ile rahat edin.</p>

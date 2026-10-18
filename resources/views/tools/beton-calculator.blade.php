@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Beton Hesaplama (m³): Kaç m³ Beton Gerekir? | WORKSİTEM</title>
-    <meta name="description" content="Kaç m³ beton gerekir? Döşeme, temel, kolon ve kiriş için net hacmi, fireyi ve transmikser sayısını saniyeler içinde hesaplayın. Ücretsiz, üyeliksiz.">
+    <meta name="description" content="Kaç m³ beton gerekir? Döşeme, temel, kolon ve kiriş için net hacmi, fireyi ve transmikser sayısını hemen hesaplayın. Ücretsiz, üyeliksiz.">
     <link rel="canonical" href="https://worksitem.com/araclar/beton-hesaplayici">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
@@ -364,7 +364,7 @@ summary:focus-visible{
         </div>
 
         <div class="ai-insight">
-            <div style="font-size: 24px;">🤖</div>
+            <div style="font-size: 24px;">💡</div>
             <div class="ai-insight-text"><strong id="aiTitle">Beton Sınıfı Notu</strong><p id="aiText"></p></div>
         </div>
     </div>
@@ -416,7 +416,7 @@ summary:focus-visible{
                 Her sınıf hazır beton, grobeton, pompalı veya pompasız ve
                 proje bazlı beton sipariş taleplerini WORKSİTEM kullanıcılarından alın.
             </p>
-            <!-- BETON_SUPPLIER_APPLICATION_V1 -->
+            {{-- BETON_SUPPLIER_APPLICATION_V1 --}}
 
 <details
     id="supplierApplication"

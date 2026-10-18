@@ -31,7 +31,7 @@
                 <div class="res-item"><span>BDDK Ekspertiz Sınırı</span> <strong id="r_bddk">0 TL</strong></div>
                 <div class="res-item"><span>Gelire Göre Maks. Taksit (%50)</span> <strong id="r_ins">0 TL/Ay</strong></div>
                 <div class="res-item total"><span>ÇEKİLEBİLECEK AZAMİ KREDİ</span> <span id="r_max" data-wc-price>0 TL</span></div>
-                <div class="ai-box"><div style="color:#8a6200; font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size:22px;">🤖 Finansal Uyarılar</div><ul id="ai_notes" style="font-size:13px; color:#0f172a; margin:0; padding-left:15px;"></ul></div>
+                <div class="ai-box"><div style="color:#8a6200; font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size:22px;">💡 Finansal Uyarılar</div><ul id="ai_notes" style="font-size:13px; color:#0f172a; margin:0; padding-left:15px;"></ul></div>
             </div>
         </div>
     </div>

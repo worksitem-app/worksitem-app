@@ -7,7 +7,7 @@
     <meta name="description" content="PDF, JPG veya PNG kat planınızı yükleyin; WORKSİTEM Dijital Metraj aracıyla proje üzerinden metraj çıkarmaya başlayın.">
     <link rel="canonical" href="https://worksitem.com/araclar/dijital-metraj">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <!-- PDF.js Kütüphanesi -->
+    {{-- PDF.js Kütüphanesi --}}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
     <style>
         :root {
@@ -108,7 +108,7 @@
 <p class="ws-mobile-note">Ölçüm için en iyi deneyim bilgisayar ekranındadır; telefonda planı yakınlaştırarak kullanabilirsiniz.</p>
 <div class="takeoff-shell">
 
-    <!-- LEFT TOOLBAR -->
+    {{-- LEFT TOOLBAR --}}
     <aside class="sidebar-left">
         <button class="tool-btn" id="toolMove" title="Kaydır (Pan)">✋</button>
         <div class="tool-tooltip">Kaydır</div>
@@ -120,7 +120,7 @@
         <div class="tool-tooltip">Alan (m²)</div>
     </aside>
 
-    <!-- MAIN WORKSPACE -->
+    {{-- MAIN WORKSPACE --}}
     <main class="main-workspace">
         <header class="topbar">
             <a href="/araclar" class="brand">WORKSİTEM <span>CONTECH TAKEOFF</span></a>
@@ -138,7 +138,7 @@
         </div>
     </main>
 
-    <!-- RIGHT SIDEBAR -->
+    {{-- RIGHT SIDEBAR --}}
     <aside class="sidebar-right">
         <div class="right-header">
             <h3>Metraj Listesi (BOQ)</h3>
@@ -156,7 +156,7 @@
     </aside>
 </div>
 
-    <!-- KÜÇÜK MODALLAR -->
+    {{-- KÜÇÜK MODALLAR --}}
     <div id="scalePrompt">
         <h3>Ölçek Kalibrasyonu</h3>
         <p style="font-size:13px; color:#a1a1aa;">Çizdiğiniz bu çizgi gerçekte kaç metre?</p>
@@ -165,7 +165,7 @@
         <button class="file-input-btn" id="btnSaveScale">Uygula</button>
     </div>
 
-    <!-- B2B LEAD MODAL -->
+    {{-- B2B LEAD MODAL --}}
     <div id="leadModal">
         <div class="lead-content">
             <h2>Kainta İnşaat'tan Uygulama Teklifi</h2>

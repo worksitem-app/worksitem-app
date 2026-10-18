@@ -71,7 +71,7 @@
                 <div class="res-item total"><span>TOPLAM PENCERE MALİYETİ</span> <span id="r_total" data-wc-price>0 TL</span></div>
                 
                 <div class="ai-box">
-                    <div style="color:var(--cyan); font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size:22px; margin-bottom:10px;">🤖 AI Yorumu</div>
+                    <div style="color:var(--cyan); font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size:22px; margin-bottom:10px;">💡 Uzman Yorumu</div>
                     <ul id="ai_notes" style="font-size:13px; margin:0; padding-left:15px;"></ul>
                 </div>
             </div>

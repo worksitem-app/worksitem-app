@@ -28,7 +28,7 @@
                 <div class="res-item"><span>Çekilen Tahmini Akım</span> <strong id="r_amp">0 Amper</strong></div>
                 <div class="res-item"><span>Gerilim Düşümü Oranı (%e)</span> <strong id="r_drop">0 %</strong></div>
                 <div class="res-item total"><span>ÖNERİLEN KABLO KESİTİ</span> <span id="r_cable">0 mm² Bakır</span></div>
-                <div class="ai-box"><div style="color:#b45309; font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size:22px;">🤖 Elektrik Mühendisi Notu</div><ul id="ai_notes" style="font-size:13px; color:#0f172a; margin:0; padding-left:15px; line-height:1.6;"></ul></div>
+                <div class="ai-box"><div style="color:#b45309; font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size:22px;">💡 Elektrik Mühendisi Notu</div><ul id="ai_notes" style="font-size:13px; color:#0f172a; margin:0; padding-left:15px; line-height:1.6;"></ul></div>
             </div>
         </div>
     </div>

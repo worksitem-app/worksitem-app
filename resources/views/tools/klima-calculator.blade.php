@@ -184,7 +184,7 @@
         </div>
 
         <div class="ai-insight" id="aiInsight">
-            <div class="ai-insight-icon">🤖</div>
+            <div class="ai-insight-icon">💡</div>
             <div class="ai-insight-text">
                 <strong>Mekanik Uzmanı Notu</strong>
                 <p id="insightText">Hesaplamalar tamamlandı.</p>
@@ -204,7 +204,7 @@
 
     <div class="wc-below">
 
-    <!-- ELEME KAPISI -->
+    {{-- ELEME KAPISI --}}
     <div class="budget-confirm-box" id="budgetConfirmBox">
         <div class="budget-confirm-title">Mekanik tesisatınız için profesyonel projelendirme ister misiniz?</div>
         <div class="budget-confirm-text">
@@ -216,13 +216,13 @@
         </div>
     </div>
 
-    <!-- ONAY MESAJI -->
+    {{-- ONAY MESAJI --}}
     <div class="qualified-message" id="qualifiedMessage">
-        <strong>Harika. Doğru iklimlendirme verimi artırır.</strong>
+        <strong>Son bir adım kaldı.</strong>
         <span>Aşağıdaki formu doldurduğunuzda Kainta İnşaat mekanik birimi sistem çözümleri için iletişime geçecektir.</span>
     </div>
 
-    <!-- B2B LEAD FORM -->
+    {{-- B2B LEAD FORM --}}
     <div class="lead-box" id="leadBox">
         <h3>Profesyonel Mekanik ve HVAC Teklifi</h3>
         <p>Projeniz için doğru klima, havalandırma (VRF/Split) ve tesisat çözümlerini Kainta İnşaat güvencesiyle planlayın.</p>
@@ -300,7 +300,7 @@ document.getElementById('calculateBtn').addEventListener('click', function() {
     document.getElementById('totalLoad').innerText = formatBtu(totalLoad) + ' BTU';
     document.getElementById('deviceStandard').innerText = formatBtu(recommended) + ' BTU/h';
 
-    // AI Insight Mantığı
+    // Uzman notu Mantığı
     let insightStr = '';
     if (recommended >= 24000 && recommended < 48000) {
         insightStr = `Alanınızın ısı yükü oldukça yüksek. Tek bir büyük kapasiteli duvar tipi cihaz (Örn: 24.000 BTU) kullanmak yerine, konforu eşit dağıtmak için <strong>iki adet 12.000 BTU cihaz</strong> veya <strong>Salon Tipi</strong> klimaları değerlendirebilirsiniz.`;

@@ -520,7 +520,7 @@ $tileOfficial = collect($tilePrices ?? [])->mapWithKeys(function($p,$role){
         <small id="purchaseSummary">—</small>
     </div>
 
-    <!-- VISUALIZER_SALES_CTA_V1 -->
+    {{-- VISUALIZER_SALES_CTA_V1 --}}
 <div class="visualizer-upsell" id="visualizerUpsell">
     <div>
         <span>AI SERAMİK ÖNİZLEME</span>

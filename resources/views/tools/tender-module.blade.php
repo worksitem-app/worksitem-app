@@ -109,7 +109,7 @@
     <div class="app-container">
         <div class="ambient-glow"></div>
         
-        <!-- SOL PANEL -->
+        {{-- SOL PANEL --}}
         <div class="sidebar">
             <div class="sidebar-header">
                 <h2>Poz Kütüphanesi</h2>
@@ -130,7 +130,7 @@
             </div>
         </div>
 
-        <!-- SAĞ PANEL -->
+        {{-- SAĞ PANEL --}}
         <div class="main-content">
             <div class="toolbar">
                 <button class="tab-btn active">Keşif Özeti</button>

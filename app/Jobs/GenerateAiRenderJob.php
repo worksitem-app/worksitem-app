@@ -21,7 +21,6 @@ class GenerateAiRenderJob implements ShouldQueue
      * Execute the job.
      */
     public function handle(): void
-    {
-        //
-    }
+{
+    logger()->info('QUEUE TEST SUCCESS');
 }

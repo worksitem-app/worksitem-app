@@ -185,7 +185,7 @@
         </div>
 
         <div class="ai-insight" id="aiInsight">
-            <div class="ai-insight-icon" id="insightIcon">🤖</div>
+            <div class="ai-insight-icon" id="insightIcon">💡</div>
             <div class="ai-insight-text">
                 <strong id="insightTitle">Yatırım Risk Analizi</strong>
                 <p id="insightText">Hesaplanıyor...</p>
@@ -205,7 +205,7 @@
 
     <div class="wc-below">
 
-    <!-- ELEME KAPISI -->
+    {{-- ELEME KAPISI --}}
     <div class="budget-confirm-box" id="budgetConfirmBox">
         <div class="budget-confirm-title">Bu projeyi hayata geçirmek için teklif ister misiniz?</div>
         <div class="budget-confirm-text">
@@ -217,13 +217,13 @@
         </div>
     </div>
 
-    <!-- ONAY MESAJI -->
+    {{-- ONAY MESAJI --}}
     <div class="qualified-message" id="qualifiedMessage">
-        <strong>Harika. Doğru bütçe yönetimi projeyi başarıya taşır.</strong>
+        <strong>Son bir adım kaldı.</strong>
         <span>Aşağıdaki formu doldurduğunuzda teknik ofisimiz proje teklifleri için sizinle iletişime geçecektir.</span>
     </div>
 
-    <!-- B2B LEAD FORM -->
+    {{-- B2B LEAD FORM --}}
     <div class="lead-box" id="leadBox">
         <h3>Profesyonel Taahhüt ve Proje Teklifi</h3>
         <p>Arsanızın mimari fizibilitesi, kaba ve ince inşaat maliyetleri için Kainta İnşaat'tan profesyonel destek alın.</p>
@@ -307,7 +307,7 @@ document.getElementById('calculateBtn').addEventListener('click', function() {
         netProfitEl.style.color = 'var(--accent)';
     }
 
-    // AI Insight / Risk Analizi
+    // Uzman notu / Risk Analizi
     const insightBox = document.getElementById('aiInsight');
     const insightTitle = document.getElementById('insightTitle');
     const insightText = document.getElementById('insightText');
@@ -325,7 +325,7 @@ document.getElementById('calculateBtn').addEventListener('click', function() {
         insightIcon.innerText = '⚖️';
     } else {
         insightBox.className = 'ai-insight success';
-        insightTitle.innerText = `Mükemmel Fizibilite (Kârlılık: %${profitMargin.toFixed(1)})`;
+        insightTitle.innerText = `Kârlı görünüyor (Kârlılık: %${profitMargin.toFixed(1)})`;
         insightText.innerHTML = `Kârlılık oranınız <strong>%${profitMargin.toFixed(1)}</strong> seviyesi ile yatırım için oldukça cazip görünüyor. Arsada teknik bir engel yoksa vakit kaybetmeden avan projeyi çizdirip sözleşme aşamasına geçebilirsiniz.`;
         insightIcon.innerText = '📈';
     }

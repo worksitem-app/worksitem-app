@@ -158,7 +158,7 @@
         </div>
 
         <div class="info-card">
-            <div class="info-card-title">🤖 Şantiye Şefi Notu</div>
+            <div class="info-card-title">💡 Şantiye Şefi Notu</div>
             <div class="info-card-text">
                 Plywood kalıp seçimi pürüzsüz (Brüt) beton yüzeyi sağlar. Sıva maliyetini düşürür ancak ilk yatırım ve işçilik maliyeti standart ahşaba göre ortalama %20 daha yüksektir. ÇŞB Poz: 15.180.1003 baz alınmıştır.<br><br>
                 <em>Kalıp/Beton oranları (m²/m³) yaklaşık pratik değerlerdir. Kesin maliyet için statik projeden doğrudan metrekare alınmalıdır.</em>
@@ -173,7 +173,7 @@
 
     <div class="wc-below">
 
-    <!-- ELEME KAPISI -->
+    {{-- ELEME KAPISI --}}
     <div class="budget-confirm-box" id="budgetConfirmBox">
         <div class="budget-confirm-title">Bu bütçe aralığı projeniz için gerçekçi mi?</div>
         <div class="budget-confirm-text">
@@ -185,13 +185,13 @@
         </div>
     </div>
 
-    <!-- ONAY MESAJI -->
+    {{-- ONAY MESAJI --}}
     <div class="qualified-message" id="qualifiedMessage">
         <strong>Projeniz Kainta İnşaat değerlendirmesine uygun görünüyor.</strong>
         <span>Aşağıdaki formu doldurduğunuzda detaylı teklif süreci için sizinle iletişime geçilecektir.</span>
     </div>
 
-    <!-- B2B LEAD FORM -->
+    {{-- B2B LEAD FORM --}}
     <div class="lead-box" id="leadBox">
         <h3>Kalıp ve Kaba İnşaat Teklifi Alın</h3>
         <p>Hesaplanan bu veriler ışığında Kainta İnşaat uzmanlarından kaba inşaat teklifi talep edin.</p>

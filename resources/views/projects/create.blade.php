@@ -189,10 +189,10 @@
         </a>
     </nav>
 
-    <!-- HERO SECTION -->
+    {{-- HERO SECTION --}}
     <div class="hero-container">
         <div class="hero-left">
-            <div class="badge-ai">⚡ KAİNTA AI PROJE ASİSTANI</div>
+            <div class="badge-ai">⚡ PROJE ASİSTANI</div>
             <h1 class="hero-title">İnşaat ve Tadilat Maliyeti Hesaplama | <br><span>Kainta İnşaat</span></h1>
             <p class="hero-sub">Villa, ev, fabrika, ofis ve ticari projeleriniz için yaklaşık inşaat ve tadilat maliyetini hesaplayın. Projenizi Kainta İnşaat'ın teknik ekibiyle değerlendirin.</p>
             
@@ -213,10 +213,10 @@
         </div>
     </div>
 
-    <!-- HESAPLAYICI BÖLÜMÜ -->
+    {{-- HESAPLAYICI BÖLÜMÜ --}}
     <div id="tahminci" class="calculator-section">
         
-        <!-- DÜRÜST MALİYET TICKER'I -->
+        {{-- DÜRÜST MALİYET TICKER'I --}}
         <div class="ticker-wrap">
             <div class="ticker-title">💡 2026 İnşaat Maliyetlerinde Hangi Kalemler Etkili?</div>
             <div class="ticker-move">
@@ -240,8 +240,8 @@
                     <button type="button" class="form-tab-btn" id="btn-tab-metraj" onclick="switchTab('metraj')">📐 HIZLI METRAJ</button>
                 </div>
 
-                <!-- ================= TAB 1: YENİ İNŞAAT ALANI ================= -->
-                <!-- name="" parametreleri db'ye uygun şekilde (question_22 vs) eşleşecek şekilde backend'de işlenecektir -->
+                {{-- ================= TAB 1: YENİ İNŞAAT ALANI ================= --}}
+                {{-- name="" parametreleri db'ye uygun şekilde (question_22 vs) eşleşecek şekilde backend'de işlenecektir --}}
                 <form action="{{ route('projects.store') }}" method="POST" enctype="multipart/form-data" id="section-insaat" class="form-section active">
                     @csrf
                     <div class="main-panel-title">İnşaat Projenizin Yaklaşık Maliyetini Öğrenin</div>
@@ -278,7 +278,7 @@
                         <label class="form-label">ÇŞB Yapı Sınıfı & Tipi</label>
                         <select name="project_type_id" id="projectTypeSelect" class="form-control" required style="border: 2px solid var(--border); font-weight: 700; background: #fff;">
                             <option value="" disabled selected>Lütfen Yapı Sınıfı Seçin</option>
-                            <!-- ID'ler Blade'de dinamik basılacak (Backend loop üzerinden) -->
+                            {{-- ID'ler Blade'de dinamik basılacak (Backend loop üzerinden) --}}
                             @if(isset($projectTypes) && count($projectTypes) > 0)
                                 @foreach($projectTypes as $type)
                                     <option value="{{ $type->id }}">{{ $type->name }}</option>
@@ -343,7 +343,7 @@
                     <button type="submit" class="btn-submit">Maliyetimi Hesapla →</button>
                 </form>
 
-                <!-- ================= TAB 2: TADİLAT ================= -->
+                {{-- ================= TAB 2: TADİLAT ================= --}}
                 <form action="{{ route('projects.store') }}" method="POST" id="section-tadilat" class="form-section">
                     @csrf
                     <input type="hidden" name="is_renovation" value="1">
@@ -407,7 +407,7 @@
                     <button type="submit" class="btn-submit" style="background: #10b981; color:#fff; margin-top:25px;">Kesin Hesaplama ve Rapor Al →</button>
                 </form>
 
-                <!-- ================= TAB 3: HIZLI METRAJ HESAP MAKİNESİ ================= -->
+                {{-- ================= TAB 3: HIZLI METRAJ HESAP MAKİNESİ ================= --}}
                 <div id="section-metraj" class="form-section">
                     <div class="main-panel-title">Yaklaşık Kaba İnşaat Metrajı</div>
                     <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">* Sonuçlar ön fizibilite amacıyla yaklaşık katsayılarla hesaplanır; uygulama metrajı değildir. Türkiye mimari katsayılarına göre temel inşaat malzemelerini saniyeler içinde miktar olarak görün.</p>
@@ -440,9 +440,9 @@
 
             </div>
 
-            <!-- SAĞ PANEL: NASIL ÇALIŞIR & SATIŞ HUNİSİ -->
+            {{-- SAĞ PANEL: NASIL ÇALIŞIR & SATIŞ HUNİSİ --}}
             <div class="right-panel">
-                <div class="funnel-header">KAİNTA AI PROJE ASİSTANI</div>
+                <div class="funnel-header">PROJE ASİSTANI</div>
                 <div class="funnel-sub">
                     Kainta İnşaat'ın geliştirdiği dijital proje analiz sistemiyle inşaat ve tadilat projenizin yaklaşık maliyetini hesaplayın.<br><br>
                     <strong>Not:</strong> <em>Worksitem altyapısı, Kainta İnşaat'ın keşif, maliyet analizi ve teklif süreçlerini dijitalleştirmek için kullanılmaktadır.</em>
@@ -496,7 +496,7 @@
         </div>
     </div>
 
-        <!-- BAŞARI MESAJI BİLDİRİMİ -->
+        {{-- BAŞARI MESAJI BİLDİRİMİ --}}
     @if(session('success'))
         <div style="position: fixed; top: 20px; right: 20px; background: rgba(16, 185, 129, 0.95); border: 1px solid var(--green); color: #fff; padding: 20px; border-radius: 12px; z-index: 10001; font-weight: 600; box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3); animation: slideInRight 0.5s ease-out;">
             ✅ {{ session('success') }}
@@ -505,7 +505,7 @@
         <style>@keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }</style>
     @endif
 
-    <!-- ANA SAYFA LEAD (KEŞİF TALEBİ) MODAL FORMU -->
+    {{-- ANA SAYFA LEAD (KEŞİF TALEBİ) MODAL FORMU --}}
     <div id="leadModalIndex" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:9999; display:none; align-items:center; justify-content:center; backdrop-filter: blur(5px);">
         <div style="background:var(--card-bg); border:1px solid var(--border); border-radius:16px; width:90%; max-width:450px; padding:30px; position:relative; box-shadow:0 25px 50px rgba(0,0,0,0.5);">
             <button type="button" onclick="document.getElementById('leadModalIndex').style.display='none'" style="position:absolute; right:20px; top:20px; background:none; border:none; color:var(--muted); font-size:24px; cursor:pointer;">&times;</button>
@@ -544,20 +544,20 @@
         </div>
     </div>
 
-    <!-- BRAND STATEMENT -->
+    {{-- BRAND STATEMENT --}}
     <div class="brand-statement-box">
         "Sadece inşaat teklifi vermiyoruz; <span>projenizi önce analiz ediyor</span>, maliyetini çıkarıyor ve <span>anahtar teslim uygulamaya</span> hazırlıyoruz."
     </div>
 
-    <!-- FOOTER -->
+    {{-- FOOTER --}}
     <footer class="site-footer">
-        <div>© 2026 Kainta İnşaat | Worksitem AI Asistanı Ortaklığıyla Sunulmaktadır.</div>
+        <div>© 2026 Worksitem</div>
         <div class="footer-links">
             <a onclick="openModal('modal-privacy')">Gizlilik Politikası</a>
             <a onclick="openModal('modal-terms')">Şartlar</a>
             <a onclick="openModal('modal-faq')">SSS</a>
         </div>
-    <!-- 40+ CONTECH HESAPLAMA ARAÇLARI MERKEZİ -->
+    {{-- 40+ CONTECH HESAPLAMA ARAÇLARI MERKEZİ --}}
 <div style="max-width:1200px; margin:60px auto; padding:0 20px;">
     <div style="text-align:center; margin-bottom:40px;">
         <span style="background:#fff8e1; color:#101318; font-weight:800; font-size:0.8rem; padding:6px 14px; border-radius:9999px; text-transform:uppercase;">UZMAN MÜHENDİSLİK ARAÇLARI</span>
@@ -593,7 +593,7 @@
         </a>
         <a href="/araclar/duvar-rengi-gorsellestirici" style="background:#fff; border:1px solid #e2e8f0; border-radius:12px; padding:20px; text-decoration:none; color:#0f172a; transition:all 0.2s;" onmouseover="this.style.borderColor='#101318'">
             <div style="font-size:1.5rem; margin-bottom:8px;">📸</div>
-            <strong style="display:block; font-size:1rem; margin-bottom:4px;">AI Duvar Renklendirici</strong>
+            <strong style="display:block; font-size:1rem; margin-bottom:4px;">Duvar Rengi Görselleştirici</strong>
             <span style="font-size:0.85rem; color:#64748b;">Oda fotoğrafı üzerinde boyama</span>
         </a>
         <a href="/araclar/belge-olusturucu" style="background:#fff; border:1px solid #e2e8f0; border-radius:12px; padding:20px; text-decoration:none; color:#0f172a; transition:all 0.2s;" onmouseover="this.style.borderColor='#101318'">
@@ -609,12 +609,12 @@
 </div>
 </footer>
 
-    <!-- MODALLAR -->
+    {{-- MODALLAR --}}
     <div class="modal-overlay" id="modal-privacy"><div class="modal-box"><div class="modal-title">🔒 GİZLİLİK POLİTİKASI</div><div class="modal-content"><p>Girdiğiniz veriler yalnızca maliyet tahmini oluşturmak için kullanılır. Verileriniz 3. taraflarla asla paylaşılmaz.</p></div><button class="modal-close-btn" onclick="closeModal('modal-privacy')">KAPAT</button></div></div>
     <div class="modal-overlay" id="modal-terms"><div class="modal-box"><div class="modal-title">📋 HİZMET ŞARTLARI</div><div class="modal-content"><p>Burada sunulan maliyet tahminleri bilgilendirme amaçlıdır. Kesin maliyetler için Kainta İnşaat profesyonel mimar ve mühendis kadrosuyla yerinde keşif yapılması gerekmektedir.</p></div><button class="modal-close-btn" onclick="closeModal('modal-terms')">KAPAT</button></div></div>
     <div class="modal-overlay" id="modal-faq"><div class="modal-box"><div class="modal-title">❓ SIKÇA SORULAN SORULAR</div><div class="modal-content"><p>Bu sistem ön fizibilite oluşturmak amacıyla çalışır. Tüm rakamlar yaklaşiktır.</p></div><button class="modal-close-btn" onclick="closeModal('modal-faq')">KAPAT</button></div></div>
 
-    <!-- JAVASCRIPT MOTORU -->
+    {{-- JAVASCRIPT MOTORU --}}
     <script>
         function switchTab(tabId) {
             document.querySelectorAll('.form-tab-btn').forEach(btn => btn.classList.remove('active'));

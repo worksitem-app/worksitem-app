@@ -33,7 +33,7 @@
     <div style="padding:15px 4%; border-bottom:1px solid var(--border); background:#151c28;"><a href="/araclar" style="color:#fff; text-decoration:none; font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size:24px;">◀ WORKSİTEM ARAÇLAR</a></div>
     
     <div class="container">
-        <!-- SOL PANEL -->
+        {{-- SOL PANEL --}}
         <div class="form-card">
             <h1>Merdiven Hesaplayıcı</h1>
             <p style="color:var(--muted); font-size:13px; margin-bottom:20px;">Ergonomik merdiven formülü (2h + b = 63 cm) kullanılarak basamak ölçüleri ve 2D kesit planı otomatik oluşturulur.</p>
@@ -59,7 +59,7 @@
             <a href="/maliyet-hesapla" class="cta-btn">Betonarme Maliyetini Hesapla →</a>
         </div>
 
-        <!-- SAĞ PANEL: 2D ÇİZİM MOToru -->
+        {{-- SAĞ PANEL: 2D ÇİZİM MOToru --}}
         <div class="canvas-container">
             <canvas id="stairCanvas" width="800" height="500"></canvas>
             <div style="position:absolute; top:20px; left:20px; font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size:24px; color:rgba(255,255,255,0.2);">2D KESİT PLANI</div>

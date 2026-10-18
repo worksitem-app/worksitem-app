@@ -24,7 +24,7 @@
                 <div class="res-item"><span>SGK ve Vergi (%37.5 Brüt Üzerinden)</span> <strong id="r_sgk">0 TL</strong></div>
                 <div class="res-item"><span>Yemek & Yol Gideri</span> <strong id="r_extra">0 TL</strong></div>
                 <div class="res-item total"><span>İŞVERENE TOPLAM MALİYET</span> <span id="r_total">0 TL</span></div>
-                <div class="ai-box"><div style="color:#b45309; font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size:22px;">🤖 İş Güvenliği Notu</div><ul id="ai_notes" style="font-size:13px; color:#0f172a; margin:0; padding-left:15px;"></ul></div>
+                <div class="ai-box"><div style="color:#b45309; font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size:22px;">💡 İş Güvenliği Notu</div><ul id="ai_notes" style="font-size:13px; color:#0f172a; margin:0; padding-left:15px;"></ul></div>
             </div>
         </div>
     </div>

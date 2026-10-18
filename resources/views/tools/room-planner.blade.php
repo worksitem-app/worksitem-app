@@ -68,7 +68,7 @@
     <nav class="wc-crumb" aria-label="Sayfa yolu" style="max-width:1200px;margin:18px auto 0;padding:0 4%;font-size:13px;color:#5B6472"><a href="/" style="color:inherit">Ana sayfa</a> / <a href="/araclar" style="color:inherit">Araçlar</a> / <span>Oda tasarımı</span></nav>
     
     <div class="container">
-        <!-- SOL PANEL: GİRDİLER VE FOTOĞRAF -->
+        {{-- SOL PANEL: GİRDİLER VE FOTOĞRAF --}}
         <div class="panel">
             <h1>Yapay zekâ ile oda tasarımı</h1>
             <p class="subtitle">Odanızın fotoğrafını yükleyin, stili seçin; yapay zekâ duvar, pencere ve kapıları koruyarak odayı seçtiğiniz stilde yeniden döşesin. Sonuç bir görselleştirmedir, uygulama projesi değildir.</p>
@@ -116,7 +116,7 @@
             @endif
         </div>
 
-        <!-- SAĞ PANEL: ÇALIŞMA ALANI VE SONUÇLAR -->
+        {{-- SAĞ PANEL: ÇALIŞMA ALANI VE SONUÇLAR --}}
         <div class="workspace">
             
             <div class="placeholder-view" id="placeholderView">

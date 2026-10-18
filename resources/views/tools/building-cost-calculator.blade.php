@@ -166,7 +166,7 @@
             </div>
         </div>
 
-        <!-- YENİ: İZİNLER, HARÇLAR VE ŞANTİYE KURULUMU -->
+        {{-- YENİ: İZİNLER, HARÇLAR VE ŞANTİYE KURULUMU --}}
         <div class="permits-box">
             <div class="permits-title">📜 Yasal İzinler & Ek Maliyetler (Opsiyonel)</div>
             <div class="checkbox-grid">
@@ -232,7 +232,7 @@
 
     <div class="wc-below">
 
-    <!-- ... (Aşağıdaki Lead form html'i aynı) ... -->
+    {{-- ... (Aşağıdaki Lead form html'i aynı) ... --}}
     <div class="budget-confirm-box" id="budgetConfirmBox">
         <div style="font-size: 18px; font-weight: 900;">Projeniz hazır mı? Teklif alın.</div>
         <div class="budget-confirm-actions">

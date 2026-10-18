@@ -72,7 +72,7 @@
                 <div class="res-item total"><span>ÖNERİLEN CİHAZ</span> <strong id="r_total">0 BTU</strong></div>
                 
                 <div class="ai-box">
-                    <div style="color:var(--primary); font-weight:800; margin-bottom:10px;">🤖 Mekanik Uzmanı Notu</div>
+                    <div style="color:var(--primary); font-weight:800; margin-bottom:10px;">💡 Mekanik Uzmanı Notu</div>
                     <ul id="ai_notes" style="font-size:0.875rem; margin:0; padding-left:18px;"></ul>
                 </div>
                 </div>

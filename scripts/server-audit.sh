@@ -7,7 +7,7 @@
 #  Ne yapar: ana dizin, uygulamalar (~/apps/*, eski kopyalar), alan adları
 #  (public_html), yedekler, büyük dosyalar, artık dosyalar, cron, veritabanı
 #  boyutları ve dosya sayısı (inode) raporu çıkarır.
-#  Rapor: ~/backups/audit-TARIH.txt  → bu dosyayı Claude'a gönderin.
+#  Rapor: ~/backups/audit-TARIH.txt  → bu dosyayı teknik ekibe gönderin.
 #  Şifre, anahtar, .env değerleri YAZDIRILMAZ (yalnızca güvenli ayar adları).
 # ═══════════════════════════════════════════════════════════════
 set -uo pipefail
@@ -125,7 +125,7 @@ done < "$TMPD/apps"
 sec "10. Özet"
 echo "Uygulama sayısı: $(wc -l < "$TMPD/apps")"
 echo "Ana dizindeki .b64/.patch: $(find "$H" -maxdepth 1 -type f \( -name '*.b64' -o -name '*.patch' \) 2>/dev/null | wc -l)"
-echo "Bitti. Bu dosyayı Claude'a gönderin: $OUT"
+echo "Bitti. Bu dosyayı teknik ekibe gönderin: $OUT"
 } > "$OUT" 2>&1
 
 echo "Rapor hazır: $OUT  ($(wc -l < "$OUT") satır)"

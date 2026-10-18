@@ -21,7 +21,7 @@
             <input type="hidden" name="landing_page" data-lead-tracking="landing_page">
             <input type="hidden" name="referrer" data-lead-tracking="referrer">
 
-            <!-- Proje Tipi -->
+            {{-- Proje Tipi --}}
             <div style="margin-bottom:18px;">
                 <label style="display:block; font-size:0.85rem; font-weight:700; color:#334155; margin-bottom:8px;">Proje Tipi *</label>
                 <div style="display:flex; flex-direction:column; gap:8px;">
@@ -40,25 +40,25 @@
                 </div>
             </div>
 
-            <!-- Ad Soyad -->
+            {{-- Ad Soyad --}}
             <div style="margin-bottom:14px;">
                 <label style="display:block; font-size:0.85rem; font-weight:700; color:#334155; margin-bottom:4px;">Ad Soyad *</label>
                 <input type="text" name="full_name" required placeholder="Adınız ve Soyadınız" style="width:100%; padding:11px 14px; border-radius:8px; border:1px solid #cbd5e1; font-family:inherit; font-size:0.95rem; background:#f8fafc; outline:none;">
             </div>
 
-            <!-- Telefon Numaranız -->
+            {{-- Telefon Numaranız --}}
             <div style="margin-bottom:14px;">
                 <label style="display:block; font-size:0.85rem; font-weight:700; color:#334155; margin-bottom:4px;">Telefon Numaranız *</label>
                 <input type="tel" name="phone" required placeholder="05XX XXX XX XX" style="width:100%; padding:11px 14px; border-radius:8px; border:1px solid #cbd5e1; font-family:inherit; font-size:0.95rem; background:#f8fafc; outline:none;">
             </div>
 
-            <!-- Ek Notlarınız -->
+            {{-- Ek Notlarınız --}}
             <div style="margin-bottom:20px;">
                 <label style="display:block; font-size:0.85rem; font-weight:700; color:#334155; margin-bottom:4px;">Ek Notlarınız (Opsiyonel)</label>
                 <textarea name="notes" id="modalNotes" rows="2" placeholder="Projeniz hakkında eklemek istediğiniz detaylar..." style="width:100%; padding:11px 14px; border-radius:8px; border:1px solid #cbd5e1; font-family:inherit; font-size:0.95rem; background:#f8fafc; outline:none;"></textarea>
             </div>
 
-            <!-- KVKK ve İletişim Tercihleri -->
+            {{-- KVKK ve İletişim Tercihleri --}}
             <div style="margin-bottom:18px; padding:14px; border:1px solid #cbd5e1; border-radius:10px; background:#f8fafc;">
                 <label style="display:flex; align-items:flex-start; gap:10px; cursor:pointer; color:#334155; font-size:0.78rem; line-height:1.5;">
                     <input
@@ -95,7 +95,7 @@
                 </label>
             </div>
 
-            <!-- Submit Button -->
+            {{-- Submit Button --}}
             <button type="submit" style="width:100%; background:#059669; color:#ffffff; font-weight:800; font-size:1rem; padding:15px; border-radius:10px; border:none; cursor:pointer; transition:background 0.2s;" onmouseover="this.style.background='#047857'" onmouseout="this.style.background='#059669'">
                 ÜCRETSİZ KEŞİF İSTE →
             </button>

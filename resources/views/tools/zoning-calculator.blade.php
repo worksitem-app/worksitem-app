@@ -45,7 +45,7 @@
                 <div class="res-item total"><span>MAKSİMUM KAT SAYISI</span> <span id="r_floors">0 Kat</span></div>
                 
                 <div class="ai-box">
-                    <div style="color:var(--cyan); font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size:22px; margin-bottom:10px;">🤖 Mimari Uyarılar</div>
+                    <div style="color:var(--cyan); font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size:22px; margin-bottom:10px;">💡 Mimari Uyarılar</div>
                     <ul id="ai_notes" style="font-size:13px; margin:0; padding-left:15px; line-height:1.6;"></ul>
                 </div>
             </div>

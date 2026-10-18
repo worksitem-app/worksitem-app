@@ -32,7 +32,7 @@
                 <div class="res-item total"><span>ÖNERİLEN BORU ÇAPI</span> <span id="r_dia" data-wc-price>0 mm</span></div>
                 <div class="res-item"><span>Boru Birim Fiyatı (2026 ÇŞB)</span> <strong id="r_price">0 TL/m</strong></div>
                 <div class="res-item"><span>Toplam Boru Maliyeti</span> <strong id="r_total">0 TL</strong></div>
-                <div class="ai-box"><div style="color:#8a6200; font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size:22px;">🤖 Tesisat Notu</div><ul id="ai_notes" style="font-size:13px; color:#0f172a; margin:0; padding-left:15px;"></ul></div>
+                <div class="ai-box"><div style="color:#8a6200; font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size:22px;">💡 Tesisat Notu</div><ul id="ai_notes" style="font-size:13px; color:#0f172a; margin:0; padding-left:15px;"></ul></div>
             </div>
         </div>
     </div>

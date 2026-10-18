@@ -180,7 +180,7 @@
 
     <div class="wc-below">
 
-    <!-- ELEME KAPISI -->
+    {{-- ELEME KAPISI --}}
     <div class="budget-confirm-box" id="budgetConfirmBox">
         <div class="budget-confirm-title">Mülkünüz için resmi harita ve aplikasyon desteği ister misiniz?</div>
         <div class="budget-confirm-text">
@@ -192,13 +192,13 @@
         </div>
     </div>
 
-    <!-- ONAY MESAJI -->
+    {{-- ONAY MESAJI --}}
     <div class="qualified-message" id="qualifiedMessage">
-        <strong>Harika. Doğru koordinatlarla sınır ihlallerini önlüyoruz.</strong>
+        <strong>Son bir adım kaldı.</strong>
         <span>Aşağıdaki formu doldurduğunuzda Harita departmanımız yasal süreçler için sizinle iletişime geçecektir.</span>
     </div>
 
-    <!-- B2B LEAD FORM -->
+    {{-- B2B LEAD FORM --}}
     <div class="lead-box" id="leadBox">
         <h3>Profesyonel Harita & LİHKAB Desteği</h3>
         <p>Arazinize özel total station ve GPS ile hassas ölçüm, plankote ve sınır tespiti için Kainta İnşaat'tan teklif alın.</p>
@@ -264,7 +264,7 @@ document.getElementById('calculateBtn').addEventListener('click', function() {
     document.getElementById('paperCm').innerText = measurementCm + ' cm';
     document.getElementById('realCm').innerText = money.format(realCm) + ' cm';
 
-    // AI Insight (Mühendis Notu) Dinamik Hesaplama
+    // Uzman notu (Mühendis Notu) Dinamik Hesaplama
     // 1 mm kağıt üzerinde gerçekte kaç metredir?
     const mmToMeter = (1 * scale) / 1000;
     

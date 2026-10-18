@@ -190,7 +190,7 @@
 
     <div class="wc-below">
 
-    <!-- ELEME KAPISI -->
+    {{-- ELEME KAPISI --}}
     <div class="budget-confirm-box" id="budgetConfirmBox">
         <div class="budget-confirm-title">Elektrik faturasını sıfırlamak için Kainta İnşaat'tan teklif ister misiniz?</div>
         <div class="budget-confirm-text">
@@ -202,13 +202,13 @@
         </div>
     </div>
 
-    <!-- ONAY MESAJI -->
+    {{-- ONAY MESAJI --}}
     <div class="qualified-message" id="qualifiedMessage">
-        <strong>Harika. Temiz enerjiye ilk adımı attınız!</strong>
+        <strong>Son bir adım kaldı.</strong>
         <span>Aşağıdaki formu doldurduğunuzda Kainta İnşaat Enerji birimi çatı keşfi ve net teklif için sizinle iletişime geçecektir.</span>
     </div>
 
-    <!-- B2B LEAD FORM -->
+    {{-- B2B LEAD FORM --}}
     <div class="lead-box" id="leadBox">
         <h3>Profesyonel EPC ve GES Teklifi Alın</h3>
         <p>Hesaplanan güç ihtiyacınıza göre, en verimli panel ve inverter kombinasyonları için anahtar teslim fiyat çalışması talep edin.</p>
@@ -298,10 +298,10 @@ document.getElementById('calculateBtn').addEventListener('click', function() {
     document.getElementById('roofArea').innerText = roofArea.toFixed(0) + ' m²';
     document.getElementById('roiTime').innerText = roiYears + ' Yıl';
 
-    // AI Insight / Mühendislik Notu
+    // Uzman notu / Mühendislik Notu
     const insightText = document.getElementById('insightText');
     if (roiYears < 5) {
-        insightText.innerHTML = `Mükemmel bir yatırım! Bölgenizin güneşlenme süresi sayesinde sistem kendini <strong>${roiYears} yıl</strong> gibi çok kısa bir sürede amorti ediyor. Sistem ömrünün 25 yıl olduğu düşünüldüğünde, kalan 20 yıl boyunca ücretsiz elektrik kullanacaksınız.`;
+        insightText.innerHTML = `Bölgenizin güneşlenme süresiyle sistem kendini <strong>${roiYears} yıl</strong> gibi çok kısa bir sürede amorti ediyor. Sistem ömrünün 25 yıl olduğu düşünüldüğünde, kalan 20 yıl boyunca ücretsiz elektrik kullanacaksınız.`;
     } else {
         insightText.innerHTML = `Sistem yatırım maliyetini mevcut elektrik faturanıza göre yaklaşık <strong>${roiYears} yılda</strong> çıkarıyor. Elektrik birim fiyatlarına gelebilecek zamlar bu amortisman süresini daha da kısaltacaktır. Çatınızda ${roofArea.toFixed(0)} m² boş alan olduğundan emin olun.`;
     }

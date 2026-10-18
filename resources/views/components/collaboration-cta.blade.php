@@ -1,4 +1,4 @@
-<!-- WORKSITEM_COLLABORATION_CTA_V1 -->
+{{-- WORKSITEM_COLLABORATION_CTA_V1 --}}
 <section class="ws-collab-section" aria-labelledby="wsCollabTitle">
     <style>
         .ws-collab-section{

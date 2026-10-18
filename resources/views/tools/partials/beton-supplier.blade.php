@@ -15,7 +15,7 @@
                 Her sınıf hazır beton, grobeton, pompalı veya pompasız ve
                 proje bazlı beton sipariş taleplerini WORKSİTEM kullanıcılarından alın.
             </p>
-            <!-- BETON_SUPPLIER_APPLICATION_V1 -->
+            {{-- BETON_SUPPLIER_APPLICATION_V1 --}}
 
 <details
     id="supplierApplication"

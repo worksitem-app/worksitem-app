@@ -34,11 +34,14 @@ return new class extends Migration
 
             $table->timestamps();
 
-            $table->index([
-                'source_question_id',
-                'source_option_id',
-                'target_question_id'
-            ]);
+            $table->index(
+    [
+        'source_question_id',
+        'source_option_id',
+        'target_question_id'
+    ],
+    'qr_lookup_idx'
+);
         });
     }
 

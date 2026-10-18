@@ -167,7 +167,7 @@
         </div>
 
         <div class="ai-insight" id="aiInsight">
-            <div class="ai-insight-icon" id="insightIcon">🤖</div>
+            <div class="ai-insight-icon" id="insightIcon">💡</div>
             <div class="ai-insight-text">
                 <strong id="insightTitle">Yatırım ve Piyasa Notu</strong>
                 <p id="insightText">Hesaplanıyor...</p>
@@ -196,7 +196,7 @@
 
     <div class="wc-below">
 
-    <!-- ELEME KAPISI -->
+    {{-- ELEME KAPISI --}}
     <div class="budget-confirm-box" id="budgetConfirmBox">
         <div class="budget-confirm-title">Mülkünüzü değerinde yenilemek veya yeni projelere dönüştürmek ister misiniz?</div>
         <div class="budget-confirm-text">
@@ -208,13 +208,13 @@
         </div>
     </div>
 
-    <!-- ONAY MESAJI -->
+    {{-- ONAY MESAJI --}}
     <div class="qualified-message" id="qualifiedMessage">
-        <strong>Harika. Gayrimenkulünüzün değerine değer katacağız.</strong>
+        <strong>Son bir adım kaldı.</strong>
         <span>Aşağıdaki formu doldurduğunuzda proje uzmanlarımız yatırım ve yenileme teklifleri için iletişime geçecektir.</span>
     </div>
 
-    <!-- B2B LEAD FORM -->
+    {{-- B2B LEAD FORM --}}
     <div class="lead-box" id="leadBox">
         <h3>Profesyonel Renovasyon ve Yatırım Teklifi</h3>
         <p>Mülkünüzün tadilatı veya yeni gayrimenkul yatırımlarınızın planlanması için Kainta İnşaat uzmanlarından destek alın.</p>
@@ -281,7 +281,7 @@ document.getElementById('calculateBtn').addEventListener('click', function() {
     document.getElementById('annualRent').innerText = money.format(adjustedAnnualRent) + ' TL';
     document.getElementById('roiPercent').innerText = '% ' + roi.toFixed(2);
 
-    // AI Insight ve Cross-Sell Mantığı
+    // Uzman notu ve Cross-Sell Mantığı
     const insightBox = document.getElementById('aiInsight');
     const insightTitle = document.getElementById('insightTitle');
     const insightText = document.getElementById('insightText');
@@ -296,7 +296,7 @@ document.getElementById('calculateBtn').addEventListener('click', function() {
 
     if (amortization <= 15) {
         insightBox.className = 'ai-insight success';
-        insightTitle.innerText = `Mükemmel Getiri Oranı`;
+        insightTitle.innerText = `Getiri oranı yüksek`;
         insightText.innerHTML = `Yıllık <strong>%${roi.toFixed(2)}</strong> ROI (Yatırım Getirisi) oranı konut piyasasında bulması çok zor bir orandır. Genellikle ticari gayrimenkuller bu seviyede bir geri dönüş sağlar. Bu yatırımı korumanızı tavsiye ederiz.`;
         insightIcon.innerText = '📈';
         investCrossSell.style.display = 'block'; // Yeni yatırımlara aç

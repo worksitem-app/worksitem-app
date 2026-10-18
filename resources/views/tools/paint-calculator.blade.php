@@ -1986,7 +1986,7 @@ summary:focus-visible{
 </style>
 
 
-<!-- PAINT_SEO_META_V2 -->
+{{-- PAINT_SEO_META_V2 --}}
 
 <meta
     name="robots"
@@ -2513,7 +2513,7 @@ summary:focus-visible{
 
             </div>
 
-            <!-- ÖLÇÜLERDEN -->
+            {{-- ÖLÇÜLERDEN --}}
 
             <div id="dimensionsPanel">
 
@@ -2661,7 +2661,7 @@ summary:focus-visible{
 
             </div>
 
-            <!-- NET ALAN -->
+            {{-- NET ALAN --}}
 
             <div id="netPanel" class="hidden">
 
@@ -2692,7 +2692,7 @@ summary:focus-visible{
 
             </div>
 
-            <!-- DIŞ CEPHE -->
+            {{-- DIŞ CEPHE --}}
 
             <div id="accessPanel" class="hidden">
 
@@ -2718,7 +2718,7 @@ summary:focus-visible{
 
             </div>
 
-            <!-- ADVANCED -->
+            {{-- ADVANCED --}}
 
             <details class="advanced-settings">
 
@@ -2839,7 +2839,7 @@ summary:focus-visible{
 
         </section>
 
-        <!-- RESULT -->
+        {{-- RESULT --}}
 
         <aside class="panel result-panel">
 
@@ -2869,7 +2869,7 @@ summary:focus-visible{
 
                 </div>
 
-                <!-- YÜKSEK NİYET CTA -->
+                {{-- YÜKSEK NİYET CTA --}}
                 <div class="result-cta">
 
                     <strong>Uygulama için teklif alın</strong>
@@ -2959,7 +2959,7 @@ summary:focus-visible{
                     class="status warn hidden">
                 </div>
 
-                <!-- MALZEME -->
+                {{-- MALZEME --}}
                 <details class="result-more">
                     <summary>Malzeme listesini ve hesap detaylarını göster</summary>
                     <div class="result-more-body">
@@ -3110,7 +3110,7 @@ summary:focus-visible{
     });
 })();
 </script>
-<!-- MOBILE CTA -->
+{{-- MOBILE CTA --}}
 
 <div
     id="mobileStickyCta"
@@ -4794,7 +4794,7 @@ syncSurfaceScope();
 
 
 
-<!-- PAINT_SEO_LLM_CONTENT_V2 -->
+{{-- PAINT_SEO_LLM_CONTENT_V2 --}}
 
 <section
     class="paint-seo-section first"
