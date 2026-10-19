@@ -133,7 +133,7 @@ return [
 
     // 3D görünüm kütüphanesi (sabit sürüm)
     'three' => [
-        'module' => 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js',
-        'addons' => 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/',
+        'module' => 'https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.js',
+        'addons' => 'https://cdn.jsdelivr.net/npm/three@0.186.1/examples/jsm/',
     ],
 ];

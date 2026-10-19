@@ -41,4 +41,11 @@ return [
         'max_zoom' => 20,
     ],
     'leaflet' => ['css' => 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css', 'js' => 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'],
+    // v80: alan/çevre Turf.js (WGS84 jeodezik hesap), grafikler Chart.js. Yalnız gereken modüller
+    // (tam turf paketi ~550 KB; bunlar birkaç KB). Yüklenemezse sayfa eski hesaba/SVG'ye döner.
+    'libs' => [
+        'turf_area' => 'https://cdn.jsdelivr.net/npm/@turf/area@7.4.0/+esm',
+        'turf_length' => 'https://cdn.jsdelivr.net/npm/@turf/length@7.4.0/+esm',
+        'chart' => 'https://cdn.jsdelivr.net/npm/chart.js@4.5.1/auto/+esm',
+    ],
 ];

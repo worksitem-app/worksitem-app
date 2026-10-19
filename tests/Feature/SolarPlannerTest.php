@@ -31,6 +31,18 @@ class SolarPlannerTest extends TestCase
         $this->get('/araclar/gunes-paneli-hesaplama')->assertOk()->assertSee('/araclar/ges-planlayici', false);
     }
 
+    public function test_alan_turf_grafik_chartjs_three_guncel(): void
+    {
+        $html = $this->get('/araclar/ges-planlayici')->assertOk()->getContent();
+        $this->assertStringContainsString('@turf/area@', $html);
+        $this->assertStringContainsString('@turf/length@', $html);
+        $this->assertStringContainsString('chart.js@4', $html);
+        $this->assertStringContainsString('three@0.186', $html);
+        $this->assertStringNotContainsString('three@0.160', $html);
+        $this->assertStringContainsString('areaM2(S.proj.pts)', $html);
+        $this->assertStringContainsString('id="gpChartBox"', $html);
+    }
+
     public function test_adres_arama_turkiye_ile_sinirli_ve_onbellekli(): void
     {
         Http::fake(['nominatim.openstreetmap.org/*' => Http::response([['display_name' => 'Moda, Kadıköy, İstanbul', 'lat' => '40.98', 'lon' => '29.03']])]);

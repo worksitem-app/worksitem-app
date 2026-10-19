@@ -9,6 +9,7 @@
         'geo' => route('tools.solar_planner.geocode'), 'bld' => route('tools.solar_planner.building'), 'calc' => route('tools.solar_planner.calc'),
         'panels' => $cfg['panels'], 'panel' => $cfg['default_panel'], 'setback' => $cfg['setback'], 'flatTilt' => $cfg['flat_tilt'],
         'imagery' => $cfg['imagery'], 'kwhPrice' => $kwhPrice, 'quote' => url('/araclar/gunes-paneli-hesaplama'),
+        'lib' => $cfg['libs'] ?? [],
     ];
 @endphp
 <!DOCTYPE html>
@@ -106,6 +107,7 @@
         .gp-legal b{display:block;margin-bottom:4px}
         .gp-legal ol{margin:4px 0 0;padding-left:18px}
         .gp-chart{width:100%;height:120px;display:block}
+        .gp-chartbox{position:relative;width:100%;height:160px;margin:4px 0 2px}
         .gp-ctas{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
         .gp-ctas a{text-decoration:none;text-align:center;flex:1}
         .gp-info{margin-top:22px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
@@ -364,6 +366,22 @@ function update() {
 }
 
 function ll(x, y) { return G.unproject(S.proj, x, y); }
+
+// Alan ve çevre: Turf.js (WGS84 üzerinde jeodezik). Modül yüklenene kadar ya da
+// yüklenemezse düzlem (projeksiyon) hesabı kullanılır; ikisi çatı ölçeğinde ‰ düzeyinde örtüşür.
+const turf = { area: null, length: null };
+const turfReady = (C.lib.turf_area ? Promise.all([import(C.lib.turf_area), import(C.lib.turf_length)]) : Promise.reject())
+    .then(([a, l]) => { turf.area = a.default || a.area; turf.length = l.default || l.length; if (S.roof) renderFaces(); })
+    .catch(() => {});
+function ringLonLat(pts) { const r = pts.map((p) => { const q = ll(p[0], p[1]); return [q[1], q[0]]; }); r.push(r[0]); return r; }
+function areaM2(pts) {
+    if (!turf.area || !S.proj || pts.length < 3) return G.area(pts);
+    return turf.area({ type: 'Polygon', coordinates: [ringLonLat(pts)] });
+}
+function perimeterM(pts) {
+    if (!turf.length || !S.proj || pts.length < 2) return G.edges(pts).reduce((a, e) => a + e.len, 0);
+    return turf.length({ type: 'LineString', coordinates: ringLonLat(pts) }, { units: 'meters' });
+}
 function draw2d() {
     Object.values(lyr).forEach((g) => g !== lyr.edit && g !== lyr.pin && g !== lyr.draft && g.clearLayers());
     L.polygon(S.ring, { color: '#101318', weight: 2, fill: false }).addTo(lyr.bld);
@@ -384,7 +402,7 @@ function draw2d() {
 function renderFaces() {
     $('gpFaces').innerHTML = S.roof.faces.map((f, i) => {
         const l = S.layouts[i], off = S.off.has(f.id);
-        return '<li><input type="checkbox" data-f="' + f.id + '" ' + (off ? '' : 'checked') + ' aria-label="' + f.id + '. yüzey"><div><b><span class="gp-dot" style="background:' + effColor(eff(l.azimuth, l.tilt)) + '"></span>' + f.id + '. ' + G.dirName(l.azimuth) + '</b><span>Yön ' + Math.round(l.azimuth) + '° · eğim ' + Math.round(l.tilt) + '° · ' + nf1.format(G.area(f.pts)) + ' m²</span></div><em>' + (off ? 'kapalı' : l.panels.length + ' panel · ' + nf2.format(l.kwp) + ' kWp') + '</em></li>';
+        return '<li><input type="checkbox" data-f="' + f.id + '" ' + (off ? '' : 'checked') + ' aria-label="' + f.id + '. yüzey"><div><b><span class="gp-dot" style="background:' + effColor(eff(l.azimuth, l.tilt)) + '"></span>' + f.id + '. ' + G.dirName(l.azimuth) + '</b><span>Yön ' + Math.round(l.azimuth) + '° · eğim ' + Math.round(l.tilt) + '° · ' + nf1.format(areaM2(f.pts)) + ' m²</span></div><em>' + (off ? 'kapalı' : l.panels.length + ' panel · ' + nf2.format(l.kwp) + ' kWp') + '</em></li>';
     }).join('');
     $('gpFaces').querySelectorAll('input').forEach((c) => c.addEventListener('change', () => { const id = +c.dataset.f; c.checked ? S.off.delete(id) : S.off.add(id); if (!S.off.size) S.off.add(-1); update(); }));
 }
@@ -394,11 +412,12 @@ let timer = null, seq = 0;
 function schedule() { clearTimeout(timer); timer = setTimeout(calc, 600); }
 async function calc() {
     if (!S.roof) return;
+    await turfReady;
     const faces = S.layouts.map((l) => ({ kwp: +l.kwp.toFixed(3), angle: Math.round(l.tilt), azimuth: Math.round(l.azimuth) })).filter((f) => f.kwp > 0);
     if (!faces.length) { $('gpOut').innerHTML = '<p class="gp-msg warn">Çatıya panel sığmadı. Kenar boşluğunu azaltın, çatı tipini ya da mahya yönünü değiştirin.</p>'; return; }
     const use = val('use'), fab = use !== 'konut', price = fab ? (+$('gpPrice').value || C.kwhPrice) : C.kwhPrice;
     const monthly = fab ? (+$('gpKwh').value || 0) : ((+$('gpBill').value || 0) / price);
-    const site = { area: Math.round(G.area(S.proj.pts)), perimeter: Math.round(G.edges(S.proj.pts).reduce((a, e) => a + e.len, 0)) };
+    const site = { area: Math.round(areaM2(S.proj.pts)), perimeter: Math.round(perimeterM(S.proj.pts)) };
     const body = { lat: S.proj.origin[0], lon: S.proj.origin[1], use, flat: val('roof') === 'duz' || use === 'arazi', faces, monthly_kwh: Math.round(monthly), price, battery: $('gpBattery').checked, site };
     const my = ++seq;
     $('gpOut').style.opacity = 0.55;
@@ -410,6 +429,31 @@ async function calc() {
         if (!r.ok || !d.ok) { $('gpOut').innerHTML = '<p class="gp-msg warn">' + esc(d.message || 'Hesaplanamadı, biraz sonra tekrar deneyin.') + '</p>'; return; }
         renderOut(d, body, monthly);
     } catch (e) { $('gpOut').style.opacity = 1; $('gpOut').innerHTML = '<p class="gp-msg warn">Bağlantı hatası; tekrar deneyin.</p>'; }
+}
+
+// Aylık üretim grafiği: Chart.js (gerektiğinde yüklenir). Yüklenemezse eski SVG çubuklar.
+let chartLib = null, chartObj = null;
+function loadChart() { return chartLib || (chartLib = (C.lib.chart ? import(C.lib.chart) : Promise.reject()).then((m) => m.Chart || m.default).catch(() => null)); }
+async function drawChart(m) {
+    const box = $('gpChartBox');
+    if (!box) return;
+    const Chart = await loadChart();
+    if (!box.isConnected) return;   // bu arada yeni sonuç basıldı
+    if (chartObj) { chartObj.destroy(); chartObj = null; }
+    if (!Chart) { box.outerHTML = chart(m); return; }
+    const ay = ['Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz', 'Tem', 'Ağu', 'Eyl', 'Eki', 'Kas', 'Ara'];
+    chartObj = new Chart(box.querySelector('canvas'), {
+        type: 'bar',
+        data: { labels: ay, datasets: [{ label: 'Üretim (kWh)', data: m.map((v) => Math.round(v)), backgroundColor: '#FFB800', hoverBackgroundColor: '#E5A500', borderRadius: 3, maxBarThickness: 28 }] },
+        options: {
+            responsive: true, maintainAspectRatio: false, animation: false, locale: 'tr-TR',
+            plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => nf0.format(c.parsed.y) + ' kWh' } } },
+            scales: {
+                x: { grid: { display: false }, ticks: { color: '#5B6472', font: { size: 10 } } },
+                y: { beginAtZero: true, grid: { color: 'rgba(91,100,114,.15)' }, ticks: { color: '#5B6472', font: { size: 10 }, maxTicksLimit: 4, callback: (v) => nf0.format(v) } },
+            },
+        },
+    });
 }
 
 function chart(m) {
@@ -436,7 +480,7 @@ function renderOut(d, body, monthly) {
         + (land ? '<div><small>Arazi / kullanılan</small><b>' + nf0.format(body.site.area) + ' m² · ' + nf0.format(body.site.area / Math.max(0.1, d.kwp)) + ' m²/kWp</b></div>' : '')
         + (e.coverage !== null ? '<div><small>Tüketimi karşılama</small><b>%' + e.coverage + '</b></div>' : '')
         + '<div><small>CO₂ azaltımı</small><b>≈' + nf1.format(e.co2) + ' t/yıl</b></div></div>';
-    h += chart(y.monthly);
+    h += '<div class="gp-chartbox" id="gpChartBox"><canvas role="img" aria-label="Aylık tahmini üretim, kWh"></canvas></div>';
     h += '<ul class="gp-items">' + Object.entries(e.items).map(([k, v]) => '<li><span>' + esc(k) + '</span><b>' + tl(v) + '</b></li>').join('') + '</ul>';
     if (land) h += '<div class="gp-legal"><b>Arazi GES: izin ve mevzuat</b>Arazide lisanssız GES bir tüketim tesisiyle ilişkilendirilerek kurulur; fazla enerjinin şebekeye verilmesi ve bedeli güncel mevzuata ve dağıtım şirketi bağlantı görüşüne bağlıdır. Arazinin imar ve tapu niteliği (tarım arazisi ise kullanım izinleri), bağlantı kapasitesi, trafo ve hat bedeli, zemin etüdü keşifte netleşir. Gösterilen değer yatırım kararı için ön fizibilitedir.</div>';
     if (!monthly && !land) h += '<p class="gp-msg">Tasarruf ve geri dönüş için ' + (fab ? 'aylık tüketiminizi' : 'aylık faturanızı') + ' girin.</p>';
@@ -446,6 +490,7 @@ function renderOut(d, body, monthly) {
     h += '<p class="gp-note">Üretim: ' + (y.source === 'PVGIS' ? 'PVGIS (Avrupa Komisyonu JRC) güneş verisi' : 'yaklaşık bölgesel değer (PVGIS şu an yanıt vermedi)') + ', %14 sistem kaybı. Maliyet aralığı −%15 / +%20; ön tasarımdır, keşifte netleşir.</p>';
     h += '<div class="gp-ctas"><a class="gp-btn" href="' + esc(quote) + '">Bu tasarımla teklif iste</a><button class="gp-btn o" type="button" onclick="window.print()">Yazdır</button></div>';
     $('gpOut').innerHTML = h;
+    drawChart(y.monthly);
 }
 
 // ── 3D ──
