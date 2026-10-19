@@ -71,6 +71,52 @@ class LaunchReadinessTest extends TestCase
         $this->get('https://staging.worksitem.com/up')->assertOk();
     }
 
+    public function test_google_fonts_olusturmayi_engellemez(): void
+    {
+        $html = $this->get('/')->assertOk()->getContent();
+        $head = substr($html, 0, stripos($html, '</head>'));
+
+        preg_match_all('#<link\b[^>]*fonts\.googleapis\.com/css[^>]*>#i', $head, $m);
+        $this->assertNotEmpty($m[0]);
+        foreach ($m[0] as $tag) {
+            $blocking = preg_match('#rel=["\']stylesheet#i', $tag) && ! str_contains($tag, 'media="print"');
+            // Engelleyen tek kopya <noscript> içinde olabilir
+            if ($blocking) {
+                $this->assertMatchesRegularExpression('#<noscript>'.preg_quote($tag, '#').'</noscript>#', $head);
+            }
+        }
+        $this->assertStringContainsString('/css/ws-brand.css', $head);
+        $this->assertStringContainsString("'Inter Fallback'", file_get_contents(public_path('css/ws-brand.css')));
+    }
+
+    public function test_defer_fonts_zaten_ertelenmis_baglantiya_dokunmaz(): void
+    {
+        $html = '<html><head><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=X" media="print" onload="this.media=\'all\'"></head><body></body></html>';
+        $this->assertSame($html, BrandShell::deferFonts($html));
+
+        $plain = '<html><head><link href="https://fonts.googleapis.com/css2?family=X&display=swap" rel="stylesheet"></head><body><link href="https://fonts.googleapis.com/css2?family=Y" rel="stylesheet"></body></html>';
+        $out = BrandShell::deferFonts($plain);
+        $this->assertStringContainsString('rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=X&display=swap"', $out);
+        $this->assertStringContainsString('media="print"', $out);
+        // Gövdedeki bağlantılara dokunulmaz
+        $this->assertStringContainsString('<body><link href="https://fonts.googleapis.com/css2?family=Y" rel="stylesheet"></body>', $out);
+    }
+
+    public function test_llms_txt_standart_bicimde(): void
+    {
+        config(['worksitem_tools.tool_status.default' => 'review', 'worksitem_tools.tool_status.overrides' => ['boya-hesaplayici' => 'active']]);
+        $txt = $this->get('/llms.txt')->assertOk()->getContent();
+        $lines = explode("\n", $txt);
+
+        $this->assertSame('# WORKSİTEM', $lines[0], 'İlk satır tek H1 olmalı');
+        $this->assertStringStartsWith('> ', $lines[2], 'H1 ardından özet alıntı satırı olmalı');
+        $this->assertSame(1, preg_match_all('/^# /m', $txt), 'Yalnız bir H1');
+        $this->assertMatchesRegularExpression('#^- \[[^\]]+\]\(https://worksitem\.com/araclar/boya-hesaplayici\)#m', $txt);
+        $this->assertMatchesRegularExpression('#^- \[Ana sayfa\]\(https://worksitem\.com/\)#m', $txt);
+        $this->assertStringContainsString('## Optional', $txt);
+        $this->assertStringNotContainsString(':updated', $txt);
+    }
+
     public function test_robots_txt_her_bot_bolumunde_kapali_yollari_tekrarlar(): void
     {
         $robots = file_get_contents(public_path('robots.txt'));

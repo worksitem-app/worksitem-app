@@ -5,6 +5,16 @@
    azaltılmış hareket tercihi.
    Renkler: logo sarısı #FFB800 · mürekkep #101318 · beyaz üzerinde sarı yazı #8A6200
    ========================================================================== */
+/* Inter yüklenene kadar aynı ölçülerde görünen yedek: yazı tipi değişince satırlar kaymasın (CLS) */
+@font-face {
+    font-family: 'Inter Fallback';
+    src: local('Arial'), local('Helvetica Neue'), local('Roboto');
+    size-adjust: 107.4%;
+    ascent-override: 90.2%;
+    descent-override: 22.48%;
+    line-gap-override: 0%;
+}
+
 :root {
     --ws-yellow: #FFB800;
     --ws-yellow-600: #E5A500;
@@ -14,7 +24,7 @@
     --ws-muted: #5B6472;
     --ws-page: #F5F6F8;
     --ws-line: #E5E7EB;
-    --ws-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --ws-font: 'Inter', 'Inter Fallback', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 body {

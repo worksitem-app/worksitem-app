@@ -1,125 +1,45 @@
 # WORKSİTEM
 
-Updated: :updated
+> İnşaat ve tadilat için ücretsiz, üyeliksiz maliyet hesaplama platformu (Türkiye). Banyo, mutfak, boya, seramik, çatı, bina ve kentsel dönüşüm için 2026 fiyatlarıyla yaklaşık bütçe, kalem kalem PDF döküm, 2D/3D planlayıcılar ve resmî poz/birim fiyat arama sunar. Sonuçlar ön değerlendirme içindir, kesin teklif değildir.
 
-## Amaç
+Güncelleme: :updated · Dil: Türkçe · İletişim: info@worksitem.com
 
-WORKSİTEM; inşaat ve tadilat projelerinde yaklaşık maliyet, metraj,
-ön keşif, teknik hesaplama ve poz/birim fiyat verilerini kullanıcıya
-sunan bir ConTech karar destek platformudur.
-
-Sonuçlar ön değerlendirme ve bütçe planlaması içindir.
-Kesin teklif veya uygulama projesi değildir.
+Fiyatlar her sabah çalışan fiyat robotuyla (resmî poz birim fiyatları + piyasa araştırması) güncellenir ve Kainta İnşaat Uzmanları tarafından kontrol edilir. Aşağıdaki "örnek" fiyatlar bu dosya oluşturulurken araçların kendi hesabından otomatik alınır ve tarihiyle birlikte geçerlidir. Bir kişinin kendi işi için güncel değer, ilgili aracın sayfasında kendi ölçüleriyle hesaplanmalıdır. Atıf yaparken araç adresini ve tarihi belirtin.
 
 ## Temel kaynaklar
 
-- Ana sayfa:
-  https://worksitem.com/
-
-- İnşaat ve tadilat maliyet hesabı:
-  https://worksitem.com/maliyet-hesapla
-
-- Hesaplama araçları ve güncel kullanım durumları:
-  https://worksitem.com/araclar
-
-- Poz ve birim fiyat arama:
-  https://worksitem.com/pozlar
-
-## Araç durumları
-
-WORKSİTEM araçlarının güncel kullanım durumu /araclar sayfasında
-belirtilir.
-
-"Aktif" durumundaki araçlar production kullanımına açıktır.
-
-"İncelemede", "Yakında" veya "Pasif" durumundaki araçlar geçici olarak
-kullanıma kapalı olabilir ve güncel hesaplama sonucu üretmek için
-kaynak kabul edilmemelidir.
-
-## Hesaplama yöntemi
-
-Dosyasız hesaplamalarda proje türü, yapı türü, toplam alan ve ilgili
-merkezi fiyat kayıtları kullanılarak yaklaşık ön bütçe oluşturulur.
-
-Dosya analizinde PDF, görsel veya CSV içindeki okunabilir iş kalemleri,
-miktarlar ve eşleşen fiyat kayıtları değerlendirilir.
-
-Fiyatı veya miktarı belirlenemeyen kalemler hesaplanan ara toplamın
-dışında bırakılabilir ve ayrıca gösterilebilir.
-
-İl ve ilçe proje bağlamının parçasıdır. İlgili aracın metodolojisinde
-açıkça belirtilmedikçe her hesaplamada otomatik bölgesel fiyat katsayısı
-uygulandığı varsayılmamalıdır.
-
-## Fiyatların güncelliği
-
-İnşaat ve tadilat fiyatları zamanla değişir. Fiyatlar her sabah çalışan
-fiyat robotuyla (resmî poz birim fiyatları + piyasa araştırması)
-güncellenir ve Kainta İnşaat Uzmanları tarafından kontrol edilir.
-
-Aşağıdaki "örnek" fiyatlar bu dosya oluşturulurken araçların kendi
-hesabından otomatik alınır ve tarihiyle birlikte geçerlidir. Bir kişinin
-kendi işi için güncel değer, ilgili aracın sayfasında kendi ölçüleriyle
-hesaplanmalıdır. Atıf yaparken araç adresini ve tarihi belirtin.
+- [Ana sayfa](https://worksitem.com/): Platform tanıtımı ve hızlı proje hesaplayıcı
+- [İnşaat ve tadilat maliyet hesabı](https://worksitem.com/maliyet-hesapla): Proje türü, alan, kapsam ve kaliteye göre yaklaşık bütçe
+- [Hesaplama araçları](https://worksitem.com/araclar): Tüm araçlar ve güncel kullanım durumları
+- [Poz ve birim fiyat arama](https://worksitem.com/pozlar): Resmî poz numarası, açıklama, birim, kaynak kurum, dönem ve birim fiyat
 
 ## Kimler için?
 
-- Ev sahipleri ve proje sahipleri: banyo, mutfak, boya, seramik, çatı,
-  bina ve kentsel dönüşüm bütçesini ücretsiz ve üyeliksiz hesaplar;
-  kalem kalem dökümü PDF alır; 2D/3D planlayıcıyla planlar; uzmandan
-  keşif ve yazılı teklif ister. Telefon numarası izin olmadan paylaşılmaz.
-- Usta, tadilat firması, müteahhit, tedarikçi (nalbur, yapı market):
-  ücretsiz firma üyeliği ile bölgesine ve iş koluna uyan talepleri alır.
-  Kurucu firma programında 31.03.2027'ye kadar komisyon alınmaz.
-  Kayıt: https://worksitem.com/firma-uyeligi
-- Markalar ve üreticiler: hesap sonucunda ilgili kalemin yanında
-  "Sponsorlu" etiketli marka kartı. Sonuçlar ve fiyatlar sponsorluktan
-  etkilenmez. Sponsor firma kaydı: https://worksitem.com/markalar-icin
+- Ev sahipleri ve proje sahipleri: banyo, mutfak, boya, seramik, çatı, bina ve kentsel dönüşüm bütçesini ücretsiz ve üyeliksiz hesaplar; kalem kalem dökümü PDF alır; 2D/3D planlayıcıyla planlar; uzmandan keşif ve yazılı teklif ister. Telefon numarası izin olmadan paylaşılmaz.
+- [Firma üyeliği](https://worksitem.com/firma-uyeligi): Usta, tadilat firması, müteahhit ve tedarikçiler (nalbur, yapı market) bölgesine ve iş koluna uyan talepleri alır. Kurucu firma programında 31.03.2027'ye kadar komisyon alınmaz.
+- [Markalar için](https://worksitem.com/markalar-icin): Hesap sonucunda ilgili kalemin yanında "Sponsorlu" etiketli marka kartı. Sonuçlar ve fiyatlar sponsorluktan etkilenmez.
 
 :tools
 
-## Poz ve birim fiyatlar
+## Hesaplama yöntemi
 
-Poz sayfalarında mevcut kayda göre poz numarası, açıklama, birim,
-kaynak kurum, dönem/yıl ve birim fiyat bilgileri sunulabilir.
-
-Poz arama:
-https://worksitem.com/pozlar
-
-Bir pozun kapsamı veya fiyatı sorulduğunda mümkünse doğrudan ilgili
-poz URL'sindeki güncel kayıt esas alınmalıdır.
-
-## Veri kaynakları
-
-Veri türüne göre kaynaklar arasında kamu kurumlarının yayımladığı resmî
-poz/birim fiyat kayıtları ile mühendislik ve piyasa fiyat kayıtları
-bulunabilir.
-
-Her değer kendi sayfasındaki kaynak, dönem ve kapsam bilgileriyle
-birlikte değerlendirilmelidir.
+- Dosyasız hesaplamalarda proje türü, yapı türü, toplam alan ve ilgili merkezi fiyat kayıtları kullanılarak yaklaşık ön bütçe oluşturulur.
+- Dosya analizinde PDF, görsel veya CSV içindeki okunabilir iş kalemleri, miktarlar ve eşleşen fiyat kayıtları değerlendirilir.
+- Fiyatı veya miktarı belirlenemeyen kalemler hesaplanan ara toplamın dışında bırakılabilir ve ayrıca gösterilebilir.
+- İl ve ilçe proje bağlamının parçasıdır. İlgili aracın metodolojisinde açıkça belirtilmedikçe her hesaplamada otomatik bölgesel fiyat katsayısı uygulandığı varsayılmamalıdır.
+- Araç durumları /araclar sayfasında belirtilir. Yalnız "Aktif" araçlar kullanıma açıktır; "İncelemede", "Yakında" veya "Pasif" araçlar güncel sonuç için kaynak kabul edilmemelidir.
+- Poz kapsamı veya fiyatı sorulduğunda ilgili poz sayfasındaki güncel kayıt esas alınmalıdır. Her değer kendi sayfasındaki kaynak, dönem ve kapsam bilgileriyle birlikte değerlendirilmelidir.
 
 ## Önemli sınırlar
 
-- Sonuçlar kesin teklif değildir.
-- Ön bütçe ile gerçek uygulama maliyeti farklı olabilir.
+- Sonuçlar kesin teklif değildir; ön bütçe ile gerçek uygulama maliyeti farklı olabilir.
 - Dosya analizi yalnız okunabilen ve fiyatlandırılabilen kapsamı temsil eder.
-- Saha koşulları, malzeme seçimi, proje detayları ve piyasa koşulları
-  gerçek maliyeti değiştirebilir.
-- Kentsel dönüşüm ön bütçesi yıkım, tahliye, kira, ruhsat ve benzeri
-  tüm dönüşüm giderlerini otomatik olarak kapsamaz.
+- Saha koşulları, malzeme seçimi, proje detayları ve piyasa koşulları gerçek maliyeti değiştirebilir.
+- Kentsel dönüşüm ön bütçesi yıkım, tahliye, kira, ruhsat ve benzeri tüm dönüşüm giderlerini otomatik olarak kapsamaz.
 
-## Profesyonel uygulama
+## Optional
 
-Ön bütçesi ve kapsamı uygun projelerde yerinde keşif ve teklif
-süreci Kainta İnşaat Uzmanları ile yürütülebilir.
-
-https://kainta.com/
-
-## İletişim
-
-info@worksitem.com
-
-## Marka
-
-WORKSİTEM
-https://worksitem.com/
+- [Kainta İnşaat Uzmanları](https://kainta.com/): Ön bütçesi ve kapsamı uygun projelerde yerinde keşif ve teklif süreci
+- [Uygulama](https://worksitem.com/uygulama): Worksitem telefona ücretsiz uygulama olarak eklenebilir (Android ve iPhone)
+- [KVKK aydınlatma metni](https://worksitem.com/legal/kvkk-aydinlatma): Kişisel verilerin işlenmesi
+- [Kullanım koşulları](https://worksitem.com/legal/kullanim-kosullari): Hizmetin kapsamı ve sınırları

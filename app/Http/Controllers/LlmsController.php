@@ -40,17 +40,18 @@ class LlmsController extends Controller
                     // Soru-cevap biçiminde tarihli örnek: yapay zekâ asistanları doğrudan alıntılayabilsin
                     if ($qa = ToolSeo::quickAnswer(ToolSeo::faq((array) ($page['faq'] ?? [])))) {
                         $date = \App\Support\PriceDate::for($slug)->locale('tr')->translatedFormat('j F Y');
-                        $desc .= "\n  Örnek ({$date}): ".trim($qa[0]).' → '.ToolSeo::desc(trim($qa[1]), 220);
+                        $desc .= " Örnek ({$date}): ".trim($qa[0]).' → '.ToolSeo::desc(trim($qa[1]), 220);
                     }
                 } catch (\Throwable) {
                     $desc = $desc ?: '';
                 }
             }
-            $lines[] = '- '.($meta['title'] ?? $slug).': https://worksitem.com/araclar/'.$slug.($desc !== '' ? "\n  ".$desc : '');
+            // llmstxt.org biçimi: - [Ad](adres): açıklama (tek satır)
+            $title = str_replace(['[', ']'], ['(', ')'], (string) ($meta['title'] ?? $slug));
+            $lines[] = '- ['.$title.'](https://worksitem.com/araclar/'.$slug.')'.($desc !== '' ? ': '.preg_replace('/\s+/u', ' ', $desc) : '');
         }
-        $tools = "## Aktif araçlar\n\nAşağıdaki araçlar şu an kullanıma açıktır. Güncel sonuç için aracın kendi sayfası esas alınmalıdır.\n\n"
-            .($lines ? implode("\n", $lines) : '- Şu an listelenecek aktif araç yok.')."\n\n"
-            ."## Markalar için\n\nSponsor firma kaydı ve iş birliği: https://worksitem.com/markalar-icin\n\n## Firmalar için\n\nUsta, tadilat firması, müteahhit ve tedarikçiler için ücretsiz firma üyeliği (kurucu firma programı: 31.03.2027'ye kadar komisyon yok): https://worksitem.com/firma-uyeligi\n\n## Uygulama\n\nWorksitem telefona ücretsiz uygulama olarak eklenebilir (Android ve iPhone): https://worksitem.com/uygulama";
+        $tools = "## Aktif araçlar\n\n"
+            .($lines ? implode("\n", $lines) : '- Şu an listelenecek aktif araç yok.');
 
         return strtr((string) file_get_contents(resource_path('llms/base.txt')), [
             ':updated' => now('Europe/Istanbul')->toDateString(),

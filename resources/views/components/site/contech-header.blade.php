@@ -519,6 +519,9 @@ html[data-theme="dark"] .wks-search-open:hover{
         <img
             src="/brand/worksitem-logo.png"
             alt="WORKSİTEM"
+            width="200"
+            height="58"
+            fetchpriority="high"
         >
     </a>
 

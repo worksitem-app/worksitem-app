@@ -51,22 +51,51 @@ class BrandShell
             $html = substr($html, 0, $b).self::CSRF_REFRESH_SCRIPT.substr($html, $b);
             $response->setContent($html);
         }
-        if (str_contains($html, '/css/ws-brand.css')) {
-            return $response;
+        if (! str_contains($html, '/css/ws-brand.css')) {
+            $tags = '';
+            if (! str_contains($html, 'family=Inter')) {
+                $tags .= '<link rel="preconnect" href="https://fonts.googleapis.com">'
+                    .'<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
+                    .'<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">';
+            }
+            $tags .= '<link rel="stylesheet" href="'.\App\Support\Asset::url('css/ws-brand.css').'">';
+            $pos = stripos($html, '</head>');
+            $html = substr($html, 0, $pos).$tags."\n".substr($html, $pos);
         }
 
-        $tags = '';
-        if (! str_contains($html, 'family=Inter')) {
-            $tags .= '<link rel="preconnect" href="https://fonts.googleapis.com">'
-                .'<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
-                .'<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">';
-        }
-        $tags .= '<link rel="stylesheet" href="'.\App\Support\Asset::url('css/ws-brand.css').'">';
-
-        $pos = stripos($html, '</head>');
-        $response->setContent(substr($html, 0, $pos).$tags."\n".substr($html, $pos));
+        $response->setContent(self::deferFonts($html));
 
         return $response;
+    }
+
+    /**
+     * Google Fonts stil dosyalarını oluşturmayı engellemeyecek biçimde yükler.
+     * Mobilde sayfa, fonts.googleapis.com + fonts.gstatic.com gidiş-dönüşünü beklemeden çizilir;
+     * yazı önce benzer ölçülü yedek yazı tipiyle (ws-brand.css › "Inter Fallback") görünür.
+     * JavaScript kapalıysa <noscript> içindeki normal bağlantı devreye girer.
+     */
+    public static function deferFonts(string $html): string
+    {
+        $head = stripos($html, '</head>');
+        if ($head === false || ! str_contains(substr($html, 0, $head), 'fonts.googleapis.com/css')) {
+            return $html;
+        }
+
+        $headHtml = preg_replace_callback('#<link\b[^>]*>#i', function (array $m): string {
+            $tag = $m[0];
+            if (! preg_match('#href=["\'](https://fonts\.googleapis\.com/css[^"\']*)["\']#i', $tag, $h)
+                || ! preg_match('#rel=["\']stylesheet["\']#i', $tag)
+                || preg_match('#\bmedia=#i', $tag)) {
+                return $tag;
+            }
+            $href = $h[1];
+
+            return '<link rel="preload" as="style" href="'.$href.'">'
+                .'<link rel="stylesheet" href="'.$href.'" media="print" onload="this.media=\'all\'">'
+                .'<noscript><link rel="stylesheet" href="'.$href.'"></noscript>';
+        }, substr($html, 0, $head));
+
+        return $headHtml.substr($html, $head);
     }
 
     /**
