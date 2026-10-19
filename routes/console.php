@@ -58,6 +58,22 @@ Schedule::command('market:tick')
     ->withoutOverlapping()
     ->onOneServer();
 
+// Tam yedek (spatie/laravel-backup): 03:00 veritabanı + dosyalar, ardından 7 günden eskileri sil.
+// Ayarlar config/backup.php; yedekler storage/app/spatie-backups. Sorun olursa e-posta gelir.
+if (class_exists(\Spatie\Backup\BackupServiceProvider::class)) {
+    Schedule::command('backup:run')
+        ->dailyAt('03:00')
+        ->timezone('Europe/Istanbul')
+        ->withoutOverlapping(120)
+        ->onOneServer()
+        ->after(fn () => \Illuminate\Support\Facades\Artisan::call('backup:clean'));
+
+    Schedule::command('backup:monitor')
+        ->dailyAt('09:05')
+        ->timezone('Europe/Istanbul')
+        ->onOneServer();
+}
+
 Schedule::command('app:backup-db --keep=14')
     ->dailyAt('03:45')
     ->timezone('Europe/Istanbul')

@@ -38,6 +38,14 @@ return [
             'report' => false,
         ],
 
+        // spatie/laravel-backup zip'leri (web'den erişilemez; bkz. config/backup.php)
+        'backups' => [
+            'driver' => 'local',
+            'root' => storage_path('app/spatie-backups'),
+            'throw' => true,
+            'report' => false,
+        ],
+
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),

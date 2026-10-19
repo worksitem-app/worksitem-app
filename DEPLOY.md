@@ -27,6 +27,7 @@
 6. **Sağlayıcı tarafı harcama limitleri:** Replicate ve Google AI Studio'da aylık bütçe uyarısı ve limit tanımlayın. Uygulamadaki `AI_GLOBAL_DAILY_LIMIT` ikinci bir emniyet katmanıdır.
 7. **İzleme:** UptimeRobot (ücretsiz) ile `https://worksitem.com/up` adresini 5 dakikada bir kontrol ettirin, e-posta/SMS uyarısı açın.
 8. **Otomatik yedek:** hPanel'de günlük otomatik yedeği açın. `scripts/deploy.sh` her deploy'da ayrıca `~/worksitem-backups` altına yedek alır (son 14 yedek tutulur).
+9. **Tam yedek (v78, spatie/laravel-backup):** her gece 03:00 (İstanbul) veritabanı + dosyalar (.env, storage/app; vendor/.git hariç) tek zip olarak `storage/app/spatie-backups/worksitem-production/` altına yazılır, son 7 gün tutulur, 09:05'te sağlık kontrolü yapılır; sorun olursa `BACKUP_NOTIFY_EMAIL` adresine e-posta gider. Ayrı cron gerekmez: yukarıdaki her dakikalık `schedule:run` satırı yeter. Elle: `php artisan backup:run`, liste: `php artisan backup:list`. Geri yükleme: zip'i açın, `db-dumps/*.sql` dosyasını `mysql -u USER -p DB_ADI < dosya.sql` ile yükleyin, `storage/app` ve `.env`'i yerine koyun.
 
 ## 2. Her deploy
 

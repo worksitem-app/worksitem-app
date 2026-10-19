@@ -51,7 +51,11 @@ curl -s "$URL/robots.txt" | awk '/User-agent: Bingbot/{f=1} f&&/firma-paneli/{pr
 curl -s "$URL/" | grep -q 'google-site-verification' && ok "Search Console doğrulama etiketi" || echo "  · Search Console etiketi yok (DNS ile doğrulandıysa sorun değil; değilse GOOGLE_SITE_VERIFICATION=)"
 b=$(ls -t "$LIVE"/storage/app/backups/db-*.sql.gz 2>/dev/null | head -1)
 if [ -n "$b" ]; then age=$(( ( $(date +%s) - $(stat -c %Y "$b") ) / 3600 )); [ "$age" -le 36 ] && ok "Veritabanı yedeği: $age saat önce ($(du -h "$b" | cut -f1))" || no "Son veritabanı yedeği $age saat önce"; else no "Veritabanı yedeği yok (php artisan app:backup-db)"; fi
-echo "  · Yedekler aynı sunucuda: haftada bir storage/app/backups ve storage/app/public'i bilgisayara indirin"
+z=$(ls -t "$LIVE"/storage/app/spatie-backups/*/*.zip 2>/dev/null | head -1)
+if [ -n "$z" ]; then age=$(( ( $(date +%s) - $(stat -c %Y "$z") ) / 3600 )); cnt=$(ls "$LIVE"/storage/app/spatie-backups/*/*.zip 2>/dev/null | wc -l); [ "$age" -le 36 ] && ok "Tam yedek (veritabanı + dosyalar): $age saat önce ($(du -h "$z" | cut -f1)), tutulan $cnt" || no "Son tam yedek $age saat önce (03:00 yedeği çalışmadı mı? php artisan backup:run)"
+elif [ -d "$LIVE/vendor/spatie/laravel-backup" ]; then echo "  · Tam yedek henüz yok (ilk yedek 03:00'te; hemen almak için: php artisan backup:run)"
+else echo "  · Tam yedek paketi kurulu değil (v78)"; fi
+echo "  · Yedekler aynı sunucuda: haftada bir storage/app/spatie-backups içindeki son zip'i bilgisayara indirin"
 
 echo "▶ Sistem"
 php artisan app:preflight 2>/dev/null | grep -E "Sonuç|FAIL|WARN" | sed 's/^/  /'
