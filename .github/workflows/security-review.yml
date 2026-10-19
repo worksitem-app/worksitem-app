@@ -1,0 +1,47 @@
+# v79: Her PR'da Claude ile güvenlik incelemesi (anthropics/claude-code-security-review)
+#
+# Gerekli gizli anahtar: GitHub › repo › Settings › Secrets and variables › Actions
+#   CLAUDE_API_KEY = Anthropic Console'dan alınan API anahtarı (sk-ant-...)
+#
+# - Yalnız bu repodaki dallardan açılan PR'larda çalışır. Dışarıdan (fork) gelen PR'lar
+#   gizli anahtarı göremez ve eylem talimat enjeksiyonuna karşı sertleştirilmemiştir;
+#   o yüzden fork PR'ları atlanır.
+# - Eylem sürümü commit'e sabitlendi (main dalı değişse de beklenmedik kod çalışmaz).
+#   Güncellemek için: git ls-remote https://github.com/anthropics/claude-code-security-review HEAD
+# - Bulgular PR'a yorum olarak düşer; CI'yı kırmaz (tests.yml ayrı çalışır).
+
+name: Security Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: security-review-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  security:
+    if: github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 2
+
+      - uses: anthropics/claude-code-security-review@0c6a49f1fa56a1d472575da86a94dbc1edb78eda
+        with:
+          claude-api-key: ${{ secrets.CLAUDE_API_KEY }}
+          claude-model: claude-sonnet-5-5
+          comment-pr: true
+          upload-results: true
+          claudecode-timeout: 20
+          exclude-directories: vendor,node_modules,public/build,storage,docs
+          custom-security-scan-instructions: .github/security-review-instructions.txt
