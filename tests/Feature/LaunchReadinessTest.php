@@ -56,6 +56,21 @@ class LaunchReadinessTest extends TestCase
         $this->assertTrue(BrandShell::hasCsrfToken($html));
     }
 
+    public function test_canlida_www_ana_alan_adina_yonlenir_ve_yol_korunur(): void
+    {
+        config(['app.url' => 'https://worksitem.com']);
+        $this->app['env'] = 'production';
+
+        $this->get('https://www.worksitem.com/araclar/boya-hesaplayici?x=1')
+            ->assertStatus(301)
+            ->assertRedirect('https://worksitem.com/araclar/boya-hesaplayici?x=1');
+        $this->get('http://www.worksitem.com/')
+            ->assertStatus(301)
+            ->assertRedirect('https://worksitem.com/');
+        // Başka alt alan adlarına (ör. staging) dokunulmaz
+        $this->get('https://staging.worksitem.com/up')->assertOk();
+    }
+
     public function test_robots_txt_her_bot_bolumunde_kapali_yollari_tekrarlar(): void
     {
         $robots = file_get_contents(public_path('robots.txt'));
