@@ -24,6 +24,12 @@ return [
     // Dış servisler (sunucu tarafından çağrılır; tarayıcıdan doğrudan çağrı yapılmaz)
     'nominatim' => 'https://nominatim.openstreetmap.org/search',
     'overpass' => 'https://overpass-api.de/api/interpreter',
+    'overpass_mirrors' => [
+        'https://overpass.kumi.systems/api/interpreter',
+        'https://overpass.private.coffee/api/interpreter',
+        'https://overpass-api.de/api/interpreter',
+    ],
+    'overpass_timeout' => 8,
     'pvgis' => 'https://re.jrc.ec.europa.eu/api/v5_3/PVcalc',
     'user_agent' => 'Worksitem/1.0 (info@worksitem.com)',
     // Uydu görüntüsü (Leaflet): Esri World Imagery, atıf zorunlu

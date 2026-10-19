@@ -41,14 +41,21 @@ class SolarPlanService
 
         return Cache::remember($key, now()->addDays(14), function () use ($lat, $lon) {
             $ql = sprintf('[out:json][timeout:15];way["building"](around:60,%.6F,%.6F);out geom tags;', $lat, $lon);
-            try {
-                $r = $this->http()->asForm()->post((string) config('worksitem_solar.overpass'), ['data' => $ql]);
-            } catch (\Throwable $e) {
-                Log::info('GES bina verisi alınamadı', ['error' => $e->getMessage()]);
-
-                return null;
+            // Birden çok Overpass sunucusu: biri yavaşsa/engelliyse sıradakine geçilir
+            $r = null;
+            foreach ((array) config('worksitem_solar.overpass_mirrors', [config('worksitem_solar.overpass')]) as $url) {
+                try {
+                    $try = $this->http()->timeout((int) config('worksitem_solar.overpass_timeout', 8))->asForm()->post((string) $url, ['data' => $ql]);
+                    if ($try->successful() && is_array($try->json('elements'))) {
+                        $r = $try;
+                        break;
+                    }
+                    Log::info('GES bina verisi alınamadı', ['host' => parse_url((string) $url, PHP_URL_HOST), 'status' => $try->status()]);
+                } catch (\Throwable $e) {
+                    Log::info('GES bina verisi alınamadı', ['host' => parse_url((string) $url, PHP_URL_HOST), 'error' => class_basename($e)]);
+                }
             }
-            if (! $r->successful()) {
+            if (! $r) {
                 return null;
             }
             $best = null;
@@ -123,7 +130,7 @@ class SolarPlanService
 
         return Cache::remember($key, now()->addDays(90), function () use ($lat, $lon, $angle, $aspect) {
             try {
-                $r = $this->http()->get((string) config('worksitem_solar.pvgis'), [
+                $r = $this->http()->retry(2, 400, throw: false)->get((string) config('worksitem_solar.pvgis'), [
                     'lat' => round($lat, 4), 'lon' => round($lon, 4), 'peakpower' => 1, 'loss' => (int) config('worksitem_solar.system_loss', 14),
                     'angle' => $angle, 'aspect' => $aspect, 'mountingplace' => 'building', 'outputformat' => 'json',
                 ]);
@@ -134,6 +141,8 @@ class SolarPlanService
             }
             $rows = (array) $r->json('outputs.monthly.fixed');
             if (! $r->successful() || count($rows) !== 12) {
+                Log::info('PVGIS yanıtı kullanılamadı', ['status' => $r->status(), 'body' => mb_substr($r->body(), 0, 200)]);
+
                 return null;
             }
 

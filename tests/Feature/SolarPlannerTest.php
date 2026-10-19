@@ -43,7 +43,7 @@ class SolarPlannerTest extends TestCase
     public function test_bina_hatti_noktayi_iceren_yapi(): void
     {
         $ring = [['lat' => 40.0, 'lon' => 29.0], ['lat' => 40.0, 'lon' => 29.0003], ['lat' => 40.0002, 'lon' => 29.0003], ['lat' => 40.0002, 'lon' => 29.0], ['lat' => 40.0, 'lon' => 29.0]];
-        Http::fake(['overpass-api.de/*' => Http::response(['elements' => [['type' => 'way', 'tags' => ['building' => 'industrial', 'building:levels' => '2'], 'geometry' => $ring]]])]);
+        Http::fake(['overpass.kumi.systems/*' => Http::response('', 504), 'overpass.private.coffee/*' => Http::response(['elements' => [['type' => 'way', 'tags' => ['building' => 'industrial', 'building:levels' => '2'], 'geometry' => $ring]]])]);
         $this->getJson('/araclar/ges-planlayici/bina?lat=40.0001&lon=29.0001')->assertOk()
             ->assertJsonPath('found', true)->assertJsonPath('levels', 2)->assertJsonPath('type', 'industrial')->assertJsonCount(4, 'ring');
         $this->getJson('/araclar/ges-planlayici/bina?lat=51.5&lon=0.1')->assertStatus(422);   // Türkiye dışı
