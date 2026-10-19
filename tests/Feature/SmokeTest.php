@@ -34,8 +34,9 @@ class SmokeTest extends TestCase
         $this->get('/admin/login')->assertStatus(200);
     }
 
-    public function test_olmayan_sayfa_301_donuyor(): void
+    public function test_olmayan_sayfa_404_donuyor(): void
     {
-        $this->get('/bu-sayfa-yok-12345')->assertStatus(301);
+        // Ana sayfaya toplu 301 = Google'da soft 404. Bilinen eski adresler routes/redirects.php'de.
+        $this->get('/bu-sayfa-yok-12345')->assertStatus(404);
     }
 }

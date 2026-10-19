@@ -46,6 +46,11 @@ class BrandShell
             $html = substr($html, 0, $b).view('components.site.app-banner')->render().substr($html, $b);
             $response->setContent($html);
         }
+        // Form güvenlik anahtarını tazele: sayfa saatlerce açık kalınca form "419 süresi doldu" vermesin
+        if (! str_contains($html, 'id="wsCsrfRefresh"') && self::hasCsrfToken($html) && ($b = strripos($html, '</body>')) !== false) {
+            $html = substr($html, 0, $b).self::CSRF_REFRESH_SCRIPT.substr($html, $b);
+            $response->setContent($html);
+        }
         if (str_contains($html, '/css/ws-brand.css')) {
             return $response;
         }
@@ -62,6 +67,25 @@ class BrandShell
         $response->setContent(substr($html, 0, $pos).$tags."\n".substr($html, $pos));
 
         return $response;
+    }
+
+    /**
+     * Her 20 dakikada ve sekmeye uzun aradan sonra dönüldüğünde /csrf-yenile'den yeni anahtar alır,
+     * sayfadaki tüm _token alanlarını ve csrf-token meta etiketini günceller (oturumu da canlı tutar).
+     */
+    public const CSRF_REFRESH_SCRIPT = '<script id="wsCsrfRefresh">(function(){var last=Date.now(),busy=false;'
+        .'function upd(){if(busy)return;busy=true;fetch("/csrf-yenile",{credentials:"same-origin",cache:"no-store",headers:{Accept:"application/json"}})'
+        .'.then(function(r){return r.ok?r.json():null}).then(function(d){if(!d||!d.token)return;last=Date.now();'
+        .'document.querySelectorAll(\'input[name="_token"]\').forEach(function(i){i.value=d.token});'
+        .'var m=document.querySelector(\'meta[name="csrf-token"]\');if(m)m.setAttribute("content",d.token);'
+        .'if(window.axios&&window.axios.defaults&&window.axios.defaults.headers&&window.axios.defaults.headers.common)window.axios.defaults.headers.common["X-CSRF-TOKEN"]=d.token;})'
+        .'.catch(function(){}).then(function(){busy=false})}'
+        .'setInterval(upd,1200000);'
+        .'document.addEventListener("visibilitychange",function(){if(!document.hidden&&Date.now()-last>600000)upd()});'        .'})();</script>';
+
+    public static function hasCsrfToken(string $html): bool
+    {
+        return str_contains($html, 'name="_token"') || str_contains($html, 'name="csrf-token"');
     }
 
     public static function injectApp(string $html): string

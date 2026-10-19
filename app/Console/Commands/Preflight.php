@@ -93,6 +93,13 @@ class Preflight extends Command
         $this->warnUnless($beat > 0 && (time() - $beat) <= 300, 'Zamanlayıcı (cron) çalışıyor',
             'Son 5 dk zamanlayıcı kalp atışı yok. Cron: * * * * * cd '.base_path().' && php artisan schedule:run >> /dev/null 2>&1');
 
+        $backups = glob(storage_path('app/backups/db-*.sql.gz')) ?: [];
+        $newest = $backups === [] ? 0 : max(array_map('filemtime', $backups));
+        $this->warnUnless($newest > 0 && (time() - $newest) <= 36 * 3600, 'Veritabanı yedeği (son 36 saat)',
+            $newest > 0
+                ? 'Son yedek '.round((time() - $newest) / 3600).' saat önce: php artisan app:backup-db (cron çalışıyor mu?)'
+                : 'Hiç yedek yok: php artisan app:backup-db --keep=14');
+
         $this->warnUnless(app(\App\Services\FxRates::class)->current() !== null, 'Döviz kuru önbellekte (TCMB)',
             'Döviz kuru yok: php artisan fx:update (banyo aracında $/€/£ satırı gizli kalır)');
 

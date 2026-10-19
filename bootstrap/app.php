@@ -60,6 +60,15 @@ return Application::configure(basePath: dirname(__DIR__))
             fn (Request $request) => $request->is('api/*') || $request->expectsJson(),
         );
 
+        // Süresi dolan form anahtarı: JSON isteklerinde İngilizce "CSRF token mismatch." yerine anlaşılır Türkçe mesaj
+        $exceptions->render(function (\Symfony\Component\HttpKernel\Exception\HttpException $e, Request $request) {
+            if ($e->getStatusCode() === 419 && $request->expectsJson()) {
+                return response()->json([
+                    'message' => 'Sayfa uzun süre açık kaldı. Sayfayı yenileyip tekrar deneyin.',
+                ], 419);
+            }
+        });
+
         // QueryException'i 422 olarak render et (Integer overflow icin)
         $exceptions->render(function (\Illuminate\Database\QueryException $e, Request $request) {
             if ($request->expectsJson()) {

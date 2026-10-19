@@ -9,6 +9,8 @@ Disallow: /filament/
 Disallow: /firma-paneli/
 Disallow: /teklif/
 Disallow: /odeme/
+Disallow: /kesif/odeme
+Disallow: /csrf-yenile
 Disallow: /*?*utm_
 Disallow: /*?*fbclid
 Disallow: /*?*gclid
@@ -24,19 +26,57 @@ User-agent: Googlebot
 Allow: /
 Disallow: /admin/
 Disallow: /api/internal/
+Disallow: /filament/
 Disallow: /firma-paneli/
 Disallow: /teklif/
 Disallow: /odeme/
+Disallow: /kesif/odeme
+Disallow: /csrf-yenile
+Disallow: /*?*utm_
+Disallow: /*?*fbclid
+Disallow: /*?*gclid
+Disallow: /*?*ref=
+Disallow: /*?q=
+Disallow: /*?kurum=
 
 # Bing
 User-agent: Bingbot
 Allow: /
 Disallow: /admin/
+Disallow: /api/internal/
+Disallow: /filament/
+Disallow: /firma-paneli/
+Disallow: /teklif/
+Disallow: /odeme/
+Disallow: /kesif/odeme
+Disallow: /csrf-yenile
+Disallow: /*?*utm_
+Disallow: /*?*fbclid
+Disallow: /*?*gclid
+Disallow: /*?*ref=
+Disallow: /*?q=
+Disallow: /*?kurum=
 
 # Yandex
 User-agent: YandexBot
 Allow: /
 Disallow: /admin/
+Disallow: /api/internal/
+Disallow: /filament/
+Disallow: /firma-paneli/
+Disallow: /teklif/
+Disallow: /odeme/
+Disallow: /kesif/odeme
+Disallow: /csrf-yenile
+Disallow: /*?*utm_
+Disallow: /*?*fbclid
+Disallow: /*?*gclid
+Disallow: /*?*ref=
+Disallow: /*?q=
+Disallow: /*?kurum=
+
+# Not: Bir bot kendi adını taşıyan bölümü bulunca genel (*) kuralları OKUMAZ.
+# Bu yüzden kapalı yollar her bölümde tekrar yazılı; değişiklikte hepsini birlikte güncelleyin.
 
 # ─── Yapay zekâ arama ve asistan botları ───
 # Amaç: ChatGPT, Claude, Perplexity, Gemini ve Copilot cevaplarında
@@ -48,6 +88,19 @@ User-agent: ChatGPT-User
 User-agent: GPTBot
 Allow: /
 Disallow: /admin/
+Disallow: /api/internal/
+Disallow: /filament/
+Disallow: /firma-paneli/
+Disallow: /teklif/
+Disallow: /odeme/
+Disallow: /kesif/odeme
+Disallow: /csrf-yenile
+Disallow: /*?*utm_
+Disallow: /*?*fbclid
+Disallow: /*?*gclid
+Disallow: /*?*ref=
+Disallow: /*?q=
+Disallow: /*?kurum=
 
 # Anthropic
 User-agent: Claude-SearchBot
@@ -55,17 +108,57 @@ User-agent: Claude-User
 User-agent: ClaudeBot
 Allow: /
 Disallow: /admin/
+Disallow: /api/internal/
+Disallow: /filament/
+Disallow: /firma-paneli/
+Disallow: /teklif/
+Disallow: /odeme/
+Disallow: /kesif/odeme
+Disallow: /csrf-yenile
+Disallow: /*?*utm_
+Disallow: /*?*fbclid
+Disallow: /*?*gclid
+Disallow: /*?*ref=
+Disallow: /*?q=
+Disallow: /*?kurum=
 
 # Perplexity
 User-agent: PerplexityBot
 User-agent: Perplexity-User
 Allow: /
 Disallow: /admin/
+Disallow: /api/internal/
+Disallow: /filament/
+Disallow: /firma-paneli/
+Disallow: /teklif/
+Disallow: /odeme/
+Disallow: /kesif/odeme
+Disallow: /csrf-yenile
+Disallow: /*?*utm_
+Disallow: /*?*fbclid
+Disallow: /*?*gclid
+Disallow: /*?*ref=
+Disallow: /*?q=
+Disallow: /*?kurum=
 
 # Google Gemini / Apple Intelligence (eğitim izni)
 User-agent: Google-Extended
 User-agent: Applebot-Extended
 Allow: /
+Disallow: /admin/
+Disallow: /api/internal/
+Disallow: /filament/
+Disallow: /firma-paneli/
+Disallow: /teklif/
+Disallow: /odeme/
+Disallow: /kesif/odeme
+Disallow: /csrf-yenile
+Disallow: /*?*utm_
+Disallow: /*?*fbclid
+Disallow: /*?*gclid
+Disallow: /*?*ref=
+Disallow: /*?q=
+Disallow: /*?kurum=
 
 # Sitemap
 Sitemap: https://worksitem.com/sitemap.xml

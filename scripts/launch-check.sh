@@ -38,6 +38,21 @@ for n in llms.txt sitemap.xml; do [ -e "$LIVE/public/$n" ] || [ -e "$D/$n" ] && 
 curl -s "$URL/robots.txt" | grep -q 'firma-paneli' && ok "robots.txt güncel" || no "robots.txt eski (yayın klasöründeki kopya)"
 curl -sI "$URL/sw.js" | grep -qi 'cache-control: no-cache' && ok "sw.js önbelleğe alınmıyor" || echo "  · sw.js için no-cache başlığı yok (yayın klasörü .htaccess)"
 
+echo "▶ Hata sayfaları, HTTPS ve yedek"
+c=$(code /bu-adres-yok-$RANDOM); [ "$c" = "404" ] && ok "Bilinmeyen adres gerçek 404 veriyor" || no "$c bilinmeyen adres (404 olmalı; soft 404)"
+curl -s "$URL/bu-adres-yok-$RANDOM" | grep -q 'Bu sayfa yok' && ok "404 sayfası Türkçe ve markalı" || no "404 sayfası varsayılan (İngilizce)"
+h=$(curl -s -o /dev/null -w "%{http_code} %{redirect_url}" "http://worksitem.com/"); case "$h" in 30[18]\ https://*) ok "http → https yönlendirmesi";; *) no "http yönlendirmesi: $h";; esac
+h=$(curl -s -o /dev/null -w "%{http_code} %{redirect_url}" "https://www.worksitem.com/"); case "$h" in 30[18]\ https://worksitem.com/*) ok "www → worksitem.com yönlendirmesi";; *) no "www yönlendirmesi: $h";; esac
+curl -sI "$URL/" | grep -qi 'strict-transport-security' && ok "HSTS başlığı" || no "HSTS başlığı yok"
+d=$(echo | openssl s_client -servername worksitem.com -connect worksitem.com:443 2>/dev/null | openssl x509 -noout -enddate 2>/dev/null | cut -d= -f2)
+if [ -n "$d" ]; then left=$(( ( $(date -d "$d" +%s) - $(date +%s) ) / 86400 )); [ "$left" -gt 14 ] && ok "SSL sertifikası: $left gün kaldı" || no "SSL sertifikası $left gün içinde bitiyor"; fi
+curl -s "$URL/csrf-yenile" | grep -q '"token"' && ok "Form anahtarı tazeleme (/csrf-yenile)" || no "/csrf-yenile çalışmıyor (uzun açık formlar 419 verir)"
+curl -s "$URL/robots.txt" | awk '/User-agent: Bingbot/{f=1} f&&/firma-paneli/{print; exit}' | grep -q . && ok "robots.txt: Bing/AI botları için de panel kapalı" || no "robots.txt: Bing/AI bölümlerinde kapalı yollar eksik"
+curl -s "$URL/" | grep -q 'google-site-verification' && ok "Search Console doğrulama etiketi" || echo "  · Search Console etiketi yok (DNS ile doğrulandıysa sorun değil; değilse GOOGLE_SITE_VERIFICATION=)"
+b=$(ls -t "$LIVE"/storage/app/backups/db-*.sql.gz 2>/dev/null | head -1)
+if [ -n "$b" ]; then age=$(( ( $(date +%s) - $(stat -c %Y "$b") ) / 3600 )); [ "$age" -le 36 ] && ok "Veritabanı yedeği: $age saat önce ($(du -h "$b" | cut -f1))" || no "Son veritabanı yedeği $age saat önce"; else no "Veritabanı yedeği yok (php artisan app:backup-db)"; fi
+echo "  · Yedekler aynı sunucuda: haftada bir storage/app/backups ve storage/app/public'i bilgisayara indirin"
+
 echo "▶ Sistem"
 php artisan app:preflight 2>/dev/null | grep -E "Sonuç|FAIL|WARN" | sed 's/^/  /'
 php artisan about 2>/dev/null | grep -i "queue" | sed 's/^ */  Kuyruk: /'

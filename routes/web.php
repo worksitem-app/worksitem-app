@@ -44,6 +44,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->name('home');
 
+// Uzun süre açık kalan sayfalarda form anahtarını tazeler (BrandShell betiği çağırır; 419 önlenir)
+Route::get('/csrf-yenile', fn () => response()->json(['token' => csrf_token()])
+    ->header('Cache-Control', 'no-store, private')
+    ->header('X-Robots-Tag', 'noindex'))
+    ->middleware('throttle:public-read')->name('csrf.refresh');
+
 Route::view('/hakkimizda', 'hakkimizda');
 Route::view('/vizyon', 'vizyon');
 Route::view('/ekip', 'ekip');
@@ -398,8 +404,8 @@ if (class_exists(\App\Http\Controllers\Auth\PublicAuthController::class) && file
 }
 
 /*
-| Bilinmeyen URL → ana sayfaya 301 (eski insaatvtadilat.com linkleri için).
-| UYARI: Google toplu ana sayfa yönlendirmelerini "soft 404" sayar. Uzun vadede
-| bilinen eski URL'leri redirects.php'ye tek tek ekleyip burada 404 dönülmeli.
+| Bilinmeyen URL → gerçek 404 (markalı sayfa: resources/views/errors/404.blade.php).
+| Eskiden ana sayfaya 301 veriliyordu; Google bunu "soft 404" sayıyordu.
+| Bilinen eski adresler routes/redirects.php'de tek tek yönlendirilir.
 */
-Route::fallback(fn () => redirect('/', 301));
+Route::fallback(fn () => abort(404));
