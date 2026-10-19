@@ -424,6 +424,12 @@ return array (
       'title' => 'TAKS / KAKS Hesaplayıcı',
       'cat' => 'yatirim',
     ),
+    'ges-planlayici' =>
+    array (
+      'title' => 'GES Planlayıcı: Çatıya Panel Yerleşimi (2D / 3D)',
+      'cat' => 'mekanik',
+      'desc' => 'Adresinizi yazın; çatınız uydu haritasında gelsin, paneller otomatik dizilsin, 2D ve 3D görün; yıllık üretim, maliyet ve geri dönüş süresi hesaplansın.',
+    ),
     'mutfak-planlayici' =>
     array (
       'title' => '2D / 3D Mutfak Planlayıcı',

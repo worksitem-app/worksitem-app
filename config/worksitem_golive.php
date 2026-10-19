@@ -42,7 +42,7 @@ return [
         ],
 
         // Yeni araçlar (14.10.2026)
-        'yeni-araclar' => ['mutfak-planlayici'],
+        'yeni-araclar' => ['mutfak-planlayici', 'ges-planlayici'],
 
         // Yapay zekâ özellikleri: AI_SPEND_ENABLED=true ve sağlayıcı bütçe limitleri tanımlandıktan sonra.
         // (Seramik görselleştirici araç listesinde değil; AI kredi sistemiyle korunur.)

@@ -304,6 +304,10 @@ Route::prefix('araclar')->name('tools.')->group(function () {
     Route::get('/banyo-planlayici', [\App\Http\Controllers\Tools\BathPlannerController::class, 'show'])->name('banyo_planner');
     Route::get('/wc-planlayici', [\App\Http\Controllers\Tools\BathPlannerController::class, 'wc'])->name('wc_planner');
     Route::get('/mutfak-planlayici', [\App\Http\Controllers\Tools\BathPlannerController::class, 'kitchen'])->name('kitchen_planner');
+    Route::get('/ges-planlayici', [\App\Http\Controllers\Tools\SolarPlannerController::class, 'show'])->name('solar_planner');
+    Route::get('/ges-planlayici/adres', [\App\Http\Controllers\Tools\SolarPlannerController::class, 'geocode'])->middleware('throttle:public-read')->name('solar_planner.geocode');
+    Route::get('/ges-planlayici/bina', [\App\Http\Controllers\Tools\SolarPlannerController::class, 'building'])->middleware('throttle:public-read')->name('solar_planner.building');
+    Route::post('/ges-planlayici/hesapla', [\App\Http\Controllers\Tools\SolarPlannerController::class, 'calculate'])->middleware('throttle:public-write')->name('solar_planner.calc');
     Route::post('/banyo-planlayici/render', [\App\Http\Controllers\Tools\BathPlannerController::class, 'render'])
         ->middleware(['ai.spend', 'ai.quota', 'throttle:ai'])->name('banyo_planner_render');
     Route::get('/banyo-maliyet-hesaplayici/rapor.pdf', [\App\Http\Controllers\Reports\BathroomReportController::class, 'pdf'])

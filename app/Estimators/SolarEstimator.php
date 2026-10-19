@@ -4,7 +4,7 @@ namespace App\Estimators;
 
 class SolarEstimator extends KitEstimator
 {
-    private const P = ['panel_kwp' => 10000, 'inverter_kwp' => 6000, 'mount_kwp' => ['cati' => 3500, 'arazi' => 5500], 'install_kwp' => 4000, 'project' => 15000, 'battery_kwh' => 12000, 'kwh_price' => 3.5];
+    public const P = ['panel_kwp' => 10000, 'inverter_kwp' => 6000, 'mount_kwp' => ['cati' => 3500, 'arazi' => 5500], 'install_kwp' => 4000, 'project' => 15000, 'battery_kwh' => 12000, 'kwh_price' => 3.5];
 
     public function key(): string { return 'ges'; }
 
@@ -45,11 +45,21 @@ class SolarEstimator extends KitEstimator
                 ['1 kWp kaç panel eder?', 'Günümüzde 450–550 W paneller yaygındır; 1 kWp yaklaşık 2 panel ve 5 m² çatı alanı demektir.'],
                 ['Hesaba neler dahil?', 'Panel, inverter, konstrüksiyon, kablo, montaj, proje ve başvuru; seçerseniz batarya. KDV dahil yaklaşık değerlerdir.'],
             ],
-            'related' => [['/araclar/enerji-tuketim-hesaplama', 'Enerji tüketimi'], ['/araclar/jenerator-hesaplama', 'Jeneratör'], ['/araclar/mantolama-maliyeti', 'Mantolama'], ['/araclar/cati-maliyet-hesaplayici', 'Çatı maliyeti']],
+            'related' => [['/araclar/ges-planlayici', 'GES planlayıcı (2D / 3D çatı)'], ['/araclar/enerji-tuketim-hesaplama', 'Enerji tüketimi'], ['/araclar/jenerator-hesaplama', 'Jeneratör'], ['/araclar/mantolama-maliyeti', 'Mantolama'], ['/araclar/cati-maliyet-hesaplayici', 'Çatı maliyeti']],
         ];
     }
 
     public function contingencyRate(): float { return 0.05; }
+
+    public function planner(): ?array
+    {
+        return [
+            'url' => route('tools.solar_planner'),
+            'label' => 'Çatınıza panelleri yerleştirin (2D / 3D)',
+            'hint' => 'Adresinizi yazın; çatınız uydu haritasında gelsin, paneller dizilsin, üretim PVGIS verisiyle hesaplansın.',
+            'map' => [],
+        ];
+    }
 
     public function steps(): array
     {
