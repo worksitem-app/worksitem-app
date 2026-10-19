@@ -79,6 +79,22 @@ class SolarPlannerTest extends TestCase
         $this->assertGreaterThan(1000, $res->json('specific'));
     }
 
+    public function test_arazi_ges_yatirim_kalemleri_ve_serbest_montaj(): void
+    {
+        Http::fake(['re.jrc.ec.europa.eu/*' => Http::response($this->pvgis(130))]);
+        $res = $this->postJson('/araclar/ges-planlayici/hesapla', [
+            'lat' => 37.9, 'lon' => 32.5, 'use' => 'arazi', 'flat' => true, 'price' => 3.5,
+            'faces' => [['kwp' => 1000, 'angle' => 29, 'azimuth' => 180]], 'site' => ['area' => 20000, 'perimeter' => 600],
+        ])->assertOk()->assertJsonPath('ok', true);
+        $items = array_keys($res->json('eco.items'));
+        $this->assertTrue(collect($items)->contains(fn ($k) => str_starts_with($k, 'Çevre çiti')));
+        $this->assertTrue(collect($items)->contains(fn ($k) => str_starts_with($k, 'Saha hazırlığı')));
+        $this->assertNotNull($res->json('eco.payback'));                 // tüketim girilmese de üretim değeriyle
+        Http::assertSent(fn ($r) => str_contains($r->url(), 'mountingplace=free'));
+        $html = $this->get('/araclar/ges-planlayici')->getContent();
+        $this->assertStringContainsString('value="arazi"', $html);
+    }
+
     public function test_panel_yoksa_anlasilir_hata(): void
     {
         $this->postJson('/araclar/ges-planlayici/hesapla', ['lat' => 40, 'lon' => 29, 'use' => 'konut', 'faces' => [['kwp' => 0, 'angle' => 30, 'azimuth' => 180]]])

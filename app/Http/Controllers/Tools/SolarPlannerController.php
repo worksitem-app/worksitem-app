@@ -40,7 +40,9 @@ class SolarPlannerController extends Controller
     {
         $v = $request->validate([
             'lat' => ['required', 'numeric', 'between:35,43'], 'lon' => ['required', 'numeric', 'between:25,45'],
-            'use' => ['required', 'in:konut,fabrika'],
+            'use' => ['required', 'in:konut,fabrika,arazi'],
+            'site.area' => ['nullable', 'numeric', 'min:0', 'max:5000000'],
+            'site.perimeter' => ['nullable', 'numeric', 'min:0', 'max:100000'],
             'flat' => ['nullable', 'boolean'],
             'faces' => ['required', 'array', 'min:1', 'max:12'],
             'faces.*.kwp' => ['required', 'numeric', 'min:0', 'max:5000'],
@@ -54,9 +56,9 @@ class SolarPlannerController extends Controller
         if ($kwp <= 0) {
             return response()->json(['ok' => false, 'message' => 'Çatıya panel yerleşmedi; çatı çizimini veya kenar boşluğunu kontrol edin.'], 422);
         }
-        $y = $s->yield((float) $v['lat'], (float) $v['lon'], $v['faces']);
+        $y = $s->yield((float) $v['lat'], (float) $v['lon'], $v['faces'], $v['use'] === 'arazi');
         $price = (float) ($v['price'] ?? SolarEstimator::P['kwh_price']);
-        $eco = $s->economics($kwp, $v['use'], (bool) ($v['flat'] ?? false), (float) $y['yearly'], (float) ($v['monthly_kwh'] ?? 0), $price, (bool) ($v['battery'] ?? false));
+        $eco = $s->economics($kwp, $v['use'], (bool) ($v['flat'] ?? false), (float) $y['yearly'], (float) ($v['monthly_kwh'] ?? 0), $price, (bool) ($v['battery'] ?? false), (array) ($v['site'] ?? []));
 
         return response()->json(['ok' => true, 'kwp' => round($kwp, 2), 'yield' => $y, 'eco' => $eco, 'specific' => round($y['yearly'] / $kwp)])
             ->header('Cache-Control', 'no-store');

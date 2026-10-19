@@ -93,7 +93,7 @@ class SolarPlanService
      * @param  list<array{kwp:float, angle:float, azimuth:float}>  $faces  azimuth: pusula (0=K, 90=D, 180=G, 270=B)
      * @return array{monthly: list<float>, yearly: float, source: string, faces: list<float>}
      */
-    public function yield(float $lat, float $lon, array $faces): array
+    public function yield(float $lat, float $lon, array $faces, bool $ground = false): array
     {
         $monthly = array_fill(0, 12, 0.0);
         $perFace = [];
@@ -107,7 +107,7 @@ class SolarPlanService
             }
             $angle = max(0, min(90, round((float) $f['angle'])));
             $aspect = (int) round(fmod(((float) $f['azimuth'] - 180) + 540, 360) - 180);   // PVGIS: 0=güney, 90=batı, -90=doğu
-            $m = $this->pvgisPerKwp($lat, $lon, $angle, $aspect);
+            $m = $this->pvgisPerKwp($lat, $lon, $angle, $aspect, $ground ? 'free' : 'building');
             if (! $m) {
                 $source = 'yaklaşık';
                 $m = self::fallbackPerKwp($lat, $angle, $aspect);
@@ -124,15 +124,15 @@ class SolarPlanService
     }
 
     /** 1 kWp için aylık kWh (PVGIS), önbellekli */
-    private function pvgisPerKwp(float $lat, float $lon, int $angle, int $aspect): ?array
+    private function pvgisPerKwp(float $lat, float $lon, int $angle, int $aspect, string $place = 'building'): ?array
     {
-        $key = sprintf('ges:pvgis:%.2F:%.2F:%d:%d', $lat, $lon, $angle, $aspect);
+        $key = sprintf('ges:pvgis:%.2F:%.2F:%d:%d:%s', $lat, $lon, $angle, $aspect, $place);
 
-        return Cache::remember($key, now()->addDays(90), function () use ($lat, $lon, $angle, $aspect) {
+        return Cache::remember($key, now()->addDays(90), function () use ($lat, $lon, $angle, $aspect, $place) {
             try {
                 $r = $this->http()->retry(2, 400, throw: false)->get((string) config('worksitem_solar.pvgis'), [
                     'lat' => round($lat, 4), 'lon' => round($lon, 4), 'peakpower' => 1, 'loss' => (int) config('worksitem_solar.system_loss', 14),
-                    'angle' => $angle, 'aspect' => $aspect, 'mountingplace' => 'building', 'outputformat' => 'json',
+                    'angle' => $angle, 'aspect' => $aspect, 'mountingplace' => $place, 'outputformat' => 'json',
                 ]);
             } catch (\Throwable $e) {
                 Log::info('PVGIS alınamadı', ['error' => $e->getMessage()]);
@@ -161,7 +161,7 @@ class SolarPlanService
     }
 
     /** Maliyet ve geri dönüş: GES maliyet aracının kWp fiyatlarıyla */
-    public function economics(float $kwp, string $use, bool $flat, float $yearly, float $monthlyKwh, float $price, bool $battery = false): array
+    public function economics(float $kwp, string $use, bool $flat, float $yearly, float $monthlyKwh, float $price, bool $battery = false, array $site = []): array
     {
         $P = SolarEstimator::P;
         $scale = 1.0;
@@ -170,18 +170,31 @@ class SolarPlanService
                 $scale = $f;
             }
         }
-        $mount = $P['mount_kwp']['cati'] * ($flat ? (float) config('worksitem_solar.flat_mount_factor', 1.15) : 1);
+        $land = $use === 'arazi';
+        $mount = $land ? $P['mount_kwp']['arazi'] : $P['mount_kwp']['cati'] * ($flat ? (float) config('worksitem_solar.flat_mount_factor', 1.15) : 1);
         $items = [
             'Güneş paneli' => $kwp * $P['panel_kwp'] * $scale,
             'İnverter' => $kwp * $P['inverter_kwp'] * $scale,
             'Konstrüksiyon' => $kwp * $mount * $scale,
             'Kablo, koruma ve montaj' => $kwp * $P['install_kwp'] * $scale,
-            'Proje, başvuru ve kabul' => $P['project'] * ($use === 'fabrika' ? 3 : 1),
+            'Proje, başvuru ve kabul' => $land ? (float) config('worksitem_solar.land.project', 250000) : $P['project'] * ($use === 'fabrika' ? 3 : 1),
         ];
+        if ($land) {
+            $a = (float) ($site['area'] ?? 0);
+            $per = (float) ($site['perimeter'] ?? 0);
+            $L = (array) config('worksitem_solar.land');
+            if ($a > 0) {
+                $items['Saha hazırlığı ve tesviye ('.number_format($a, 0, ',', '.').' m²)'] = $a * (float) ($L['prep_m2'] ?? 40);
+            }
+            if ($per > 0) {
+                $items['Çevre çiti ve giriş kapısı ('.number_format($per, 0, ',', '.').' m)'] = $per * (float) ($L['fence_m'] ?? 1500);
+            }
+            $items['Kamera, aydınlatma ve topraklama'] = max(60000, $kwp * (float) ($L['site_kwp'] ?? 400));
+        }
         if ($battery) {
             $kwh = round($kwp * (float) config('worksitem_solar.battery_ratio', 2), 1);
             $items['Batarya ('.str_replace('.', ',', (string) $kwh).' kWh)'] = $kwh * $P['battery_kwh'] * $scale;
-            $items['Otomatik güç kontrolü ve enerji kesme sistemi'] = (float) (config('worksitem_solar.storage_control')[$use] ?? 35000);
+            $items['Otomatik güç kontrolü ve enerji kesme sistemi'] = (float) (config('worksitem_solar.storage_control')[$use === 'arazi' ? 'fabrika' : $use] ?? 35000);
         }
         $total = array_sum($items) * 1.05;
         $consYear = $monthlyKwh * 12;

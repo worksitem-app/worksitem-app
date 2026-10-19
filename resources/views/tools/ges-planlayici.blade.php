@@ -139,8 +139,9 @@
                 <div class="gp-seg" role="radiogroup" aria-label="Kullanım">
                     <input type="radio" name="use" id="u1" value="konut" checked><label for="u1">Konut<small>ev, villa, apartman</small></label>
                     <input type="radio" name="use" id="u2" value="fabrika"><label for="u2">Fabrika / işyeri<small>OSB, depo, AVM</small></label>
+                    <input type="radio" name="use" id="u3" value="arazi"><label for="u3">Arazi GES<small>yatırım, tarla, arsa</small></label>
                 </div>
-                <div class="gp-seg c4" role="radiogroup" aria-label="Çatı tipi" style="margin-top:8px">
+                <div class="gp-seg c4" id="gpRoofSeg" role="radiogroup" aria-label="Çatı tipi" style="margin-top:8px">
                     <input type="radio" name="roof" id="r1" value="besik" checked><label for="r1">Beşik<small>iki yüzey</small></label>
                     <input type="radio" name="roof" id="r2" value="kirma"><label for="r2">Kırma<small>dört yüzey</small></label>
                     <input type="radio" name="roof" id="r3" value="duz"><label for="r3">Düz<small>teras</small></label>
@@ -150,7 +151,7 @@
                     <div><label for="gpSlope">Çatı eğimi (°)</label><input class="gp-in" id="gpSlope" type="number" min="0" max="60" step="1" value="30"></div>
                     <div><label for="gpFloors">Kat sayısı</label><input class="gp-in" id="gpFloors" type="number" min="1" max="40" step="1" value="2"></div>
                     <div><label for="gpPanel">Panel</label><select class="gp-in" id="gpPanel"></select></div>
-                    <div><label for="gpSetback">Kenar boşluğu (m)</label><input class="gp-in" id="gpSetback" type="number" min="0" max="5" step="0.1" value="0.5"></div>
+                    <div><label for="gpSetback">Kenar boşluğu (m)</label><input class="gp-in" id="gpSetback" type="number" min="0" max="30" step="0.1" value="0.5"></div>
                 </div>
                 <div class="gp-row" style="margin-top:10px;flex-wrap:wrap">
                     <button class="gp-btn o s" type="button" id="gpSwap">Mahya yönünü çevir</button>
@@ -169,6 +170,7 @@
                 <div class="gp-f" id="gpConsKonut">
                     <div class="full"><label for="gpBill">Aylık ortalama elektrik faturası (TL)</label><input class="gp-in" id="gpBill" type="number" min="0" step="50" placeholder="Örn. 2500"></div>
                 </div>
+                <p class="gp-note" id="gpArazNote" hidden>Arazi GES'te üretim, ilişkilendirilen tüketim tesisinde kullanılır; fazlası mevzuattaki koşullarla şebekeye verilir. Aşağıya ilişkilendireceğiniz tesisin aylık tüketimini ve birim fiyatı yazın; boş bırakırsanız üretimin tamamı bu fiyatla değerlendirilir.</p>
                 <div class="gp-f" id="gpConsFab" hidden>
                     <div><label for="gpKwh">Aylık tüketim (kWh)</label><input class="gp-in" id="gpKwh" type="number" min="0" step="100" placeholder="Örn. 40000"></div>
                     <div><label for="gpPrice">Birim fiyat (TL/kWh)</label><input class="gp-in" id="gpPrice" type="number" min="0.5" max="50" step="0.01"></div>
@@ -312,10 +314,19 @@ function setRing(ring) { S.ring = ring.map((p) => [+p[0], +p[1]]); S.off.clear()
 // Ayarlar
 function setUse(u) { document.querySelector('input[name=use][value=' + u + ']').checked = true; onUse(); }
 function onUse() {
-    const fab = val('use') === 'fabrika';
-    $('gpConsKonut').hidden = fab; $('gpConsFab').hidden = !fab;
-    $('gpSetback').value = C.setback[fab ? 'fabrika' : 'konut'];
-    if (fab && val('roof') === 'besik') { document.querySelector('input[name=roof][value=trapez]').checked = true; onRoof(); }
+    const use = val('use'), fab = use !== 'konut', land = use === 'arazi';
+    $('gpConsKonut').hidden = fab; $('gpConsFab').hidden = !fab; $('gpArazNote').hidden = !land;
+    $('gpRoofSeg').hidden = land; $('gpFloors').parentElement.hidden = land; $('gpSwap').hidden = land;
+    $('gpDrawBtn').textContent = land ? 'Arazi sınırını çizeyim' : 'Çatıyı kendim çizeyim';
+    $('gpSetback').value = land ? 5 : C.setback[use === 'fabrika' ? 'fabrika' : 'konut'];
+    if (land) {
+        document.querySelector('input[name=roof][value=duz]').checked = true;
+        $('gpSlope').value = Math.round(Math.min(32, Math.max(20, (S.proj ? S.proj.origin[0] : 39) * 0.76)));
+        $('gpSlope').previousElementSibling.textContent = 'Panel eğimi (°)';
+        if ($('gpPanel').querySelector('option[value="610"]')) $('gpPanel').value = '610';
+        S.off.clear();
+        if (!S.ring) { msg('Arazinizi haritada bulun ve "Arazi sınırını çizeyim" ile parselin köşelerine tıklayın.'); }
+    } else if (use === 'fabrika' && val('roof') === 'besik') { document.querySelector('input[name=roof][value=trapez]').checked = true; onRoof(); return; }
     update();
 }
 function onRoof() {
@@ -343,11 +354,12 @@ function update() {
     if (!S.ring || S.ring.length < 3) return;
     const P = params();
     S.proj = G.project(S.ring);
-    const wallH = P.floors * 3;
-    S.roof = G.faces(S.proj.pts, { type: P.roof, slope: P.roof === 'duz' ? 0 : P.slope, swap: S.swap, wallH });
+    const land = val('use') === 'arazi';
+    const wallH = land ? 0.01 : P.floors * 3;
+    S.roof = G.faces(S.proj.pts, { type: land ? 'duz' : P.roof, slope: (land || P.roof === 'duz') ? 0 : P.slope, swap: S.swap, wallH });
     if (!S.off.size && S.roof.faces.length > 1) S.roof.faces.forEach((f) => { const d = Math.abs(((f.azimuth - 180 + 540) % 360) - 180); if (d > 110) S.off.add(f.id); });   // güneyden 110°'den fazla sapan (kuzey) yüzeyler
     S.layouts = S.roof.faces.map((f) => S.off.has(f.id) ? { panels: [], kwp: 0, tilt: f.slope, azimuth: f.azimuth, down: f.down }
-        : G.layout(f, { l: P.panel.l, s: P.panel.s, w: P.panel.w, setback: P.setback, gap: 0.02, flat: { tilt: P.slope, lat: S.proj.origin[0] } }));
+        : G.layout(f, { l: P.panel.l, s: P.panel.s, w: P.panel.w, setback: P.setback, gap: 0.02, flat: { tilt: P.slope, lat: S.proj.origin[0] }, south: land }));
     draw2d(); renderFaces(); if (three.on) build3d(); schedule();
 }
 
@@ -384,9 +396,10 @@ async function calc() {
     if (!S.roof) return;
     const faces = S.layouts.map((l) => ({ kwp: +l.kwp.toFixed(3), angle: Math.round(l.tilt), azimuth: Math.round(l.azimuth) })).filter((f) => f.kwp > 0);
     if (!faces.length) { $('gpOut').innerHTML = '<p class="gp-msg warn">Çatıya panel sığmadı. Kenar boşluğunu azaltın, çatı tipini ya da mahya yönünü değiştirin.</p>'; return; }
-    const fab = val('use') === 'fabrika', price = fab ? (+$('gpPrice').value || C.kwhPrice) : C.kwhPrice;
+    const use = val('use'), fab = use !== 'konut', price = fab ? (+$('gpPrice').value || C.kwhPrice) : C.kwhPrice;
     const monthly = fab ? (+$('gpKwh').value || 0) : ((+$('gpBill').value || 0) / price);
-    const body = { lat: S.proj.origin[0], lon: S.proj.origin[1], use: fab ? 'fabrika' : 'konut', flat: val('roof') === 'duz', faces, monthly_kwh: Math.round(monthly), price, battery: $('gpBattery').checked };
+    const site = { area: Math.round(G.area(S.proj.pts)), perimeter: Math.round(G.edges(S.proj.pts).reduce((a, e) => a + e.len, 0)) };
+    const body = { lat: S.proj.origin[0], lon: S.proj.origin[1], use, flat: val('roof') === 'duz' || use === 'arazi', faces, monthly_kwh: Math.round(monthly), price, battery: $('gpBattery').checked, site };
     const my = ++seq;
     $('gpOut').style.opacity = 0.55;
     try {
@@ -410,7 +423,7 @@ function chart(m) {
 
 function renderOut(d, body, monthly) {
     const e = d.eco, y = d.yield, n = S.layouts.reduce((a, l) => a + l.panels.length, 0);
-    const fab = body.use === 'fabrika';
+    const fab = body.use !== 'konut', land = body.use === 'arazi';
     const sun = S.proj.origin[0] < 37.5 ? '5.5' : (S.proj.origin[0] < 40 ? '4.5' : '4.0');
     const bill = Math.round((monthly || (y.yearly / 12)) * body.price);
     const quote = C.quote + '?' + new URLSearchParams({ bill: String(Math.max(200, bill)), sun, mount: 'cati', quality: 'orta', ...(body.battery ? { 'extras[]': 'battery' } : {}) }).toString() + '#teklif';
@@ -418,13 +431,15 @@ function renderOut(d, body, monthly) {
     h += '<div class="gp-sum">'
         + '<div><small>Yıllık üretim</small><b>' + nf0.format(y.yearly) + ' kWh</b></div>'
         + '<div><small>Özgül verim</small><b>' + nf0.format(d.specific) + ' kWh/kWp</b></div>'
-        + '<div><small>Yıllık tasarruf</small><b>' + (monthly ? tl(e.saving) : '—') + '</b></div>'
-        + '<div><small>Geri dönüş</small><b>' + (monthly && e.payback ? nf1.format(e.payback) + ' yıl' : '—') + '</b></div>'
+        + '<div><small>' + (land && !monthly ? 'Yıllık üretim değeri' : 'Yıllık tasarruf') + '</small><b>' + (monthly || land ? tl(e.saving) : '—') + '</b></div>'
+        + '<div><small>Geri dönüş</small><b>' + ((monthly || land) && e.payback ? nf1.format(e.payback) + ' yıl' : '—') + '</b></div>'
+        + (land ? '<div><small>Arazi / kullanılan</small><b>' + nf0.format(body.site.area) + ' m² · ' + nf0.format(body.site.area / Math.max(0.1, d.kwp)) + ' m²/kWp</b></div>' : '')
         + (e.coverage !== null ? '<div><small>Tüketimi karşılama</small><b>%' + e.coverage + '</b></div>' : '')
         + '<div><small>CO₂ azaltımı</small><b>≈' + nf1.format(e.co2) + ' t/yıl</b></div></div>';
     h += chart(y.monthly);
     h += '<ul class="gp-items">' + Object.entries(e.items).map(([k, v]) => '<li><span>' + esc(k) + '</span><b>' + tl(v) + '</b></li>').join('') + '</ul>';
-    if (!monthly) h += '<p class="gp-msg">Tasarruf ve geri dönüş için ' + (fab ? 'aylık tüketiminizi' : 'aylık faturanızı') + ' girin.</p>';
+    if (land) h += '<div class="gp-legal"><b>Arazi GES: izin ve mevzuat</b>Arazide lisanssız GES bir tüketim tesisiyle ilişkilendirilerek kurulur; fazla enerjinin şebekeye verilmesi ve bedeli güncel mevzuata ve dağıtım şirketi bağlantı görüşüne bağlıdır. Arazinin imar ve tapu niteliği (tarım arazisi ise kullanım izinleri), bağlantı kapasitesi, trafo ve hat bedeli, zemin etüdü keşifte netleşir. Gösterilen değer yatırım kararı için ön fizibilitedir.</div>';
+    if (!monthly && !land) h += '<p class="gp-msg">Tasarruf ve geri dönüş için ' + (fab ? 'aylık tüketiminizi' : 'aylık faturanızı') + ' girin.</p>';
     if (e.excess > 0) h += '<p class="gp-note">Tüketiminizden yaklaşık ' + nf0.format(e.excess) + ' kWh/yıl fazla üretim çıkıyor; fazla üretimin mahsubu ve satışı mevzuata ve dağıtım şirketi koşullarına bağlıdır, tasarrufa dahil edilmedi.</p>';
     if (body.battery) h += '<p class="gp-note">Depolamalı sistemlerde, anlaşma gücünün üzerindeki depolama için otomatik güç kontrolü ve enerji kesme sistemi gerekir; bu kalem tahminidir, keşifte netleşir.</p>';
     if (fab || body.battery) h += '<div class="gp-legal"><b>Mevzuat uygunluk süreci</b>Lisanssız üretim ve depolama mevzuatındaki son değişiklikler nedeniyle teklif yalnız panel ve montajdan oluşmaz. Keşifte mühendislerimiz şunları netleştirir:<ol><li>Bağlantı anlaşması ve anlaşma gücü (gerekiyorsa revizyon ve süreleri)</li><li>Uzaktan izleme ve acil durumda uzaktan kontrol (haberleşme / SCADA) gereklilikleri</li><li>Depolama varsa otomatik güç kontrolü ve enerji kesme sistemi</li></ol>Bu hükümler her tesise aynı şekilde uygulanmaz; tesisinizin kapsamı keşifte kontrol edilir.</div>';

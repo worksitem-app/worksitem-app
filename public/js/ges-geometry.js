@@ -128,6 +128,7 @@
                 if (d < bd) { bd = d; best = c; }
             });
             dx = best[0]; dy = best[1]; tilt = p.flat.tilt; az = compass(dx, dy);
+            if (p.south) { dx = 0; dy = -1; az = 180; }   // arazi: sıralar parsel yönünden bağımsız tam güneye
         }
         var ex = -dy, ey = dx;                          // saçak boyunca
         var cosT = Math.cos(tilt * D), sinT = Math.sin(tilt * D);
@@ -147,8 +148,9 @@
             return cs;
         }
         var bestRun = null;
-        [0, 0.25, 0.5, 0.75].forEach(function (fa) {
-            [0, 0.15, 0.33, 0.66].forEach(function (fb) {
+        var big = (a1 - a0) * (b1 - b0) > 20000;          // büyük parselde daha az kaydırma denemesi (hız)
+        (big ? [0, 0.5] : [0, 0.25, 0.5, 0.75]).forEach(function (fa) {
+            (big ? [0, 0.5] : [0, 0.15, 0.33, 0.66]).forEach(function (fb) {
                 var run = [];
                 for (var b = b0 + sb + fb * rowPitch; b + dPanel <= b1 + 1e-6; b += rowPitch)
                     for (var a = a0 + sb + fa * wPlan; a + p.s <= a1 + 1e-6; a += wPlan) { var cs = fits(a, b); if (cs) run.push(cs); }

@@ -20,6 +20,8 @@ return [
     // Depolama: batarya kWh = kWp × oran; anlaşma gücü üzerinde depolamada otomatik güç kontrolü ve enerji kesme
     // sistemi yükümlülüğü için pano/otomasyon (tahmini, keşifte netleşir)
     'battery_ratio' => 2.0,
+    // Arazi GES (yatırım) ek kalemleri — tahmini, Kainta saha referansıyla güncellenmeli; trafo/hat bedeli bağlantı görüşüyle netleşir
+    'land' => ['project' => 250000, 'prep_m2' => 40, 'fence_m' => 1500, 'site_kwp' => 400],
     'storage_control' => ['konut' => 35000, 'fabrika' => 150000],
     // Dış servisler (sunucu tarafından çağrılır; tarayıcıdan doğrudan çağrı yapılmaz)
     'nominatim' => 'https://nominatim.openstreetmap.org/search',
