@@ -18,7 +18,7 @@
    - Cloudflare kullanılıyorsa `TRUSTED_PROXIES=*`
 4. **Cron** (hPanel → Gelişmiş → Cron Jobs). Eski satırları silin, yalnızca bunu bırakın:
    ```
-   * * * * * cd /home/KULLANICI/worksitem && php artisan schedule:run >> /dev/null 2>&1
+   */5 * * * * cd /home/KULLANICI/apps/worksitem && nice -n 19 php artisan schedule:run >> /dev/null 2>&1
    ```
 5. **Admin kullanıcısı:**
    ```
@@ -27,7 +27,7 @@
 6. **Sağlayıcı tarafı harcama limitleri:** Replicate ve Google AI Studio'da aylık bütçe uyarısı ve limit tanımlayın. Uygulamadaki `AI_GLOBAL_DAILY_LIMIT` ikinci bir emniyet katmanıdır.
 7. **İzleme:** UptimeRobot (ücretsiz) ile `https://worksitem.com/up` adresini 5 dakikada bir kontrol ettirin, e-posta/SMS uyarısı açın.
 8. **Otomatik yedek:** hPanel'de günlük otomatik yedeği açın. `scripts/deploy.sh` her deploy'da ayrıca `~/worksitem-backups` altına yedek alır (son 14 yedek tutulur).
-9. **Tam yedek (v78, spatie/laravel-backup):** her gece 03:00 (İstanbul) veritabanı + dosyalar (.env, storage/app; vendor/.git hariç) tek zip olarak `storage/app/spatie-backups/worksitem-production/` altına yazılır, son 7 gün tutulur, 09:05'te sağlık kontrolü yapılır; sorun olursa `BACKUP_NOTIFY_EMAIL` adresine e-posta gider. Ayrı cron gerekmez: yukarıdaki her dakikalık `schedule:run` satırı yeter. Elle: `php artisan backup:run`, liste: `php artisan backup:list`. Geri yükleme: zip'i açın, `db-dumps/*.sql` dosyasını `mysql -u USER -p DB_ADI < dosya.sql` ile yükleyin, `storage/app` ve `.env`'i yerine koyun.
+9. **Tam yedek (v78, spatie/laravel-backup):** her gece 03:00 (İstanbul) veritabanı + dosyalar (.env, storage/app; vendor/.git hariç) tek zip olarak `storage/app/spatie-backups/worksitem-production/` altına yazılır, son 7 gün tutulur, 09:05'te sağlık kontrolü yapılır; sorun olursa `BACKUP_NOTIFY_EMAIL` adresine e-posta gider. Ayrı cron gerekmez: yukarıdaki 5 dakikalık `schedule:run` satırı yeter (v84: her dakika çalıştırmak paylaşımlı sunucuyu yavaşlatıyordu; tüm görev saatleri 5'in katı). Elle: `php artisan backup:run`, liste: `php artisan backup:list`. Geri yükleme: zip'i açın, `db-dumps/*.sql` dosyasını `mysql -u USER -p DB_ADI < dosya.sql` ile yükleyin, `storage/app` ve `.env`'i yerine koyun.
 
 ## 2. Her deploy
 

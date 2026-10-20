@@ -15,6 +15,7 @@ class SchedulerHeartbeatTest extends TestCase
     public function test_kalp_atisi_skaler_saklanir_ve_preflight_cokmeden_okur(): void
     {
         Cache::forget(Preflight::HEARTBEAT_KEY);
+        $this->travelTo(now()->startOfHour()->addMinutes(10));   // kalp atışı 5 dakikada bir (v84)
         $this->artisan('schedule:run')->assertSuccessful();
 
         $this->assertIsInt(Cache::get(Preflight::HEARTBEAT_KEY));

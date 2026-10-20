@@ -70,7 +70,7 @@ return [
 
         'destination' => [
             'compression_method' => ZipArchive::CM_DEFAULT,
-            'compression_level' => 6,
+            'compression_level' => 1,   // paylaşımlı hostingte düşük CPU (zip biraz büyür)
             'filename_prefix' => '',
             'disks' => [
                 'backups',

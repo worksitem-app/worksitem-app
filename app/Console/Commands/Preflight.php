@@ -90,8 +90,8 @@ class Preflight extends Command
 
         // ── Zamanlayıcı (cron) ─────────────────────────────────
         $beat = self::lastBeat();
-        $this->warnUnless($beat > 0 && (time() - $beat) <= 300, 'Zamanlayıcı (cron) çalışıyor',
-            'Son 5 dk zamanlayıcı kalp atışı yok. Cron: * * * * * cd '.base_path().' && php artisan schedule:run >> /dev/null 2>&1');
+        $this->warnUnless($beat > 0 && (time() - $beat) <= 660, 'Zamanlayıcı (cron) çalışıyor',
+            'Son 10 dk zamanlayıcı kalp atışı yok. Cron (5 dk): */5 * * * * cd '.base_path().' && nice -n 19 php artisan schedule:run >> /dev/null 2>&1');
 
         $backups = glob(storage_path('app/backups/db-*.sql.gz')) ?: [];
         $newest = $backups === [] ? 0 : max(array_map('filemtime', $backups));

@@ -18,10 +18,12 @@ use Illuminate\Support\Facades\Schedule;
 |
 */
 
-// Zamanlayıcının çalıştığını app:preflight doğrulayabilsin diye kalp atışı
+// Zamanlayıcının çalıştığını app:preflight doğrulayabilsin diye kalp atışı.
+// v84: paylaşımlı hostingte cron 5 dakikada bir çalışır (her dakika Laravel açmak sunucuyu yoruyordu).
+// Bu yüzden TÜM görev saatleri 5'in katı dakikada olmalı (ScheduleCadenceTest denetler).
 Schedule::call(fn () => Preflight::beat())
     ->name('scheduler-heartbeat')
-    ->everyMinute();
+    ->everyFiveMinutes();
 
 // Günlük CEO raporu
 Schedule::command('reports:daily-ceo')

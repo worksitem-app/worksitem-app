@@ -60,6 +60,8 @@ echo "  · Yedekler aynı sunucuda: haftada bir storage/app/spatie-backups için
 echo "▶ Sistem"
 php artisan app:preflight 2>/dev/null | grep -E "Sonuç|FAIL|WARN" | sed 's/^/  /'
 php artisan about 2>/dev/null | grep -i "queue" | sed 's/^ */  Kuyruk: /'
+c=$(crontab -l 2>/dev/null | grep -v '^\s*#' | grep -c 'schedule:run'); m=$(crontab -l 2>/dev/null | grep -v '^\s*#' | grep 'schedule:run' | grep -c '^\* ')
+if [ "$c" = "1" ] && [ "$m" = "0" ]; then ok "Cron: tek schedule:run satırı, 5 dakikada bir"; elif [ "$c" = "0" ]; then echo "  · crontab okunamadı ya da satır yok (hPanel › Cron Jobs'tan bakın)"; else no "Cron: $c schedule:run satırı, $m tanesi her dakika (tek satır */5 olmalı; sunucuyu yorar)"; fi
 tail -n 1 ~/cron-worksitem.log 2>/dev/null | cut -c1-120 | sed 's/^/  Son cron: /'
 
 echo "▶ Bugünkü durum"
