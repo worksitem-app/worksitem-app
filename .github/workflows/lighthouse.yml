@@ -1,0 +1,61 @@
+# v83: Ücretsiz hız ve SEO ölçümü (Lighthouse CI)
+#
+# Canlı siteyi (worksitem.com) mobil ayarla ölçer: performans, SEO, erişilebilirlik, en iyi uygulamalar.
+# - Her pazartesi 06:30 (İstanbul) ve elle (Actions › Lighthouse › Run workflow) çalışır.
+# - Rapor bağlantısı iş özetine yazılır (Google'ın ücretsiz geçici depolaması, ~7 gün).
+# - Eşiklerin altı yalnız UYARI verir; iş kırmızıya dönmez. Ayarlar: .github/lighthouserc.json
+# Hesap, anahtar ya da ücret gerekmez.
+
+name: Lighthouse
+
+on:
+  schedule:
+    - cron: '30 3 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Lighthouse (3 ölçüm, ortanca)
+        id: lh
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          urls: |
+            https://worksitem.com/
+            https://worksitem.com/araclar
+            https://worksitem.com/maliyet-hesapla
+            https://worksitem.com/araclar/banyo-maliyet-hesaplayici
+            https://worksitem.com/araclar/boya-hesaplayici
+            https://worksitem.com/araclar/ges-planlayici
+          configPath: .github/lighthouserc.json
+          runs: 3
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+
+      - name: Özet
+        if: always()
+        env:
+          LINKS: ${{ steps.lh.outputs.links }}
+          MANIFEST: ${{ steps.lh.outputs.manifest }}
+        run: |
+          python3 - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json, os
+          links = json.loads(os.environ.get('LINKS') or '{}')
+          rows = [r for r in json.loads(os.environ.get('MANIFEST') or '[]') if r.get('isRepresentativeRun')]
+          print('## Lighthouse (mobil)\n')
+          print('| Sayfa | Performans | SEO | Erişilebilirlik | En iyi uyg. | Rapor |')
+          print('|---|---|---|---|---|---|')
+          for r in rows:
+              s = r.get('summary', {})
+              f = lambda k: str(round(s.get(k, 0) * 100)) if k in s else '-'
+              u = r['url']
+              print(f"| {u.replace('https://worksitem.com', '') or '/'} | {f('performance')} | {f('seo')} | {f('accessibility')} | {f('best-practices')} | [aç]({links.get(u, '#')}) |")
+          PY
