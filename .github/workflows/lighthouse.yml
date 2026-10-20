@@ -18,11 +18,21 @@ permissions:
 
 jobs:
   lighthouse:
-    runs-on: ubuntu-latest
+    # ubuntu-latest Ekim 2026'da Ubuntu 26'ya geçiyor; Chrome sorunlarına karşı sabit sürüm
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
 
     steps:
       - uses: actions/checkout@v4
+
+      - name: Siteye erişim kontrolü (GitHub sunucusundan)
+        run: |
+          UA='Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Mobile Safari/537.36 Chrome-Lighthouse'
+          for u in / /araclar /maliyet-hesapla /araclar/banyo-maliyet-hesaplayici /araclar/boya-hesaplayici /araclar/ges-planlayici; do
+            printf '%s  ' "$u"; curl -s -o /dev/null -A "$UA" -w '%{http_code} %{time_total}s %{redirect_url}\n' --max-time 30 "https://worksitem.com$u" || echo "BAĞLANTI HATASI"
+          done
+          which google-chrome chromium chromium-browser 2>/dev/null || true
+          google-chrome --version 2>/dev/null || true
 
       - name: Lighthouse (3 ölçüm, ortanca)
         id: lh
