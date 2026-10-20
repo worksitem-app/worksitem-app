@@ -12,7 +12,13 @@
     function getSessionKey() {
         let key = sessionStorage.getItem('ws_session_key');
         if (!key) {
-            key = 'sess_' + Date.now() + '_' + Math.random().toString(36).substring(2, 15);
+            // Oturum anahtarı: kriptografik rastgele (Math.random tahmin edilebilir)
+            const c = window.crypto || {};
+            let rnd = '';
+            if (typeof c.randomUUID === 'function') rnd = c.randomUUID().replace(/-/g, '');
+            else if (typeof c.getRandomValues === 'function') rnd = Array.from(c.getRandomValues(new Uint8Array(16)), (b) => b.toString(16).padStart(2, '0')).join('');
+            else rnd = Date.now().toString(36);
+            key = 'sess_' + Date.now() + '_' + rnd;
             sessionStorage.setItem('ws_session_key', key);
         }
         return key;
@@ -145,11 +151,15 @@ document.addEventListener('click', function(e) {
 
     const text = (target.innerText || target.textContent || '').toLowerCase();
     const href = target.href || '';
+    // Alan adını URL'den çöz (ör. "evil.com/?kainta.com" eşleşmesin)
+    let host = '';
+    try { host = href ? new URL(href, location.href).hostname.toLowerCase() : ''; } catch (err) { host = ''; }
+    const isKainta = host === 'kainta.com' || host.endsWith('.kainta.com');
 
     // "Kainta" kelimesi geçiyor mu?
-    if (text.includes('kainta') || href.includes('kainta.com')) {
+    if (text.includes('kainta') || isKainta) {
         const toolSlug = document.body.dataset.toolSlug || 'unknown';
-        const eventType = href.includes('kainta.com') ? 'kainta_cta_click' : 'cost_cta_click';
+        const eventType = isKainta ? 'kainta_cta_click' : 'cost_cta_click';
 
         if (window.WorksitemEvents) {
             if (eventType === 'kainta_cta_click') {

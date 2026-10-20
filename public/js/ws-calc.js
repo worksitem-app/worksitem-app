@@ -29,6 +29,12 @@
             .slice(0, 2);
     }
 
+    function esc(s) {
+        return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+            return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+        });
+    }
+
     function round10(v) { return Math.round(v / 10) * 10; }
 
     function fxHtml(nums) {
@@ -37,10 +43,10 @@
         Object.keys(cfg.symbols || {}).forEach(function (code) {
             var rate = cfg.fx.rates[code], sym = cfg.symbols[code];
             if (!rate) return;
-            var parts = nums.map(function (n) { return sym + nf.format(round10(n / rate)); });
+            var parts = nums.map(function (n) { return esc(sym) + nf.format(round10(n / rate)); });
             out += '<span>≈ ' + parts.join(' – ') + '</span>';
         });
-        return out + '<span><em>TCMB satış kuru, ' + cfg.fx.date + '</em></span>';
+        return out + '<span><em>TCMB satış kuru, ' + esc(cfg.fx.date) + '</em></span>';
     }
 
     var result = document.querySelector('[data-wc-result]');

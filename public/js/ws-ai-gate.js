@@ -74,7 +74,7 @@
         track('ai_gate_view', { gate: 'login' });
         return new Promise(function (resolve) {
             open(
-                '<span class="wsag-tag">Günde ' + C.freePerDay + ' ücretsiz</span>' +
+                '<span class="wsag-tag">Günde ' + esc(C.freePerDay) + ' ücretsiz</span>' +
                 '<h2 id="wsagTitle">Telefonunuzla giriş yapın</h2>' +
                 '<p>' + esc(data.message || 'Yapay zekâ özellikleri telefonla giriş yapan kullanıcılara günde ' + C.freePerDay + ' kez ücretsizdir.') + '</p>' +
                 '<form id="wsagForm" novalidate>' +
