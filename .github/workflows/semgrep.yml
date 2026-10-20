@@ -1,0 +1,61 @@
+# v82: Ücretsiz güvenlik taraması (Semgrep Community Edition)
+#
+# Claude güvenlik incelemesinin (v79) yerine geçer; API anahtarı, hesap ya da ücret gerektirmez.
+# - Her PR'da ve main'e her gönderimde, ayrıca her pazartesi 06:00 (İstanbul) çalışır.
+# - Bulgular: GitHub › repo › Security › Code scanning (herkese açık repoda ücretsiz).
+# - Şimdilik CI'yı kırmaz (yalnız raporlar). Bulgular temizlenince "--error" eklenerek zorunlu yapılabilir.
+
+name: Semgrep
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '0 3 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write
+
+concurrency:
+  group: semgrep-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  semgrep:
+    if: github.actor != 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Semgrep kur
+        run: pip install "semgrep>=1.181,<2"
+
+      - name: Tara (PHP, JavaScript, gizli anahtar, GitHub Actions kuralları)
+        env:
+          SEMGREP_SEND_METRICS: 'off'
+        run: |
+          semgrep scan \
+            --config p/php \
+            --config p/javascript \
+            --config p/secrets \
+            --config p/github-actions \
+            --exclude vendor --exclude node_modules --exclude public/build \
+            --exclude storage --exclude 'public/js/filament' --exclude 'public/vendor' \
+            --sarif --output semgrep.sarif \
+            --metrics off
+
+      - name: Sonuçları GitHub Security sekmesine yükle
+        if: always() && hashFiles('semgrep.sarif') != ''
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: semgrep.sarif
+          category: semgrep
