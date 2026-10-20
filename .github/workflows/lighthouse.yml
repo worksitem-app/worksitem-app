@@ -33,6 +33,12 @@ jobs:
           done
           which google-chrome chromium chromium-browser 2>/dev/null || true
           echo "::notice title=Chrome::$(google-chrome --version 2>&1 | head -1)"
+          H=$(curl -sI -A 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/155.0.0.0 Safari/537.36' --max-time 30 https://worksitem.com/ | tr -d '\r' | grep -iE '^(HTTP|server|platform|x-hcdn|x-turbo|cf-|x-litespeed|x-cache|panel)' | tr '\n' ' ')
+          echo "::notice title=HeadlessChrome UA::$H"
+          H=$(curl -sI --max-time 30 https://worksitem.com/ | tr -d '\r' | grep -iE '^(HTTP|server|platform|x-hcdn|x-turbo|cf-|x-litespeed|x-cache|panel)' | tr '\n' ' ')
+          echo "::notice title=Normal UA::$H"
+          S=$(timeout 60 google-chrome --headless=new --no-sandbox --disable-gpu --dump-dom https://worksitem.com/ 2>/dev/null | grep -o '<title>[^<]*' | head -1)
+          echo "::notice title=Gerçek Chrome başlık::${S:-boş}"
 
       - name: Lighthouse (3 ölçüm, ortanca)
         id: lh
