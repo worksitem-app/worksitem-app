@@ -53,7 +53,9 @@ jobs:
       - name: Hata ayrıntısı (yalnız başarısızsa)
         if: failure()
         run: |
-          npx --yes @lhci/cli collect --url=https://worksitem.com/ --numberOfRuns=1 2>&1 | tail -n 25 > lhci-err.txt || true
+          npx --yes @lhci/cli collect --url=https://worksitem.com/ --numberOfRuns=1 > lhci-full.txt 2>&1 || true
+          grep -iE 'status code|statusCode|runtime error|ERR_|unable to|blocked|403|429|503|navigat|interstitial|security' lhci-full.txt | grep -v 'Caught exception' | sort -u | head -n 25 > lhci-err.txt
+          [ -s lhci-err.txt ] || tail -n 25 lhci-full.txt > lhci-err.txt
           while IFS= read -r l; do [ -n "$l" ] && echo "::warning title=LHCI::${l:0:300}"; done < lhci-err.txt
 
       - name: Özet
