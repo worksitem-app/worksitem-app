@@ -29,10 +29,10 @@ jobs:
         run: |
           UA='Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Mobile Safari/537.36 Chrome-Lighthouse'
           for u in / /araclar /maliyet-hesapla /araclar/banyo-maliyet-hesaplayici /araclar/boya-hesaplayici /araclar/ges-planlayici; do
-            printf '%s  ' "$u"; curl -s -o /dev/null -A "$UA" -w '%{http_code} %{time_total}s %{redirect_url}\n' --max-time 30 "https://worksitem.com$u" || echo "BAĞLANTI HATASI"
+            r=$(curl -s -o /dev/null -A "$UA" -w '%{http_code} %{time_total}s %{redirect_url}' --max-time 30 "https://worksitem.com$u" || echo "BAĞLANTI HATASI"); echo "::notice title=Erişim $u::$r"
           done
           which google-chrome chromium chromium-browser 2>/dev/null || true
-          google-chrome --version 2>/dev/null || true
+          echo "::notice title=Chrome::$(google-chrome --version 2>&1 | head -1)"
 
       - name: Lighthouse (3 ölçüm, ortanca)
         id: lh
@@ -49,6 +49,12 @@ jobs:
           runs: 3
           uploadArtifacts: true
           temporaryPublicStorage: true
+
+      - name: Hata ayrıntısı (yalnız başarısızsa)
+        if: failure()
+        run: |
+          npx --yes @lhci/cli collect --url=https://worksitem.com/ --numberOfRuns=1 2>&1 | tail -n 25 > lhci-err.txt || true
+          while IFS= read -r l; do [ -n "$l" ] && echo "::warning title=LHCI::${l:0:300}"; done < lhci-err.txt
 
       - name: Özet
         if: always()
