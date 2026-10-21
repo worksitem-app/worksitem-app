@@ -87,6 +87,32 @@ jobs:
                   note('warning', f'Düşük puan {p}', ', '.join(low)); warns += 1
               rows.append(f"| {p} | {cat.get('performance','-')} | {cat.get('seo','-')} | {cat.get('accessibility','-')} | {cat.get('best-practices','-')} | {dv('largest-contentful-paint')} | {dv('cumulative-layout-shift')} | {dv('total-blocking-time')} | {field} |")
               note('notice', f'Puan {p}', f"perf {cat.get('performance')} · seo {cat.get('seo')} · erişil. {cat.get('accessibility')} · en iyi {cat.get('best-practices')} · LCP {dv('largest-contentful-paint')} · CLS {dv('cumulative-layout-shift')} · TBT {dv('total-blocking-time')} · gerçek kullanıcı {field}")
+              # Teşhis: ana içerik öğesi, LCP evreleri, engelleyen dosyalar, kayma kaynakları
+              def items(k):
+                  return ((au.get(k) or {}).get('details') or {}).get('items') or []
+              def flat(it):
+                  out = []
+                  for x in it:
+                      if isinstance(x, dict) and x.get('type') in ('table', 'list') and 'items' in x:
+                          out += flat(x['items'])
+                      else:
+                          out.append(x)
+                  return out
+              lcp_el = [ (x.get('node') or {}).get('snippet', '') for x in flat(items('largest-contentful-paint-element')) if isinstance(x, dict) and x.get('node') ]
+              if lcp_el:
+                  note('notice', f'LCP öğesi {p}', lcp_el[0][:250])
+              ph = [f"{x.get('phase') or x.get('label')}: {round(x.get('timing') or x.get('duration') or 0)} ms" for x in flat(items('lcp-breakdown-insight') or items('largest-contentful-paint-element')) if isinstance(x, dict) and (x.get('phase') or x.get('label')) and (x.get('timing') is not None or x.get('duration') is not None)]
+              if ph:
+                  note('notice', f'LCP evreleri {p}', ' · '.join(ph)[:300])
+              rb = [f"{(x.get('url') or '')[-80:]} ({round(x.get('wastedMs') or 0)} ms)" for x in flat(items('render-blocking-insight') or items('render-blocking-resources')) if isinstance(x, dict) and x.get('url')]
+              if rb:
+                  note('notice', f'Engelleyen {p}', ' | '.join(rb)[:400])
+              ls = [ ((x.get('node') or {}).get('snippet') or x.get('extra', {}).get('value', '') or '')[:120] + f" ({round(x.get('score') or 0, 3)})" for x in flat(items('cls-culprits-insight') or items('layout-shifts')) if isinstance(x, dict) and (x.get('node') or x.get('score'))]
+              if ls:
+                  note('notice', f'Kayma {p}', ' | '.join(ls[:4])[:400])
+              big = sorted([x for x in flat(items('network-requests')) if isinstance(x, dict) and x.get('url')], key=lambda x: -(x.get('transferSize') or 0))[:5]
+              if big:
+                  note('notice', f'En büyük dosyalar {p}', ' | '.join(f"{x['url'][-70:]} {round((x.get('transferSize') or 0)/1024)} KB" for x in big)[:400])
               time.sleep(3)
 
           with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as f:
