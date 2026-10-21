@@ -13,6 +13,19 @@ class BathroomCalculatorTest extends TestCase
 {
     use RefreshDatabase;
 
+    // Kur dosyası diskte kalır (storage/app/fx-tcmb.json): test sırası değişince "kur yokken" testleri bozuluyordu
+    protected function setUp(): void
+    {
+        parent::setUp();
+        @unlink(storage_path('app/fx-tcmb.json'));
+    }
+
+    protected function tearDown(): void
+    {
+        @unlink(storage_path('app/fx-tcmb.json'));
+        parent::tearDown();
+    }
+
     private function est(array $o = []): array
     {
         return app(BathroomEstimator::class)->estimate(array_merge([
