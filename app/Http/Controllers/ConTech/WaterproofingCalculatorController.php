@@ -162,6 +162,29 @@ class WaterproofingCalculatorController extends Controller
                 'note' => '%100 saf poliürea bazlı iki bileşenli sistem.',
             ],
 
+            'acrylic_liquid' => [
+                'label' => 'Akrilik Esaslı Likit Yalıtım · Elyaf Takviyeli · 2 Kat',
+                'poz' => null,
+                'applications' => [
+                    'teras',
+                    'balkon',
+                    'cati',
+                ],
+                'note' => 'Su bazlı, UV dayanımlı akrilik likit membran; üzeri açık bırakılabilen teras ve çatılar için. Resmî pozu yok, piyasa fiyatı kullanılır.',
+            ],
+
+            'pu_liquid' => [
+                'label' => 'Poliüretan Esaslı Likit Membran · 2 Kat / 1,5 mm',
+                'poz' => null,
+                'applications' => [
+                    'teras',
+                    'balkon',
+                    'cati',
+                    'otopark',
+                ],
+                'note' => 'Esnek, çatlak köprüleyen tek veya çift bileşenli poliüretan likit membran. Resmî pozu yok, piyasa fiyatı kullanılır.',
+            ],
+
             'geosynthetic_clay' => [
                 'label' => 'Temel Geosentetik Kil Örtü',
                 'poz' => '15.270.1202',

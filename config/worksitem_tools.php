@@ -83,6 +83,7 @@ return array (
     7 => 'siginak-yonetmeligi',
     8 => 'asansor-zorunlulugu',
     9 => 'deprem-izolator-maliyeti',
+    10 => 'beton-onarim-maliyeti',
   ),
   'tools' => 
   array (
@@ -183,6 +184,11 @@ return array (
     'deprem-izolator-maliyeti' => 
     array (
       'title' => 'Deprem İzolatörü Maliyeti',
+      'cat' => 'kaba',
+    ),
+    'beton-onarim-maliyeti' => 
+    array (
+      'title' => 'Beton Onarım ve Grout Maliyeti',
       'cat' => 'kaba',
     ),
     'donati-tahvil-hesaplayici' => 

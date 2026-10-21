@@ -179,7 +179,7 @@ PROMPT;
         ->timeout(60)
         ->retry(2, 3000, throw: false)
         ->post(
-            'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent',
+            'https://generativelanguage.googleapis.com/v1beta/models/'.rawurlencode((string) config('services.gemini.boq_model', 'gemini-3.6-flash')).':generateContent',
             [
                 'contents' => [
                     [
@@ -680,7 +680,7 @@ PROMPT;
         ->timeout(60)
         ->retry(2, 3000, throw: false)
         ->post(
-            'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent',
+            'https://generativelanguage.googleapis.com/v1beta/models/'.rawurlencode((string) config('services.gemini.boq_model', 'gemini-3.6-flash')).':generateContent',
             [
                 'contents' => [
                     ['parts' => [['text' => $prompt]]]

@@ -45,6 +45,7 @@ class KitEngineTest extends TestCase
             'sandvic' => ['sandvic-panel-hesaplayici', ['system' => 'roof_pu50', 'area' => '500']],
             'radyator' => ['radyator-petek-hesaplayici', ['insulation' => 'standart', 'area' => '100', 'type' => 'h60', 'scope' => 'petek', 'extras' => ['thermo']]],
             'ges' => ['gunes-paneli-hesaplama', ['bill' => '2000', 'sun' => '4.5', 'mount' => 'cati', 'quality' => 'orta']],
+            'beton_onarim' => ['beton-onarim-maliyeti', ['mode' => 'onarim', 'area' => '12', 'depth' => '3', 'element' => 'kolon', 'rebar' => 'hafif', 'material' => 'cimento']],
             'izolator' => ['deprem-izolator-maliyeti', ['columns' => '40', 'floors' => '6', 'class' => 'konut', 'scope' => 'yeni']],
             'bina' => ['tahmini-bina-maliyeti', ['type' => 'apartman', 'area' => '1000', 'quality' => 'orta', 'extras' => ['projects']]],
             'statik' => ['statik-proje-bedeli', ['type' => 'apartman', 'area' => '1000', 'kind' => 'yeni', 'extras' => ['soil']]],
@@ -171,5 +172,61 @@ class KitEngineTest extends TestCase
         $miss = $e->estimate($e->normalize(['surface' => 'zemin', 'wall' => '20', 'size' => '60x60', 'quality' => 'orta', 'scope' => 'hazir']));
         $this->assertFalse($miss['ready']);
         $this->assertContains('zemin alanı', $miss['missing']);
+    }
+
+    public function test_boya_dis_cephe_modu_iskele_ve_kosullu_adimlar(): void
+    {
+        $e = KitRegistry::get('boya-hesaplayici');
+        $q = ['target' => 'dis_cephe', 'perimeter' => '60', 'floors' => '5', 'color' => 'ayni', 'state' => 'orta', 'quality' => 'orta', 'access' => 'iskele',
+            'floor' => '100', 'surfaces' => 'duvar_tavan', 'extras' => ['furniture'], 'xextras' => ['wash']];
+        $in = $e->normalize($q);
+        $this->assertNull($in['floor']);                       // gizli iç cephe alanı hesaba girmez
+        $this->assertSame([], $in['extras']);
+        $r = $e->estimate($in);
+        $this->assertTrue($r['ready']);
+        $this->assertSame('cephe m² başına', $r['per_unit_label']);
+        $this->assertArrayHasKey('iskele', $r['items']);
+        $this->assertArrayNotHasKey('tavan', $r['items']);
+        $this->assertGreaterThan(0, $r['items']['iskele']['mid']);
+        $this->assertStringContainsString('765', collect($r['meta'])->pluck(1)->implode(' '));   // 60 × 15 m × 0,85
+
+        $noScaffold = $e->estimate($e->normalize(['access' => 'yok'] + $q));
+        $this->assertArrayNotHasKey('iskele', $noScaffold['items']);
+        $this->assertLessThan($r['mid'], $noScaffold['mid']);
+        $this->assertContains('kat sayısı', $e->estimate($e->normalize(['target' => 'dis_cephe', 'perimeter' => '60'] + array_diff_key($q, ['floors' => 1])))['missing']);
+
+        // Rapor: dış cephe kalite seçenekleri, malzeme listesi
+        $pro = $e->proReport($in);
+        $this->assertSame('Silikonlu', $pro['compare']['orta']['label']);
+        $this->assertStringContainsString('Dış cephe boyası', collect($pro['materials'])->pluck(0)->implode(' '));
+        $this->assertSame(['Neresi boyanacak?', 'Boyanacak cephe alanı (biliyorsanız)'], array_slice(array_column($e->inputRows($in), 0), 0, 2));
+
+        // Sayfa: dış cephe seçiliyken iç cephe adımları gizli ve alanları gönderilmez
+        $html = $this->get('/araclar/boya-hesaplayici?'.http_build_query($q))->assertOk()->getContent();
+        $this->assertMatchesRegularExpression('/data-step="surfaces"[^>]*hidden/', $html);
+        $this->assertMatchesRegularExpression('/data-step="access"[^>]*data-show/', $html);
+
+        // İç cephe sonucu değişmedi
+        $this->assertTrue($e->estimate($e->normalize(self::tools()['boya'][1]))['ready']);
+    }
+
+    public function test_seramik_cok_yuzey_zemin_ve_duvar_ayri_urun(): void
+    {
+        $e = KitRegistry::get('seramik-maliyet-hesaplayici');
+        $base = ['surface' => 'zemin_duvar', 'floor' => '5', 'wall' => '22', 'size' => '60x60', 'quality' => 'orta', 'scope' => 'hazir'];
+        $same = $e->estimate($e->normalize($base));
+        $this->assertSame(0.0, (float) ($same['items']['seramik_duvar']['mid'] ?? 0));
+
+        $split = $e->estimate($e->normalize($base + ['wsize' => '30x60', 'wquality' => 'ekonomik']));
+        $this->assertStringContainsString('Zemin karosu 60×60', $split['items']['seramik']['label']);
+        $this->assertStringContainsString('Duvar karosu 30×60', $split['items']['seramik_duvar']['label']);
+        $this->assertLessThan($same['mid'], $split['mid']);        // duvar ekonomik seramik → daha ucuz
+        $mats = collect($e->materials($e->normalize($base + ['wsize' => '30x60'])))->pluck(0)->all();
+        $this->assertContains('Zemin karosu kutusu', $mats);
+        $this->assertContains('Duvar karosu kutusu', $mats);
+
+        // Yalnız zeminde duvar ürünü yok sayılır
+        $zemin = $e->normalize(['surface' => 'zemin', 'floor' => '5', 'size' => '60x60', 'quality' => 'orta', 'scope' => 'hazir', 'wsize' => '120x120']);
+        $this->assertSame('', $zemin['wsize']);
     }
 }

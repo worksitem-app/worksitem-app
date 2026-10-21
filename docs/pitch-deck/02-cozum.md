@@ -1,11 +1,9 @@
 # Slayt 2 — Çözüm
 
-**Başlık:** ConTech — İnşaatın Tek Platformu
+**Başlık:** Hesapla → Eşleş → Görün
 
-- 40+ interaktif hesaplayıcı (beton, demir, boya, iskele, GES, asansör…)
-- AI destekli iç mekan tasarımı
-- Otomatik metraj ve keşif çıkarma
-- Teklif ve ihale yönetimi
-- Tek giriş, tek arayüz, tek veri kaynağı
+- **Hesapla:** Ücretsiz, üyeliksiz araçlar; resmî poz ve piyasa fiyatlarıyla kalem kalem, tarihli sonuç ve PDF rapor.
+- **Eşleş:** Bütçesini bilen, telefonu doğrulanmış kullanıcının talebi iş koluna ve bölgesine uyan kayıtlı firmalara gider; kullanıcı seçer.
+- **Görün:** Markalar ilgili kalemin yanında etiketli sponsor kartıyla; sonuçlar sponsorluktan etkilenmez.
 
-**Konuşmacı Notu:** "Biz sadece bir hesaplayıcı değiliz. Tasarımdan teklife kadar tüm süreci tek platformda birleştiriyoruz."
+**Konuşmacı notu:** "Her hesap bir sonraki adımı besliyor: bütçe → teklif → doğru ürün."

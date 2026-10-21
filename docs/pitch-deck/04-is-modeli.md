@@ -1,11 +1,8 @@
 # Slayt 4 — İş Modeli
 
-**Başlık:** Freemium + SaaS + Lead Gen
+- **Eşleşme bedeli (firmadan):** Yalnız müşteri firmayı seçtiğinde; iş tutarının %5'i, en az 250, en çok 7.500 TL + KDV. Kurucu firma programı: 31.03.2027'ye kadar ücretsiz. Teklif vermek her zaman ücretsiz.
+- **Sponsor alanları (markalar):** Hesap kaleminin yanında etiketli kart; sözleşmeyle.
+- **Pro rapor ve yapay zekâ kredisi (kullanıcı):** iyzico ile.
+- **Öne çıkan firma:** 2.400 TL + KDV / yıl.
 
-- **Freemium:** 40+ araç ücretsiz → organik trafik
-- **SaaS:** Aylık abonelik (teklif, ihale, metraj modülleri)
-- **Lead Gen:** Müteahhit ↔ tedarikçi eşleştirme
-- **API:** api/pozlar/search ile dış entegrasyon
-- **Reklam:** Niş inşaat sektörü reklamları
-
-**Konuşmacı Notu:** "Ücretsiz araçlarla müteahhitleri çekiyoruz, ardından teklif ve ihale modülüyle para kazanıyoruz."
+**Konuşmacı notu:** "Firma yalnız iş kazandığında öder; bu yüzden kayıt bariyeri sıfır."

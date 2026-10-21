@@ -1,228 +1,78 @@
 # Worksitem — Yatırımcı Sunumu
 
-**Hazırlanma:** 22 Eylül 2026  
-**Web:** https://worksitem.com  
-**Repo:** https://github.com/worksitem-app/worksitem-app
+**Güncelleme:** 15 Ekim 2026 (ürün sürümü v69) · **Web:** https://worksitem.com
+
+> Bu belgede yalnız ölçülmüş veya kaynağı belirtilmiş rakamlar yer alır. Pazar büyüklüğü rakamları sunumdan önce kaynakla doğrulanacaktır (bkz. 7. bölüm).
 
 ---
 
 ## 1. Problem
 
-Türkiye'de **500.000+ inşaat firması** var. Hepsi müşteri arıyor. Ama:
-- **Google reklamları** pahalı (₺50+/tıklama)
-- **Lead siteleri** %10-20 komisyon alıyor
-- **Kendi web siteleri** lead üretmiyor
-- **AI destekli araçlar** yok
-- **Maliyet şeffaflığı** yok
-
-**Sonuç:** Kainta İnşaat gibi firmalar dijital dönüşüm yapamıyor.
-
----
+- **Ev sahibi** tadilata başlamadan bütçesini bilmiyor; ustadan gelen fiyatı karşılaştıracak bir dayanağı yok.
+- **Usta ve firma** bütçesi belirsiz, ciddiyeti ölçülmemiş taleplerle zaman kaybediyor; ilan siteleri ve reklam pahalı.
+- **Marka ve üretici** ürününü, malzeme kararının verildiği anda gösteremiyor.
 
 ## 2. Çözüm
 
-**Worksitem:** İnşaat sektörünün **dijital lead motoru.**
+Worksitem üç kitleyi aynı akışta buluşturur:
 
-### Ürün Özellikleri
+1. **Hesapla:** Ücretsiz, üyeliksiz hesaplayıcılar; güncel ve tarihli fiyatla kalem kalem maliyet, PDF Pro rapor.
+2. **Eşleş:** Bütçesini bilen, telefonunu SMS ile doğrulamış kullanıcının talebi; iş koluna, bölgesine ve en küçük iş tutarına uyan kayıtlı firmalara gider. Kullanıcı teklifleri görür, seçer; iletişim yalnız seçilen firmayla paylaşılır.
+3. **Görün:** Markalar ilgili hesap kaleminin yanında, etiketli sponsor kartıyla görünür. Sonuçlar sponsorluktan etkilenmez.
 
-**A) 60+ Ücretsiz Araç (SEO)**
-- Beton, demir, boya, sıva, mantolama, çatı, MEP, statik
-- 5 kategori, 19 featured araç
-- **Google'da organik trafik**
-- Lead magnet
+Sahadan toplanan firma fiyat beyanları ve her sabah çalışan fiyat robotu (yönetici onaylı) hesapların isabetini sürekli artırır.
 
-**B) AI İç Mekan Tasarımı**
-- Kullanıcı oda fotoğrafı yükler
-- Metin yazar ("kitap rafı ekle, yeşil bitki koy")
-- **Nano Banana 2** ile 25 saniyede yeniden tasarım
-- Oda yapısı korunur, sadece mobilya/stil değişir
-- **Maliyet: $0.067/görsel**
+## 3. Ürün (canlıda, 15.10.2026)
 
-**C) Merkezi Fiyat Motoru**
-- 168 malzeme fiyatı
-- 28 kategori
-- **%40 Kainta çarpanı** (kâr + genel gider)
-- ÇŞB resmi fiyatları + piyasa verisi
-
-**D) CRM + Lead Scoring**
-- Filament admin panel
-- Lead kalite skoru (hot/warm/research)
-- Satış hunisi takibi
-- KVKK uyumlu consent tracking
-
-**E) Tool Events Analytics**
-- Her araç görüntüleme kaydedilir
-- Hesaplama başlatma/tamamlama ölçülür
-- Kainta CTA tıklamaları izlenir
-- **Canlı dashboard**
-
----
-
-## 3. Traction (Kanıt)
-
-### Kainta İnşaat (Pilot Müşteri)
-
-| Metrik | Değer |
+| Bileşen | Durum |
 |---|---|
-| **Yaş** | 9 yıl |
-| **Yıllık Ciro** | ₺5.000.000 |
-| **Google Tıklama** | 2.970/ay |
-| **Google Gösterim** | 189.000/ay |
-| **CTR** | %1.57 |
-| **En çok büyüyen** | Blog yazıları |
+| Araçlar | 77 araç; 74 yayında, 2 yapay zekâ aracı açılıyor (v69). Banyo, mutfak, boya (iç/dış cephe + iskele), seramik (zemin/duvar ayrı ürün), parke, çatı, mantolama, PVC, inşaat maliyeti, metraj, statik ön kontrol |
+| Planlayıcılar | Banyo, WC ve mutfak için 2D/3D |
+| Fiyat altyapısı | ÇŞB/YFK resmî poz fiyatları + piyasa araştırması; fiyat robotu her sabah, yönetici onayı; her raporda fiyat tarihi |
+| Firma tarafı | Ücretsiz kayıt, vergi no doğrulaması, şifresiz (SMS) firma paneli, uygulama bildirimi |
+| Teklif pazaryeri | Kurulu ve test edildi; kullanıcı tarafı avukat onayından sonra açılacak |
+| Ödeme | iyzico ile Pro rapor ve yapay zekâ kredisi |
+| Uygulama | PWA (ana ekrana ekle) canlıda; Google Play paketi hazırlanıyor |
 
-**Kainta.com → Worksitem → Kainta İnşaat** lead akışı **kanıtlanmış.**
+## 4. İş modeli
 
-### Worksitem (MVP)
+| Gelir kalemi | Durum | Fiyat |
+|---|---|---|
+| Eşleşme bedeli (firmadan, yalnız müşteri seçtiğinde) | Kurucu firma programı: 31.03.2027'ye kadar ücretsiz | Sonra iş tutarının %5'i, en az 250, en çok 7.500 TL + KDV |
+| Sponsor alanları (markalar) | Başvuru alınıyor; sözleşmesiz yayın yok | Teklifle |
+| Pro rapor ve yapay zekâ kredisi | Altyapı canlıda | Admin'den ayarlanır |
+| Öne çıkan firma | Altyapı hazır | 2.400 TL + KDV / yıl |
 
-| Metrik | Değer |
+Teklif vermek firmalar için her zaman ücretsizdir.
+
+## 5. Bugünkü sayılar (ölçülmüş)
+
+| Ölçü | Değer | Kaynak |
+|---|---|---|
+| Yayındaki araç | 74 | Canlı kontrol, 15.10.2026 |
+| Site haritasındaki adres | 1.336 | Canlı kontrol, 15.10.2026 |
+| Kayıtlı firma / sponsor | 0 / 0 | Saha satışı 15.10.2026'da başlıyor |
+| Veritabanındaki talep / araç olayı | 13 / 714 | 13.10.2026 envanteri |
+| Otomatik test | 460 | Depo, 15.10.2026 |
+
+**Pilot firma — Kainta İnşaat** (kurucunun firması; kurucu beyanı, Eylül 2026): 9 yıllık firma, yıllık ciro yaklaşık ₺5 milyon, kainta.com aylık 2.970 Google tıklaması / 189.000 gösterim (%1,57 TO). Kainta platformda hizmet veren firmalardan biri olarak konumlanır; sözleşmelerde taraf Worksitem'dir.
+
+## 6. Yol haritası
+
+| Dönem | Hedef |
 |---|---|
-| **Araç Sayısı** | 60+ |
-| **AI Event (bugün)** | 17 |
-| **Tool Events (bugün)** | 30 |
-| **En Popüler Araç** | beton-hesaplayici (27 event) |
-| **Git Commit** | 17 |
-| **Test Sayısı** | 48 |
-| **CI/CD** | GitHub Actions ✅ |
+| Ekim–Aralık 2026 | İstanbul'da banyo, mutfak, boya, zemin iş kollarında kurucu firma programı; avukat onayı sonrası teklif pazaryeri; Google Play |
+| Ocak–Mart 2027 | Bir il + iş kolunda sürekli 3+ teklif veren firma; sponsor sözleşmeleri; yapay zekâ kredi satışı |
+| Nisan 2027 | Eşleşme bedeli başlar; yeni iller |
 
-**İlk traction verisi toplanıyor.**
+Ölçütler ve sonuçlar her pazartesi `launch-check` ve yönetim paneli raporlarıyla takip edilir.
 
----
+## 7. Sunumdan önce doğrulanacaklar
 
-## 4. Pazar
+- Türkiye'de tadilat/yapı firması sayısı ve tadilat harcaması (TÜİK, sektör raporları).
+- Rakip platformların komisyon ve üyelik modelleri.
+- Pilot firma verilerinin ekran görüntüleri (Search Console).
 
-| Metrik | Değer |
-|---|---|
-| **Türkiye İnşaat Sektörü** | ₺1.5 trilyon/yıl |
-| **İnşaat Firması** | 500.000+ |
-| **Dijital Dönüşüm** | Başlangıç aşaması |
-| **AI Adoption** | Düşük → ilk olma avantajı |
-| **SEO Rekabet** | Düşük |
+## 8. Ekip
 
----
-
-## 5. İş Modeli
-
-### Aşama 1 (Şimdi — 0-6 ay)
-
-**Kainta İnşaat için lead üretimi**
-- Worksitem → ücretsiz araçlar → lead toplama
-- Kainta İnşaat → profesyonel teklif → satış
-- **Kainta ciro artışı:** ₺500K-1M ek gelir/yıl
-
-### Aşama 2 (6-12 ay)
-
-**Diğer firmalara açılma**
-- **Komisyon modeli:** Her lead için %5-10
-- **Abonelik modeli:** ₺2.000-10.000/ay
-- **Hedef:** 10 firma × ₺5.000/ay = **₺50.000/ay**
-
-### Aşama 3 (12-24 ay)
-
-**SaaS Platformu**
-- Self-servis kayıt
-- AI destekli satış
-- White-label seçeneği
-- API
-- **Hedef:** ₺500.000+/ay
-
----
-
-## 6. Rekabet Avantajı
-
-| Rakip | Zayıflık |
-|---|---|
-| **Google Ads** | Pahalı, lead kalitesi düşük |
-| **Lead Siteleri** | %10-20 komisyon, kalite düşük |
-| **SAP/Oracle** | Pahalı, hantal, inşaat odaklı değil |
-| **Yerli ERP'ler** | İnşaat odaklı değil |
-| **Global AI Araçları** | Türkiye fiyatlarını bilmiyor |
-
-**Worksitem:**
-- ✅ **60+ ücretsiz araç** (SEO)
-- ✅ **AI iç mekan** (farklılaştırıcı)
-- ✅ **Türkiye fiyat verisi** (benzersiz)
-- ✅ **Kainta modeli** (kanıtlanmış)
-
----
-
-## 7. Yatırım İhtiyacı
-
-**Ne için?**
-- **Pazarlama** (%50): SEO, Google Ads, içerik
-- **Geliştirme** (%30): 1-2 developer, AI API
-- **Operasyon** (%20): Sunucu, araçlar
-
-**Tutar:** Belirlenecek (₺X milyon)
-
-**Hedef:** 6-12 ay içinde:
-- Aylık 10.000+ tool view
-- Aylık 100+ lead
-- 10+ pilot firma
-- ₺50K+/ay recurring revenue
-
----
-
-## 8. Yol Haritası
-
-### Çeyrek 1 (0-3 ay)
-- [ ] Tool events iyileştir
-- [ ] AI maliyet tahmini
-- [ ] Kainta CTA optimizasyonu
-- [ ] SEO içerik üretimi
-- [ ] Google Analytics + Search Console
-
-### Çeyrek 2 (3-6 ay)
-- [ ] Pilot müşteri (Kainta dışında)
-- [ ] Ödeme sistemi (Stripe)
-- [ ] Self-servis kayıt
-- [ ] Video walkthrough (AI)
-- [ ] Mobil uygulama
-
-### Çeyrek 3-4 (6-12 ay)
-- [ ] Multi-tenant SaaS
-- [ ] White-label seçeneği
-- [ ] API marketplace
-- [ ] Enterprise satış
-- [ ] Uluslararası pazar
-
----
-
-## 9. Neden Şimdi?
-
-- **Yapay zeka** inşaat sektöründe henüz emekleme aşamasında
-- **Türkiye'de** bu alanda oyuncu yok
-- **Kainta** ile kanıtlanmış bir model var
-- **Dijital dönüşüm** talebi artıyor
-- **SEO rekabeti** düşük
-
----
-
-## 10. Ekip
-
-**Şu an:** Solo founder (Kainta sahibi)
-
-**İhtiyaç:** 
-- 1-2 full-stack developer
-- 1 pazarlama uzmanı
-- 1 satış temsilcisi
-
-**Yatırım sonrası:** 3-4 kişilik ekip
-
----
-
-## 11. Sonuç
-
-**Worksitem, Türkiye inşaat sektörünün dijital dönüşümünü hızlandırıyor.**
-
-- ✅ **Ürün hazır:** 60+ araç, AI, CRM
-- ✅ **Traction var:** Kainta modeli + tool events
-- ✅ **Pazar büyük:** ₺1.5T, 500K+ firma
-- ✅ **Fark yaratıyor:** AI + maliyet + CRM
-- ✅ **Vizyon net:** Türkiye'nin inşaat SaaS platformu
-
----
-
-**İletişim:** info@worksitem.com  
-**Web:** https://worksitem.com  
-**Demo:** https://worksitem.com/ai-tasarim/ic-mekan
+Kurucu (inşaat sektörü, Kainta İnşaat). Önerilen ilk işe alımlar: firma operasyonu / saha satış (tam zamanlı), yarı zamanlı yazılımcı (nöbet ve kod inceleme).

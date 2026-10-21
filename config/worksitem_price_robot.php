@@ -45,6 +45,13 @@ return [
         ['path' => 'worksitem_estimators.zemin.types.mermer.material', 'tool' => 'zemin-kaplama', 'label' => 'Mermer zemin kaplama malzemesi', 'q' => 'mermer zemin kaplama m2 fiyatı malzeme', 'unit' => 'm²'],
         ['path' => 'worksitem_estimators.zemin.types.mermer.labor', 'tool' => 'zemin-kaplama', 'label' => 'Mermer döşeme işçiliği', 'q' => 'mermer döşeme işçilik m2 fiyatı', 'unit' => 'm²'],
 
+        // v76: yapı kimyasalları (seramik, saha betonu)
+        ['path' => 'worksitem_estimators.seramik.epoxy_grout_3kg', 'tool' => 'seramik-maliyet-hesaplayici', 'label' => 'Epoksi derz dolgu (3 kg set)', 'q' => 'epoksi derz dolgu 3 kg fiyatı', 'unit' => 'set'],
+        ['path' => 'worksitem_estimators.seramik.level_clip', 'tool' => 'seramik-maliyet-hesaplayici', 'label' => 'Karo seviyeleme klipsi (adet)', 'q' => 'seramik seviyeleme klipsi 100 adet fiyatı', 'unit' => 'adet', 'divide' => 100],
+        ['path' => 'worksitem_estimators.saha.densifier_m2', 'tool' => 'saha-betonu-hesaplayici', 'label' => 'Sıvı beton yüzey sertleştirici uygulaması', 'q' => 'lityum silikat beton yüzey sertleştirici uygulama m2 fiyatı', 'unit' => 'm²'],
+        ['path' => 'worksitem_estimators.beton_onarim.mortar_kg.cimento', 'tool' => 'beton-onarim-maliyeti', 'label' => 'Çimento esaslı yapısal tamir harcı', 'q' => 'R4 yapısal tamir harcı 25 kg fiyatı', 'unit' => 'kg', 'divide' => 25],
+        ['path' => 'worksitem_estimators.beton_onarim.grout_kg.cimento', 'tool' => 'beton-onarim-maliyeti', 'label' => 'Çimento esaslı akışkan grout', 'q' => 'akışkan grout harcı 25 kg fiyatı', 'unit' => 'kg', 'divide' => 25],
+
         // Mantolama
         ['path' => 'worksitem_estimators.mantolama.board_m2.eps', 'tool' => 'mantolama-maliyeti', 'label' => 'EPS mantolama levhası (cm başına)', 'q' => '5 cm karbonlu EPS mantolama levhası m2 fiyatı', 'unit' => 'm² · 1 cm', 'divide' => 5],
         ['path' => 'worksitem_estimators.mantolama.board_m2.tasyunu', 'tool' => 'mantolama-maliyeti', 'label' => 'Taşyünü mantolama levhası (cm başına)', 'q' => '5 cm taşyünü mantolama levhası m2 fiyatı', 'unit' => 'm² · 1 cm', 'divide' => 5],

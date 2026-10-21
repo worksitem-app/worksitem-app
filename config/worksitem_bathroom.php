@@ -77,6 +77,9 @@ return [
         'ex_havlupan' => ['label' => 'Havlupan', 'price' => [3500, 6000, 12000], 'default' => false],
         'ex_tavan' => ['label' => 'Asma tavan + spot', 'per_m2' => 1100, 'fixed' => 3000, 'default' => false],
         'ex_elektrik' => ['label' => 'Elektrik ve aydınlatma yenileme', 'fixed' => 6000, 'default' => false],
+        // v76 (tahmini): zemin + duş bölgesi epoksi derz farkı ve teslim öncesi temizlik
+        'ex_epoksi_derz' => ['label' => 'Epoksi derz dolgu (zemin ve duş)', 'per_m2' => 900, 'fixed' => 1500, 'default' => false],
+        'ex_temizlik' => ['label' => 'Teslim öncesi temizlik ve bakım', 'per_m2' => 120, 'fixed' => 1200, 'default' => false],
     ],
 
     // Döviz karşılığı (TCMB efektif değil, döviz satış kuru). Kur yoksa satır gizlenir.

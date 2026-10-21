@@ -116,7 +116,7 @@ SADECE JSON formatında çıktı ver, başka metin YOK:
         $response = Http::withHeaders([
             'x-goog-api-key' => $apiKey,
         ])->timeout(90)->post(
-            'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent',
+            'https://generativelanguage.googleapis.com/v1beta/models/'.rawurlencode((string) config('services.gemini.boq_model', 'gemini-3.6-flash')).':generateContent',
             [
                 'contents' => [['parts' => [['text' => $prompt]]]],
                 'generationConfig' => [

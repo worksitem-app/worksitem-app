@@ -78,7 +78,7 @@ class IsolatorEstimator extends KitEstimator
         $iso = $n * $unit;
         $items = [
             'izolator' => ['label' => 'Sismik izolatör ('.$n.' adet)', 'mid' => $iso, 'color' => '#FFB800'],
-            'montaj' => ['label' => $in['scope'] === 'mevcut' ? 'Kolon kesme, kriko, montaj ve izolasyon katı' : 'Montaj, ankraj ve izolasyon katı işleri', 'mid' => $iso * ($in['scope'] === 'mevcut' ? 0.8 : 0.25), 'color' => '#101318'],
+            'montaj' => ['label' => $in['scope'] === 'mevcut' ? 'Kolon kesme, kriko, montaj, grout ve izolasyon katı' : 'Montaj, ankraj, grout ve izolasyon katı işleri', 'mid' => $iso * ($in['scope'] === 'mevcut' ? 0.8 : 0.25), 'color' => '#101318'],
             'muhendislik' => ['label' => 'Proje, prototip testi ve denetim', 'mid' => $iso * 0.08, 'color' => '#2F6F8F'],
         ];
         $days = $in['scope'] === 'mevcut' ? [60, 150] : [15, 40];
@@ -94,6 +94,7 @@ class IsolatorEstimator extends KitEstimator
             ['Sismik izolatör', $n, 'adet', $this->steps()[1]['options'][$in['class']]['hint']],
             ['Alt / üst bağlantı plakası', $n * 2, 'adet', ''],
             ['Ankraj bulonu', $n * 8, 'adet', 'İzolatör başına ≈8'],
+            ['Akışkan grout harcı (25 kg, çimento esaslı)', $n * 8, 'torba', 'Plaka altı ve üstü, izolatör başına ≈200 kg; montaj kaleminin içinde'],
             ['Esnek tesisat bağlantısı', max(4, (int) ceil($n / 5)), 'adet', 'Doğalgaz, su, atık su geçişleri'],
         ];
     }

@@ -60,6 +60,7 @@ return [
         'kat-karsiligi-analiz' => ['insaat-taahhut', null],
         'statik-proje-bedeli' => ['mimarlik-ve-muhendislik', null],
         'deprem-izolator-maliyeti' => ['yapi-guclendirme', null],
+        'beton-onarim-maliyeti' => ['yapi-guclendirme', null],
         'klima-btu-hesaplayici' => ['mekanik-tesisat', null],
         'havalandirma-hesaplayici' => ['mekanik-tesisat', null],
         'radyator-petek-hesaplayici' => ['mekanik-tesisat', null],

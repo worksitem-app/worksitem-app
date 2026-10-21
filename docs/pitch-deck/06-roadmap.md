@@ -1,11 +1,8 @@
-# Slayt 6 — Roadmap
+# Slayt 6 — Yol Haritası
 
-**Başlık:** Yol Haritası
+- **Ekim–Aralık 2026:** İstanbul'da banyo, mutfak, boya, zemin iş kollarında kurucu firma saha satışı; avukat onayı sonrası teklif pazaryeri; Google Play.
+- **Ocak–Mart 2027:** Bir il + iş kolunda sürekli 3+ teklif veren firma; sponsor sözleşmeleri; yapay zekâ kredi satışı.
+- **Nisan 2027:** Eşleşme bedeli başlar; yeni iller.
+- **Sonrası:** VPS'e geçiş, ekip (saha operasyonu, yazılım), yeni iş kolları.
 
-- **Q1 2026:** İngilizce pazar açılımı (/en/tools/*)
-- **Q2 2026:** Mobil uygulama (iOS + Android)
-- **Q3 2026:** AI metraj v2 (fotoğraftan metraj)
-- **Q4 2026:** B2B SaaS tam sürüm
-- **2027:** MENA pazarı (Arapça + İngilizce)
-
-**Konuşmacı Notu:** "Türkiye'de kanıtladığımız modeli, İngilizce ve Arapça pazarlara taşıyoruz."
+**Konuşmacı notu:** "Önce yoğunluk, sonra yaygınlık: bir şehirde, birkaç iş kolunda kanıtlayıp genişliyoruz."

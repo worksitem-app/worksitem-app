@@ -12,7 +12,7 @@ class PdfToRayicCsv extends Command
                             {file : PDF dosya adı veya tam yolu}
                             {--period= : Dönem, örn. 2026-08}
                             {--source=YFK : Kaynak}
-                            {--model=gemini-3.7-flash : Gemini modeli}
+                            {--model= : Gemini modeli (boşsa services.gemini.rayic_model)}
                             {--output= : Çıktı CSV dosyası}
                             {--from=1 : Başlangıç sayfası}
                             {--to= : Bitiş sayfası}
@@ -59,7 +59,7 @@ class PdfToRayicCsv extends Command
         }
 
         $source = trim((string) $this->option('source'));
-        $model = trim((string) $this->option('model'));
+        $model = trim((string) $this->option('model')) ?: (string) config('services.gemini.rayic_model', 'gemini-3.6-flash');
 
         $fromPage = max(1, (int) $this->option('from'));
         $toOption = $this->option('to');

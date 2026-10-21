@@ -102,6 +102,20 @@
     </div>
 </div></section>
 
+@php($pkgs = \App\Services\Sponsors\SponsorPackages::all())
+@php($toolTitles = collect((array) config('worksitem_tools.tools'))->map(fn ($t) => $t['title'] ?? '')->all())
+<section class="mk" id="yapi-kimyasallari"><div class="mk-in">
+    <h2>Yapı kimyasalları paketleri</h2>
+    <p class="lead">Yapıştırıcı, derz, su yalıtımı, tamir harcı gibi ürünler hesap sonucunda miktarıyla çıkar (kaç torba, kaç kg). Marka, tam o satırın yanında "Sponsorlu" etiketiyle görünür.</p>
+    <div class="mk-grid">
+        @foreach ($pkgs as $pk => $p)
+            <div class="mk-card" id="paket-{{ $pk }}"><h3>{{ $p['label'] }}</h3><p>{{ $p['desc'] }}</p>
+                <ul>@foreach ($p['tools'] as $t => $cats)<li>{{ ($toolTitles[$t] ?? '') ?: (config("worksitem_sponsors.tools.$t.label") ?: $t) }}</li>@endforeach</ul>
+            </div>
+        @endforeach
+    </div>
+</div></section>
+
 <section class="mk"><div class="mk-in">
     <div class="mk-rules">
         <strong>Şeffaflık kuralları:</strong> Her sponsor kartında "Sponsorlu" etiketi yer alır. Sponsorluk, hesaplama sonuçlarını, birim fiyatları ve sıralanan maliyetleri hiçbir şekilde etkilemez. Kullanıcı verileri markalarla paylaşılmaz; raporlar toplu ve anonimdir. Bağlantılar arama motorları için "sponsorlu" olarak işaretlenir.

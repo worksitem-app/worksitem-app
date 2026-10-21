@@ -121,6 +121,10 @@ abstract class PozEstimator extends KitEstimator
 
     protected function blocked(string $label, ?string $poz): array
     {
+        if ($poz && str_starts_with($poz, 'WEB-')) {
+            return ['blocked' => $label.' için resmî birim fiyat yok ve güncel piyasa fiyatı henüz doğrulanmadı. Fiyat uydurmuyoruz; metraj ve teklif için Kainta İnşaat\'a başvurabilirsiniz.'];
+        }
+
         return ['blocked' => $label.' için doğrulanmış resmî birim fiyat (YFK '.$this->period().($poz ? ', poz '.$poz : '').') bulunamadı. Fiyat uydurmuyoruz; metraj ve teklif için Kainta İnşaat\'a başvurabilirsiniz.'];
     }
 

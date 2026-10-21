@@ -1,173 +1,60 @@
 # Worksitem — Yatırımcı Teknik Değerlendirmesi
 
-**Hazırlanma tarihi:** 21 Eylül 2026  
-**Canlı URL:** https://worksitem.com  
-**Repo:** https://github.com/worksitem-app/worksitem-app
+**Güncelleme:** 15 Ekim 2026 (v69) · **Canlı:** https://worksitem.com · **Depo:** GitHub (özel)
+
+İş modeli ve yol haritası: [INVESTOR_PITCH.md](INVESTOR_PITCH.md). Mimari ve işletim: [README.md](README.md), [DEPLOY.md](DEPLOY.md).
 
 ---
 
-## 1. Ürün Özeti
+## 1. Ürün özeti
 
-**Worksitem**, Türkiye'deki müteahhitler, mimarlar ve yapı profesyonelleri için geliştirilmiş bulut tabanlı **maliyet hesaplama ve teklif yönetim platformu**dur.
+Worksitem, tadilat ve inşaat maliyetini güncel fiyatlarla hesaplayan ücretsiz araçlar üzerinden ev sahiplerini, usta/firmaları ve markaları buluşturan bir platformdur. Gelir: firmalardan eşleşme bedeli (31.03.2027'ye kadar kurucu firma programıyla ücretsiz), sponsor alanları, Pro rapor ve yapay zekâ kredisi.
 
-### Değer Önerisi
-
-İnşaat projelerinin **ön maliyet hesabı** ve **teklif hazırlama** sürecini tek platformda toplar:
-
-- **60+ hesaplayıcı** — beton, demir, sıva, boya, mantolama, çatı, MEP, statik, finans
-- **Keşif (BoQ)** — poz import, birim fiyat analizi, kâr marjı yönetimi
-- **Teklif üretimi** — PDF çıktı, müşteriye özel fiyatlandırma
-- **AI destekli özellikler** — iç mekan tasarımı, otomatik fiyat güncelleme
-- **Lead yönetimi** — CRM, satış hunisi, dönüşüm takibi
-
-### Hedef Kitle
-
-- Müteahhitler (küçük-orta ölçek)
-- Mimarlık ofisleri
-- Yapı denetim firmaları
-- Tadilat ve dekorasyon firmaları
-
-### Niş ve Rekabet Avantajı
-
-Türkiye'de inşaat sektörüne özel **AI destekli** ve **uçtan uca** bir platform bulunmuyor. Mevcut çözümler:
-- Ya çok pahalı (SAP, Oracle)
-- Ya çok basit (Excel)
-- Ya da sektöre özel değil (genel muhasebe)
-
-Worksitem, **SEO ile ücretsiz araç** üzerinden lead toplayıp, **SaaS abonelik** ile gelir elde ediyor.
-
----
-
-## 2. Teknik Güçlü Yönler
-
-### Tech Stack
+## 2. Teknik yapı
 
 | Katman | Teknoloji |
 |---|---|
-| Framework | Laravel 13.x (en güncel) |
-| Dil | PHP 8.3 |
-| Admin Panel | Filament 3.3 |
-| Frontend | Blade + Livewire + Tailwind 4 |
-| Build | Vite 8 |
-| Veritabanı | MySQL 8 |
-| PDF | barryvdh/laravel-dompdf |
-| Excel | phpoffice/phpspreadsheet |
+| Uygulama | Laravel 13, PHP 8.3 |
+| Yönetim paneli | Filament 3 (16 kaynak + özel sayfalar: saha fiyatları, A/B testleri, fiyat merkezi) |
+| Arayüz | Blade, Livewire, Tailwind 4, Vite 8; PWA (servis çalışanı, web bildirimi) |
+| Veritabanı | MariaDB (canlı), SQLite (test) |
+| Dış servisler | Gemini, Replicate, iyzico, Netgsm, TCMB, GA4 |
 
-### Proje İstatistikleri
+**Ölçüler (15.10.2026):** 361 route · 40 controller · 33 model · 65 migration · 25 artisan komutu · 460 otomatik test · ~49.000 satır PHP · 210 Blade şablonu · 77 araç (74 yayında).
 
-- **233 route** — gerçek SaaS kapsamı
-- **18 controller**
-- **14 Eloquent model**
-- **24 database migration**
-- **60+ hesaplayıcı aracı**
-- **~11.300 satır PHP** (app + routes + database)
+### Mimari kararlar
 
-### Kalite ve Süreç
+- **Tek hesap kaynağı:** Hesap motorundaki 31 araçta sonuç sunucuda hesaplanır; canlı sonuç ve PDF Pro rapor aynı kodu kullanır.
+- **Fiyat güveni:** Resmî poz fiyatları + yönetici onaylı piyasa fiyatları; robotun önerisi onaysız yayına girmez; fiyat bulunamazsa sonuç uydurulmaz.
+- **Harcama kilitleri:** Yapay zekâ çağrıları `AI_SPEND_ENABLED` ile tek noktadan kapanır; kullanıcı başına günlük hak + kredi + site geneli günlük tavan. SMS'te numara/IP/site günlük tavanları.
+- **Kademeli açılış:** Pazaryeri, firma rehberi, ödemeler, yapay zekâ ayrı özellik anahtarlarıyla açılır; araçlar yayın ön ayarlarıyla.
+- **Güvenli yayın:** Staging → canlı betiği yedek alır, migration önizlemesi çıkarır, duman testi yapar, tek komutla geri döner.
 
-- ✅ **Git versiyon kontrolü** — 7 commit, temiz history
-- ✅ **GitHub Actions CI** — her push'ta 17 test otomatik
-- ✅ **Test kapsamı** — %15-20 (hedef %80)
-- ✅ **README** — profesyonel dokümantasyon
-- ✅ **Migration tutarlılığı** — sıfırdan kurulum yapılabiliyor
-- ✅ **Environment yönetimi** — `.env`, `.env.example`, gitignore
+## 3. Kalite ve güvenlik
 
-### Güvenlik
+- 460 otomatik test (GitHub Actions), her sürümden önce tamamı çalıştırılır; arayüz değişiklikleri tarayıcıda (Playwright) kontrol edilir.
+- Canlı yapılandırma denetimi (`app:preflight`) ve günlük "motor kontrolü" (`launch-check.sh`): son kontrol 0 FAIL / 0 WARN.
+- Gizli bilgiler yalnız sunucu `.env` dosyasında; çıktılarda maskelenir.
+- CSRF, oturum şifreleme, güvenli çerez, güvenlik başlıkları; proje bağlantılarında tahmin edilemeyen kimlik (ULID); kimlik numaraları herkese açık sayfalarda maskeli.
+- KVKK: çerez onayı (GA4 yalnız onayla), açık rıza kaydı, aydınlatma ve başvuru sayfaları; telefon numarası kullanıcı izni olmadan paylaşılmaz.
+- Vergi numarası/TCKN kontrol haneli doğrulama; e-fatura/e-arşiv için fatura bilgileri; faturayı mali müşavir keser.
 
-- `.env` dosyası git'te yok
-- API anahtarları environment variable olarak saklanıyor
-- SQL injection koruması (Eloquent ORM)
-- CSRF token tüm POST isteklerinde
-- KVKK uyumlu consent tracking (contact_consent, marketing_consent)
-- IP hash saklama (KVKK uyumlu)
+## 4. Riskler
 
----
-
-## 3. Riskler ve Mitigasyonlar
-
-| Risk | Etki | Mitigasyon |
+| Risk | Etki | Önlem |
 |---|---|---|
-| **Bus factor: 1 geliştirici** | Yüksek | Kod dokümante edilmiş, README + yorumlar. İlk yatırımla junior developer alımı planlı. |
-| **AI API bağımlılığı** | Orta | Gemini + Replicate bağımsız. Birinin kesintisi hizmeti durdurmuyor. |
-| **Test kapsamı düşük (%15-20)** | Orta | Roadmap'te %80 hedef. CI altyapısı hazır. |
-| **Shared hosting** | Orta | Trafik 3x artarsa dedicated sunucuya geçiş. Maliyet ~$50/ay. |
-| **Regülasyon (KVKK)** | Düşük | Consent tracking mevcut, IP hash. |
-| **Kur dalgalanması (TL)** | Orta | Fiyatlar DB'den çekiliyor, admin panelinden güncellenebiliyor. |
+| Tek kişilik teknik ekip | Yüksek | Ayrıntılı belgeler, testler, geri dönüşlü yayın betiği; yarı zamanlı yazılımcı alımı planlı |
+| Paylaşımlı hosting | Orta | VPS geçiş planı ve tetikleyicileri hazır (`docs/SUNUCU-TASIMA.md`) |
+| Pazaryeri hukuki sorumluluk (AYM K.2026/42, yürürlük ~Mart 2027) | Orta | Firma tazmin taahhüdü, avukat incelemesi tamamlanmadan kullanıcı tarafı kapalı |
+| Yapay zekâ maliyeti | Orta | Harcama kilidi, günlük tavanlar, kredi sistemi, sağlayıcı bütçe limiti |
+| Fiyat isabeti | Orta | Robot + onay akışı, saha fiyat beyanları, tarihli rapor |
+
+## 5. Açık işler
+
+- Avukat onayı → teklif pazaryeri ve firma rehberi.
+- Google Play yayını (kapalı test).
+- Hata takibi servisi (Sentry/Flare), yönetim paneline iki adımlı doğrulama, CI'da MariaDB.
 
 ---
 
-## 4. Roadmap (6-12 ay)
-
-### Çeyrek 1 (0-3 ay)
-- [ ] Stripe abonelik entegrasyonu (3 tier: Free / Pro / Enterprise)
-- [ ] Test kapsamı %50'ye çıkarma
-- [ ] Landing page yenileme
-- [ ] Onboarding flow (kayıt → ilk proje → ilk teklif)
-
-### Çeyrek 2 (3-6 ay)
-- [ ] Çok dilli destek (EN)
-- [ ] Mobil uygulama (React Native)
-- [ ] ERP entegrasyonu (Logo, Netsis)
-- [ ] Real-time işbirliği (Laravel Reverb)
-
-### Çeyrek 3-4 (6-12 ay)
-- [ ] API marketplace (3. parti entegrasyonlar)
-- [ ] AI içerik üretimi (sözleşme, şartname)
-- [ ] Rapor ve analitik dashboard
-- [ ] Kurumsal satış ekibi
-
----
-
-## 5. Son 30 Günün Teknik Aktivitesi
-
-Bu dönemde yapılan teknik iyileştirmeler:
-
-- ✅ DB şifresi güçlendirildi
-- ✅ Prod config güvenli hale getirildi (`APP_DEBUG=false`, `APP_ENV=production`)
-- ✅ Blade syntax hataları çözüldü
-- ✅ 84 çöp dosya temizlendi
-- ✅ Git repo kurulumu ve GitHub push
-- ✅ CI/CD altyapısı (GitHub Actions)
-- ✅ Test kapsamı %1.7 → %15-20
-- ✅ Migration tutarlılığı düzeltildi
-- ✅ README ve dokümantasyon yazımı
-
----
-
-## 6. Yatırımcı İçin Temel Sorular ve Cevaplar
-
-**S: Bu ürün ne yapıyor?**  
-C: İnşaat projelerinin maliyet hesabı ve teklif hazırlama sürecini tek platformda topluyor.
-
-**S: Kime satıyor?**  
-C: Müteahhitler, mimarlar, yapı profesyonelleri.
-
-**S: Rakipleri kim?**  
-C: Excel (ücretsiz ama dağınık), SAP/Oracle (pahalı, hantal), yerli ERP'ler (inşaat odaklı değil).
-
-**S: Nasıl para kazanıyor?**  
-C: Freemium SaaS abonelik (Free / Pro / Enterprise). Free plan SEO ile lead topluyor.
-
-**S: Ne kadar olgun?**  
-C: MVP'nin ötesinde — 233 route, 60+ araç, gerçek müşteri akışı. Ürün-pazar uyumu araştırma aşamasında.
-
-**S: Teknik ekip?**  
-C: Şu an solo founder. Yatırımla 1-2 junior developer alımı planlı.
-
-**S: En büyük risk?**  
-C: Bus factor (tek geliştirici). Ama kod dokümante, test altyapısı kuruldu, teknik borç yönetilebilir.
-
----
-
-## 7. Sonuç
-
-Worksitem, **Türkiye inşaat sektörüne özel**, **AI destekli**, **uçtan uca** bir SaaS platformu. Teknik temel sağlam, kod dokümante, test altyapısı kurulu.
-
-Yatırım sonrası öncelikler:
-1. **Go-to-market** — gerçek müşteri kazanımı
-2. **Ürün-pazar uyumu** — hangi segment en çok değer görüyor?
-3. **Ölçeklenebilirlik** — altyapı ve ekip büyütme
-4. **Test kapsamı** — %80 hedefine çıkarma
-
----
-
-*Bu belge, teknik due diligence sürecini hızlandırmak için hazırlanmıştır. Sorularınız için: info@worksitem.com*
+*Teknik inceleme soruları için: info@worksitem.com*

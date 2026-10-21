@@ -11,6 +11,10 @@ namespace App\Estimators;
  *  - cards:   ['type'=>'cards','key'=>..,'title'=>..,'options'=>[k=>['label'=>..,'hint'=>..]],'required'=>bool,'cols'=>2|3|4]
  *  - numbers: ['type'=>'numbers','title'=>..,'fields'=>[['key','label','unit','min','max','step','placeholder','required','default']],'help'=>..]
  *  - checks:  ['type'=>'checks','key'=>..,'title'=>..,'options'=>[k=>label]]
+ *
+ * Koşullu adım: 'show' => ['target' => ['dis_cephe']] → yalnız o seçimde görünür ve hesaba girer;
+ * 'hide' => ['target' => ['dis_cephe']] → o seçimde gizlenir (seçim yapılmamışken görünür).
+ * Aynı anahtar iki koşullu adımda kullanılabilir (ör. iç/dış cephe için ayrı "kalite" seçenekleri).
  */
 abstract class KitEstimator
 {
@@ -107,7 +111,54 @@ abstract class KitEstimator
             }
         }
 
+        // Görünmeyen koşullu adımların değerleri hesaba girmez (aynı anahtar görünen bir adımda yoksa)
+        $visibleKeys = [];
+        foreach ($this->steps() as $step) {
+            if ($this->visible($step, $in)) {
+                foreach ($this->stepKeys($step) as $k) {
+                    $visibleKeys[$k] = true;
+                }
+            }
+        }
+        foreach ($this->steps() as $step) {
+            if ($this->visible($step, $in)) {
+                continue;
+            }
+            foreach ($this->stepKeys($step) as $k) {
+                if (isset($visibleKeys[$k])) {
+                    continue;
+                }
+                $in[$k] = match ($step['type']) { 'checks' => [], 'cards' => '', default => null };
+                if ($step['type'] === 'numbers') {
+                    $in['_given_'.$k] = false;
+                }
+            }
+        }
+
         return $in;
+    }
+
+    /** Adım görünür mü? ('show' => [anahtar => [değerler]]) */
+    public function visible(array $step, array $in): bool
+    {
+        foreach ((array) ($step['show'] ?? []) as $k => $vals) {
+            if (! in_array((string) ($in[$k] ?? ''), array_map('strval', (array) $vals), true)) {
+                return false;
+            }
+        }
+        foreach ((array) ($step['hide'] ?? []) as $k => $vals) {
+            if (in_array((string) ($in[$k] ?? ''), array_map('strval', (array) $vals), true)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /** @return list<string> */
+    private function stepKeys(array $step): array
+    {
+        return $step['type'] === 'numbers' ? array_column($step['fields'], 'key') : [$step['key']];
     }
 
     /** Eksik zorunlu alanların kullanıcıya gösterilecek adları */
@@ -116,6 +167,9 @@ abstract class KitEstimator
         $miss = [];
         $n = 0;
         foreach ($this->steps() as $step) {
+            if (! $this->visible($step, $in)) {
+                continue;
+            }
             $n++;
             if ($step['type'] === 'cards' && ($step['required'] ?? false) && ($in[$step['key']] ?? '') === '') {
                 $miss[] = mb_strtolower($step['short'] ?? $step['title']).' ('.$n.'. adım)';
@@ -197,6 +251,9 @@ abstract class KitEstimator
     {
         $parts = [];
         foreach ($this->steps() as $step) {
+            if (! $this->visible($step, $in)) {
+                continue;
+            }
             if ($step['type'] === 'cards' && ($in[$step['key']] ?? '') !== '') {
                 $parts[] = $step['options'][$in[$step['key']]]['label'];
             }
@@ -217,6 +274,9 @@ abstract class KitEstimator
     {
         $rows = [];
         foreach ($this->steps() as $step) {
+            if (! $this->visible($step, $in)) {
+                continue;
+            }
             if ($step['type'] === 'cards') {
                 $v = $in[$step['key']] ?? '';
                 $rows[] = [$step['title'], $v !== '' ? $step['options'][$v]['label'] : 'Seçilmedi'];
@@ -239,7 +299,7 @@ abstract class KitEstimator
     /** Kalite adımı varsa her seviyede tahmin */
     public function compare(array $in): array
     {
-        $step = collect($this->steps())->firstWhere('key', 'quality');
+        $step = collect($this->steps())->first(fn ($s) => ($s['key'] ?? null) === 'quality' && $this->visible($s, $in));
         if (! $step) {
             return [];
         }

@@ -67,6 +67,8 @@ class BathroomCalculatorTest extends TestCase
 
     public function test_sayfa_aralik_tablo_sss_ve_kvkk_icerir(): void
     {
+        @unlink(\App\Services\FxRates::file());   // başka testin yazdığı kur dosyası döviz satırını açmasın
+        \Illuminate\Support\Facades\Cache::forget(\App\Services\FxRates::CACHE_KEY);
         $html = $this->get('/araclar/banyo-maliyet-hesaplayici')->assertOk()->getContent();
         $this->assertStringContainsString('Ölçüler bekleniyor', $html); // ölçü otomatik gelmez
         $this->assertStringContainsString('₺104.000', $html); // 4 m² örnek özet (SEO)

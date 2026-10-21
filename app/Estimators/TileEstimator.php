@@ -42,9 +42,9 @@ class TileEstimator extends KitEstimator
             'wait' => 'Alanı girin ve seçimleri yapın; maliyet burada anında hesaplanır.',
             'per_unit_label' => $this->perUnitLabel(),
             'sponsor_title' => 'Seramik ve yapı kimyasalı markaları',
-            'facts' => ['Ücretsiz, kayıt gerekmez', 'Fire ve kutu hesabı', '$ € £ karşılığı'],
+            'facts' => ['Ücretsiz, kayıt gerekmez', 'Zemin ve duvar ayrı ürün', 'Fire ve kutu hesabı'],
             'method' => [
-                'Kaplanacak alan = seçilen yüzeylere göre zemin m² + duvar m².',
+                'Kaplanacak alan = seçilen yüzeylere göre zemin m² + duvar m². Zemin + duvarda iki yüzey için ayrı ebat ve malzeme seçilebilir; her biri kendi fire ve işçilik katsayısıyla hesaplanır.',
                 'Seramik malzemesi: alan × (1 + fire oranı) × kaliteye göre m² fiyatı. Fire oranı ebatla artar (60×60\'ta %10, 120×120\'de %15).',
                 'Yapıştırıcı yaklaşık 5 kg/m² (25 kg torba), derz yaklaşık 0,5 kg/m² (5 kg paket) alınır.',
                 'İşçilik: m² döşeme fiyatı × ebat katsayısı (büyük ebatta 1,35–1,6). Eski seramik üzerine döşemede %10 eklenir.',
@@ -60,6 +60,7 @@ class TileEstimator extends KitEstimator
                 ['1 m² seramik döşeme kaç TL?', now()->year.' fiyatlarıyla yalnız döşeme işçiliği yaklaşık '.number_format($this->setting('tile_labor_standard_m2', $this->p()['labor_m2']), 0, ',', '.').' TL/m²\'dir; malzeme, yapıştırıcı, derz ve fire eklendiğinde 60×60 mat porselen için toplam m² maliyeti yaklaşık '.$this->exampleRange(['surface' => 'zemin', 'floor' => 20, 'size' => '60x60', 'quality' => 'orta', 'scope' => 'hazir'], true).' olur.'],
                 ['Seramik firesi ne kadar alınmalı?', 'Düz döşemede %10, büyük ebat veya çapraz döşemede %12–15 fire önerilir. Aynı parti (lot) numarasından fazladan 1 kutu almak ileride tamirde işe yarar.'],
                 ['1 m² için kaç kg yapıştırıcı gerekir?', 'Karo ebadı ve zemin düzgünlüğüne göre 4–6 kg; 60×60 ve üzeri ebatta çift taraflı sürme nedeniyle üst sınıra yakındır.'],
+                ['Banyoda zemin ve duvar için ayrı seramik nasıl hesaplanır?', 'Zemin + duvarı seçip iki alanı ayrı girin; duvar için farklı ebat (ör. 30×60) ve malzeme seçtiğinizde her yüzey kendi firesi, kutu sayısı ve işçiliğiyle ayrı satırda hesaplanır. Örneğin 5 m² zemin 60×60 mat porselen ve 22 m² duvar 30×60 seramik için '.now()->year.' fiyatlarıyla toplam yaklaşık '.$this->exampleRange(['surface' => 'zemin_duvar', 'floor' => 5, 'wall' => 22, 'size' => '60x60', 'quality' => 'orta', 'wsize' => '30x60', 'wquality' => 'ekonomik', 'scope' => 'hazir']).' tutar.'],
                 ['Eski seramik üzerine seramik döşenir mi?', 'Eski kaplama sağlam, düz ve boşluksuzsa uygun astar ve yapıştırıcıyla döşenebilir; kapı yüksekliği ve gider kotları kontrol edilmelidir.'],
             ],
             'related' => [['/araclar/banyo-maliyet-hesaplayici', 'Banyo tadilat maliyeti'], ['/araclar/mutfak-maliyet-hesaplayici', 'Mutfak tadilat maliyeti'], ['/araclar/seramik-gorsellestirici', 'Seramiği mekânında gör (AI)'], ['/araclar/su-yalitimi-hesaplayici', 'Su yalıtımı maliyeti']],
@@ -83,13 +84,35 @@ class TileEstimator extends KitEstimator
                 ['key' => 'floor', 'label' => 'Zemin alanı', 'unit' => 'm²', 'min' => 0.5, 'max' => 2000, 'step' => 0.5, 'placeholder' => 'Örn. 20'],
                 ['key' => 'wall', 'label' => 'Duvar alanı', 'unit' => 'm²', 'min' => 0.5, 'max' => 2000, 'step' => 0.5, 'placeholder' => 'Örn. 24'],
             ], 'help' => 'Duvar alanı = duvar uzunluğu × yükseklik (kapı ve pencereleri düşün). Seçtiğiniz yüzeye ait alan hesaba katılır.'],
-            ['type' => 'cards', 'key' => 'size', 'title' => 'Karo ebadı', 'short' => 'Karo ebadı', 'required' => true, 'cols' => 4, 'options' => [
+            ['type' => 'cards', 'key' => 'size', 'title' => 'Karo ebadı', 'short' => 'Karo ebadı', 'required' => true, 'cols' => 4, 'hide' => ['surface' => ['zemin_duvar']], 'options' => [
                 '30x60' => ['label' => '30×60', 'hint' => 'Duvar seramiği'],
                 '60x60' => ['label' => '60×60', 'hint' => 'En yaygın zemin'],
                 '60x120' => ['label' => '60×120', 'hint' => 'Büyük ebat'],
                 '120x120' => ['label' => '120×120+', 'hint' => 'Plaka / slab'],
             ]],
-            ['type' => 'cards', 'key' => 'quality', 'title' => 'Malzeme kalitesi', 'short' => 'Malzeme kalitesi', 'required' => true, 'cols' => 3, 'options' => [
+            ['type' => 'cards', 'key' => 'size', 'title' => 'Zemin karo ebadı', 'short' => 'Zemin karo ebadı', 'required' => true, 'cols' => 4, 'show' => ['surface' => ['zemin_duvar']], 'options' => [
+                '30x60' => ['label' => '30×60', 'hint' => 'Duvar seramiği'],
+                '60x60' => ['label' => '60×60', 'hint' => 'En yaygın zemin'],
+                '60x120' => ['label' => '60×120', 'hint' => 'Büyük ebat'],
+                '120x120' => ['label' => '120×120+', 'hint' => 'Plaka / slab'],
+            ]],
+            ['type' => 'cards', 'key' => 'quality', 'title' => 'Malzeme kalitesi', 'short' => 'Malzeme kalitesi', 'required' => true, 'cols' => 3, 'hide' => ['surface' => ['zemin_duvar']], 'options' => [
+                'ekonomik' => ['label' => 'Ekonomik', 'hint' => 'Standart seramik'],
+                'orta' => ['label' => 'Orta', 'hint' => 'Mat porselen'],
+                'premium' => ['label' => 'Premium', 'hint' => 'Rektifiyeli / parlak / ithal'],
+            ]],
+            ['type' => 'cards', 'key' => 'quality', 'title' => 'Zemin malzemesi', 'short' => 'Zemin malzemesi', 'required' => true, 'cols' => 3, 'show' => ['surface' => ['zemin_duvar']], 'options' => [
+                'ekonomik' => ['label' => 'Ekonomik', 'hint' => 'Standart seramik'],
+                'orta' => ['label' => 'Orta', 'hint' => 'Mat porselen'],
+                'premium' => ['label' => 'Premium', 'hint' => 'Rektifiyeli / parlak / ithal'],
+            ]],
+            ['type' => 'cards', 'key' => 'wsize', 'title' => 'Duvar karo ebadı (zeminden farklıysa)', 'short' => 'Duvar karo ebadı', 'cols' => 4, 'show' => ['surface' => ['zemin_duvar']], 'options' => [
+                '30x60' => ['label' => '30×60', 'hint' => 'Duvar seramiği'],
+                '60x60' => ['label' => '60×60', 'hint' => 'En yaygın zemin'],
+                '60x120' => ['label' => '60×120', 'hint' => 'Büyük ebat'],
+                '120x120' => ['label' => '120×120+', 'hint' => 'Plaka / slab'],
+            ]],
+            ['type' => 'cards', 'key' => 'wquality', 'title' => 'Duvar malzemesi (zeminden farklıysa)', 'short' => 'Duvar malzemesi', 'cols' => 3, 'show' => ['surface' => ['zemin_duvar']], 'options' => [
                 'ekonomik' => ['label' => 'Ekonomik', 'hint' => 'Standart seramik'],
                 'orta' => ['label' => 'Orta', 'hint' => 'Mat porselen'],
                 'premium' => ['label' => 'Premium', 'hint' => 'Rektifiyeli / parlak / ithal'],
@@ -99,11 +122,17 @@ class TileEstimator extends KitEstimator
                 'sokum' => ['label' => 'Söküm var', 'hint' => 'Eski kaplama kırılıp atılacak'],
                 'ustune' => ['label' => 'Üstüne döşeme', 'hint' => 'Eski seramik üzerine'],
             ]],
+            ['type' => 'cards', 'key' => 'grout', 'title' => 'Derz dolgu tipi', 'short' => 'Derz dolgu', 'cols' => 2, 'options' => [
+                'cimento' => ['label' => 'Çimento esaslı', 'hint' => 'Standart, kuru alanlar ve banyo duvarı'],
+                'epoksi' => ['label' => 'Epoksi esaslı', 'hint' => 'Leke ve su tutmaz; duş zemini, mutfak, havuz'],
+            ]],
             ['type' => 'checks', 'key' => 'extras', 'title' => 'Ekstralar', 'options' => [
                 'sap' => 'Tesviye şapı (zemin)',
                 'yalitim' => 'Su yalıtımı (ıslak hacim)',
+                'seviye' => 'Karo seviyeleme sistemi (klips + kama)',
                 'profil' => 'Köşe profili',
                 'supurgelik' => 'Süpürgelik (zemin)',
+                'temizlik' => 'Teslim öncesi temizlik ve bakım',
             ]],
         ];
     }
@@ -130,40 +159,79 @@ class TileEstimator extends KitEstimator
         return $m;
     }
 
+    /** @return array{0:string,1:string,2:string,3:string} [zemin ebadı, duvar ebadı, zemin kalitesi, duvar kalitesi] */
+    private function specs(array $in): array
+    {
+        $fs = (string) $in['size'];
+        $fq = (string) $in['quality'];
+
+        return [$fs, ($in['wsize'] ?? '') !== '' ? (string) $in['wsize'] : $fs, $fq, ($in['wquality'] ?? '') !== '' ? (string) $in['wquality'] : $fq];
+    }
+
+    /** Zemin ve duvar ayrı ürün mü? (ikisi de alanlı ve ebat ya da kalite farklı) */
+    private function split(array $in, float $floor, float $wall): bool
+    {
+        [$fs, $ws, $fq, $wq] = $this->specs($in);
+
+        return $floor > 0 && $wall > 0 && ($fs !== $ws || $fq !== $wq);
+    }
+
+    private function sizeLabel(string $size): string
+    {
+        return ['30x60' => '30×60', '60x60' => '60×60', '60x120' => '60×120', '120x120' => '120×120+'][$size] ?? $size;
+    }
+
     protected function compute(array $in): array
     {
         $p = $this->p();
         [$floor, $wall] = $this->areas($in);
         $area = $floor + $wall;
-        $size = $in['size'];
+        [$fs, $ws, $fq, $wq] = $this->specs($in);
+        $split = $this->split($in, $floor, $wall);
+        $base = $this->setting('tile_labor_standard_m2', $p['labor_m2']) * ($in['scope'] === 'ustune' ? 1.1 : 1);
+        $laborTotal = $floor * $base * $p['size_labor'][$fs] + $wall * $base * $p['size_labor'][$ws];
+        $mat = fn (float $a, string $sz, string $q) => $a * (1 + $p['size_waste'][$sz]) * $this->q(['quality' => $q], $p['tile_m2']);
+        $size = $fs;
         $waste = $p['size_waste'][$size];
-        $labor = $this->setting('tile_labor_standard_m2', $p['labor_m2']) * $p['size_labor'][$size] * ($in['scope'] === 'ustune' ? 1.1 : 1);
         $adhesive = $this->unitPrice('tile_adhesive_standard_25kg', $p['adhesive_bag']);
         $grout = $this->unitPrice('tile_grout_5kg', $p['grout_pack']);
         $bags = (int) ceil($area * 5 / 25);
+        $epoxy = ($in['grout'] ?? '') === 'epoksi';
         $packs = (int) max(1, ceil($area * 0.5 / 5));
+        $epoxySets = (int) max(1, ceil($area * $p['epoxy_grout_kg_m2'] / 3));
+        $groutCost = $epoxy
+            ? $epoxySets * $this->setting('tile_epoxy_grout_3kg', $p['epoxy_grout_3kg']) + $area * $this->setting('tile_epoxy_grout_labor_m2', $p['epoxy_grout_labor_m2'])
+            : $packs * $grout;
+        $clips = (int) ceil($floor * $p['level_clips_m2'][$fs] + $wall * $p['level_clips_m2'][$ws]);
         $perimeter = $floor > 0 ? 4 * sqrt($floor) : 0;
 
         $items = [
             'sokum' => ['label' => 'Eski kaplama sökümü ve moloz', 'mid' => $in['scope'] === 'sokum' ? $area * $p['demolition_m2'] : 0, 'color' => '#5B6472'],
             'sap' => ['label' => 'Tesviye şapı', 'mid' => $this->has($in, 'extras', 'sap') ? $floor * $p['screed_m2'] : 0, 'color' => '#2F6F8F'],
             'yalitim' => ['label' => 'Su yalıtımı', 'mid' => $this->has($in, 'extras', 'yalitim') ? $area * $p['waterproof_m2'] : 0, 'color' => '#7FB3C8'],
-            'seramik' => ['label' => 'Seramik / porselen malzeme (%'.round($waste * 100).' fire dahil)', 'mid' => $area * (1 + $waste) * $this->q($in, $p['tile_m2']), 'color' => '#FFB800'],
-            'yapistirici' => ['label' => 'Yapıştırıcı ve derz', 'mid' => $bags * $adhesive + $packs * $grout, 'color' => '#8A6200'],
-            'iscilik' => ['label' => 'Döşeme işçiliği', 'mid' => $area * $labor, 'color' => '#101318'],
+            'seramik' => ['label' => $split ? 'Zemin karosu '.$this->sizeLabel($fs).' (%'.round($p['size_waste'][$fs] * 100).' fire dahil)' : 'Seramik / porselen malzeme (%'.round($waste * 100).' fire dahil)',
+                'mid' => $split ? $mat($floor, $fs, $fq) : $mat($area, $fs, $fq), 'color' => '#FFB800'],
+            'seramik_duvar' => ['label' => 'Duvar karosu '.$this->sizeLabel($ws).' (%'.round($p['size_waste'][$ws] * 100).' fire dahil)', 'mid' => $split ? $mat($wall, $ws, $wq) : 0, 'color' => '#E0A100'],
+            'yapistirici' => ['label' => $epoxy ? 'Yapıştırıcı' : 'Yapıştırıcı ve derz', 'mid' => $bags * $adhesive + ($epoxy ? 0 : $groutCost), 'color' => '#8A6200'],
+            'derz_epoksi' => ['label' => 'Epoksi derz dolgu ve uygulama', 'mid' => $epoxy ? $groutCost : 0, 'color' => '#6E4F00'],
+            'seviye' => ['label' => 'Karo seviyeleme sistemi ('.number_format($clips, 0, ',', '.').' klips)', 'mid' => $this->has($in, 'extras', 'seviye') ? $clips * $this->setting('tile_level_clip', $p['level_clip']) : 0, 'color' => '#9C8B5E'],
+            'iscilik' => ['label' => 'Döşeme işçiliği', 'mid' => $laborTotal, 'color' => '#101318'],
             'profil' => ['label' => 'Köşe profili', 'mid' => $this->has($in, 'extras', 'profil') ? max(6, $perimeter * 0.5 + $wall * 0.3) * $p['profile_m'] : 0, 'color' => '#C9A55A'],
             'supurgelik' => ['label' => 'Süpürgelik', 'mid' => $this->has($in, 'extras', 'supurgelik') && $floor > 0 ? $perimeter * $p['skirting_m'] : 0, 'color' => '#3F7D5B'],
+            'temizlik' => ['label' => 'Teslim öncesi temizlik ve bakım', 'mid' => $this->has($in, 'extras', 'temizlik') ? $area * $this->setting('tile_cleaning_m2', $p['cleaning_m2']) : 0, 'color' => '#6FA8A0'],
         ];
         $days = [max(1, (int) ceil($area / 25)), max(2, (int) ceil($area / 15))];
         if ($in['scope'] === 'sokum') {
             $days = [$days[0] + 1, $days[1] + 2];
         }
+        $days[1] = max($days[1], $days[0] + 1);
 
         return [
             'items' => $items,
             'per_unit' => $area,
             'days' => $days,
-            'meta' => [['Tahmini süre', $days[0].'–'.$days[1].' iş günü'], ['Kaplanacak alan', self::n1($area).' m²']],
+            'meta' => array_merge([['Tahmini süre', $days[0].'–'.$days[1].' iş günü'], ['Kaplanacak alan', self::n1($area).' m²']],
+                $split ? [['Zemin / duvar', self::n1($floor).' m² · '.self::n1($wall).' m²']] : []),
             'notes' => $this->has($in, 'extras', 'sap') || $in['scope'] !== 'hazir' ? [] : ['Zemin düzgün değilse tesviye şapı gerekebilir.'],
         ];
     }
@@ -173,16 +241,28 @@ class TileEstimator extends KitEstimator
         $p = $this->p();
         [$floor, $wall] = $this->areas($in);
         $area = $floor + $wall;
-        $size = $in['size'];
-        $need = $area * (1 + $p['size_waste'][$size]);
-        $box = $p['box_m2'][$size];
-        $rows = [
-            ['Karo ('.$this->steps()[2]['options'][$size]['label'].')', self::n1($need), 'm²', 'Alan '.self::n1($area).' m² + %'.round($p['size_waste'][$size] * 100).' fire'],
-            ['Karo kutusu', (int) ceil($need / $box), 'kutu', 'Kutu başına yaklaşık '.self::n1($box).' m² (markaya göre değişir)'],
+        [$fs, $ws] = $this->specs($in);
+        $tile = function (string $name, float $a, string $sz) use ($p) {
+            $need = $a * (1 + $p['size_waste'][$sz]);
+
+            return [
+                [$name.' ('.$this->sizeLabel($sz).')', self::n1($need), 'm²', 'Alan '.self::n1($a).' m² + %'.round($p['size_waste'][$sz] * 100).' fire'],
+                [$name.' kutusu', (int) ceil($need / $p['box_m2'][$sz]), 'kutu', 'Kutu başına yaklaşık '.self::n1($p['box_m2'][$sz]).' m² (markaya göre değişir)'],
+            ];
+        };
+        $rows = $this->split($in, $floor, $wall)
+            ? array_merge($tile('Zemin karosu', $floor, $fs), $tile('Duvar karosu', $wall, $ws))
+            : $tile('Karo', $area, $fs);
+        $rows = array_merge($rows, [
             ['Seramik yapıştırıcısı (C2TE, 25 kg)', (int) ceil($area * 5 / 25), 'torba', 'Yaklaşık 5 kg/m²'],
-            ['Derz dolgu (5 kg)', (int) max(1, ceil($area * 0.5 / 5)), 'paket', 'Yaklaşık 0,5 kg/m²'],
-            ['Seviye ayar klipsi', (int) ceil($area * 4), 'adet', 'Büyük ebatta düzgünlük için'],
-        ];
+            ($in['grout'] ?? '') === 'epoksi'
+                ? ['Epoksi derz dolgu (3 kg set)', (int) max(1, ceil($area * $p['epoxy_grout_kg_m2'] / 3)), 'set', 'Yaklaşık '.self::n1($p['epoxy_grout_kg_m2']).' kg/m²']
+                : ['Derz dolgu (5 kg)', (int) max(1, ceil($area * 0.5 / 5)), 'paket', 'Yaklaşık 0,5 kg/m²'],
+            ['Seviye ayar klipsi', (int) ceil($floor * $p['level_clips_m2'][$fs] + $wall * $p['level_clips_m2'][$ws]), 'adet', 'Ebada göre m² başına '.$p['level_clips_m2'][$fs].' klips; kamalar tekrar kullanılır'],
+        ]);
+        if ($this->has($in, 'extras', 'temizlik')) {
+            $rows[] = ['Seramik temizleyici (inşaat sonrası)', (int) max(1, ceil($area / 40)), 'L', 'Yaklaşık 1 L / 40 m², seyreltilerek'];
+        }
         if ($this->has($in, 'extras', 'yalitim')) {
             $rows[] = ['Çimento esaslı su yalıtımı (20 kg)', (int) ceil($area * 3 / 20), 'kova', '2 kat, yaklaşık 3 kg/m²'];
         }

@@ -77,13 +77,14 @@ class SlabEstimator extends KitEstimator
             ]],
             ['type' => 'cards', 'key' => 'finish', 'title' => 'Yüzey işlemi', 'short' => 'Yüzey işlemi', 'required' => true, 'cols' => 2, 'options' => [
                 'helikopter' => ['label' => 'Helikopter perdah + kuvars', 'hint' => 'Düzgün, aşınmaya dayanıklı'],
+                'korund' => ['label' => 'Helikopter + korund sertleştirici', 'hint' => 'Forklift, ağır trafik, depo'],
                 'cekme' => ['label' => 'Mastarla çekme', 'hint' => 'İşlemsiz, kaba'],
             ]],
             ['type' => 'cards', 'key' => 'pump', 'title' => 'Mobil pompa', 'short' => 'Pompa', 'required' => true, 'cols' => 2, 'options' => [
                 'evet' => ['label' => 'Pompa gerekli', 'hint' => 'Mikser yanaşamıyorsa'],
                 'hayir' => ['label' => 'Gerekmiyor', 'hint' => 'Mikser oluğu yeterli'],
             ]],
-            ['type' => 'checks', 'key' => 'extras', 'title' => 'Ekstralar', 'options' => ['fill' => 'Stabilize dolgu (15 cm, sıkıştırılmış)', 'nylon' => 'Naylon (beton altı)', 'joint' => 'Derz kesimi']],
+            ['type' => 'checks', 'key' => 'extras', 'title' => 'Ekstralar', 'options' => ['fill' => 'Stabilize dolgu (15 cm, sıkıştırılmış)', 'nylon' => 'Naylon (beton altı)', 'joint' => 'Derz kesimi', 'curing' => 'Kür kimyasalı (püskürtme)', 'densifier' => 'Sıvı yüzey sertleştirici (toz önleyici)']],
         ];
     }
 
@@ -106,8 +107,10 @@ class SlabEstimator extends KitEstimator
             'beton' => ['label' => 'Hazır beton '.strtoupper($in['class']).' (%5 fire)', 'mid' => $v * $price, 'color' => '#FFB800'],
             'pompa' => ['label' => 'Mobil pompa ('.$pours.' döküm)', 'mid' => $in['pump'] === 'evet' ? $pours * $this->toolPrice('beton-hesaplayici', 'pump', $p['pump']) : 0, 'color' => '#2F6F8F'],
             'iscilik' => ['label' => 'Döküm ve vibrasyon işçiliği', 'mid' => $v * $p['labor_m3'], 'color' => '#101318'],
-            'perdah' => ['label' => $in['finish'] === 'helikopter' ? 'Helikopter perdah + kuvars' : 'Mastarla çekme', 'mid' => $a * $p['finish_m2'][$in['finish']], 'color' => '#C9A55A'],
+            'perdah' => ['label' => ['helikopter' => 'Helikopter perdah + kuvars', 'korund' => 'Helikopter perdah + korund serpme sertleştirici', 'cekme' => 'Mastarla çekme'][$in['finish']] ?? 'Yüzey işlemi', 'mid' => $a * $p['finish_m2'][$in['finish']], 'color' => '#C9A55A'],
             'derz' => ['label' => 'Derz kesimi', 'mid' => $this->has($in, 'extras', 'joint') ? $a * $p['joint_m2'] : 0, 'color' => '#3F7D5B'],
+            'kur' => ['label' => 'Kür kimyasalı', 'mid' => $this->has($in, 'extras', 'curing') ? $a * $p['curing_m2'] : 0, 'color' => '#6FA8A0'],
+            'sertlestirici' => ['label' => 'Sıvı yüzey sertleştirici', 'mid' => $this->has($in, 'extras', 'densifier') ? $a * $p['densifier_m2'] : 0, 'color' => '#9C8B5E'],
         ];
         $days = [max(1, (int) ceil($a / 400)), max(2, (int) ceil($a / 200))];
 
@@ -126,6 +129,15 @@ class SlabEstimator extends KitEstimator
         }
         if ($in['finish'] === 'helikopter') {
             $rows[] = ['Kuvars serpme sertleştirici', number_format($a * 4, 0, ',', '.'), 'kg', '≈4 kg/m²'];
+        }
+        if ($in['finish'] === 'korund') {
+            $rows[] = ['Korund / metalik serpme sertleştirici', number_format($a * 5, 0, ',', '.'), 'kg', '≈5 kg/m², ağır trafik'];
+        }
+        if ($this->has($in, 'extras', 'curing')) {
+            $rows[] = ['Kür kimyasalı', self::n1($a * 0.2), 'L', '≈0,2 L/m², perdahtan hemen sonra'];
+        }
+        if ($this->has($in, 'extras', 'densifier')) {
+            $rows[] = ['Sıvı yüzey sertleştirici (lityum silikat)', self::n1($a * 0.15), 'L', '≈0,15 L/m², beton 28 günlük olunca'];
         }
         if ($this->has($in, 'extras', 'fill')) {
             $rows[] = ['Stabilize malzeme', self::n1($a * 0.15 * 1.25), 'm³', 'Sıkışma payı dahil'];

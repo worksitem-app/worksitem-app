@@ -214,3 +214,8 @@ html[data-theme="dark"] .bt-sharerow input,html[data-theme="dark"] .bt-sharerow 
 .bt-plan small{display:block;font-size:12px;color:#5B6472;margin-top:2px}
 html[data-theme="dark"] .bt-plan{background:#141A24;color:#fff;border-color:#E6E9EE}
 html[data-theme="dark"] .bt-plan small{color:#C9CED6}
+/* v76 kalem sponsorluğu */
+.bt-lines li>span{min-width:0}
+.bt-spl{display:inline-block;max-width:100%;overflow:hidden;text-overflow:ellipsis;box-sizing:border-box;margin-left:8px;padding:1px 7px;border:1px solid #E3E6EA;border-radius:999px;font-size:11px;font-weight:700;color:#8A6200;text-decoration:none;white-space:nowrap;vertical-align:1px}
+.bt-spl:hover{border-color:#8A6200}
+html[data-theme="dark"] .bt-spl{border-color:#2A3342;color:#FFCF4D}

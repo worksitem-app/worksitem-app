@@ -208,35 +208,14 @@ class ToolController extends Controller
             return response()->json(['success' => false, 'error' => 'Görsel servisi şu an kullanılamıyor.'], 503);
         }
 
-        $url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-image:generateContent';
-
         try {
-            $response = Http::withHeaders(['x-goog-api-key' => $apiKey])->connectTimeout(5)->timeout(45)->post($url, [
-                'instances' => [['prompt' => $prompt]],
-                'parameters' => ['sampleCount' => 1]
-            ]);
-
-            if ($response->successful()) {
-                $data = $response->json();
-                $imageBytes = $data['predictions'][0]['bytesBase64Encoded'] ?? null;
-                if ($imageBytes) {
-                    return response()->json([
-                        'success' => true,
-                        'image' => 'data:image/jpeg;base64,' . $imageBytes
-                    ]);
-                }
-            }
-
-            // Dış API gövdesi kullanıcıya DÖNÜLMEZ (iç model adı, kota, anahtar bilgisi sızabilir)
-            \Illuminate\Support\Facades\Log::warning('generateRoomDesign API hatası', [
-                'status' => $response->status(),
-                'body' => mb_substr($response->body(), 0, 2000),
-            ]);
-            return response()->json(['success' => false, 'error' => 'Görsel üretilemedi, lütfen tekrar deneyin.'], 502);
-        } catch (\Throwable $e) {
-            report($e);
-            return response()->json(['success' => false, 'error' => 'Görsel servisine bağlanılamadı.'], 502);
+            $out = app(\App\Services\AI\GeminiImage::class)->generate($prompt, [], 'room_planner', ['room_type' => $roomType, 'style' => $style]);
+        } catch (\RuntimeException $e) {
+            // Kullanıcıya yalnız güvenli mesaj (iç model/kota bilgisi sızmaz)
+            return response()->json(['success' => false, 'error' => $e->getMessage()], 502);
         }
+
+        return response()->json(['success' => true, 'image' => 'data:'.$out['mime'].';base64,'.base64_encode($out['bytes'])]);
     }
 
     public function concreteCalculator() { return view('tools.concrete-calculator'); }

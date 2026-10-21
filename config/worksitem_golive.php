@@ -43,6 +43,8 @@ return [
 
         // Yeni araçlar (14.10.2026)
         'yeni-araclar' => ['mutfak-planlayici', 'ges-planlayici'],
+        // v76: yapı kimyasalları boşluk kapatma
+        'yapi-kimyasallari' => ['beton-onarim-maliyeti'],
 
         // Yapay zekâ özellikleri: AI_SPEND_ENABLED=true ve sağlayıcı bütçe limitleri tanımlandıktan sonra.
         // (Seramik görselleştirici araç listesinde değil; AI kredi sistemiyle korunur.)

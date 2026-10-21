@@ -77,7 +77,8 @@
         <form class="bt-form" id="kForm" onsubmit="return false" aria-label="Hesap bilgileri">
             @foreach ($steps as $step)
                 @php $n++; @endphp
-                <section class="bt-step" data-step="{{ $step['key'] ?? 'numbers'.$n }}">
+                @php $vis = $e->visible($step, $input ?? []); @endphp
+                <section class="bt-step" data-step="{{ $step['key'] ?? 'numbers'.$n }}" @if (! empty($step['show'])) data-show='@json($step['show'])' @endif @if (! empty($step['hide'])) data-hide='@json($step['hide'])' @endif @if (! $vis) hidden @endif>
                     <h2><i>{{ $n }}</i>{{ $step['title'] }}
                         @if ($step['type'] === 'checks' || ($step['type'] === 'cards' && ! ($step['required'] ?? false)))<small class="bt-opt-note">isteğe bağlı</small>@endif
                     </h2>
@@ -85,8 +86,8 @@
                         <div class="bt-opts c{{ $step['cols'] ?? 3 }}">
                             @foreach ($step['options'] as $k => $o)
                                 <div class="bt-opt">
-                                    <input type="radio" name="{{ $step['key'] }}" id="o_{{ $step['key'] }}_{{ $k }}" value="{{ $k }}" @checked(($input[$step['key']] ?? '') === (string) $k)>
-                                    <label for="o_{{ $step['key'] }}_{{ $k }}"><b>{{ $o['label'] }}</b>@if (! empty($o['hint']))<small>{{ $o['hint'] }}</small>@endif</label>
+                                    <input type="radio" name="{{ $step['key'] }}" id="o_{{ $n }}_{{ $step['key'] }}_{{ $k }}" value="{{ $k }}" @checked(($input[$step['key']] ?? '') === (string) $k) @disabled(! $vis)>
+                                    <label for="o_{{ $n }}_{{ $step['key'] }}_{{ $k }}"><b>{{ $o['label'] }}</b>@if (! empty($o['hint']))<small>{{ $o['hint'] }}</small>@endif</label>
                                 </div>
                             @endforeach
                         </div>
@@ -95,7 +96,7 @@
                             @foreach ($step['fields'] as $f)
                                 <div class="bt-field">
                                     <label for="f_{{ $f['key'] }}">{{ $f['label'] }}</label>
-                                    <div class="bt-input"><input type="number" id="f_{{ $f['key'] }}" name="{{ $f['key'] }}" inputmode="decimal" min="{{ $f['min'] }}" max="{{ $f['max'] }}" step="{{ $f['step'] }}" placeholder="{{ $f['placeholder'] ?? '' }}"
+                                    <div class="bt-input"><input type="number" id="f_{{ $f['key'] }}" name="{{ $f['key'] }}" inputmode="decimal" min="{{ $f['min'] }}" max="{{ $f['max'] }}" step="{{ $f['step'] }}" placeholder="{{ $f['placeholder'] ?? '' }}" @disabled(! $vis)
                                         value="{{ ! empty($input['_given_'.$f['key']]) ? $input[$f['key']] : '' }}"><span>{{ $f['unit'] }}</span></div>
                                 </div>
                             @endforeach
@@ -104,7 +105,7 @@
                     @elseif ($step['type'] === 'checks')
                         <div class="bt-checks">
                             @foreach ($step['options'] as $k => $label)
-                                <label class="bt-check"><input type="checkbox" name="{{ $step['key'] }}[]" value="{{ $k }}" @checked(in_array($k, $input[$step['key']] ?? [], true))> {{ $label }}</label>
+                                <label class="bt-check"><input type="checkbox" name="{{ $step['key'] }}[]" value="{{ $k }}" @checked(in_array($k, $input[$step['key']] ?? [], true)) @disabled(! $vis)> {{ $label }}</label>
                             @endforeach
                         </div>
                     @endif
@@ -130,8 +131,8 @@
                 <div class="bt-bar" id="kBar" aria-hidden="true"></div>
                 <ul class="bt-lines" id="kLines">
                     @if ($ready)
-                        @foreach ($est['items'] as $it)
-                            <li><i style="background:{{ $it['color'] }}"></i><span>{{ $it['label'] }}</span><b>{{ $tl($it['low']) }} – {{ $tl($it['high']) }}</b></li>
+                        @foreach ($est['items'] as $ik => $it)
+                            <li><i style="background:{{ $it['color'] }}"></i><span>{{ $it['label'] }}@if (! empty($sponsorLines[$ik]))<a class="bt-spl" href="{{ $sponsorLines[$ik]['url'] }}" target="_blank" rel="sponsored nofollow noopener" data-sponsor="{{ $sponsorLines[$ik]['id'] }}">Sponsorlu · {{ $sponsorLines[$ik]['brand'] }}</a>@endif</span><b>{{ $tl($it['low']) }} – {{ $tl($it['high']) }}</b></li>
                         @endforeach
                     @else
                         <li><i></i><span>Kalemler seçimlerinize göre burada listelenir</span><b>—</b></li>
@@ -293,7 +294,10 @@
         Object.keys(res.items).forEach(function (k) {
             var it = res.items[k];
             bar += '<span style="width:' + (it.mid / total * 100).toFixed(2) + '%;background:' + it.color + '"></span>';
-            lines += '<li><i style="background:' + it.color + '"></i><span>' + esc(it.label) + '</span><b>' + tl(it.low) + ' – ' + tl(it.high) + '</b></li>';
+            var sp = res.sponsor_lines && res.sponsor_lines[k];
+            lines += '<li><i style="background:' + it.color + '"></i><span>' + esc(it.label)
+                + (sp ? '<a class="bt-spl" href="' + esc(sp.url) + '" target="_blank" rel="sponsored nofollow noopener" data-sponsor="' + sp.id + '">Sponsorlu · ' + esc(sp.brand) + '</a>' : '')
+                + '</span><b>' + tl(it.low) + ' – ' + tl(it.high) + '</b></li>';
         });
         $('kBar').innerHTML = bar; $('kLines').innerHTML = lines;
         $('kMeta').innerHTML = (res.meta || []).map(function (m) { return '<div>' + esc(m[0]) + '<strong>' + esc(m[1]) + '</strong></div>'; }).join('');
@@ -306,7 +310,32 @@
         dock();
     }
 
+    // Koşullu adımlar: seçime göre göster/gizle, gizli adımın alanları gönderilmez, adımlar yeniden numaralanır
+    function applyShow() {
+        var cur = {}, keep = {};
+        form.querySelectorAll('input[type=radio]:checked').forEach(function (r) { keep[r.name] = r.value; if (!r.disabled) cur[r.name] = r.value; });
+        form.querySelectorAll('.bt-step[data-show],.bt-step[data-hide]').forEach(function (st) {
+            var show = {}, hide = {};
+            try { show = JSON.parse(st.getAttribute('data-show') || '{}'); hide = JSON.parse(st.getAttribute('data-hide') || '{}'); } catch (e) {}
+            var ok = Object.keys(show).every(function (k) { return show[k].map(String).indexOf(String(cur[k] || '')) !== -1; })
+                && !Object.keys(hide).some(function (k) { return hide[k].map(String).indexOf(String(cur[k] || '')) !== -1; });
+            st.hidden = !ok;
+            st.querySelectorAll('input').forEach(function (inp) { inp.disabled = !ok; });
+        });
+        // Aynı anahtarlı iki adım arasında geçişte seçim korunur (ör. iç/dış cephe boya kalitesi)
+        form.querySelectorAll('.bt-step:not([hidden])').forEach(function (st) {
+            var r = st.querySelector('input[type=radio]');
+            if (r && !st.querySelector('input[type=radio]:checked') && keep[r.name]) {
+                var m = st.querySelector('input[type=radio][value="' + keep[r.name] + '"]'); if (m) m.checked = true;
+            }
+        });
+        var i = 0;
+        form.querySelectorAll('.bt-step').forEach(function (st) { if (!st.hidden) { var n = st.querySelector('h2 > i'); if (n) n.textContent = ++i; } });
+    }
+    applyShow();
+
     function calc() {
+        applyShow();
         var my = ++seq;
         $('resultCard').classList.add('bt-loading');
         fetch(C.calc + '?' + params().toString(), { headers: { 'Accept': 'application/json' } })
@@ -323,7 +352,7 @@
     $('kNext').addEventListener('click', function () {
         if (!last) {
             var miss = null;
-            form.querySelectorAll('.bt-step').forEach(function (st) {
+            form.querySelectorAll('.bt-step:not([hidden])').forEach(function (st) {
                 var radios = st.querySelectorAll('input[type=radio]');
                 if (radios.length && !st.querySelector('input[type=radio]:checked')) { st.classList.add('is-missing'); miss = miss || st; }
             });

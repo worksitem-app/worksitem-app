@@ -63,6 +63,14 @@ class WaterproofingEstimator extends CatalogPozEstimator
         if (str_starts_with($k, 'cement') || str_starts_with($k, 'crystalline')) {
             $rows[] = ['Çimento esaslı yalıtım (20 kg set)', (int) ceil($a * (str_contains($k, '3coat') ? 4 : 3) / 20), 'set', '≈3–4 kg/m²'];
         }
+        if ($k === 'acrylic_liquid') {
+            $rows[] = ['Akrilik likit yalıtım (20 kg)', (int) ceil($a * 1.5 / 20), 'kova', '2 kat, ≈1,5 kg/m²'];
+            $rows[] = ['Akrilik astar (5 L)', (int) max(1, ceil($a * 0.15 / 5)), 'kova', '≈0,15 L/m²'];
+        }
+        if ($k === 'pu_liquid') {
+            $rows[] = ['Poliüretan likit membran (25 kg)', (int) ceil($a * 1.8 / 25), 'kova', '2 kat, ≈1,8 kg/m²'];
+            $rows[] = ['Poliüretan astar (5 kg)', (int) max(1, ceil($a * 0.2 / 5)), 'kova', '≈0,2 kg/m²'];
+        }
         if (str_contains($k, 'mesh')) {
             $rows[] = ['Yalıtım filesi', (int) ceil($a * 1.1), 'm²', 'Bindirme dahil'];
         }

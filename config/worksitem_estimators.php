@@ -33,6 +33,7 @@ return [
         'asma-tavan-hesaplayici' => \App\Estimators\CeilingEstimator::class,
         'su-yalitimi-hesaplayici' => \App\Estimators\WaterproofingEstimator::class,
         'epoksi-zemin-hesaplayici' => \App\Estimators\EpoxyEstimator::class,
+        'beton-onarim-maliyeti' => \App\Estimators\ConcreteRepairEstimator::class,
         'sandvic-panel-hesaplayici' => \App\Estimators\SandwichPanelEstimator::class,
         'beton-hesaplayici' => \App\Estimators\ConcreteEstimator::class,
         'su-tesisat-hesaplama' => \App\Estimators\PlumbingEstimator::class,
@@ -77,6 +78,13 @@ return [
         'waterproof_m2' => 550,
         'profile_m' => 75,
         'skirting_m' => 260,
+        // v76 (tahmini piyasa değerleri, KDV dahil; Fiyat Merkezi › pricing_settings ile güncellenir)
+        'epoxy_grout_3kg' => 1500 * 1.2,            // epoksi derz dolgu 3 kg set — tile_epoxy_grout_3kg
+        'epoxy_grout_kg_m2' => 0.6,                 // 60×60, 2–3 mm derzde ≈0,5–0,7 kg/m²
+        'epoxy_grout_labor_m2' => 120,              // epoksi derz uygulama farkı — tile_epoxy_grout_labor_m2
+        'level_clip' => 2.5,                        // klips (+ kama amortismanı), adet — tile_level_clip
+        'level_clips_m2' => ['30x60' => 12, '60x60' => 8, '60x120' => 6, '120x120' => 4],
+        'cleaning_m2' => 35,                        // inşaat sonrası temizlik kimyasalı + işçilik — tile_cleaning_m2
     ],
 
     'boya' => [
@@ -89,6 +97,19 @@ return [
         'coverage_m2_per_l' => 11,
         'wall_factor' => 2.7,                       // daire net m² → duvar alanı (2,6 m tavan)
         'extras' => ['furniture' => 2500, 'door' => 1800, 'radiator' => 900, 'plaster_m2' => 380],
+        // Dış cephe (Kainta saha referansı; Fiyat Merkezi › pricing_settings ile güncellenir)
+        'facade' => [
+            'paint_15l' => 5200 * 1.2,                  // silikonlu dış cephe boyası 15 L (orta sınıf, KDV dahil) — pricing_settings: paint_facade_15l
+            'primer_15l' => 3200 * 1.2,                 // dış cephe astarı 15 L — paint_facade_primer_15l
+            'quality_factor' => [0.75, 1.0, 1.45],      // akrilik / silikonlu / silikon-elastomerik
+            'coverage_m2_per_l' => 8,                   // pürüzlü sıva yüzeyinde kat başına
+            'primer_m2_per_l' => 10,
+            'labor_m2' => 200,                          // cephe m² başına ustalık (astar + 2 kat, iskele hariç) — paint_facade_labor_m2
+            'window_share' => 0.15,                     // çevre × yükseklikten düşülen pencere payı
+            'floor_height' => 3.0,
+            'repair_m2' => ['iyi' => 15, 'orta' => 60, 'kotu' => 180],   // çatlak/sıva tamiri + file (cephe m²)
+            'extras' => ['wash_m2' => 18, 'sill_m' => 120, 'mesh_m2' => 95],
+        ],
     ],
 
     'parke' => [
@@ -193,8 +214,27 @@ return [
         'concrete_m3' => ['c20' => 3400 * 1.2, 'c25' => 3600 * 1.2, 'c30' => 3900 * 1.2, 'c35' => 4250 * 1.2],
         'pump' => 9000,
         'mesh_m2' => ['tek' => 115 * 1.2, 'cift' => 230 * 1.2],
-        'finish_m2' => ['helikopter' => 220, 'cekme' => 45],
+        'finish_m2' => ['helikopter' => 220, 'korund' => 360, 'cekme' => 45],   // korund: helikopter + ≈5 kg/m² korund/metalik serpme (v76, tahmini)
         'labor_m3' => 450, 'fill_m3' => 450, 'joint_m2' => 25, 'nylon_m2' => 8,
+        'densifier_m2' => 90,          // sıvı yüzey sertleştirici (lityum silikat) + toz önleyici, uygulama dahil (v76, tahmini)
+        'curing_m2' => 25,             // kür kimyasalı ≈0,2 L/m², püskürtme (v76, tahmini)
+    ],
+
+    // v76 Beton onarım ve grout (tahmini piyasa değerleri, KDV dahil; Fiyat Merkezi › pricing_settings ile güncellenir)
+    'beton_onarim' => [
+        'mortar_kg' => ['cimento' => 38, 'epoksi' => 300],     // R4 tamir harcı 25 kg ≈950 TL; epoksi tamir harcı 15 kg set ≈4.500 TL
+        'grout_kg' => ['cimento' => 30, 'epoksi' => 260],      // akışkan grout 25 kg ≈750 TL; epoksi grout 15 kg set ≈3.900 TL
+        'prep_m2' => 450, 'prep_cm' => 90,                     // kırım + kumlama/su jeti + temizlik
+        'labor_m2' => 650, 'labor_cm' => 160,                  // harç uygulama
+        'element_factor' => ['zemin' => 0.85, 'perde' => 1.0, 'kolon' => 1.2, 'tavan' => 1.45, 'cephe' => 1.3],
+        'corrosion_m2' => ['hafif' => 280, 'agir' => 520],     // pas temizliği + korozyon önleyici (malzeme + işçilik)
+        'primer_m2' => 90,
+        'rebar_add_m2' => 1100,                                 // ilave donatı, bindirme, ankraj (kesit kaybında)
+        'injection_m' => 1400,                                  // epoksi çatlak enjeksiyonu, mtül
+        'coating_m2' => 260,
+        'scaffold_m2' => 180, 'scaffold_min' => 8000,
+        'grout_prep_each' => 900, 'grout_labor_each' => 1600,   // plaka başına
+        'anchor_kg' => 1.2, 'anchor_labor_each' => 220,
     ],
 
     'tesisat' => [

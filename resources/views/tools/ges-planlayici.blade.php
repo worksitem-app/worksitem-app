@@ -11,6 +11,7 @@
         'imagery' => $cfg['imagery'], 'kwhPrice' => $kwhPrice, 'quote' => url('/araclar/gunes-paneli-hesaplama'),
         'lib' => $cfg['libs'] ?? [],
         'ilceler' => (array) config('turkey_districts', []),
+        'overpass' => $cfg['overpass_mirrors'] ?? [$cfg['overpass']],
     ];
 @endphp
 <!DOCTYPE html>
@@ -406,14 +407,47 @@ map.on('click', (e) => {
     locate(e.latlng.lat, e.latlng.lng, false);
 });
 
+async function osmBuilding(lat, lon) {
+    const ql = '[out:json][timeout:10];way["building"](around:60,' + lat.toFixed(6) + ',' + lon.toFixed(6) + ');out geom tags;';
+    for (const url of C.overpass || []) {
+        const ctl = new AbortController(), t = setTimeout(() => ctl.abort(), 9000);
+        try {
+            const r = await fetch(url, { method: 'POST', body: 'data=' + encodeURIComponent(ql), headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, signal: ctl.signal });
+            clearTimeout(t);
+            if (!r.ok) continue;
+            const j = await r.json(), kx = Math.cos(lat * Math.PI / 180);
+            let best = null, bestD = Infinity;
+            for (const el of j.elements || []) {
+                let ring = (el.geometry || []).map((g) => [g.lat, g.lon]);
+                if (ring.length < 4) continue;
+                const a = ring[0], z = ring[ring.length - 1];
+                if (a[0] === z[0] && a[1] === z[1]) ring = ring.slice(0, -1);
+                let inn = false;
+                for (let i = 0, k = ring.length - 1; i < ring.length; k = i++) {
+                    const [yi, xi] = ring[i], [yk, xk] = ring[k];
+                    if ((yi > lat) !== (yk > lat) && lon < (xk - xi) * (lat - yi) / ((yk - yi) || 1e-12) + xi) inn = !inn;
+                }
+                const cy = ring.reduce((s, p) => s + p[0], 0) / ring.length, cx = ring.reduce((s, p) => s + p[1], 0) / ring.length;
+                const d = inn ? -1 : Math.hypot((cy - lat) * 111320, (cx - lon) * 111320 * kx);
+                if (d < bestD && d < 40) { bestD = d; best = { found: true, ring, levels: parseInt((el.tags || {})['building:levels'], 10) || null, type: (el.tags || {}).building || 'yes' }; }
+            }
+            return best || { found: false };
+        } catch (e) { clearTimeout(t); }
+    }
+    return null;
+}
 async function locate(lat, lon, fly) {
     S.lat = lat; S.lon = lon;
     lyr.pin.clearLayers(); L.circleMarker([lat, lon], { radius: 6, color: '#fff', weight: 2, fillColor: '#FFB800', fillOpacity: 1 }).addTo(lyr.pin);
     if (fly) map.setView([lat, lon], 19);
     msg('Bina aranıyor…');
     try {
-        const r = await fetch(C.bld + '?lat=' + lat + '&lon=' + lon, { headers: { Accept: 'application/json' } });
-        const b = r.ok ? await r.json() : { found: false };
+        // Önce tarayıcıdan OpenStreetMap (Overpass) sorgusu; olmazsa sunucu üzerinden
+        let b = await osmBuilding(lat, lon);
+        if (!b) {
+            const r = await fetch(C.bld + '?lat=' + lat + '&lon=' + lon, { headers: { Accept: 'application/json' } });
+            b = r.ok ? await r.json() : { found: false };
+        }
         if (b.found) {
             if (b.levels) $('gpFloors').value = Math.min(40, Math.max(1, b.levels));
             if (/industrial|warehouse|factory|commercial|retail/.test(b.type || '')) setUse('fabrika');

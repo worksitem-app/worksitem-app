@@ -16,6 +16,7 @@ class KitController extends Controller
         $slug = (string) $request->route('kit');
         $e = KitRegistry::get($slug);
         $in = $e->normalize($request->query());
+        $est = $e->estimate($in);
 
         return view('tools.kit', [
             'e' => $e,
@@ -23,7 +24,8 @@ class KitController extends Controller
             'steps' => $e->steps(),
             'input' => $in,
             'query' => $request->query(),
-            'est' => $e->estimate($in),
+            'est' => $est,
+            'sponsorLines' => $est['ready'] ? \App\Services\Sponsors\SponsorLines::for($slug, array_keys($est['items']), $in) : [],
             'fx' => $fx->current(),
             'slug' => $slug,
         ]);
@@ -31,8 +33,13 @@ class KitController extends Controller
 
     public function calc(Request $request, FxRates $fx): JsonResponse
     {
-        $e = KitRegistry::get((string) $request->route('kit'));
-        $est = $e->estimate($e->normalize($request->query()));
+        $slug = (string) $request->route('kit');
+        $e = KitRegistry::get($slug);
+        $in = $e->normalize($request->query());
+        $est = $e->estimate($in);
+        if ($est['ready']) {
+            $est['sponsor_lines'] = (object) \App\Services\Sponsors\SponsorLines::for($slug, array_keys($est['items']), $in);
+        }
 
         if ($est['ready'] && ($rates = $fx->current())) {
             $est['fx'] = [];

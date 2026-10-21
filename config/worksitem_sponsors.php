@@ -18,8 +18,9 @@ return [
                 'seramik' => 'Seramik ve karo',
                 'vitrifiye' => 'Vitrifiye ve armatür',
                 'dus' => 'Duşakabin, küvet',
-                'yalitim' => 'Su yalıtımı ve yapı kimyasalları',
-                'genel' => 'Genel (tüm banyo)',
+                'yalitim' => 'Islak hacim su yalıtımı',
+                'yapistirici' => 'Yapıştırıcı ve derz dolgu',
+                'genel' => 'Genel',
             ],
         ],
         'banyo-planlayici' => [
@@ -54,7 +55,10 @@ return [
             'label' => 'Seramik metraj ve maliyet',
             'categories' => [
                 'seramik' => 'Seramik ve porselen karo',
-                'yapistirici' => 'Yapıştırıcı, derz, yapı kimyasalı',
+                'yapistirici' => 'Karo yapıştırıcısı',
+                'derz' => 'Derz dolgu (çimento ve epoksi)',
+                'seviyeleme' => 'Karo seviyeleme sistemi',
+                'temizlik' => 'Temizlik ve bakım ürünleri',
                 'yalitim' => 'Su yalıtımı',
                 'genel' => 'Genel',
             ],
@@ -63,8 +67,11 @@ return [
             'label' => 'Boya hesaplayıcı',
             'categories' => [
                 'boya' => 'İç cephe boyası',
-                'astar' => 'Astar ve macun',
-                'ekipman' => 'Rulo, fırça, ekipman',
+                'dis_cephe' => 'Dış cephe boyası',
+                'astar' => 'Astar',
+                'hazirlik' => 'Macun ve yüzey hazırlık',
+                'dekoratif' => 'Dekoratif boya',
+                'ekipman' => 'Ekipman',
                 'genel' => 'Genel',
             ],
         ],
@@ -72,7 +79,8 @@ return [
             'label' => 'WC tadilat maliyeti',
             'categories' => [
                 'vitrifiye' => 'Vitrifiye ve armatür',
-                'seramik' => 'Seramik',
+                'seramik' => 'Seramik ve karo',
+                'yapistirici' => 'Yapıştırıcı ve derz dolgu',
                 'genel' => 'Genel',
             ],
         ],
@@ -87,8 +95,9 @@ return [
         'zemin-kaplama' => [
             'label' => 'Zemin kaplama',
             'categories' => [
-                'parke' => 'Parke / SPC',
-                'seramik' => 'Seramik ve mermer',
+                'parke' => 'Parke',
+                'seramik' => 'Seramik ve karo',
+                'yapistirici' => 'Yapıştırıcı ve derz dolgu',
                 'genel' => 'Genel',
             ],
         ],
@@ -96,7 +105,8 @@ return [
             'label' => 'Mantolama maliyeti',
             'categories' => [
                 'yalitim' => 'Isı yalıtım levhası',
-                'sistem' => 'Harç, sıva, dekoratif sıva',
+                'sistem' => 'Yapıştırma ve sıva harcı, aksesuar',
+                'dekoratif' => 'Dekoratif kaplama ve son kat',
                 'iskele' => 'İskele',
                 'genel' => 'Genel',
             ],
@@ -106,15 +116,16 @@ return [
             'categories' => [
                 'profil' => 'PVC profil',
                 'cam' => 'Isıcam',
-                'panjur' => 'Panjur ve sineklik',
+                'panjur' => 'Panjur',
+                'montaj' => 'Montaj köpüğü ve sızdırmazlık',
                 'genel' => 'Genel',
             ],
         ],
         'sap-hesaplayici' => [
             'label' => 'Şap maliyeti',
             'categories' => [
-                'sap' => 'Hazır şap ve çimento',
-                'katki' => 'Katkı ve yapı kimyasalı',
+                'sap' => 'Hazır şap ve düzeltme şapı',
+                'katki' => 'Katkı ve astar',
                 'genel' => 'Genel',
             ],
         ],
@@ -183,7 +194,9 @@ return [
             'label' => 'Saha betonu',
             'categories' => [
                 'beton' => 'Hazır beton',
-                'hasir' => 'Hasır ve demir',
+                'hasir' => 'Çelik hasır',
+                'sertlestirici' => 'Yüzey sertleştirici',
+                'kur' => 'Kür malzemesi',
                 'genel' => 'Genel',
             ],
         ],
@@ -207,13 +220,29 @@ return [
             'label' => 'Su yalıtımı',
             'categories' => [
                 'yalitim' => 'Su yalıtım malzemesi',
+                'cimento' => 'Çimento esaslı ve kristalize yalıtım',
+                'likit' => 'Poliürea, poliüretan ve akrilik likit',
+                'membran' => 'Bitüm ve membran',
+                'bant' => 'Su yalıtım bandı ve tamamlayıcı',
+                'genel' => 'Genel',
+            ],
+        ],
+        'beton-onarim-maliyeti' => [
+            'label' => 'Beton onarım ve grout',
+            'categories' => [
+                'tamir' => 'Tamir harcı',
+                'grout' => 'Grout harcı',
+                'korozyon' => 'Korozyon önleyici ve aderans astarı',
+                'enjeksiyon' => 'Enjeksiyon ve koruyucu kaplama',
                 'genel' => 'Genel',
             ],
         ],
         'epoksi-zemin-hesaplayici' => [
             'label' => 'Epoksi zemin',
             'categories' => [
-                'epoksi' => 'Epoksi ve zemin kaplama',
+                'epoksi' => 'Epoksi ve poliüretan kaplama',
+                'astar' => 'Zemin astarı',
+                'tesviye' => 'Tesviye harcı',
                 'genel' => 'Genel',
             ],
         ],
@@ -247,6 +276,7 @@ return [
             'categories' => [
                 'izolator' => 'Sismik izolatör',
                 'muhendislik' => 'Mühendislik',
+                'grout' => 'Grout harcı',
                 'genel' => 'Genel',
             ],
         ],
@@ -270,8 +300,9 @@ return [
             'label' => 'Beton hesaplayıcı',
             'categories' => [
                 'beton' => 'Hazır beton',
-                'pompa' => 'Pompa hizmeti',
+                'pompa' => 'Pompa',
                 'katki' => 'Beton katkısı',
+                'kur' => 'Kür malzemesi',
                 'genel' => 'Genel',
             ],
         ],
@@ -287,7 +318,7 @@ return [
             'label' => 'Çatı maliyeti',
             'categories' => [
                 'kiremit' => 'Kiremit ve çatı örtüsü',
-                'yalitim' => 'Çatı yalıtımı',
+                'yalitim' => 'Teras ve çatı su yalıtımı',
                 'genel' => 'Genel',
             ],
         ],
@@ -313,9 +344,83 @@ return [
             'categories' => [
                 'boya' => 'İç cephe boyası',
                 'dekor' => 'Dekoratif kaplama ve duvar kâğıdı',
+                'renk' => 'Renklendirme sistemi',
                 'genel' => 'Genel',
             ],
         ],
+    ],
+
+    /*
+    | Kalem sponsorluğu: sonuç kartındaki kalemin yanında "Sponsorlu · Marka" etiketi.
+    | araç → [kalem anahtarı → kategori]  ya da  [kalem → ['field' => giriş alanı, 'map' => [değer önekleri → kategori], 'default' => kategori]]
+    */
+    'item_map' => [
+        'seramik-maliyet-hesaplayici' => ['seramik' => 'seramik', 'seramik_duvar' => 'seramik', 'yapistirici' => 'yapistirici', 'derz_epoksi' => 'derz', 'seviye' => 'seviyeleme', 'temizlik' => 'temizlik', 'yalitim' => 'yalitim'],
+        'su-yalitimi-hesaplayici' => ['imalat' => ['field' => 'system', 'map' => ['cement' => 'cimento', 'crystalline' => 'cimento', 'hybrid_polyurea' => 'likit', 'pure_polyurea' => 'likit', 'pu_liquid' => 'likit', 'acrylic_liquid' => 'likit', 'roof_' => 'membran', 'pvc_' => 'membran', 'hdpe_' => 'membran', 'tpo_' => 'membran', 'geosynthetic' => 'membran'], 'default' => 'yalitim']],
+        'epoksi-zemin-hesaplayici' => ['epoxy' => 'epoksi', 'uv_topcoat' => 'epoksi', 'leveling' => 'tesviye'],
+        'boya-hesaplayici' => ['boya' => ['field' => 'target', 'map' => ['dis_cephe' => 'dis_cephe'], 'default' => 'boya'], 'astar' => 'astar', 'macun' => 'hazirlik', 'tamir' => 'hazirlik'],
+        'mantolama-maliyeti' => ['levha' => 'yalitim', 'sistem' => 'sistem', 'sonkat' => 'dekoratif', 'iskele' => 'iskele'],
+        'sap-hesaplayici' => ['malzeme' => 'sap', 'katki' => 'katki'],
+        'beton-hesaplayici' => ['beton' => 'beton', 'pompa' => 'pompa', 'kur' => 'kur'],
+        'saha-betonu-hesaplayici' => ['beton' => 'beton', 'hasir' => 'hasir', 'perdah' => ['field' => 'finish', 'map' => ['helikopter' => 'sertlestirici', 'korund' => 'sertlestirici'], 'default' => ''], 'sertlestirici' => 'sertlestirici', 'kur' => 'kur'],
+        'beton-onarim-maliyeti' => ['harc' => 'tamir', 'grout' => 'grout', 'pas' => 'korozyon', 'astar' => 'korozyon', 'enjeksiyon' => 'enjeksiyon', 'kaplama' => 'enjeksiyon'],
+        'zemin-kaplama' => [],
+        'wc-maliyet-hesabi' => [],
+    ],
+
+    /*
+    | Tematik paketler (Markalar için sayfası + `php artisan sponsors:package`).
+    | araç → kategoriler. Fiyat burada tutulmaz; ölçüm verisi geldikçe teklifle belirlenir.
+    */
+    'packages' => [
+        'su-yalitimi' => [
+            'label' => 'Su Yalıtımı',
+            'desc' => 'Teras, banyo, bodrum ve çatı yalıtımı hesaplayan kullanıcılara.',
+            'tools' => [
+                'su-yalitimi-hesaplayici' => ['yalitim', 'cimento', 'likit', 'membran', 'bant'],
+                'banyo-maliyet-hesaplayici' => ['yalitim'],
+                'seramik-maliyet-hesaplayici' => ['yalitim'],
+                'cati-maliyet-hesaplayici' => ['yalitim'],
+            ],
+        ],
+        'seramik-uygulama' => [
+            'label' => 'Seramik Uygulama',
+            'desc' => 'Yapıştırıcı, derz dolgu, seviyeleme ve temizlik: kaç torba gerektiği yazan satırın yanında.',
+            'tools' => [
+                'seramik-maliyet-hesaplayici' => ['yapistirici', 'derz', 'seviyeleme', 'temizlik'],
+                'banyo-maliyet-hesaplayici' => ['yapistirici'],
+                'wc-maliyet-hesabi' => ['yapistirici'],
+                'zemin-kaplama' => ['yapistirici'],
+            ],
+        ],
+        'endustriyel-zemin' => [
+            'label' => 'Endüstriyel Zemin',
+            'desc' => 'Epoksi, sertleştirici, kür, şap ve beton katkısı: fabrika, depo ve otopark zeminleri.',
+            'tools' => [
+                'epoksi-zemin-hesaplayici' => ['epoksi', 'astar', 'tesviye'],
+                'saha-betonu-hesaplayici' => ['sertlestirici', 'kur'],
+                'sap-hesaplayici' => ['sap', 'katki'],
+                'beton-hesaplayici' => ['katki', 'kur'],
+            ],
+        ],
+        'boya-cephe' => [
+            'label' => 'Boya ve Cephe',
+            'desc' => 'İç ve dış cephe boyası, dekoratif boya, renklendirme ve mantolama sistemi.',
+            'tools' => [
+                'boya-hesaplayici' => ['boya', 'dis_cephe', 'astar', 'hazirlik', 'dekoratif'],
+                'duvar-rengi-gorsellestirici' => ['boya', 'dekor', 'renk'],
+                'mantolama-maliyeti' => ['sistem', 'dekoratif'],
+            ],
+        ],
+        'onarim-grout' => [
+            'label' => 'Onarım ve Grout',
+            'desc' => 'Tamir harcı, korozyon önleyici, enjeksiyon ve grout: onarım, güçlendirme ve makine montajı.',
+            'tools' => [
+                'beton-onarim-maliyeti' => ['tamir', 'grout', 'korozyon', 'enjeksiyon'],
+                'deprem-izolator-maliyeti' => ['grout'],
+            ],
+        ],
+        // 'tam-kategori': yukarıdakilerin hepsi (SponsorPackages::get('tam-kategori') birleştirir)
     ],
 
     // Aynı anda gösterilecek en fazla sponsor kartı

@@ -40,6 +40,8 @@ class BathroomPriceBook
             'banyo_tavan_m2' => ['extras.ex_tavan.per_m2', 'Banyo asma tavan + spot (zemin m²)', 'TL/m2'],
             'banyo_tavan_sabit' => ['extras.ex_tavan.fixed', 'Banyo asma tavan sabit bedel', 'TL/iş'],
             'banyo_elektrik' => ['extras.ex_elektrik.fixed', 'Banyo elektrik ve aydınlatma yenileme', 'TL/iş'],
+            'banyo_epoksi_derz_m2' => ['extras.ex_epoksi_derz.per_m2', 'Banyo epoksi derz farkı (zemin m²)', 'TL/m2'],
+            'banyo_temizlik_m2' => ['extras.ex_temizlik.per_m2', 'Banyo teslim öncesi temizlik (zemin m²)', 'TL/m2'],
         ];
 
         foreach (self::Q as $q => $i) {

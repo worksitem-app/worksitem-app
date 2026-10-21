@@ -1,10 +1,7 @@
-# Slayt 7 — Yatırım Talebi
+# Slayt 7 — Yatırım Talebi (taslak — tutar ve kullanım kurucu onayıyla kesinleşecek)
 
-**Başlık:** Yatırım Talebi
+- **Talep:** $500K seed (taslak)
+- **Kullanım (taslak):** saha satış ve firma operasyonu, pazarlama (arama ve içerik), ürün geliştirme, yasal/uyum
+- **12 aylık ölçütler:** onaylı firma sayısı, il × iş kolu başına teklif veren firma, eşleşme sayısı, sponsor sözleşmesi, aylık gelir. Hedef değerler ilk 8 haftanın saha verisiyle belirlenecek.
 
-- **Talep:** $500K Seed
-- **Kullanım:** %40 ürün geliştirme, %30 pazarlama, %20 ekip, %10 operasyon
-- **Hedef:** 12 ayda 100K kullanıcı, 5K ödeyen müşteri
-- **Metrikler:** MRR $50K, CAC $20, LTV $400
-
-**Konuşmacı Notu:** "Bu yatırımla Türkiye'nin en büyük inşaat teknolojisi platformunu kuruyoruz."
+**Konuşmacı notu:** "Ölçmediğimiz rakamı hedef diye söylemiyoruz; ilk 8 haftanın verisiyle hedefleri birlikte koyacağız."

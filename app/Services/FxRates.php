@@ -55,7 +55,7 @@ class FxRates
         return $parsed;
     }
 
-    private static function file(): string
+    public static function file(): string
     {
         return storage_path('app/fx-tcmb.json');
     }

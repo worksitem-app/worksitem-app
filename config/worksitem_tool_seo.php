@@ -58,6 +58,7 @@ return [
     'alcipan-hesaplayici' => ['desc' => 'Alçıpan duvar m² kaç TL? Bölme ve giydirme duvarın malzeme ve işçilik maliyetini resmî birim fiyatlarla, :yil güncel, ücretsiz hesaplayın.'],
     'asma-tavan-hesaplayici' => ['desc' => 'Asma tavan m² kaç TL? Alüminyum, galvaniz, lamel ve PVC tavan sistemlerinin maliyetini resmî birim fiyatlarla ücretsiz hesaplayın.'],
     'su-yalitimi-hesaplayici' => ['desc' => 'Teras, banyo veya bodrum su yalıtımı m² kaç TL? Sisteme göre malzeme ve işçilik maliyetini resmî birim fiyatlarla ücretsiz hesaplayın.'],
+    'beton-onarim-maliyeti' => ['desc' => 'Beton tamiri kaç TL? Dökülen paspayı, paslı donatı ve kolon onarımında tamir harcı, korozyon önleyici ve işçilik; makine altı grout dolgusunu :yil fiyatlarıyla ücretsiz hesaplayın.'],
     'epoksi-zemin-hesaplayici' => ['desc' => 'Epoksi zemin kaplama m² kaç TL? Tesviye, epoksi ve son kat dahil maliyeti resmî birim fiyatlarla, :yil güncel, ücretsiz hesaplayın.'],
     'sandvic-panel-hesaplayici' => ['desc' => 'Sandviç panel m² kaç TL? Poliüretan, PIR, EPS ve taşyünü çatı ve cephe panellerinin maliyetini resmî birim fiyatlarla ücretsiz hesaplayın.'],
     'cati-maliyet-hesaplayici' => ['desc' => 'Çatı yapımı m² kaç TL? Kiremit, trapez sac, onduline, OSB ve su yalıtımı dahil çatı maliyetini :yil fiyatlarıyla ücretsiz hesaplayın.'],

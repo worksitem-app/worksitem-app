@@ -19,10 +19,16 @@ class Sponsor extends Model
         'contract_amount' => 'decimal:2',
     ];
 
+    /** Staging demo kayıtlarının işareti (sponsors:demo); canlı ortamda hiçbir zaman gösterilmez */
+    public const DEMO_MARK = '[DEMO]';
+
     /** Bugün yayında olanlar */
     public function scopeLive(Builder $q): Builder
     {
         $today = now('Europe/Istanbul')->toDateString();
+        if (app()->environment('production')) {
+            $q->where(fn ($w) => $w->whereNull('notes')->orWhere('notes', 'not like', '%'.self::DEMO_MARK.'%'));
+        }
 
         return $q->where('active', true)
             ->where(fn ($w) => $w->whereNull('starts_on')->orWhere('starts_on', '<=', $today))

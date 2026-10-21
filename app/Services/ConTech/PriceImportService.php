@@ -15,7 +15,7 @@ class PriceImportService
         }
 
         $apiKey = config('services.gemini.api_key');
-        $model = config('services.gemini.boq_model', 'gemini-2.5-flash');
+        $model = config('services.gemini.boq_model', 'gemini-3.6-flash');
 
         if (empty($apiKey)) {
             throw new \Exception("GEMINI_API_KEY bulunamadı.");
