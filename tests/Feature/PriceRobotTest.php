@@ -114,6 +114,24 @@ class PriceRobotTest extends TestCase
         $this->assertStringContainsString('piyasa fiyatı', collect($est['items'])->pluck('label')->implode(' '));
     }
 
+    public function test_ayni_ay_ikinci_arastirma_kaydi_gunceller_cift_kayit_hatasi_vermez(): void
+    {
+        $robot = app(PriceRobot::class);
+        $key = KitRegistry::get('su-yalitimi-hesaplayici')->webKey('pu_liquid');
+        $it = $robot->catalog()['poz.'.$key];
+
+        Http::fake(['generativelanguage.googleapis.com/*' => Http::sequence()
+            ->push($this->gemini([1000, 1050, 1100]))
+            ->push($this->gemini([1100, 1150, 1200]))]);
+        $this->assertSame('live', $robot->run($it)['status']);
+        $this->assertSame('live', $robot->run($it)['status']);   // v93 canlıda: Duplicate entry rayic_prices_source_period_poz_unique
+
+        $rows = DB::table('rayic_prices')->where('poz_no', $key)->where('source', 'WEB')->get();
+        $this->assertCount(1, $rows);
+        $this->assertEquals(round(1150 * 1.40 / 1.2, 2), (float) $rows[0]->price);
+        $this->assertTrue((bool) $rows[0]->is_active);
+    }
+
     public function test_komut_ve_zamanlama(): void
     {
         Http::fake(['generativelanguage.googleapis.com/*' => Http::response($this->gemini([600, 640, 700]))]);

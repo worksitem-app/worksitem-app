@@ -69,3 +69,8 @@ price_stage_*
 !/composer.json
 !/package.json
 !/package-lock.json
+
+# Sunucuya yüklenen yama dosyaları depoya girmesin
+/worksitem-v*.sh
+/worksitem-v*.patch
+/worksitem-temizlik.sh

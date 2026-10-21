@@ -269,11 +269,17 @@ class PriceRobot
             return;
         }
         DB::table('rayic_prices')->where('poz_no', $it['poz'])->where('source', 'WEB')->update(['is_active' => false, 'updated_at' => now()]);
-        DB::table('rayic_prices')->insert([
-            'source' => 'WEB', 'period' => now()->format('Y-m'), 'poz_no' => $it['poz'],
+        // Aynı ay içinde ikinci araştırma: kayıt güncellenir (source + period + poz_no tekil anahtar)
+        $key = ['source' => 'WEB', 'period' => now()->format('Y-m'), 'poz_no' => $it['poz']];
+        $vals = [
             'description' => mb_substr('Piyasa (web) × '.config('worksitem_price_robot.poz_multiplier', 1.40).' · '.$it['label'], 0, 250),
-            'unit' => $it['unit'] ?? 'm²', 'price' => $price, 'is_active' => true, 'created_at' => now(), 'updated_at' => now(),
-        ]);
+            'unit' => $it['unit'] ?? 'm²', 'price' => $price, 'is_active' => true, 'updated_at' => now(),
+        ];
+        if (DB::table('rayic_prices')->where($key)->exists()) {
+            DB::table('rayic_prices')->where($key)->update($vals);
+        } else {
+            DB::table('rayic_prices')->insert($key + $vals + ['created_at' => now()]);
+        }
         PozEstimator::flushCache();
     }
 
