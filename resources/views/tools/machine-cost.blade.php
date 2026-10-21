@@ -6,7 +6,7 @@
     <title>İş Makinesi & Ekipman Kiralama Maliyeti | WORKSİTEM</title>
     <meta name="description" content="Ekskavatör, kepçe, vinç ve diğer iş makinelerinin saatlik ve günlük kiralama maliyetini, yakıt ve operatör dahil hesaplayın. Ücretsiz.">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.js"></script>
     <style>
         :root { --bg: #f5f6f8; --surface: #ffffff; --text: #101318; --muted: #6b7280; --line: #e4e7eb; --accent: #f97316; --radius: 16px; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 60px; margin:0; }

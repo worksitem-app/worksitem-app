@@ -248,7 +248,7 @@
             const fileReader = new FileReader();
             fileReader.onload = function() {
                 const typedarray = new Uint8Array(this.result);
-                pdfjsLib.getDocument(typedarray).promise.then(pdf => {
+                pdfjsLib.getDocument({ data: typedarray, isEvalSupported: false }).promise.then(pdf => {
                     pdf.getPage(1).then(page => {
                         const viewport = page.getViewport({ scale: 2.0 }); // Netlik için 2x
                         canvas.width = viewport.width;
