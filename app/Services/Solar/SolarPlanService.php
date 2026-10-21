@@ -216,8 +216,12 @@ class SolarPlanService
         $year = 1700 - max(0, $lat - 36) * 45;                 // Antalya ≈1.700, Samsun ≈1.300 kWh/kWp
         $shape = [0.045, 0.058, 0.083, 0.095, 0.11, 0.117, 0.122, 0.115, 0.095, 0.075, 0.05, 0.04];
         $orient = 1 - 0.0016 * abs($aspect) * min(1, $angle / 30) - 0.004 * abs($angle - 30) * 0.3;
+        if ($angle > 60) {   // v90: dikey cephe — güney cephe ≈ %70, doğu/batı ≈ %55 (yaz/kış şekli de değişir)
+            $orient *= 1 - ($angle - 60) * 0.01;
+            $shape = [0.07, 0.076, 0.088, 0.085, 0.087, 0.084, 0.088, 0.09, 0.09, 0.087, 0.078, 0.077];
+        }
 
-        return array_map(fn ($s) => $year * $s * max(0.45, $orient), $shape);
+        return array_map(fn ($s) => $year * $s * max(0.35, $orient), $shape);
     }
 
     /** Maliyet ve geri dönüş: GES maliyet aracının kWp fiyatlarıyla */
@@ -257,13 +261,20 @@ class SolarPlanService
             $items['Otomatik güç kontrolü ve enerji kesme sistemi'] = (float) (config('worksitem_solar.storage_control')[$use === 'arazi' ? 'fabrika' : $use] ?? 35000);
         }
         $total = array_sum($items) * 1.05;
+
+        return ['items' => array_map(fn ($v) => round($v, -2), $items),
+            'total' => round($total, -3), 'low' => round($total * 0.85, -3), 'high' => round($total * 1.2, -3)]
+            + $this->finance($total, $yearly, $monthlyKwh, $price);
+    }
+
+    /** Tasarruf, geri dönüş, tüketimi karşılama, fazla üretim, CO₂ (toplam maliyetten bağımsız ortak hesap) */
+    public function finance(float $total, float $yearly, float $monthlyKwh, float $price): array
+    {
         $consYear = $monthlyKwh * 12;
         $self = $consYear > 0 ? min($yearly, $consYear) : $yearly;
         $saving = $self * $price;
 
         return [
-            'items' => array_map(fn ($v) => round($v, -2), $items),
-            'total' => round($total, -3), 'low' => round($total * 0.85, -3), 'high' => round($total * 1.2, -3),
             'saving' => round($saving, -2), 'payback' => $saving > 0 ? round($total / $saving, 1) : null,
             'coverage' => $consYear > 0 ? round(min(1, $yearly / $consYear) * 100) : null,
             'excess' => $consYear > 0 ? max(0, round($yearly - $consYear)) : 0,

@@ -57,6 +57,24 @@
         .gp-card h2{font-size:15px;margin:0 0 10px;display:flex;gap:8px;align-items:center}
         .gp-card h2 i{font-style:normal;width:24px;height:24px;border-radius:8px;background:var(--y);display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:900}
         .gp-row{display:flex;gap:8px}
+        .gp-facade{margin-top:10px;border-top:1px dashed var(--line);padding-top:10px}
+        .gp-frow{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:8px;align-items:end;margin-top:8px}
+        .gp-frow label{display:flex;flex-direction:column;gap:4px;min-width:0}
+        .gp-frow label>span{font-size:12px;font-weight:700;color:var(--muted,#5B6472)}
+        .gp-frow em{grid-column:1/-1;font-style:normal;font-size:12.5px;color:var(--muted,#5B6472)}
+        .gp-sys{background:var(--page);border-radius:12px;padding:10px 12px;margin:0 0 10px;font-size:13.5px;line-height:1.55}
+        .gp-sys b{font-weight:700}
+        .gp-bom{margin:6px 0 10px}
+        .gp-bom summary{cursor:pointer;font-weight:700;font-size:14px;margin-bottom:6px}
+        .gp-bomt{width:100%;border-collapse:collapse;font-size:12.5px}
+        .gp-bomt th,.gp-bomt td{text-align:left;padding:5px 4px;border-bottom:1px dashed var(--line);vertical-align:top}
+        .gp-bomt th{font-size:11.5px;color:var(--muted,#5B6472);font-weight:700}
+        .gp-bomt td.n,.gp-bomt th.n{text-align:right;white-space:nowrap}
+        .gp-bomt tr.g td{background:var(--page);font-weight:700;font-size:12px}
+        .gp-bomt small{display:block;color:var(--muted,#5B6472)}
+        .gp-bomt tfoot td{font-weight:800;border-bottom:0}
+        @media(max-width:520px){.gp-bomt .hide-s{display:none}}
+        @media print{.gp-bom details,.gp-bom{display:block}.gp-bom summary{display:none}}
         .gp-land{margin-top:10px;border:1px dashed var(--line);border-radius:12px;padding:8px 10px}
         .gp-land summary{cursor:pointer;font-weight:700;font-size:13.5px}
         .gp-land[open] summary{margin-bottom:8px}
@@ -223,6 +241,25 @@
             <section class="gp-card" aria-labelledby="s3">
                 <h2 id="s3"><i>3</i>Çatı yüzeyleri</h2>
                 <ul class="gp-faces" id="gpFaces"><li style="grid-template-columns:1fr"><span>Çatı seçilince yüzeyler burada listelenir. Kuzeye bakan yüzeyler başta kapalıdır; tıklayarak açıp kapatabilirsiniz.</span></li></ul>
+                <div class="gp-facade" id="gpFacadeBox">
+                    <label class="gp-check"><input type="checkbox" id="gpFacadeOn"> Cepheye de panel koy</label>
+                    <div id="gpFacadeRows" hidden>
+                        @foreach ([1, 2] as $k)
+                        <div class="gp-frow" data-row="{{ $k }}">
+                            <label><span>{{ $k }}. cephe yönü</span>
+                                <select class="gp-in" data-f="dir">
+                                    @if ($k === 2)<option value="">— yok —</option>@endif
+                                    <option value="180">Güney</option><option value="135">Güneydoğu</option><option value="225">Güneybatı</option><option value="90">Doğu</option><option value="270">Batı</option>
+                                </select>
+                            </label>
+                            <label><span>Genişlik (m)</span><input class="gp-in" data-f="w" type="number" min="0" max="200" step="0.1" placeholder="{{ $k === 1 ? 'Örn. 8' : '' }}"></label>
+                            <label><span>Yükseklik (m)</span><input class="gp-in" data-f="h" type="number" min="0" max="60" step="0.1" placeholder="{{ $k === 1 ? 'Örn. 5' : '' }}"></label>
+                            <em data-f="out"></em>
+                        </div>
+                        @endforeach
+                        <small class="gp-hint">Pencere ve kapı dışında kalan, gölgesiz, panel konabilecek duvar alanını girin. Paneller dikey (90°) yerleşir; dikey cephe aynı panelden çatıya göre yaklaşık %30–45 daha az üretir, kışın farkı azdır. Cephe montajı iskele ve duvar ankrajı gerektirir; statik ve yangın uygunluğu keşifte kontrol edilir.</small>
+                    </div>
+                </div>
             </section>
 
             <section class="gp-card" aria-labelledby="s4">
@@ -235,6 +272,8 @@
                     <div><label for="gpKwh">Aylık tüketim (kWh)</label><input class="gp-in" id="gpKwh" type="number" min="0" step="100" placeholder="Örn. 40000"></div>
                     <div><label for="gpPrice">Birim fiyat (TL/kWh)</label><input class="gp-in" id="gpPrice" type="number" min="0.5" max="50" step="0.01"></div>
                 </div>
+                <div class="gp-f"><div class="full"><label for="gpPhase">Elektrik bağlantısı (aboneliğiniz)</label>
+                    <select class="gp-in" id="gpPhase"><option value="auto">Bilmiyorum (sistem gücüne göre seçilsin)</option><option value="mono">Monofaze (tek faz, 220 V)</option><option value="tri">Trifaze (üç faz, 380 V)</option></select></div></div>
                 <label class="gp-check"><input type="checkbox" id="gpBattery"> Enerji depolama (batarya) istiyorum</label>
             </section>
 
@@ -426,6 +465,7 @@ function onUse() {
     $('gpRoofSeg').hidden = land; $('gpFloors').parentElement.hidden = land; $('gpSwap').hidden = land;
     $('gpDrawBtn').textContent = land ? 'Arazi sınırını çizeyim' : 'Çatıyı kendim çizeyim';
     if (land) $('gpLand').open = true;
+    $('gpFacadeBox').hidden = land;
     $('gpSetback').value = land ? 5 : C.setback[use === 'fabrika' ? 'fabrika' : 'konut'];
     if (land) {
         document.querySelector('input[name=roof][value=duz]').checked = true;
@@ -447,7 +487,23 @@ document.querySelectorAll('input[name=use]').forEach((i) => i.addEventListener('
 document.querySelectorAll('input[name=roof]').forEach((i) => i.addEventListener('change', onRoof));
 ['gpSlope', 'gpFloors', 'gpPanel', 'gpSetback'].forEach((id) => $(id).addEventListener('input', () => update()));
 $('gpSwap').addEventListener('click', () => { S.swap = !S.swap; S.off.clear(); update(); });
-['gpBill', 'gpKwh', 'gpPrice', 'gpBattery'].forEach((id) => $(id).addEventListener('input', () => schedule()));
+['gpBill', 'gpKwh', 'gpPrice', 'gpBattery', 'gpPhase'].forEach((id) => $(id).addEventListener('input', () => schedule()));
+
+// Cephe panelleri (v90): dikey yerleşim, satır × sütun
+function facades() {
+    if (!$('gpFacadeOn').checked || val('use') === 'arazi') return [];
+    const P = params().panel, gap = 0.02, out = [];
+    document.querySelectorAll('.gp-frow').forEach((row) => {
+        const dir = row.querySelector('[data-f=dir]').value, w = +row.querySelector('[data-f=w]').value || 0, h = +row.querySelector('[data-f=h]').value || 0;
+        const cols = Math.floor((w + gap) / (P.s + gap)), rows = Math.floor((h + gap) / (P.l + gap)), n = dir && w && h ? Math.max(0, cols) * Math.max(0, rows) : 0;
+        const name = { 180: 'Güney', 135: 'Güneydoğu', 225: 'Güneybatı', 90: 'Doğu', 270: 'Batı' }[dir] || '';
+        row.querySelector('[data-f=out]').textContent = dir && (w || h) ? (n ? n + ' panel (' + rows + ' sıra × ' + cols + ') · ' + nf2.format(n * P.w / 1000) + ' kWp' : 'Panel sığmıyor (bir panel ' + nf2.format(P.s) + ' × ' + nf2.format(P.l) + ' m)') : '';
+        if (n) out.push({ kwp: +(n * P.w / 1000).toFixed(3), angle: 90, azimuth: +dir, panels: n, kind: 'facade', label: name + ' cephe', area: Math.round(w * h * 10) / 10 });
+    });
+    return out;
+}
+$('gpFacadeOn').addEventListener('change', () => { $('gpFacadeRows').hidden = !$('gpFacadeOn').checked; facades(); schedule(); });
+document.querySelectorAll('.gp-frow [data-f]').forEach((el) => el.addEventListener('input', () => { facades(); schedule(); }));
 
 // Verim rengi: güneye yakınlık ve eğim (yalnız görsel)
 function eff(az, tilt) { const d = Math.abs(((az - 180 + 540) % 360) - 180); return Math.max(0.35, 1 - 0.0028 * d * Math.min(1, tilt / 25) - 0.003 * Math.abs(tilt - 30) * 0.4); }
@@ -519,12 +575,13 @@ function schedule() { clearTimeout(timer); timer = setTimeout(calc, 600); }
 async function calc() {
     if (!S.roof) return;
     await turfReady;
-    const faces = S.layouts.map((l) => ({ kwp: +l.kwp.toFixed(3), angle: Math.round(l.tilt), azimuth: Math.round(l.azimuth) })).filter((f) => f.kwp > 0);
+    const faces = S.layouts.map((l, i) => ({ kwp: +l.kwp.toFixed(3), angle: Math.round(l.tilt), azimuth: Math.round(l.azimuth), panels: l.panels.length, kind: 'roof', label: (S.roof.faces[i] ? S.roof.faces[i].id + '. ' : '') + G.dirName(l.azimuth) + ' yüzey' })).filter((f) => f.kwp > 0).concat(facades());
     if (!faces.length) { $('gpOut').innerHTML = '<p class="gp-msg warn">Çatıya panel sığmadı. Kenar boşluğunu azaltın, çatı tipini ya da mahya yönünü değiştirin.</p>'; return; }
     const use = val('use'), fab = use !== 'konut', price = fab ? (+$('gpPrice').value || C.kwhPrice) : C.kwhPrice;
     const monthly = fab ? (+$('gpKwh').value || 0) : ((+$('gpBill').value || 0) / price);
     const site = { area: Math.round(areaM2(S.proj.pts)), perimeter: Math.round(perimeterM(S.proj.pts)) };
-    const body = { lat: S.proj.origin[0], lon: S.proj.origin[1], use, flat: val('roof') === 'duz' || use === 'arazi', faces, monthly_kwh: Math.round(monthly), price, battery: $('gpBattery').checked, site };
+    const body = { lat: S.proj.origin[0], lon: S.proj.origin[1], use, flat: val('roof') === 'duz' || use === 'arazi', faces, monthly_kwh: Math.round(monthly), price, battery: $('gpBattery').checked, site,
+        panel: $('gpPanel').value, roof: use === 'arazi' ? 'duz' : val('roof'), floors: use === 'arazi' ? 1 : params().floors, phase: $('gpPhase').value };
     const my = ++seq;
     $('gpOut').style.opacity = 0.55;
     try {
@@ -571,8 +628,29 @@ function chart(m) {
     }).join('') + '</svg>';
 }
 
+// v90: sistem özeti + kalem kalem malzeme listesi
+function bomHtml(b) {
+    const s = b.system, inv = s.inverter, fx = (v) => nf2.format(v);
+    const qty = (l) => (l.qty % 1 ? nf2.format(l.qty) : nf0.format(l.qty)) + ' ' + l.unit;
+    let h = '<div class="gp-sys"><b>Önerilen sistem:</b> ' + s.panels + ' × ' + s.panel_w + ' W panel = ' + fx(s.dc_kwp) + ' kWp'
+        + (s.panels_facade ? ' (' + s.panels_roof + ' çatı + ' + s.panels_facade + ' cephe)' : '') + '<br>'
+        + '<b>İnverter:</b> ' + (inv.count > 1 ? inv.count + ' × ' : '') + inv.kw + ' kW ' + (inv.phase === 'mono' ? 'monofaze' : 'trifaze') + ', ' + inv.mppt + ' MPPT · DC/AC oranı ' + fx(s.dc_ac) + '<br>'
+        + '<b>Diziler:</b> ' + s.strings.map((x) => esc(x.label || 'Yüzey') + ' ' + (x.count > 1 ? x.count + ' × ' : '') + (new Set(x.lengths).size === 1 ? x.lengths[0] : Math.min(...x.lengths) + '–' + Math.max(...x.lengths)) + ' panel' + (x.short ? ' ⚠' : '')).join(' · ')
+        + '<br><b>Kablo:</b> DC ≈ ' + nf0.format(s.cable.dc_m) + ' m · AC ' + esc(s.cable.ac) + ' ≈ ' + nf0.format(s.cable.ac_m) + ' m</div>';
+    let rows = '', g = '';
+    b.lines.forEach((l) => {
+        if (l.group !== g) { g = l.group; rows += '<tr class="g"><td colspan="4">' + esc(g) + '</td></tr>'; }
+        rows += '<tr><td>' + esc(l.name) + (l.spec ? '<small>' + esc(l.spec) + '</small>' : '') + '</td><td class="n">' + qty(l) + '</td><td class="n hide-s">' + tl(l.unit_price) + '</td><td class="n">' + tl(l.total) + '</td></tr>';
+    });
+    h += '<details class="gp-bom" open><summary>Malzeme listesi (' + b.lines.length + ' kalem)</summary><table class="gp-bomt"><thead><tr><th>Kalem</th><th class="n">Miktar</th><th class="n hide-s">Birim fiyat</th><th class="n">Tutar</th></tr></thead><tbody>' + rows + '</tbody>'
+        + '<tfoot>' + [['Ara toplam', b.subtotal], ['Beklenmeyen giderler', b.contingency], ['Toplam (' + b.vat + ')', b.total]].map(([k, v]) => '<tr><td colspan="2">' + esc(k) + '</td><td class="hide-s"></td><td class="n">' + tl(v) + '</td></tr>').join('') + '</tfoot></table></details>';
+    if (b.notes && b.notes.length) h += b.notes.map((t) => '<p class="gp-note">⚠ ' + esc(t) + '</p>').join('');
+    h += '<p class="gp-note">Malzemeler genel teknik tanımla yazıldı; marka ve model keşifte, stok ve bütçeye göre seçilir. Birim fiyatlar tahminidir ve Worksitem fiyat merkezinde güncellenir.</p>';
+    return h;
+}
+
 function renderOut(d, body, monthly) {
-    const e = d.eco, y = d.yield, n = S.layouts.reduce((a, l) => a + l.panels.length, 0);
+    const e = d.eco, y = d.yield, n = body.faces.reduce((a, f) => a + (f.panels || 0), 0);
     const fab = body.use !== 'konut', land = body.use === 'arazi';
     const sun = S.proj.origin[0] < 37.5 ? '5.5' : (S.proj.origin[0] < 40 ? '4.5' : '4.0');
     const bill = Math.round((monthly || (y.yearly / 12)) * body.price);
@@ -588,12 +666,13 @@ function renderOut(d, body, monthly) {
         + '<div><small>CO₂ azaltımı</small><b>≈' + nf1.format(e.co2) + ' t/yıl</b></div></div>';
     h += '<div class="gp-chartbox" id="gpChartBox"><canvas role="img" aria-label="Aylık tahmini üretim, kWh"></canvas></div>';
     h += '<ul class="gp-items">' + Object.entries(e.items).map(([k, v]) => '<li><span>' + esc(k) + '</span><b>' + tl(v) + '</b></li>').join('') + '</ul>';
+    if (d.bom && d.bom.ok) h += bomHtml(d.bom);
     if (land) h += '<div class="gp-legal"><b>Arazi GES: izin ve mevzuat</b>Arazide lisanssız GES bir tüketim tesisiyle ilişkilendirilerek kurulur; fazla enerjinin şebekeye verilmesi ve bedeli güncel mevzuata ve dağıtım şirketi bağlantı görüşüne bağlıdır. Arazinin imar ve tapu niteliği (tarım arazisi ise kullanım izinleri), bağlantı kapasitesi, trafo ve hat bedeli, zemin etüdü keşifte netleşir. Gösterilen değer yatırım kararı için ön fizibilitedir.</div>';
     if (!monthly && !land) h += '<p class="gp-msg">Tasarruf ve geri dönüş için ' + (fab ? 'aylık tüketiminizi' : 'aylık faturanızı') + ' girin.</p>';
     if (e.excess > 0) h += '<p class="gp-note">Tüketiminizden yaklaşık ' + nf0.format(e.excess) + ' kWh/yıl fazla üretim çıkıyor; fazla üretimin mahsubu ve satışı mevzuata ve dağıtım şirketi koşullarına bağlıdır, tasarrufa dahil edilmedi.</p>';
     if (body.battery) h += '<p class="gp-note">Depolamalı sistemlerde, anlaşma gücünün üzerindeki depolama için otomatik güç kontrolü ve enerji kesme sistemi gerekir; bu kalem tahminidir, keşifte netleşir.</p>';
     if (fab || body.battery) h += '<div class="gp-legal"><b>Mevzuat uygunluk süreci</b>Lisanssız üretim ve depolama mevzuatındaki son değişiklikler nedeniyle teklif yalnız panel ve montajdan oluşmaz. Keşifte mühendislerimiz şunları netleştirir:<ol><li>Bağlantı anlaşması ve anlaşma gücü (gerekiyorsa revizyon ve süreleri)</li><li>Uzaktan izleme ve acil durumda uzaktan kontrol (haberleşme / SCADA) gereklilikleri</li><li>Depolama varsa otomatik güç kontrolü ve enerji kesme sistemi</li></ol>Bu hükümler her tesise aynı şekilde uygulanmaz; tesisinizin kapsamı keşifte kontrol edilir.</div>';
-    h += '<p class="gp-note">Üretim: ' + (y.source === 'PVGIS' ? 'PVGIS (Avrupa Komisyonu JRC) güneş verisi' : 'yaklaşık bölgesel değer (PVGIS şu an yanıt vermedi)') + ', %14 sistem kaybı. Maliyet aralığı −%15 / +%20; ön tasarımdır, keşifte netleşir.</p>';
+    h += '<p class="gp-note">Üretim: ' + (y.source === 'PVGIS' ? 'PVGIS (Avrupa Komisyonu JRC) güneş verisi' : 'yaklaşık bölgesel değer (PVGIS şu an yanıt vermedi)') + ', %14 sistem kaybı. Maliyet aralığı ' + (d.bom && d.bom.ok ? '−%10 / +%15 (malzeme listesinden)' : '−%15 / +%20') + '; ön tasarımdır, keşifte netleşir.</p>';
     const yer = [$('gpMah').value.trim(), $('gpIlce').value, $('gpIl').value].filter(Boolean).join(', ');
     const ada = $('gpAda').value.trim(), par = $('gpParsel').value.trim();
     if (yer || ada || par) h += '<p class="gp-note"><b>Konum:</b> ' + esc(yer || 'haritadan seçildi') + (ada || par ? ' · Ada ' + esc(ada || '—') + ' / Parsel ' + esc(par || '—') : '') + ' · ' + S.proj.origin[0].toFixed(5) + ', ' + S.proj.origin[1].toFixed(5) + '</p>';

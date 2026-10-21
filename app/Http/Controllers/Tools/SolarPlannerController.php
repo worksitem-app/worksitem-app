@@ -62,8 +62,17 @@ class SolarPlannerController extends Controller
             'flat' => ['nullable', 'boolean'],
             'faces' => ['required', 'array', 'min:1', 'max:12'],
             'faces.*.kwp' => ['required', 'numeric', 'min:0', 'max:5000'],
-            'faces.*.angle' => ['required', 'numeric', 'min:0', 'max:70'],
+            'faces.*.angle' => ['required', 'numeric', 'min:0', 'max:90'],
             'faces.*.azimuth' => ['required', 'numeric', 'min:0', 'max:360'],
+            // v90 malzeme listesi
+            'faces.*.panels' => ['nullable', 'integer', 'min:0', 'max:20000'],
+            'faces.*.kind' => ['nullable', 'in:roof,facade'],
+            'faces.*.label' => ['nullable', 'string', 'max:40'],
+            'faces.*.area' => ['nullable', 'numeric', 'min:0', 'max:20000'],
+            'panel' => ['nullable', 'in:'.implode(',', array_keys((array) config('worksitem_solar.panels')))],
+            'roof' => ['nullable', 'in:besik,kirma,duz,trapez'],
+            'floors' => ['nullable', 'integer', 'min:1', 'max:60'],
+            'phase' => ['nullable', 'in:auto,mono,tri'],
             'monthly_kwh' => ['nullable', 'numeric', 'min:0', 'max:5000000'],
             'price' => ['nullable', 'numeric', 'min:0.5', 'max:50'],
             'battery' => ['nullable', 'boolean'],
@@ -76,7 +85,22 @@ class SolarPlannerController extends Controller
         $price = (float) ($v['price'] ?? SolarEstimator::P['kwh_price']);
         $eco = $s->economics($kwp, $v['use'], (bool) ($v['flat'] ?? false), (float) $y['yearly'], (float) ($v['monthly_kwh'] ?? 0), $price, (bool) ($v['battery'] ?? false), (array) ($v['site'] ?? []));
 
-        return response()->json(['ok' => true, 'kwp' => round($kwp, 2), 'yield' => $y, 'eco' => $eco, 'specific' => round($y['yearly'] / $kwp)])
+        // v90: yüzeylerin panel sayıları geldiyse kalem kalem malzeme listesi; maliyet ve geri dönüş bu listeden
+        $bom = null;
+        if (collect($v['faces'])->sum(fn ($f) => (int) ($f['panels'] ?? 0)) > 0) {
+            $bom = app(\App\Services\Solar\SolarBom::class)->build($v['faces'], [
+                'panel' => $v['panel'] ?? (string) config('worksitem_solar.default_panel'), 'use' => $v['use'],
+                'roof' => ($v['flat'] ?? false) ? 'duz' : ($v['roof'] ?? 'besik'), 'floors' => (int) ($v['floors'] ?? 1),
+                'phase' => $v['phase'] ?? 'auto', 'battery' => (bool) ($v['battery'] ?? false), 'site' => (array) ($v['site'] ?? []),
+                'monthly_kwh' => (float) ($v['monthly_kwh'] ?? 0),
+            ]);
+            if ($bom['ok'] ?? false) {
+                $eco = ['items' => $bom['groups'], 'total' => $bom['total'], 'low' => $bom['low'], 'high' => $bom['high']]
+                    + $s->finance((float) $bom['total'], (float) $y['yearly'], (float) ($v['monthly_kwh'] ?? 0), $price);
+            }
+        }
+
+        return response()->json(['ok' => true, 'kwp' => round($kwp, 2), 'yield' => $y, 'eco' => $eco, 'bom' => $bom, 'specific' => round($y['yearly'] / $kwp)])
             ->header('Cache-Control', 'no-store');
     }
 }
