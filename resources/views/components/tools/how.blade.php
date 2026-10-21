@@ -21,7 +21,7 @@
     } catch (\Throwable) {
         $priceDate = null;
     }
-    $firms = config('worksitem_market.enabled') && config("worksitem_market.tools.$tool");
+    $firms = \App\Support\Pilot::marketOpen() && config("worksitem_market.tools.$tool");
     $offer = $firms ? 'Kainta İnşaat Uzmanlarından keşif isteyin ya da ilçenizdeki onaylı firmalardan teklif alın; telefonunuz yalnız seçtiğiniz firmayla paylaşılır.'
         : 'Sonucu beğendiyseniz tek formla uzmandan keşif ve yazılı teklif isteyin. İletişim izniniz olmadan sizi kimse aramaz.';
     $steps = match ($kind) {
@@ -92,7 +92,7 @@
     </div>
     @endif
     <div class="ws-how-aud">
-        <a href="{{ route('firms.page', ['arac' => $tool]) }}">Usta veya firma mısınız? Bu işler size gelsin →</a>
+        @if (\App\Support\Pilot::firmSignupOpen())<a href="{{ route('firms.page', ['arac' => $tool]) }}">Usta veya firma mısınız? Bu işler size gelsin →</a>@endif
         <a href="{{ route('sponsor.page', ['arac' => $tool]) }}">Marka mısınız? Bu araçta görünün →</a>
     </div>
 </section>

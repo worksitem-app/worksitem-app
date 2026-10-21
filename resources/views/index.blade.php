@@ -505,7 +505,7 @@ Seçtiğiniz yapı türü ve toplam alana göre yaklaşık ön bütçe güvenli 
 <div class="definition-points">
 <div class="definition-point"><strong>1. Hesapla</strong><span>Banyo, mutfak, boya, seramik, çatı veya bina: aracı seçin, birkaç soruyu yanıtlayın, sonucu anında görün.</span></div>
 <div class="definition-point"><strong>2. Planla ve raporla</strong><span>2D / 3D planlayıcıda ürünleri yerleştirin; kalem kalem dökümü PDF olarak indirip paylaşın.</span></div>
-<div class="definition-point"><strong>3. Teklif al</strong><span>Kainta İnşaat Uzmanlarından keşif ve yazılı teklif isteyin. Kayıtlı firmalardan teklif alma çok yakında.</span></div>
+<div class="definition-point"><strong>3. Teklif al</strong><span>Kainta İnşaat Uzmanlarından keşif ve yazılı teklif isteyin. Pilot dönemde keşif ve uygulama {{ \App\Support\Pilot::areaLabel() }}'da.</span></div>
 <div class="definition-point"><strong>4. Karar ver</strong><span>Bütçe, kapsam ve teklif elinizde; telefonunuz izniniz olmadan kimseyle paylaşılmaz.</span></div>
 </div></div></div></div>
 </section>

@@ -13,9 +13,9 @@
             <div><label class="f" for="pCode">SMS kodu</label><input type="text" id="pCode" name="code" inputmode="numeric" maxlength="6" placeholder="6 haneli kod" autocomplete="one-time-code" required></div>
             <button class="fm-btn" type="submit">Giriş yap</button>
         </form>
-        <p style="margin:16px 0 0;font-size:14px;color:var(--muted)">Üye değil misiniz? <a href="{{ route('firms.page') }}" style="color:inherit;font-weight:700">Ücretsiz firma üyeliği</a></p>
+        @if (\App\Support\Pilot::firmSignupOpen())<p style="margin:16px 0 0;font-size:14px;color:var(--muted)">Üye değil misiniz? <a href="{{ route('firms.page') }}" style="color:inherit;font-weight:700">Ücretsiz firma üyeliği</a></p>@endif
     </div>
-    <div style="margin-top:20px"><x-site.why audience="firms" /></div>
+    @if (\App\Support\Pilot::firmSignupOpen())<div style="margin-top:20px"><x-site.why audience="firms" /></div>@endif
 </main>
 @include('market._otp-script', ['url' => route('market.panel.code'), 'btn' => 'pSend', 'phone' => 'pPhone', 'msg' => 'pMsg', 'code' => 'pCode'])
 <x-site.contech-footer />

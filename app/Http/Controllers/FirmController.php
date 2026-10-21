@@ -7,6 +7,7 @@ use App\Services\Payments\OnlinePayment;
 use App\Services\Sms\NetgsmSms;
 use App\Services\Sms\PhoneOtp;
 use App\Support\LeadTextGuard;
+use App\Support\Pilot;
 use App\Support\TaxId;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -25,6 +26,9 @@ class FirmController extends Controller
 {
     public function page(Request $request): View
     {
+        if (! Pilot::firmSignupOpen()) {
+            return view('firmalar.pilot-kapali');
+        }
         $tool = (string) $request->query('arac', '');
         $pre = [];
         if ($t = config("worksitem_market.tools.$tool")) {
@@ -37,12 +41,15 @@ class FirmController extends Controller
             'cities' => (array) config('worksitem_firms.cities'),
             'preTrades' => $pre,
             'ref' => mb_substr(preg_replace('/[^\pL\pN_-]/u', '', (string) $request->query('ref', '')), 0, 40),
-            'directory' => (bool) config('worksitem_firms.directory_enabled'),
+            'directory' => Pilot::directoryOpen(),
         ]);
     }
 
     public function sendCode(Request $request, PhoneOtp $otp): JsonResponse
     {
+        if (! Pilot::firmSignupOpen()) {
+            return response()->json(['ok' => false, 'message' => 'Pilot dönemde yeni firma üyeliği alınmıyor.'], 403);
+        }
         $request->validate(['phone' => ['required', 'string', 'max:30']]);
         if (! NetgsmSms::normalize((string) $request->input('phone'))) {
             return response()->json(['ok' => false, 'message' => 'Lütfen 05XX XXX XX XX biçiminde bir cep telefonu yazın.'], 422);
@@ -54,6 +61,9 @@ class FirmController extends Controller
 
     public function register(Request $request, PhoneOtp $otp): RedirectResponse
     {
+        if (! Pilot::firmSignupOpen()) {
+            return redirect()->route('firms.page');
+        }
         $trades = (array) config('worksitem_trades');
         $cities = (array) config('worksitem_firms.cities');
         $allSubs = collect($trades)->flatMap(fn ($t) => $t['services'])->all();
@@ -179,7 +189,7 @@ class FirmController extends Controller
 
     public function index(Request $request): View
     {
-        abort_unless(config('worksitem_firms.directory_enabled'), 404);
+        abort_unless(Pilot::directoryOpen(), 404);
         $f = $request->validate(['hizmet' => ['nullable', 'string', 'max:40'], 'il' => ['nullable', 'string', 'max:30']]);
         $q = Firm::query()->approved();
         if (! empty($f['hizmet']) && array_key_exists($f['hizmet'], (array) config('worksitem_trades'))) {
@@ -199,7 +209,7 @@ class FirmController extends Controller
 
     public function show(Firm $firm): View
     {
-        abort_unless(config('worksitem_firms.directory_enabled') && $firm->status === 'approved', 404);
+        abort_unless(Pilot::directoryOpen() && $firm->status === 'approved', 404);
         $firm->increment('views');
 
         return view('firmalar.show', ['firm' => $firm]);
@@ -208,7 +218,7 @@ class FirmController extends Controller
     /** "Ara / WhatsApp" tıklaması sayılır, numaraya yönlendirilir (numara sayfada açık yazılmaz) */
     public function contact(Firm $firm, string $via): RedirectResponse
     {
-        abort_unless(config('worksitem_firms.directory_enabled') && $firm->status === 'approved', 404);
+        abort_unless(Pilot::directoryOpen() && $firm->status === 'approved', 404);
         $firm->increment('contact_clicks');
         $msg = rawurlencode('Merhaba, Worksitem firma rehberinden ulaşıyorum.');
 
@@ -220,7 +230,7 @@ class FirmController extends Controller
     /** Öne çıkan (Pro) üyelik ödemesi: yöneticinin gönderdiği imzalı bağlantı */
     public function pro(Request $request, Firm $firm, OnlinePayment $pay): RedirectResponse|View
     {
-        abort_unless($firm->status === 'approved', 404);
+        abort_unless($firm->status === 'approved' && Pilot::firmSignupOpen(), 404);
         if (! $pay->enabled()) {
             return view('odeme-sonuc', ['order' => null, 'message' => 'Kartla ödeme şu an kapalı. Lütfen bizimle iletişime geçin.']);
         }

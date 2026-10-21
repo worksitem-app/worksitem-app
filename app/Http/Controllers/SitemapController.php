@@ -27,7 +27,6 @@ class SitemapController extends Controller
             ['loc' => '/maliyet-hesapla', 'priority' => '0.95', 'changefreq' => 'weekly'],
             ['loc' => '/pozlar', 'priority' => '0.9', 'changefreq' => 'daily'],
 
-            ['loc' => '/firma-uyeligi', 'priority' => '0.7', 'changefreq' => 'monthly'],
             ['loc' => '/markalar-icin', 'priority' => '0.6', 'changefreq' => 'monthly'],
             ['loc' => '/hakkimizda', 'priority' => '0.5', 'changefreq' => 'monthly'],
             ['loc' => '/ekip', 'priority' => '0.4', 'changefreq' => 'monthly'],
@@ -79,8 +78,13 @@ class SitemapController extends Controller
             ];
         }
 
+        // Firma üyeliği yalnız pilot dışında / kayıt açıkken (pilotta sayfa noindex)
+        if (\App\Support\Pilot::firmSignupOpen()) {
+            $staticPages[] = ['loc' => '/firma-uyeligi', 'priority' => '0.7', 'changefreq' => 'monthly'];
+        }
+
         // Firma rehberi (yalnız açıkken ve onaylı firmalar)
-        if (config('worksitem_firms.directory_enabled')) {
+        if (\App\Support\Pilot::directoryOpen()) {
             try {
                 $staticPages[] = ['loc' => '/firmalar', 'priority' => '0.7', 'changefreq' => 'weekly'];
                 foreach (\App\Models\Firm::query()->approved()->orderBy('id')->pluck('slug') as $fs) {

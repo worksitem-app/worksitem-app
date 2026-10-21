@@ -7,6 +7,9 @@
     effective="15.10.2026"
     robots="noindex, follow"
 >
+@if (\App\Support\Pilot::enabled())
+<p style="padding:12px 14px;border:1px solid #E7D7A6;background:#FFF8E1;border-radius:10px"><strong>Pilot dönem notu:</strong> Bu metin, firma üyeliği ve kayıtlı firmalardan teklif alma hizmetleri için hazırlanmış taslaktır. Pilot dönemde bu hizmetler kapalıdır ve bu metin kimseyle akdedilmez. Hizmetler açıldığında güncel ve onaylı metin yayımlanır.</p>
+@endif
 <p>Bu sözleşme, worksitem.com platformunu işleten ve unvan, adres ve iletişim bilgileri bu sayfanın sonundaki künyede yer alan hizmet sağlayıcı ("<strong>Worksitem</strong>") ile firma üyeliği için başvuran gerçek veya tüzel kişi ("<strong>Firma</strong>") arasında, Firma'nın başvuru formunu elektronik ortamda onaylamasıyla kurulur. Bu sözleşmede hak ve yükümlülük sahibi Worksitem'dir; platformda hizmet veren diğer firmalar (Worksitem'le aynı gruptan olanlar dahil) bu sözleşmenin tarafı değildir.</p>
 
 <h2>1. Worksitem'in rolü</h2>

@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     @php
         $kesifLead = session('kesif_lead') ? \App\Models\Lead::query()->where('public_id', session('kesif_lead'))->first() : null;
+        $outOfArea = $kesifLead && \App\Support\Pilot::inArea($kesifLead->city, $kesifLead->district) === false;
         $amounts = \App\Support\InspectionOffer::amounts();
         $tl = fn ($v) => \App\Support\InspectionOffer::tl($v);
         $methods = (array) config('worksitem_inspection.payment_methods');
@@ -129,22 +130,39 @@
         <section class="ty-card" aria-labelledby="tyTitle">
             <div class="ty-ok" aria-hidden="true">✓</div>
             <h1 id="tyTitle">Talebiniz başarıyla alındı</h1>
+            @if ($outOfArea)
+            <p>Proje bilgileriniz kaydedildi. Pilot dönemde keşif ve uygulama hizmetini yalnız {{ \App\Support\Pilot::areaLabel() }}'da veriyoruz; bölgenize açıldığımızda size haber vereceğiz.</p>
+            @else
             <p>Proje bilgileriniz Kainta İnşaat Uzmanlarına iletildi. Ön değerlendirmeden sonra sizi arayacağız.</p>
+            @endif
             @if ($kesifLead)
                 <div class="ty-no">Talep no <b>{{ $kesifLead->displayNo() }}</b></div>
             @endif
+            @unless ($outOfArea)
             <ol class="ty-steps">
                 <li><div class="n done">✓</div><div><b>Talebiniz alındı</b><span>Hesaplama ve iletişim bilgileriniz kaydedildi.</span></div></li>
                 <li><div class="n now">2</div><div><b>Uzman ön değerlendirmesi</b><span>Genellikle 1 iş günü içinde telefonla dönüş yapılır.</span></div></li>
                 <li><div class="n">3</div><div><b>Yerinde keşif ve kesin teklif</b><span>Ölçüm ve metraj yerinde yapılır, yazılı teklif hazırlanır.</span></div></li>
             </ol>
+            @endunless
             <div class="ty-actions">
                 <a href="/araclar" class="btn btn-y">Araçlara dön</a>
                 <a href="{{ $wa }}" class="btn btn-o" target="_blank" rel="noopener">WhatsApp'tan yazın</a>
             </div>
         </section>
 
-        @if ($kesifLead)
+        @if ($kesifLead && $outOfArea)
+        <aside class="kesif" id="kesif" aria-labelledby="kesifTitle" data-kainta-auto-link="off">
+            <span class="kesif-tag">Pilot dönem</span>
+            <h2 id="kesifTitle">Hizmet bölgemiz şu an {{ \App\Support\Pilot::areaLabel() }}</h2>
+            <ul class="kesif-list">
+                <li><span>Talebiniz kayıtlı; bölgenizde hizmete başladığımızda size haber veririz.</span></li>
+                <li><span>Hesaplama araçlarını her ilde ücretsiz kullanmaya devam edebilirsiniz.</span></li>
+                <li><span>Sizden hiçbir ödeme alınmaz.</span></li>
+            </ul>
+            <a class="btn btn-y" href="/araclar">Araçlara dön</a>
+        </aside>
+        @elseif ($kesifLead)
         <aside class="kesif" id="kesif" aria-labelledby="kesifTitle" data-kainta-auto-link="off">
             <span class="kesif-tag">Kesin fiyat için</span>
             <h2 id="kesifTitle">Yerinde keşif isteyin</h2>
@@ -167,7 +185,7 @@
     </div>
     </main>
 
-    @if ($kesifLead && ! $kesifLead->inspection_status)
+    @if ($kesifLead && ! $outOfArea && ! $kesifLead->inspection_status)
     <dialog class="km" id="kesifModal" data-kainta-auto-link="off" aria-labelledby="kmTitle" @if ($orderErrors) data-open-on-load @endif>
         <form method="POST" action="{{ route('kesif.accept') }}" novalidate data-km-form>
             @csrf

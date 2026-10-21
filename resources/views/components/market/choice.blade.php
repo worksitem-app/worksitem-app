@@ -4,7 +4,7 @@
     Kullanım: <x-market.choice tool="banyo-maliyet-hesaplayici" />
 --}}
 @props(['tool'])
-@if (config('worksitem_market.enabled') && config("worksitem_market.tools.$tool"))
+@if (\App\Support\Pilot::marketOpen() && config("worksitem_market.tools.$tool"))
 <div class="ws-mc" data-kainta-auto-link="off">
     <div class="ws-mc-h">Bu işi kime yaptırmak istersiniz?</div>
     <div class="ws-mc-g">

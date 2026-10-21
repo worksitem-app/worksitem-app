@@ -7,6 +7,9 @@
     effective="15.10.2026"
     robots="noindex, follow"
 >
+@if (\App\Support\Pilot::enabled())
+<p style="padding:12px 14px;border:1px solid #E7D7A6;background:#FFF8E1;border-radius:10px"><strong>Pilot dönem notu:</strong> Bu metin, firma üyeliği ve kayıtlı firmalardan teklif alma hizmetleri için hazırlanmış taslaktır. Pilot dönemde bu hizmetler kapalıdır ve bu metin kimseyle akdedilmez. Hizmetler açıldığında güncel ve onaylı metin yayımlanır.</p>
+@endif
 <p>Bu koşullar, worksitem.com platformunu işleten ve bilgileri bu sayfanın sonundaki künyede yer alan hizmet sağlayıcı ("<strong>Worksitem</strong>") ile "kayıtlı firmalardan teklif al" hizmetini kullanan kişiler ("<strong>Kullanıcı</strong>") arasında uygulanır. Hizmet Kullanıcı için ücretsizdir. Platformda hizmet veren firmalar (Worksitem'le aynı gruptan olanlar dahil) bu koşulların tarafı değildir; her biri kendi işinden sorumludur.</p>
 
 <h2>1. Worksitem ne yapar, ne yapmaz?</h2>

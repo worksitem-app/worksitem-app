@@ -31,6 +31,17 @@
                 ['Kayıtlı firmalar arasında', 'Her firmanın vergi kaydı ve vergi levhası kontrol edilir; telefondan, şifresiz panelden teklif verirsiniz.'],
             ],
         ],
+        'pilot' => [
+            'kicker' => \App\Support\Pilot::areaLabel().'\'da keşif ve uygulama',
+            'title' => 'Hesapladığınız işi '.\App\Support\Pilot::provider().' yapsın.',
+            'cta' => ['Yerinde keşif iste', '/maliyet-hesapla'],
+            'items' => [
+                ['Yerinde keşif', 'Kainta İnşaat uzmanı yerinde ölçer, ihtiyacı netleştirir. Keşif bedeli ve koşulları teklif öncesinde açıkça yazılır.'],
+                ['Yazılı teklif', 'Keşiften sonra '.(int) config('worksitem_inspection.report_days', 5).' iş günü içinde rapor ve kalem kalem yazılı teklif.'],
+                ['Tek muhatap', 'Keşif, teklif, uygulama ve fatura aynı firmadan; sözleşmede hizmeti veren taraf açıkça yazar.'],
+                ['Pilot bölge', \App\Support\Pilot::areaLabel().' dışından gelen talepleri kaydediyoruz; bölgenize açıldığımızda haber veriyoruz.'],
+            ],
+        ],
         'brands' => [
             'kicker' => 'Markalar ve üreticiler için',
             'title' => 'Ürününüz, malzeme seçilmeden hemen önce görünsün.',
@@ -43,14 +54,24 @@
             ],
         ],
     ];
+    if (\App\Support\Pilot::firmSignupOpen()) {
+        unset($groups['pilot']);
+    } else {
+        $groups = ['users' => $groups['users'], 'pilot' => $groups['pilot'], 'brands' => $groups['brands']];
+    }
     $show = $audience === 'all' ? $groups : array_intersect_key($groups, [$audience => 1]);
 @endphp
 <section class="ws-why {{ $audience === 'all' ? 'all' : 'one' }}" aria-labelledby="wsWhy-{{ $audience }}" data-kainta-auto-link="off">
     @if ($audience === 'all')
         <div class="ws-why-head">
             <span class="ws-why-k">Neden Worksitem?</span>
+            @if (\App\Support\Pilot::firmSignupOpen())
             <h2 id="wsWhy-{{ $audience }}">Hesaplayan kazanır, iş yapan kazanır, ürün üreten kazanır.</h2>
             <p>Kullanıcı bütçesini görür; doğru bütçeyle doğru firmaya ulaşır; markalar kararın verildiği anda görünür; sahadan gelen fiyatlar hesapları daha da isabetli yapar.</p>
+            @else
+            <h2 id="wsWhy-{{ $audience }}">Bütçenizi bilin, işi tek elden yaptırın.</h2>
+            <p>Araçlarla maliyetinizi ücretsiz hesaplarsınız. {{ \App\Support\Pilot::areaLabel() }}'daysanız keşif ve uygulamayı {{ \App\Support\Pilot::provider() }} üstlenir. Markalar kararın verildiği anda görünür.</p>
+            @endif
         </div>
     @else
         <h2 id="wsWhy-{{ $audience }}" class="ws-why-one">Neden Worksitem?</h2>

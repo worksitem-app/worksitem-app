@@ -25,7 +25,7 @@ class RequestController extends Controller
 {
     public function create(Request $request): View|RedirectResponse
     {
-        abort_unless(config('worksitem_market.enabled'), 404);
+        abort_unless(\App\Support\Pilot::marketOpen(), 404);
         $tool = (string) $request->query('arac', '');
         $map = config("worksitem_market.tools.$tool");
         $est = $this->estimate($request, $tool);
@@ -56,7 +56,7 @@ class RequestController extends Controller
 
     public function store(Request $request, PhoneOtp $otp, Marketplace $market): RedirectResponse
     {
-        abort_unless(config('worksitem_market.enabled'), 404);
+        abort_unless(\App\Support\Pilot::marketOpen(), 404);
         $data = $request->validate([
             'tool' => ['nullable', 'string', 'max:80'],
             'trade' => ['required', Rule::in(array_keys((array) config('worksitem_trades')))],

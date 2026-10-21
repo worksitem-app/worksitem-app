@@ -75,7 +75,9 @@
         <div class="app-grid" style="margin-top:18px">
             <article class="ws-card app-card"><h3 class="ws-h3">Maliyet hesaplayıcılar</h3><p class="ws-muted">Banyo, mutfak, boya, seramik, parke, çatı ve inşaat maliyeti; malzeme ve işçilik kalem kalem, PDF rapor.</p></article>
             <article class="ws-card app-card"><h3 class="ws-h3">Metraj ve planlayıcılar</h3><p class="ws-muted">Beton, sıva, şap ve boya miktarı; banyo ve mutfağınızı 2D/3D yerleştirin.</p></article>
+            @if (\App\Support\Pilot::firmSignupOpen())
             <article class="ws-card app-card"><h3 class="ws-h3">Firmalar için iş bildirimi</h3><p class="ws-muted">Kayıtlı usta ve firmalar, bölgelerine yeni iş geldiğinde telefonlarına bildirim alır. <a href="{{ route('firms.page') }}">Ücretsiz firma kaydı →</a></p></article>
+            @endif
         </div>
         <p class="ws-muted" style="margin-top:18px;font-size:14px">Hesaplamalar internet bağlantısı gerektirir: fiyatlar her zaman güncel gösterilir, eski fiyat önbellekten sunulmaz.</p>
     </div>

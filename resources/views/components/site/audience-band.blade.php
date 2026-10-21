@@ -2,7 +2,7 @@
 <section class="ws-aud" aria-label="Size uygun başlangıç" data-kainta-auto-link="off">
 <div class="container ws-aud-in">
 <a class="ws-aud-c" href="#proje-hesaplayici"><span>Ev sahibiyim</span><b>Bütçemi ücretsiz hesapla →</b></a>
-<a class="ws-aud-c" href="{{ route('firms.page') }}"><span>Usta / firmayım</span><b>Bölgemdeki işleri al →</b></a>
+@if (\App\Support\Pilot::firmSignupOpen())<a class="ws-aud-c" href="{{ route('firms.page') }}"><span>Usta / firmayım</span><b>Bölgemdeki işleri al →</b></a>@else<a class="ws-aud-c" href="/maliyet-hesapla"><span>{{ \App\Support\Pilot::areaLabel() }}'dayım</span><b>Yerinde keşif iste →</b></a>@endif
 <a class="ws-aud-c" href="{{ route('sponsor.page') }}#basvuru"><span>Markayım</span><b>Sponsor firma kaydı →</b></a>
 </div>
 @once

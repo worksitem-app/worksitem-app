@@ -794,9 +794,11 @@ html[data-theme="dark"] .wks-footer{
                     Ekip
                 </a>
 
+                @if (\App\Support\Pilot::firmSignupOpen())
                 <a href="/firma-uyeligi">
                     Firma Üyeliği
                 </a>
+                @endif
 
                 <a href="/uygulama">
                     Uygulamayı İndir

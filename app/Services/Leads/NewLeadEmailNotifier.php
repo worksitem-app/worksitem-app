@@ -68,7 +68,8 @@ class NewLeadEmailNotifier
         );
 
         $subject = sprintf(
-            'WORKSITEM | Yeni Lead | %s | %s',
+            'WORKSITEM | Yeni Lead | %s%s | %s',
+            \App\Support\Pilot::inArea($lead->city, $lead->district) === false ? 'PİLOT BÖLGE DIŞI | ' : '',
             $qualityLabel,
             $lead->name ?: 'İsimsiz'
         );

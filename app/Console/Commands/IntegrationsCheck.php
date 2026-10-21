@@ -31,6 +31,11 @@ class IntegrationsCheck extends Command
         $this->line('  Search Console HTML etiketi '.$mask(config('services.google.site_verification')).' (DNS ile doğrulandıysa boş kalabilir)');
 
         $this->newLine();
+        $this->line('<options=bold>Pilot dönem</>');
+        $this->line('  Pilot ...................... '.$yes(\App\Support\Pilot::enabled()).' (WORKSITEM_PILOT) · bölge: '.\App\Support\Pilot::areaLabel().' · hizmet: '.\App\Support\Pilot::provider());
+        $this->line('  Firma üyeliği açık ......... '.$yes(\App\Support\Pilot::firmSignupOpen()).' · teklif pazaryeri: '.$yes(\App\Support\Pilot::marketOpen()).' · firma rehberi: '.$yes(\App\Support\Pilot::directoryOpen()));
+
+        $this->newLine();
         $this->line('<options=bold>iyzico</>');
         $this->line('  API key ................... '.$mask(config('services.iyzico.api_key')));
         $this->line('  Secret key ................ '.$mask(config('services.iyzico.secret_key')));

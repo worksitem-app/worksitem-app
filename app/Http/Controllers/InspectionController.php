@@ -35,6 +35,11 @@ class InspectionController extends Controller
             return redirect()->route('kesif.payment');
         }
 
+        // Pilot dönem: keşif yalnız hizmet bölgesinde (bölge dışına ödeme alınmaz)
+        if (\App\Support\Pilot::inArea($lead->city, $lead->district) === false) {
+            return redirect()->route('lead.thanks');
+        }
+
         $kurumsal = $request->input('fatura') === 'kurumsal';
         $data = $request->validate([
             'odeme' => ['required', Rule::in(array_keys((array) config('worksitem_inspection.payment_methods')))],

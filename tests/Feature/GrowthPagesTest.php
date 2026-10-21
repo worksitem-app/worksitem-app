@@ -54,6 +54,6 @@ class GrowthPagesTest extends TestCase
         $this->assertStringContainsString('/hakkimizda', $sm);
         $llms = $this->get('/llms.txt')->assertOk()->getContent();
         $this->assertStringContainsString('## Kimler için?', $llms);
-        $this->assertStringContainsString('Kurucu firma programında', $llms);
+        $this->assertStringContainsString('Pilot dönem: yerinde keşif', $llms);   // v95: firma üyeliği pilotta kapalı
     }
 }

@@ -3,8 +3,8 @@
     description="Worksitem hesaplama araçları, maliyet tahminleri ve yapay zekâ çıktılarının kullanım koşulları ve sorumluluk sınırları."
     path="/legal/kullanim-kosullari"
     type="Sözleşme"
-    version="2026-10-v2"
-    effective="12.10.2026"
+    version="2026-10-v3"
+    effective="22.10.2026"
     robots="index, follow"
 >
 <p>
@@ -66,6 +66,15 @@
     <a href="/legal/kesif-on-bilgilendirme-formu">Keşif Ön Bilgilendirme Formu</a> gösterilir ve
     <a href="/legal/kesif-mesafeli-hizmet-sozlesmesi">Keşif Mesafeli Hizmet Sözleşmesi</a> onaylanır.
     Bedel, mahsup ve cayma koşulları bu belgelerde yer alır.
+</p>
+
+<h2>5B. Hizmet Bölgesi ve Hizmet Sağlayıcı (Pilot Dönem)</h2>
+<p>
+    Hesaplama araçları tüm Türkiye için kullanılabilir. Pilot dönemde yerinde keşif, teklif ve uygulama
+    hizmetleri yalnız <strong>İstanbul</strong> il sınırları içinde ve yalnız Kainta İnşaat tarafından verilir.
+    Başka illerden gelen talepler kaydedilir; bu taleplerden keşif bedeli alınmaz ve hizmet bölgesi genişlediğinde
+    talep sahibine bilgi verilir. Pilot dönemde worksitem.com üzerinden başka firmalara üyelik, teklif daveti veya
+    kişisel veri aktarımı yapılmaz.
 </p>
 
 <h2>6. Kabul Edilemez Kullanım</h2>

@@ -16,7 +16,7 @@ Fiyatlar her sabah çalışan fiyat robotuyla (resmî poz birim fiyatları + piy
 ## Kimler için?
 
 - Ev sahipleri ve proje sahipleri: banyo, mutfak, boya, seramik, çatı, bina ve kentsel dönüşüm bütçesini ücretsiz ve üyeliksiz hesaplar; kalem kalem dökümü PDF alır; 2D/3D planlayıcıyla planlar; uzmandan keşif ve yazılı teklif ister. Telefon numarası izin olmadan paylaşılmaz.
-- [Firma üyeliği](https://worksitem.com/firma-uyeligi): Usta, tadilat firması, müteahhit ve tedarikçiler (nalbur, yapı market) bölgesine ve iş koluna uyan talepleri alır. Kurucu firma programında 31.03.2027'ye kadar komisyon alınmaz.
+- Pilot dönem: yerinde keşif, teklif ve uygulama yalnız İstanbul'da ve Kainta İnşaat tarafından verilir. Firma üyeliği ve kayıtlı firmalardan teklif alma bu dönemde kapalıdır; hesaplama araçları tüm Türkiye için açıktır.
 - [Markalar için](https://worksitem.com/markalar-icin): Hesap sonucunda ilgili kalemin yanında "Sponsorlu" etiketli marka kartı. Sonuçlar ve fiyatlar sponsorluktan etkilenmez.
 
 :tools

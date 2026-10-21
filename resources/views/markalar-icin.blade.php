@@ -122,9 +122,11 @@
     </div>
 </div></section>
 
+@if (\App\Support\Pilot::firmSignupOpen())
 <section class="mk"><div class="mk-in">
     <div class="mk-rules" style="background:var(--paper);border:1px solid var(--line)"><strong>Usta, tadilat firması, müteahhit veya bayi misiniz?</strong> Sponsorluk yerine ücretsiz firma üyeliğiyle başlayın: <a href="{{ route('firms.page') }}" style="color:inherit;font-weight:800">Firma üyeliği →</a></div>
 </div></section>
+@endif
 
 <section class="mk" id="basvuru"><div class="mk-in" style="padding-bottom:48px">
     <h2>Sponsor firma kaydı</h2>

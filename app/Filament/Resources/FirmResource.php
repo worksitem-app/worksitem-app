@@ -159,7 +159,7 @@ class FirmResource extends Resource
                         '<p style="margin-bottom:8px">Bu bağlantıyı firmaya WhatsApp veya e-postayla gönderin (14 gün geçerli). Ödeme alınınca üyelik 1 yıl öne çıkar.</p><textarea readonly rows="4" style="width:100%;font-size:12px;border:1px solid #ddd;border-radius:8px;padding:8px" onclick="this.select()">'
                         .e(URL::temporarySignedRoute('firms.pro', now()->addDays(14), ['firm' => $r->slug])).'</textarea>')),
                 Tables\Actions\Action::make('view')->label('Sayfa')->icon('heroicon-o-arrow-top-right-on-square')->color('gray')
-                    ->visible(fn (Firm $r) => $r->status === 'approved' && config('worksitem_firms.directory_enabled'))
+                    ->visible(fn (Firm $r) => $r->status === 'approved' && \App\Support\Pilot::directoryOpen())
                     ->url(fn (Firm $r) => route('firms.show', $r), shouldOpenInNewTab: true),
                 Tables\Actions\EditAction::make(),
             ])
