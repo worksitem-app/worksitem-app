@@ -27,7 +27,13 @@
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ $cfg['leaflet']['css'] }}">
+    {{-- v86 hız: harita kütüphanesi ve uydu karoları için bağlantıyı erkenden aç; Leaflet'i önden indir.
+         Leaflet CSS çizimi engellemez (harita zaten Leaflet JS gelince kurulur). --}}
+    <link rel="preconnect" href="https://unpkg.com">
+    <link rel="preconnect" href="{{ parse_url($cfg['imagery']['url'], PHP_URL_SCHEME).'://'.parse_url($cfg['imagery']['url'], PHP_URL_HOST) }}">
+    <link rel="preload" as="script" href="{{ $cfg['leaflet']['js'] }}">
+    <link rel="stylesheet" href="{{ $cfg['leaflet']['css'] }}" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="{{ $cfg['leaflet']['css'] }}"></noscript>
     <script type="application/ld+json">{!! json_encode(['@context' => 'https://schema.org', '@type' => 'WebApplication', 'name' => 'GES Planlayıcı', 'url' => $url, 'applicationCategory' => 'BusinessApplication', 'operatingSystem' => 'Web', 'inLanguage' => 'tr-TR', 'description' => $desc, 'offers' => ['@type' => 'Offer', 'price' => '0', 'priceCurrency' => 'TRY']], $jsonFlags) !!}</script>
     <script type="application/ld+json">{!! json_encode(['@context' => 'https://schema.org', '@type' => 'BreadcrumbList', 'itemListElement' => [
         ['@type' => 'ListItem', 'position' => 1, 'name' => 'Ana sayfa', 'item' => 'https://worksitem.com/'],

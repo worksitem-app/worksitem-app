@@ -71,22 +71,40 @@ class LaunchReadinessTest extends TestCase
         $this->get('https://staging.worksitem.com/up')->assertOk();
     }
 
-    public function test_google_fonts_olusturmayi_engellemez(): void
+    public function test_yazi_tipi_kendi_sunucumuzdan_ve_engellemeden(): void
     {
-        $html = $this->get('/')->assertOk()->getContent();
-        $head = substr($html, 0, stripos($html, '</head>'));
+        foreach (['/', '/araclar', '/araclar/ges-planlayici', '/maliyet-hesapla'] as $url) {
+            $html = $this->get($url)->assertOk()->getContent();
+            $head = substr($html, 0, stripos($html, '</head>'));
 
-        preg_match_all('#<link\b[^>]*fonts\.googleapis\.com/css[^>]*>#i', $head, $m);
-        $this->assertNotEmpty($m[0]);
-        foreach ($m[0] as $tag) {
-            $blocking = preg_match('#rel=["\']stylesheet#i', $tag) && ! str_contains($tag, 'media="print"');
-            // Engelleyen tek kopya <noscript> içinde olabilir
-            if ($blocking) {
-                $this->assertMatchesRegularExpression('#<noscript>'.preg_quote($tag, '#').'</noscript>#', $head);
-            }
+            // Google Fonts'a Inter için gidilmez; yerel dosyalar <head> başında önceden yüklenir
+            $this->assertDoesNotMatchRegularExpression('#fonts\.googleapis\.com/css2?\?family=Inter#', $head, $url);
+            $this->assertStringNotContainsString('fonts.gstatic.com', $head, $url);
+            $this->assertSame(2, substr_count($head, 'as="font" type="font/woff2" crossorigin'), $url);
+            $this->assertLessThan(1500, strpos($head, 'rel="preload" href="/fonts/inter/'), "$url: preload başta olmalı");
+            $this->assertStringContainsString("font-display:optional", $head, $url);
+            $this->assertStringContainsString('U+0100-02BA', $head, "$url: Türkçe (latin-ext)");
+
+            // Küçük ortak CSS'ler gömülü; ayrı istek yok
+            $this->assertStringContainsString('<style id="ws-brand-css">', $head, $url);
+            $this->assertStringNotContainsString('href="/css/ws-brand.css', $head, $url);
+            $this->assertStringNotContainsString('rel="stylesheet" href="/css/worksitem-design.css"', $head, $url);
+            $this->assertSame(1, substr_count($html, 'id="ws-fonts"'), $url);
         }
-        $this->assertStringContainsString('/css/ws-brand.css', $head);
+        foreach (array_keys(BrandShell::FONT_FILES) as $f) {
+            $this->assertFileExists(public_path($f));
+        }
+        $this->assertFileExists(public_path('fonts/inter/OFL.txt'));
         $this->assertStringContainsString("'Inter Fallback'", file_get_contents(public_path('css/ws-brand.css')));
+    }
+
+    public function test_ges_leaflet_cizimi_engellemez(): void
+    {
+        $head = $this->get('/araclar/ges-planlayici')->assertOk()->getContent();
+        $head = substr($head, 0, stripos($head, '</head>'));
+        $this->assertMatchesRegularExpression('#<link rel="stylesheet" href="https://unpkg\.com/leaflet@[^"]+/leaflet\.css" media="print" onload#', $head);
+        $this->assertStringContainsString('<link rel="preload" as="script" href="https://unpkg.com/leaflet@', $head);
+        $this->assertStringContainsString('<link rel="preconnect" href="https://server.arcgisonline.com">', $head);
     }
 
     public function test_defer_fonts_zaten_ertelenmis_baglantiya_dokunmaz(): void

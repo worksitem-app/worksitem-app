@@ -80,6 +80,7 @@ class LegalDocumentsTest extends TestCase
     {
         $html = $this->get('/araclar/banyo-maliyet-hesaplayici')->getContent();
         $this->assertMatchesRegularExpression('#/js/ws-tool-extras\.js\?v=[0-9a-f]{10}#', $html);
-        $this->assertMatchesRegularExpression('#/css/ws-brand\.css\?v=[0-9a-f]{10}#', $html);
+        $this->assertStringContainsString('<style id="ws-brand-css">', $html);
+        $this->assertMatchesRegularExpression('#/fonts/inter/inter-latin-wght-normal\.woff2\?v=[0-9a-f]{10}#', $html);
     }
 }

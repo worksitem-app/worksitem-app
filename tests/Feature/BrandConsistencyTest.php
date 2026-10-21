@@ -30,7 +30,7 @@ class BrandConsistencyTest extends TestCase
 
         $this->assertSame(1, substr_count($html, 'class="wks-header"'), "$url: header");
         $this->assertSame(1, preg_match_all('/<footer class="wks-footer/', $html), "$url: footer");
-        $this->assertStringContainsString('/css/ws-brand.css', $html);
+        $this->assertStringContainsString('id="ws-brand-css"', $html);
         $this->assertStringNotContainsString('Bebas Neue', $html);
         $this->assertStringNotContainsString('Plus Jakarta Sans', $html);
     }
