@@ -11,6 +11,13 @@ class InspectionFlowTest extends TestCase
 {
     use RefreshDatabase;
 
+    // Sunucunun .env'indeki çağrı merkezi numarası testi etkilemesin
+    protected function setUp(): void
+    {
+        parent::setUp();
+        config(['worksitem_inspection.phone' => '+90 850 346 4983', 'worksitem_inspection.whatsapp' => '908503464983']);
+    }
+
     private function submitLead(): Lead
     {
         $this->post('/lead-kaydet', [
