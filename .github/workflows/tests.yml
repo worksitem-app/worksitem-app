@@ -47,13 +47,22 @@ jobs:
       - name: Tests
         # Kırılan testler Actions sayfasında hata notu olarak da görünür (günlüğü açmadan)
         run: |
-          php vendor/bin/phpunit --log-junit junit.xml && exit 0
+          set +e
+          php -d memory_limit=1G vendor/bin/phpunit --log-junit junit.xml 2>&1 | tee phpunit.out
+          code=${PIPESTATUS[0]}
+          [ "$code" = 0 ] && exit 0
           python3 - <<'PY'
-          import xml.etree.ElementTree as ET
-          for tc in ET.parse('junit.xml').iter('testcase'):
-              for f in list(tc.findall('failure')) + list(tc.findall('error')):
-                  msg = (f.text or f.get('message') or '').strip().replace('%', '%25').replace('\r', '').replace('\n', '%0A')[:3000]
-                  print(f"::error title={tc.get('class', '')}::{tc.get('name', '')}%0A{msg}")
+          import os, xml.etree.ElementTree as ET
+          def esc(t): return t.strip().replace('%', '%25').replace('\r', '').replace('\n', '%0A')[:3000]
+          n = 0
+          if os.path.exists('junit.xml') and os.path.getsize('junit.xml') > 0:
+              for tc in ET.parse('junit.xml').iter('testcase'):
+                  for f in list(tc.findall('failure')) + list(tc.findall('error')):
+                      n += 1
+                      print(f"::error title={tc.get('class', '')}::{tc.get('name', '')}%0A{esc(f.text or f.get('message') or '')}")
+          if n == 0:
+              tail = open('phpunit.out', errors='replace').read()[-2500:]
+              print(f"::error title=PHPUnit yarıda kaldı (JUnit yok)::{esc(tail)}")
           PY
           exit 1
 
