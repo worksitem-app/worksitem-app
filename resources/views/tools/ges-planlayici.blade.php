@@ -57,6 +57,16 @@
         .gp-card h2{font-size:15px;margin:0 0 10px;display:flex;gap:8px;align-items:center}
         .gp-card h2 i{font-style:normal;width:24px;height:24px;border-radius:8px;background:var(--y);display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:900}
         .gp-row{display:flex;gap:8px}
+        .gp-land{margin-top:10px;border:1px dashed var(--line);border-radius:12px;padding:8px 10px}
+        .gp-land summary{cursor:pointer;font-weight:700;font-size:13.5px}
+        .gp-land[open] summary{margin-bottom:8px}
+        .gp-land .gp-l2{display:block;font-size:12px;font-weight:700;color:var(--muted,#5B6472);margin:10px 0 4px;background:none;padding:0}
+        .gp-hint{display:block;font-size:11.5px;color:var(--muted,#5B6472);margin-top:4px;line-height:1.45}
+        .gp-file{padding:7px}
+        .gp-adapar{display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:end;margin-top:10px}
+        .gp-adapar .gp-ap{display:flex;flex-direction:column;gap:4px;min-width:0}
+        .gp-adapar .gp-ap>span{font-size:12px;font-weight:700;color:var(--muted,#5B6472)}
+        .gp-adapar .gp-btn{grid-column:1/-1;text-align:center;text-decoration:none}
         .gp-addr{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px 10px}
         .gp-addr .gp-f{display:flex;flex-direction:column;gap:4px;min-width:0;grid-column:span 2}
         .gp-addr .gp-f>span{font-size:12px;font-weight:700;color:var(--muted,#5B6472)}
@@ -164,6 +174,23 @@
                     <button class="gp-btn" id="gpGo" type="submit">Haritada bul</button>
                 </form>
                 <ul class="gp-res" id="gpResults"></ul>
+                <details class="gp-land" id="gpLand">
+                    <summary>Tarla / arazi mi? Koordinat, parsel dosyası ya da ada-parsel ile bulun</summary>
+                    <label class="gp-l2" for="gpCoord">Koordinat ya da Google Maps bağlantısı</label>
+                    <div class="gp-row">
+                        <input class="gp-in" id="gpCoord" type="text" inputmode="decimal" maxlength="500" placeholder="Örn. 37.7812, 29.0874">
+                        <button class="gp-btn o s" type="button" id="gpCoordGo">Git</button>
+                    </div>
+                    <label class="gp-l2" for="gpFile">Parsel dosyası (KML, KMZ, GeoJSON)</label>
+                    <input class="gp-in gp-file" id="gpFile" type="file" accept=".kml,.kmz,.geojson,.json,application/vnd.google-earth.kml+xml,application/vnd.google-earth.kmz,application/geo+json">
+                    <small class="gp-hint">Dosya bilgisayarınızda okunur, sunucuya gönderilmez. Sınır haritaya oturur, paneller otomatik dizilir.</small>
+                    <div class="gp-adapar">
+                        <label class="gp-ap"><span>Ada</span><input class="gp-in" id="gpAda" type="text" inputmode="numeric" maxlength="10"></label>
+                        <label class="gp-ap"><span>Parsel</span><input class="gp-in" id="gpParsel" type="text" inputmode="numeric" maxlength="10"></label>
+                        <a class="gp-btn o s" href="https://parselsorgu.tkgm.gov.tr/" target="_blank" rel="noopener">Parsel Sorgu'yu aç ↗</a>
+                    </div>
+                    <small class="gp-hint">Ada-parseliniz varsa: Tapu Kadastro'nun Parsel Sorgu sitesinde il, ilçe, mahalle, ada ve parseli girin; parsel sınırını KML ya da GeoJSON olarak alıp buraya yükleyin. İndirme seçeneği yoksa haritacınızdan isteyebilir ya da sınırı haritada kendiniz çizebilirsiniz. Ada-parsel sonuçta ve teklif çıktısında yazılır.</small>
+                </details>
                 <p class="gp-msg" id="gpMsg">İl ve ilçeyi seçin, mahalle ve sokağı yazın. Haritada binanızın üzerine tıklayarak da başlayabilirsiniz.</p>
             </section>
 
@@ -248,6 +275,7 @@
 
 <script src="{{ $cfg['leaflet']['js'] }}"></script>
 <script src="{{ \App\Support\Asset::url('js/ges-geometry.js') }}"></script>
+<script src="{{ \App\Support\Asset::url('js/ges-parcel.js') }}"></script>
 <script>window.GES = {!! json_encode($C, $jsonFlags) !!};</script>
 <script type="module">
 const C = window.GES, G = window.GesGeo, $ = (id) => document.getElementById(id);
@@ -299,6 +327,38 @@ $('gpSearch').addEventListener('submit', async () => {
     } catch (e) { msg('Adres servisine ulaşılamadı; haritada binanıza tıklayabilirsiniz.', true); }
     $('gpGo').disabled = false;
 });
+// Arazi: koordinat / Google Maps bağlantısı ve parsel dosyası (v89)
+const PR = window.GesParcel;
+$('gpCoordGo').addEventListener('click', () => {
+    const c = PR.coords($('gpCoord').value);
+    if (!c) return msg('Koordinat okunamadı. Örnek: 37.7812, 29.0874 ya da Google Maps bağlantısı.', true);
+    if (val('use') === 'arazi') {
+        S.lat = c.lat; S.lon = c.lon;
+        lyr.pin.clearLayers(); L.circleMarker([c.lat, c.lon], { radius: 6, color: '#fff', weight: 2, fillColor: '#FFB800', fillOpacity: 1 }).addTo(lyr.pin);
+        map.setView([c.lat, c.lon], 17);
+        msg('Konuma gidildi. Parsel dosyası yükleyin ya da "Arazi sınırını çizeyim" ile köşelere tıklayın.');
+    } else locate(c.lat, c.lon, true);
+});
+$('gpCoord').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); $('gpCoordGo').click(); } });
+$('gpFile').addEventListener('change', async () => {
+    const f = $('gpFile').files[0];
+    if (!f) return;
+    msg('Dosya okunuyor…');
+    try {
+        const r = await PR.parseFile(f, f.name);
+        if (val('use') === 'konut') setUse('arazi');
+        const n = r.ring.length;
+        S.lat = r.ring.reduce((a, p) => a + p[0], 0) / n; S.lon = r.ring.reduce((a, p) => a + p[1], 0) / n;
+        lyr.pin.clearLayers();
+        setRing(r.ring);
+        map.fitBounds(L.latLngBounds(r.ring).pad(0.25), { maxZoom: 19 });
+        const ap = /ada\D*(\d+)\D+parsel\D*(\d+)/i.exec(r.name || '');
+        if (ap) { if (!$('gpAda').value) $('gpAda').value = ap[1]; if (!$('gpParsel').value) $('gpParsel').value = ap[2]; }
+        msg('Parsel yüklendi' + (r.name ? ' (' + r.name + ')' : '') + ': ' + nf0.format(areaM2(S.proj.pts)) + ' m². Paneller dizildi; sınırı "Köşeleri düzenle" ile değiştirebilirsiniz.');
+    } catch (e) { msg(e.userMessage || 'Dosya okunamadı. KML, KMZ ya da GeoJSON yükleyin.', true); }
+    $('gpFile').value = '';
+});
+
 function pick(p) { $('gpResults').innerHTML = ''; locate(p.lat, p.lon, true); }
 
 map.on('click', (e) => {
@@ -365,6 +425,7 @@ function onUse() {
     $('gpConsKonut').hidden = fab; $('gpConsFab').hidden = !fab; $('gpArazNote').hidden = !land;
     $('gpRoofSeg').hidden = land; $('gpFloors').parentElement.hidden = land; $('gpSwap').hidden = land;
     $('gpDrawBtn').textContent = land ? 'Arazi sınırını çizeyim' : 'Çatıyı kendim çizeyim';
+    if (land) $('gpLand').open = true;
     $('gpSetback').value = land ? 5 : C.setback[use === 'fabrika' ? 'fabrika' : 'konut'];
     if (land) {
         document.querySelector('input[name=roof][value=duz]').checked = true;
@@ -533,6 +594,9 @@ function renderOut(d, body, monthly) {
     if (body.battery) h += '<p class="gp-note">Depolamalı sistemlerde, anlaşma gücünün üzerindeki depolama için otomatik güç kontrolü ve enerji kesme sistemi gerekir; bu kalem tahminidir, keşifte netleşir.</p>';
     if (fab || body.battery) h += '<div class="gp-legal"><b>Mevzuat uygunluk süreci</b>Lisanssız üretim ve depolama mevzuatındaki son değişiklikler nedeniyle teklif yalnız panel ve montajdan oluşmaz. Keşifte mühendislerimiz şunları netleştirir:<ol><li>Bağlantı anlaşması ve anlaşma gücü (gerekiyorsa revizyon ve süreleri)</li><li>Uzaktan izleme ve acil durumda uzaktan kontrol (haberleşme / SCADA) gereklilikleri</li><li>Depolama varsa otomatik güç kontrolü ve enerji kesme sistemi</li></ol>Bu hükümler her tesise aynı şekilde uygulanmaz; tesisinizin kapsamı keşifte kontrol edilir.</div>';
     h += '<p class="gp-note">Üretim: ' + (y.source === 'PVGIS' ? 'PVGIS (Avrupa Komisyonu JRC) güneş verisi' : 'yaklaşık bölgesel değer (PVGIS şu an yanıt vermedi)') + ', %14 sistem kaybı. Maliyet aralığı −%15 / +%20; ön tasarımdır, keşifte netleşir.</p>';
+    const yer = [$('gpMah').value.trim(), $('gpIlce').value, $('gpIl').value].filter(Boolean).join(', ');
+    const ada = $('gpAda').value.trim(), par = $('gpParsel').value.trim();
+    if (yer || ada || par) h += '<p class="gp-note"><b>Konum:</b> ' + esc(yer || 'haritadan seçildi') + (ada || par ? ' · Ada ' + esc(ada || '—') + ' / Parsel ' + esc(par || '—') : '') + ' · ' + S.proj.origin[0].toFixed(5) + ', ' + S.proj.origin[1].toFixed(5) + '</p>';
     h += '<div class="gp-ctas"><a class="gp-btn" href="' + esc(quote) + '">Bu tasarımla teklif iste</a><button class="gp-btn o" type="button" onclick="window.print()">Yazdır</button></div>';
     $('gpOut').innerHTML = h;
     drawChart(y.monthly);

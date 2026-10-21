@@ -56,6 +56,18 @@ class SolarPlannerTest extends TestCase
         $this->assertSame(config('turkey.provinces'), array_keys(config('turkey_districts')));
     }
 
+    public function test_arazi_koordinat_parsel_dosyasi_ve_ada_parsel(): void
+    {
+        $html = $this->get('/araclar/ges-planlayici')->assertOk()->getContent();
+        foreach (['id="gpLand"', 'id="gpCoord"', 'id="gpFile"', 'accept=".kml,.kmz,.geojson', 'id="gpAda"', 'id="gpParsel"', 'https://parselsorgu.tkgm.gov.tr/'] as $x) {
+            $this->assertStringContainsString($x, $html);
+        }
+        $this->assertMatchesRegularExpression('#/js/ges-parcel\.js\?v=[0-9a-f]{10}#', $html);
+        $js = file_get_contents(public_path('js/ges-parcel.js'));
+        $this->assertStringContainsString('DecompressionStream', $js);   // KMZ
+        $this->assertStringContainsString('WGS84', $js);                  // metre cinsinden dosya uyarısı
+    }
+
     private function fakeNominatim(array $byQuery): void
     {
         Http::fake(['nominatim.openstreetmap.org/*' => function ($req) use ($byQuery) {
