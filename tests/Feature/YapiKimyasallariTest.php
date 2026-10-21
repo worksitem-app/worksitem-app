@@ -132,4 +132,20 @@ class YapiKimyasallariTest extends TestCase
         $this->artisan('sponsors:demo', ['--remove' => true])->assertSuccessful();
         $this->assertSame(0, Sponsor::where('brand', \App\Console\Commands\SponsorDemo::BRAND)->count());
     }
+
+    public function test_demo_gercek_marka_ve_seramik_markasiyla_kurulur(): void
+    {
+        $this->artisan('sponsors:demo', ['--brand' => 'Kalekim', '--url' => 'https://www.kalekim.com', '--tile-brand' => 'Kale', '--tile-url' => 'https://www.kale.com.tr', '--tile-logo' => '/storage/sponsor-demo/kale.png'])->assertSuccessful();
+        $this->assertSame(0, Sponsor::where('brand', \App\Console\Commands\SponsorDemo::BRAND)->count());
+        $this->assertTrue(Sponsor::where('brand', 'Kale')->where('tool_slug', 'seramik-maliyet-hesaplayici')->where('category', 'seramik')->where('logo_url', '/storage/sponsor-demo/kale.png')->exists());
+        $this->assertTrue(Sponsor::where('brand', 'Kalekim')->where('tool_slug', 'su-yalitimi-hesaplayici')->exists());
+
+        $r = $this->calc('seramik-maliyet-hesaplayici', ['surface' => 'zemin', 'floor' => 40, 'size' => '60x60', 'quality' => 'orta', 'scope' => 'hazir', 'grout' => 'epoksi']);
+        $this->assertSame('Kale', $r['sponsor_lines']['seramik']['brand']);
+        $this->assertSame('Kalekim', $r['sponsor_lines']['derz_epoksi']['brand']);
+
+        $this->app['env'] = 'production';
+        $this->assertSame(0, Sponsor::live()->whereIn('brand', ['Kale', 'Kalekim'])->count());
+        $this->app['env'] = 'testing';
+    }
 }
