@@ -103,7 +103,7 @@ class KitGoldenValuesTest extends TestCase
     }
 
     #[DataProvider('cases')]
-    public function test_canli_uc_nokta_ayni_tutari_verir(string $slug, array $q, array $items, array $range): void
+    public function test_canli_uc_nokta_ayni_tutari_verir(string $slug, array $q, array $items, array $range, int|float|null $perUnit): void
     {
         $r = $this->getJson('/araclar/'.$slug.'/hesapla?'.http_build_query($q))->assertOk()->json();
         $this->assertSame($range, [(int) $r['low'], (int) $r['mid'], (int) $r['high']]);
