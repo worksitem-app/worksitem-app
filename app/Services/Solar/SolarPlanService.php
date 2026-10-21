@@ -34,6 +34,66 @@ class SolarPlanService
         });
     }
 
+    /**
+     * İl / ilçe / mahalle / sokak alanlarıyla adım adım arama (v88).
+     * OpenStreetMap'te Türkiye'de her sokak ve kapı numarası yok; en ayrıntılı bulunan seviyeye düşülür:
+     * sokak → mahalle → ilçe → il. Sonuçlar seçilen ilin içindekilerle sınırlanır.
+     *
+     * @return array{level:string, results:list<array{name:string, lat:float, lon:float}>}
+     */
+    public function geocodeParts(string $il, string $ilce = '', string $mahalle = '', string $sokak = '', string $no = ''): array
+    {
+        $clean = fn (string $s, int $n) => trim(preg_replace('/\s+/u', ' ', mb_substr(strip_tags($s), 0, $n)));
+        [$il, $ilce, $mahalle, $sokak, $no] = [$clean($il, 40), $clean($ilce, 60), $clean($mahalle, 80), $clean($sokak, 100), $clean($no, 10)];
+        if ($il === '') {
+            return ['level' => 'yok', 'results' => []];
+        }
+        $ilceQ = ($ilce !== '' && mb_strtolower($ilce) !== 'merkez') ? $ilce : '';
+        // "Moda Mah." / "Moda Mahallesi" / "Moda" → "Moda Mahallesi" (OSM adı) ve yalın "Moda"
+        $mahKok = trim(preg_replace('/\s+(mahallesi|mahalle|mah\.?|mh\.?)$/iu', '', $mahalle));
+        $place = fn (array $parts) => implode(', ', array_values(array_filter($parts, fn ($p) => $p !== '')));
+
+        $steps = [];
+        if ($sokak !== '') {
+            $steps[] = ['sokak', $place([trim($sokak.' '.$no), $mahKok !== '' ? $mahKok.' Mahallesi' : '', $ilceQ, $il])];
+            $steps[] = ['sokak', $place([$sokak, $ilceQ, $il])];
+        }
+        if ($mahKok !== '') {
+            $steps[] = ['mahalle', $place([$mahKok.' Mahallesi', $ilceQ, $il])];
+            $steps[] = ['mahalle', $place([$mahKok, $ilceQ, $il])];
+        }
+        if ($ilceQ !== '') {
+            $steps[] = ['ilce', $place([$ilceQ, $il])];
+        }
+        $steps[] = ['il', $il];
+
+        $ilNorm = self::trLower($il);
+        $tried = [];
+        foreach ($steps as [$level, $q]) {
+            if (isset($tried[$q])) {
+                continue;
+            }
+            $tried[$q] = true;
+            // Nominatim kullanım kuralı: saniyede en çok 1 istek (önbellekte olanlar sayılmaz)
+            $cached = Cache::has('ges:geo:'.md5(mb_strtolower(trim(mb_substr($q, 0, 200)))));
+            if (! $cached && ($netUsed ?? false) && ! app()->runningUnitTests()) {
+                usleep(1_050_000);
+            }
+            $netUsed = ($netUsed ?? false) || ! $cached;
+            $hits = array_values(array_filter($this->geocode($q), fn ($p) => str_contains(self::trLower($p['name']), $ilNorm)));
+            if ($hits) {
+                return ['level' => $level, 'results' => $hits];
+            }
+        }
+
+        return ['level' => 'yok', 'results' => []];
+    }
+
+    private static function trLower(string $s): string
+    {
+        return mb_strtolower(str_replace(['I', 'İ'], ['ı', 'i'], $s));
+    }
+
     /** Noktadaki (yoksa en yakın) bina dış hattı: ['ring' => [[lat,lon],...], 'levels' => ?int] */
     public function building(float $lat, float $lon): ?array
     {

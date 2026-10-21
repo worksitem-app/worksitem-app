@@ -40,7 +40,8 @@ return [
         'attribution' => 'Görüntü © Esri, Maxar, Earthstar Geographics · Bina verisi © OpenStreetMap katkıda bulunanlar',
         'max_zoom' => 20,
     ],
-    'leaflet' => ['css' => 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css', 'js' => 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'],
+    // v88: Leaflet kendi sunucumuzdan (npm leaflet@1.9.4, bütünlük npm özetiyle doğrulandı; BSD-2). Sürüm yolda → önbellek güvenli
+    'leaflet' => ['css' => '/vendor/leaflet/1.9.4/leaflet.css', 'js' => '/vendor/leaflet/1.9.4/leaflet.js'],
     // v80: alan/çevre Turf.js (WGS84 jeodezik hesap), grafikler Chart.js. Yalnız gereken modüller
     // (tam turf paketi ~550 KB; bunlar birkaç KB). Yüklenemezse sayfa eski hesaba/SVG'ye döner.
     'libs' => [

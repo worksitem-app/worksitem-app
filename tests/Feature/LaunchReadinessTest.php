@@ -102,8 +102,11 @@ class LaunchReadinessTest extends TestCase
     {
         $head = $this->get('/araclar/ges-planlayici')->assertOk()->getContent();
         $head = substr($head, 0, stripos($head, '</head>'));
-        $this->assertMatchesRegularExpression('#<link rel="stylesheet" href="https://unpkg\.com/leaflet@[^"]+/leaflet\.css" media="print" onload#', $head);
-        $this->assertStringContainsString('<link rel="preload" as="script" href="https://unpkg.com/leaflet@', $head);
+        $this->assertStringContainsString('<link rel="stylesheet" href="/vendor/leaflet/1.9.4/leaflet.css" media="print" onload', $head);
+        $this->assertStringContainsString('<link rel="preload" as="script" href="/vendor/leaflet/1.9.4/leaflet.js">', $head);
+        $this->assertStringNotContainsString('unpkg.com', $head);
+        $this->assertFileExists(public_path('vendor/leaflet/1.9.4/leaflet.js'));
+        $this->assertFileExists(public_path('vendor/leaflet/1.9.4/images/layers.png'));
         $this->assertStringContainsString('<link rel="preconnect" href="https://server.arcgisonline.com">', $head);
     }
 

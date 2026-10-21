@@ -43,6 +43,66 @@ class SolarPlannerTest extends TestCase
         $this->assertStringContainsString('id="gpChartBox"', $html);
     }
 
+    public function test_adres_formu_il_ilce_mahalle_sokak(): void
+    {
+        $html = $this->get('/araclar/ges-planlayici')->assertOk()->getContent();
+        $this->assertStringContainsString('id="gpIl"', $html);
+        $this->assertStringContainsString('<option>İstanbul</option>', $html);
+        $this->assertStringContainsString('id="gpIlce"', $html);
+        $this->assertStringContainsString('id="gpMah"', $html);
+        $this->assertStringContainsString('id="gpSok"', $html);
+        $this->assertStringContainsString('"Kadıköy"', $html);   // ilçe listesi sayfada
+        $this->assertSame(973, array_sum(array_map('count', config('turkey_districts'))));
+        $this->assertSame(config('turkey.provinces'), array_keys(config('turkey_districts')));
+    }
+
+    private function fakeNominatim(array $byQuery): void
+    {
+        Http::fake(['nominatim.openstreetmap.org/*' => function ($req) use ($byQuery) {
+            parse_str((string) parse_url($req->url(), PHP_URL_QUERY), $q);
+            foreach ($byQuery as $needle => $rows) {
+                if ($q['q'] === $needle) {
+                    return Http::response($rows);
+                }
+            }
+
+            return Http::response([]);
+        }]);
+    }
+
+    public function test_sokak_bulunursa_sokak_seviyesi(): void
+    {
+        $this->fakeNominatim(['Moda Caddesi 12, Caferağa Mahallesi, Kadıköy, İstanbul' => [['display_name' => 'Moda Caddesi, Caferağa, Kadıköy, İstanbul, Türkiye', 'lat' => '40.985', 'lon' => '29.027']]]);
+        $this->getJson('/araclar/ges-planlayici/adres?'.http_build_query(['il' => 'İstanbul', 'ilce' => 'Kadıköy', 'mahalle' => 'Caferağa Mah.', 'sokak' => 'Moda Caddesi', 'no' => '12']))
+            ->assertOk()->assertJsonPath('level', 'sokak')->assertJsonPath('results.0.lat', 40.985);
+    }
+
+    public function test_sokak_yoksa_mahalleye_duser_ve_il_disini_eler(): void
+    {
+        $this->fakeNominatim([
+            // Sokak sorgusu başka ilden sonuç döndürüyor → elenmeli
+            'Yeni Sokak, Merkezefendi, Denizli' => [['display_name' => 'Yeni Sokak, Muratpaşa, Antalya, Türkiye', 'lat' => '36.9', 'lon' => '30.7']],
+            'Sırakapılar Mahallesi, Merkezefendi, Denizli' => [['display_name' => 'Sırakapılar Mahallesi, Merkezefendi, Denizli, Türkiye', 'lat' => '37.78', 'lon' => '29.09']],
+        ]);
+        $this->getJson('/araclar/ges-planlayici/adres?'.http_build_query(['il' => 'Denizli', 'ilce' => 'Merkezefendi', 'mahalle' => 'Sırakapılar', 'sokak' => 'Yeni Sokak']))
+            ->assertOk()->assertJsonPath('level', 'mahalle')->assertJsonPath('results.0.lat', 37.78);
+    }
+
+    public function test_mahalle_de_yoksa_ilceye_duser(): void
+    {
+        $this->fakeNominatim(['Pamukkale, Denizli' => [['display_name' => 'Pamukkale, Denizli, Türkiye', 'lat' => '37.92', 'lon' => '29.12']]]);
+        $this->getJson('/araclar/ges-planlayici/adres?'.http_build_query(['il' => 'Denizli', 'ilce' => 'Pamukkale', 'mahalle' => 'Olmayan', 'sokak' => 'Olmayan Sokak']))
+            ->assertOk()->assertJsonPath('level', 'ilce');
+    }
+
+    public function test_il_ve_ilce_dogrulanir(): void
+    {
+        Http::fake();
+        $this->getJson('/araclar/ges-planlayici/adres?il=Atlantis')->assertStatus(422);
+        $this->getJson('/araclar/ges-planlayici/adres?'.http_build_query(['il' => 'Denizli', 'ilce' => 'Kadıköy']))->assertStatus(422);
+        Http::assertNothingSent();
+    }
+
     public function test_adres_arama_turkiye_ile_sinirli_ve_onbellekli(): void
     {
         Http::fake(['nominatim.openstreetmap.org/*' => Http::response([['display_name' => 'Moda, Kadıköy, İstanbul', 'lat' => '40.98', 'lon' => '29.03']])]);

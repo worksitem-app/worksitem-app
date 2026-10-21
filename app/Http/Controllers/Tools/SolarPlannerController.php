@@ -23,6 +23,22 @@ class SolarPlannerController extends Controller
 
     public function geocode(Request $request, SolarPlanService $s): JsonResponse
     {
+        // v88: il / ilçe / mahalle / sokak alanlarıyla adım adım arama
+        if ($request->filled('il')) {
+            $v = $request->validate([
+                'il' => ['required', 'string', \Illuminate\Validation\Rule::in((array) config('turkey.provinces'))],
+                'ilce' => ['nullable', 'string', 'max:60'],
+                'mahalle' => ['nullable', 'string', 'max:80'],
+                'sokak' => ['nullable', 'string', 'max:100'],
+                'no' => ['nullable', 'string', 'max:10'],
+            ]);
+            if (! empty($v['ilce']) && ! in_array($v['ilce'], (array) config('turkey_districts.'.$v['il'], []), true)) {
+                return response()->json(['message' => 'İlçe bu ile ait değil.', 'errors' => ['ilce' => ['İlçe bu ile ait değil.']]], 422);
+            }
+
+            return response()->json($s->geocodeParts($v['il'], $v['ilce'] ?? '', $v['mahalle'] ?? '', $v['sokak'] ?? '', $v['no'] ?? ''));
+        }
+
         $request->validate(['q' => ['required', 'string', 'min:3', 'max:200']]);
 
         return response()->json(['results' => $s->geocode((string) $request->query('q'))]);

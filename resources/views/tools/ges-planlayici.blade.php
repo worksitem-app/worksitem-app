@@ -10,6 +10,7 @@
         'panels' => $cfg['panels'], 'panel' => $cfg['default_panel'], 'setback' => $cfg['setback'], 'flatTilt' => $cfg['flat_tilt'],
         'imagery' => $cfg['imagery'], 'kwhPrice' => $kwhPrice, 'quote' => url('/araclar/gunes-paneli-hesaplama'),
         'lib' => $cfg['libs'] ?? [],
+        'ilceler' => (array) config('turkey_districts', []),
     ];
 @endphp
 <!DOCTYPE html>
@@ -27,9 +28,8 @@
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    {{-- v86 hız: harita kütüphanesi ve uydu karoları için bağlantıyı erkenden aç; Leaflet'i önden indir.
+    {{-- v86/v88 hız: Leaflet kendi sunucumuzdan ve önden iner; uydu karoları için bağlantı erkenden açılır.
          Leaflet CSS çizimi engellemez (harita zaten Leaflet JS gelince kurulur). --}}
-    <link rel="preconnect" href="https://unpkg.com">
     <link rel="preconnect" href="{{ parse_url($cfg['imagery']['url'], PHP_URL_SCHEME).'://'.parse_url($cfg['imagery']['url'], PHP_URL_HOST) }}">
     <link rel="preload" as="script" href="{{ $cfg['leaflet']['js'] }}">
     <link rel="stylesheet" href="{{ $cfg['leaflet']['css'] }}" media="print" onload="this.media='all'">
@@ -57,6 +57,14 @@
         .gp-card h2{font-size:15px;margin:0 0 10px;display:flex;gap:8px;align-items:center}
         .gp-card h2 i{font-style:normal;width:24px;height:24px;border-radius:8px;background:var(--y);display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:900}
         .gp-row{display:flex;gap:8px}
+        .gp-addr{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px 10px}
+        .gp-addr .gp-f{display:flex;flex-direction:column;gap:4px;min-width:0;grid-column:span 2}
+        .gp-addr .gp-f>span{font-size:12px;font-weight:700;color:var(--muted,#5B6472)}
+        .gp-addr .gp-f:nth-of-type(3){grid-column:1/-1}
+        .gp-addr .gp-f:nth-of-type(4){grid-column:span 3}
+        .gp-addr .gp-no{grid-column:span 1}
+        .gp-addr .gp-btn{grid-column:1/-1}
+        .gp-addr select.gp-in{appearance:auto}
         .gp-in{width:100%;border:1.5px solid var(--line);border-radius:12px;padding:10px 12px;background:#fff}
         .gp-in:focus{border-color:var(--y);outline:none}
         .gp-btn{border:0;border-radius:12px;padding:10px 14px;font-weight:800;cursor:pointer;background:var(--y);color:var(--ink);white-space:nowrap}
@@ -134,12 +142,29 @@
         <div class="gp-side">
             <section class="gp-card" aria-labelledby="s1">
                 <h2 id="s1"><i>1</i>Adres</h2>
-                <form id="gpSearch" class="gp-row" onsubmit="return false">
-                    <input class="gp-in" id="gpQ" type="search" placeholder="Örn. Atatürk Cad. 12, Kadıköy, İstanbul" autocomplete="street-address" aria-label="Adres">
-                    <button class="gp-btn" id="gpGo" type="submit">Bul</button>
+                <form id="gpSearch" class="gp-addr" onsubmit="return false" novalidate>
+                    <label class="gp-f"><span>İl</span>
+                        <select class="gp-in" id="gpIl" required autocomplete="address-level1">
+                            <option value="">İl seçin</option>
+                            @foreach (config('turkey.provinces', []) as $il)<option>{{ $il }}</option>@endforeach
+                        </select>
+                    </label>
+                    <label class="gp-f"><span>İlçe</span>
+                        <select class="gp-in" id="gpIlce" autocomplete="address-level2" disabled><option value="">Önce il seçin</option></select>
+                    </label>
+                    <label class="gp-f"><span>Mahalle</span>
+                        <input class="gp-in" id="gpMah" type="text" maxlength="80" placeholder="Örn. Caferağa" autocomplete="address-level3">
+                    </label>
+                    <label class="gp-f"><span>Sokak / Cadde</span>
+                        <input class="gp-in" id="gpSok" type="text" maxlength="100" placeholder="Örn. Moda Caddesi" autocomplete="address-line1">
+                    </label>
+                    <label class="gp-f gp-no"><span>No</span>
+                        <input class="gp-in" id="gpNo" type="text" maxlength="10" placeholder="12" inputmode="numeric">
+                    </label>
+                    <button class="gp-btn" id="gpGo" type="submit">Haritada bul</button>
                 </form>
                 <ul class="gp-res" id="gpResults"></ul>
-                <p class="gp-msg" id="gpMsg">Adresi yazın ya da haritada binanızın üzerine tıklayın.</p>
+                <p class="gp-msg" id="gpMsg">İl ve ilçeyi seçin, mahalle ve sokağı yazın. Haritada binanızın üzerine tıklayarak da başlayabilirsiniz.</p>
             </section>
 
             <section class="gp-card" aria-labelledby="s2">
@@ -245,18 +270,32 @@ const lyr = { bld: L.layerGroup().addTo(map), faces: L.layerGroup().addTo(map), 
 function msg(t, warn) { $('gpMsg').textContent = t; $('gpMsg').classList.toggle('warn', !!warn); }
 function val(name) { return document.querySelector('input[name=' + name + ']:checked').value; }
 
-// Adres arama
+// Adres arama: il / ilçe / mahalle / sokak → bulunan en ayrıntılı seviye (v88)
+$('gpIl').addEventListener('change', () => {
+    const list = C.ilceler[$('gpIl').value] || [];
+    $('gpIlce').innerHTML = '<option value="">' + (list.length ? 'İlçe seçin' : 'Önce il seçin') + '</option>' + list.map((d) => '<option>' + esc(d) + '</option>').join('');
+    $('gpIlce').disabled = !list.length;
+});
+const ZOOM = { mahalle: 17, ilce: 14, il: 11 };
 $('gpSearch').addEventListener('submit', async () => {
-    const q = $('gpQ').value.trim();
-    if (q.length < 3) return msg('Lütfen adresi yazın (en az 3 harf).', true);
-    $('gpGo').disabled = true; msg('Aranıyor…');
+    const il = $('gpIl').value;
+    if (!il) { $('gpIl').focus(); return msg('Lütfen il seçin.', true); }
+    $('gpGo').disabled = true; $('gpResults').innerHTML = ''; msg('Aranıyor…');
+    const p = new URLSearchParams({ il, ilce: $('gpIlce').value, mahalle: $('gpMah').value.trim(), sokak: $('gpSok').value.trim(), no: $('gpNo').value.trim() });
     try {
-        const r = await fetch(C.geo + '?q=' + encodeURIComponent(q), { headers: { Accept: 'application/json' } }).then((x) => x.json());
-        const list = r.results || [];
-        $('gpResults').innerHTML = list.map((p, i) => '<li><button type="button" data-i="' + i + '">' + esc(p.name) + '</button></li>').join('');
-        $('gpResults').querySelectorAll('button').forEach((b) => b.addEventListener('click', () => pick(list[+b.dataset.i])));
-        if (list.length === 1) pick(list[0]);
-        msg(list.length ? 'Doğru adresi seçin.' : 'Adres bulunamadı. Mahalle ve ilçeyle deneyin ya da haritada binanıza tıklayın.', !list.length);
+        const r = await fetch(C.geo + '?' + p.toString(), { headers: { Accept: 'application/json' } }).then((x) => x.json());
+        const list = r.results || [], lvl = r.level;
+        if (!list.length) {
+            msg('Adres haritada bulunamadı. Haritayı yakınlaştırıp binanızın üzerine tıklayın.', true);
+        } else if (lvl === 'sokak') {
+            $('gpResults').innerHTML = list.length > 1 ? list.map((x, i) => '<li><button type="button" data-i="' + i + '">' + esc(x.name) + '</button></li>').join('') : '';
+            $('gpResults').querySelectorAll('button').forEach((b) => b.addEventListener('click', () => pick(list[+b.dataset.i])));
+            if (list.length === 1) pick(list[0]); else msg('Birden fazla sonuç var; doğru adresi seçin.');
+        } else {
+            map.setView([list[0].lat, list[0].lon], ZOOM[lvl] || 15);
+            const ne = { mahalle: 'Sokak haritada kayıtlı değil; mahalle', ilce: 'Mahalle bulunamadı; ilçe', il: 'İlçe bulunamadı; il' }[lvl] || 'Yakın bölge';
+            msg(ne + ' gösteriliyor. Haritayı yakınlaştırın ve binanızın çatısına tıklayın.', true);
+        }
     } catch (e) { msg('Adres servisine ulaşılamadı; haritada binanıza tıklayabilirsiniz.', true); }
     $('gpGo').disabled = false;
 });
