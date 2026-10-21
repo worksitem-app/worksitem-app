@@ -15,6 +15,11 @@ on:
   schedule:
     - cron: '30 3 * * 1'
   workflow_dispatch:
+    inputs:
+      pages:
+        description: 'Yalnız bu sayfalar (boşluksuz, virgülle; ör. /araclar/ges-planlayici). Boş = hepsi'
+        required: false
+        default: ''
 
 permissions:
   contents: read
@@ -28,6 +33,7 @@ jobs:
       - name: PageSpeed Insights (mobil)
         env:
           PSI_API_KEY: ${{ secrets.PSI_API_KEY }}
+          ONLY: ${{ github.event.inputs.pages }}
           PAGES: |
             /
             /araclar
@@ -43,6 +49,8 @@ jobs:
           MIN = {'performance': 70, 'seo': 95, 'accessibility': 85, 'best-practices': 85}
           key = os.environ.get('PSI_API_KEY', '').strip()
           pages = [p.strip() for p in os.environ['PAGES'].splitlines() if p.strip()]
+          if os.environ.get('ONLY', '').strip():
+              pages = [p.strip() for p in os.environ['ONLY'].split(',') if p.strip()]
 
           def psi(url):
               q = [('url', url), ('strategy', 'mobile'), ('locale', 'tr')] + [('category', c) for c in MIN]
