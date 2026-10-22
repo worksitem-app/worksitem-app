@@ -17,7 +17,7 @@ class SolarPlannerController extends Controller
         return view('tools.ges-planlayici', [
             'cfg' => (array) config('worksitem_solar'),
             'three' => (array) config('worksitem_planner.three'),
-            'kwhPrice' => SolarEstimator::P['kwh_price'],
+            'kwhPrice' => SolarEstimator::prices()['kwh_price'],
         ]);
     }
 
@@ -82,7 +82,7 @@ class SolarPlannerController extends Controller
             return response()->json(['ok' => false, 'message' => 'Çatıya panel yerleşmedi; çatı çizimini veya kenar boşluğunu kontrol edin.'], 422);
         }
         $y = $s->yield((float) $v['lat'], (float) $v['lon'], $v['faces'], $v['use'] === 'arazi');
-        $price = (float) ($v['price'] ?? SolarEstimator::P['kwh_price']);
+        $price = (float) ($v['price'] ?? SolarEstimator::prices()['kwh_price']);
         $eco = $s->economics($kwp, $v['use'], (bool) ($v['flat'] ?? false), (float) $y['yearly'], (float) ($v['monthly_kwh'] ?? 0), $price, (bool) ($v['battery'] ?? false), (array) ($v['site'] ?? []));
 
         // v90: yüzeylerin panel sayıları geldiyse kalem kalem malzeme listesi; maliyet ve geri dönüş bu listeden

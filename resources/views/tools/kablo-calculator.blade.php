@@ -137,9 +137,9 @@
             <div class="form-group">
                 <label>Kablo Tipi & Çekim Yöntemi</label>
                 <select id="installation" class="form-control">
-                    <option value="40" selected>Sıva Altı (NYM / Boru İçi)</option>
-                    <option value="60">Sıva Üstü / Tavada (Halogen Free)</option>
-                    <option value="90">Yer Altı (NYY Zırhlı)</option>
+                    <option value="{{ (float) data_get($pricing ?? [], 'kablo.siva_alti_m', 40) }}" selected>Sıva Altı (NYM / Boru İçi)</option>
+                    <option value="{{ (float) data_get($pricing ?? [], 'kablo.siva_ustu_m', 60) }}">Sıva Üstü / Tavada (Halogen Free)</option>
+                    <option value="{{ (float) data_get($pricing ?? [], 'kablo.yeralti_m', 90) }}">Yer Altı (NYY Zırhlı)</option>
                 </select>
             </div>
         </div>
@@ -300,7 +300,7 @@ document.getElementById('calculateBtn').addEventListener('click', function() {
 
     // Bütçe Hesaplama (Birim fiyat kablo kalınlaştıkça ve tesisat tipine göre artar)
     // Örn: Base (İşçilik) + (Kesit * Çarpan)
-    const unitPrice = installMultiplier + (chosen_s * 15);
+    const unitPrice = installMultiplier + (chosen_s * {{ (float) data_get($pricing ?? [], 'kablo.bakir_mm2_m', 15) }});
     const grandTotal = unitPrice * l;
 
     const money = new Intl.NumberFormat('tr-TR', { maximumFractionDigits: 0 });

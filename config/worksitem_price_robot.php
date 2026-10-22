@@ -18,7 +18,7 @@
 
 return [
     'enabled' => (bool) env('PRICE_ROBOT_ENABLED', true),
-    'daily_limit' => (int) env('PRICE_ROBOT_DAILY_LIMIT', 20),
+    'daily_limit' => (int) env('PRICE_ROBOT_DAILY_LIMIT', 55),   // ≈350 kalem ÷ 7 gün; ayda ≈1.550 arama (ücretsiz kota 5.000)
     'refresh_days' => (int) env('PRICE_ROBOT_REFRESH_DAYS', 7),    // her kalem en geç bu kadar günde bir yeniden araştırılır (50 kalem ≈ ayda 215 arama, ücretsiz kota 5.000)
     'poz_multiplier' => 1.40,
     'market_multiplier' => 1.00,
@@ -27,7 +27,7 @@ return [
     'model' => env('PRICE_ROBOT_MODEL', env('GEMINI_PRICE_RESEARCH_MODEL', 'gemini-3.6-flash')),
 
     // path: config yolu · q: Google'da aranacak ifade (Türkçe) · unit: fiyatın birimi · divide: bulunan fiyat ÷ (örn. 5 cm levha → cm başına) · factor: × (örn. m² → 60 cm yükseklikte mtül)
-    'items' => [
+    'items' => array_merge([
         // Mutfak
         ['path' => 'worksitem_estimators.mutfak.cabinet_m', 'tool' => 'mutfak-maliyet-hesaplayici', 'label' => 'Mutfak dolabı (alt + üst, montaj dahil)', 'q' => 'mutfak dolabı metre fiyatı alt üst dolap montaj dahil', 'unit' => 'mtül'],
         ['path' => 'worksitem_estimators.mutfak.counter_m.laminat', 'tool' => 'mutfak-maliyet-hesaplayici', 'label' => 'Laminat tezgah', 'q' => 'laminat mutfak tezgahı metre fiyatı montaj dahil', 'unit' => 'mtül'],
@@ -46,11 +46,11 @@ return [
         ['path' => 'worksitem_estimators.zemin.types.mermer.labor', 'tool' => 'zemin-kaplama', 'label' => 'Mermer döşeme işçiliği', 'q' => 'mermer döşeme işçilik m2 fiyatı', 'unit' => 'm²'],
 
         // v76: yapı kimyasalları (seramik, saha betonu)
-        ['path' => 'worksitem_estimators.seramik.epoxy_grout_3kg', 'tool' => 'seramik-maliyet-hesaplayici', 'label' => 'Epoksi derz dolgu (3 kg set)', 'q' => 'epoksi derz dolgu 3 kg fiyatı', 'unit' => 'set'],
-        ['path' => 'worksitem_estimators.seramik.level_clip', 'tool' => 'seramik-maliyet-hesaplayici', 'label' => 'Karo seviyeleme klipsi (adet)', 'q' => 'seramik seviyeleme klipsi 100 adet fiyatı', 'unit' => 'adet', 'divide' => 100],
+        ['path' => 'worksitem_estimators.seramik.epoxy_grout_3kg', 'tool' => 'seramik-maliyet-hesaplayici', 'label' => 'Epoksi derz dolgu (3 kg set)', 'q' => 'epoksi derz dolgu 3 kg fiyatı', 'unit' => 'set', 'setting_key' => 'tile_epoxy_grout_3kg'],
+        ['path' => 'worksitem_estimators.seramik.level_clip', 'tool' => 'seramik-maliyet-hesaplayici', 'label' => 'Karo seviyeleme klipsi (adet)', 'q' => 'seramik seviyeleme klipsi 100 adet fiyatı', 'unit' => 'adet', 'divide' => 100, 'setting_key' => 'tile_level_clip'],
         ['path' => 'worksitem_estimators.saha.densifier_m2', 'tool' => 'saha-betonu-hesaplayici', 'label' => 'Sıvı beton yüzey sertleştirici uygulaması', 'q' => 'lityum silikat beton yüzey sertleştirici uygulama m2 fiyatı', 'unit' => 'm²'],
-        ['path' => 'worksitem_estimators.beton_onarim.mortar_kg.cimento', 'tool' => 'beton-onarim-maliyeti', 'label' => 'Çimento esaslı yapısal tamir harcı', 'q' => 'R4 yapısal tamir harcı 25 kg fiyatı', 'unit' => 'kg', 'divide' => 25],
-        ['path' => 'worksitem_estimators.beton_onarim.grout_kg.cimento', 'tool' => 'beton-onarim-maliyeti', 'label' => 'Çimento esaslı akışkan grout', 'q' => 'akışkan grout harcı 25 kg fiyatı', 'unit' => 'kg', 'divide' => 25],
+        ['path' => 'worksitem_estimators.beton_onarim.mortar_kg.cimento', 'tool' => 'beton-onarim-maliyeti', 'label' => 'Çimento esaslı yapısal tamir harcı', 'q' => 'R4 yapısal tamir harcı 25 kg fiyatı', 'unit' => 'kg', 'divide' => 25, 'setting_key' => 'repair_mortar_cement_kg'],
+        ['path' => 'worksitem_estimators.beton_onarim.grout_kg.cimento', 'tool' => 'beton-onarim-maliyeti', 'label' => 'Çimento esaslı akışkan grout', 'q' => 'akışkan grout harcı 25 kg fiyatı', 'unit' => 'kg', 'divide' => 25, 'setting_key' => 'repair_grout_cement_kg'],
 
         // Mantolama
         ['path' => 'worksitem_estimators.mantolama.board_m2.eps', 'tool' => 'mantolama-maliyeti', 'label' => 'EPS mantolama levhası (cm başına)', 'q' => '5 cm karbonlu EPS mantolama levhası m2 fiyatı', 'unit' => 'm² · 1 cm', 'divide' => 5],
@@ -95,5 +95,50 @@ return [
         ['path' => 'worksitem_bathroom.showers.kabin.price', 'tool' => 'banyo-maliyet-hesaplayici', 'label' => 'Duşakabin (montaj dahil)', 'q' => 'duşakabin fiyatı 90x90 montaj dahil', 'unit' => 'adet', 'unit_keys' => ['banyo_dus_kabin_eko', 'banyo_dus_kabin_orta', 'banyo_dus_kabin_premium']],
         ['path' => 'worksitem_bathroom.extras.ex_dolap.price', 'tool' => 'banyo-maliyet-hesaplayici', 'label' => 'Banyo dolabı + lavabo + ayna', 'q' => 'lavabolu banyo dolabı aynalı fiyatı 80 cm', 'unit' => 'takım', 'unit_keys' => ['banyo_dolap_eko', 'banyo_dolap_orta', 'banyo_dolap_premium']],
         ['path' => 'worksitem_bathroom.unit.waterproof_m2', 'tool' => 'banyo-maliyet-hesaplayici', 'label' => 'Banyo zemin su yalıtımı', 'q' => 'banyo su yalıtımı m2 fiyatı işçilik dahil', 'unit' => 'm²', 'unit_keys' => ['banyo_yalitim_m2']],
+    ], require __DIR__.'/worksitem_price_robot_items.php'),
+
+    /*
+    | Kapsama: her araç ya robotta (items), ya bağlı olduğu aracın fiyatlarını kullanır (linked),
+    | ya resmî kaynaktan güncellenir (official), ya da fiyat içermez (no_price). Test bunu zorunlu kılar.
+    */
+    'coverage' => [
+        'linked' => [
+            'wc-maliyet-hesabi' => 'banyo-maliyet-hesaplayici',
+            'duvar-orgu' => 'duvar-maliyet-hesaplayici',
+            'banyo-planlayici' => 'banyo-maliyet-hesaplayici',
+            'wc-planlayici' => 'banyo-maliyet-hesaplayici',
+            'mutfak-planlayici' => 'mutfak-maliyet-hesaplayici',
+        ],
+        'official' => [
+            'alcipan-hesaplayici' => 'ÇŞB yapım işleri birim fiyatları (poz)',
+            'cati-maliyet-hesaplayici' => 'ÇŞB yapım işleri birim fiyatları (poz)',
+            'epoksi-zemin-hesaplayici' => 'ÇŞB yapım işleri birim fiyatları (poz)',
+            'havalandirma-hesaplayici' => 'ÇŞB yapım işleri birim fiyatları (poz)',
+            'yukseltilmis-doseme-hesaplayici' => 'ÇŞB yapım işleri birim fiyatları (poz)',
+            'birim-fiyat-analiz' => 'ÇŞB yapım işleri birim fiyatları (poz)',
+            'ihale-modulu' => 'ÇŞB yapım işleri birim fiyatları (poz)',
+            'otomatik-kesif-fiyatlandirma' => 'ÇŞB yapım işleri birim fiyatları (poz)',
+            'dijital-metraj' => 'ÇŞB yapım işleri birim fiyatları (poz)',
+            'tahmini-bina-maliyeti' => 'ÇŞB yapı yaklaşık birim maliyetleri tebliği',
+            'statik-proje-bedeli' => 'ÇŞB yapı yaklaşık birim maliyetleri tebliği',
+            'sgk-asgari-iscilik' => 'SGK asgari işçilik oranları',
+            'insaat-muhendisi-maas-hesabi' => 'TMMOB asgari ücret',
+        ],
+        'no_price' => [
+            'azami-konut-kredisi' => 'kullanıcı girdisi (gelir, faiz, vade)',
+            'daire-kira-degeri' => 'kullanıcı girdisi (piyasa değeri)',
+            'kat-karsiligi-analiz' => 'kullanıcı girdisi (arsa ve satış değerleri)',
+            'basit-kiris-statigi' => 'mühendislik hesabı', 'bina-agirlik-hesabi' => 'mühendislik hesabı',
+            'bombeli-tank-hacmi' => 'mühendislik hesabı', 'donati-tahvil-hesaplayici' => 'mühendislik hesabı',
+            'karot-dayanim' => 'mühendislik hesabı', 'kolon-filiz-boyu' => 'mühendislik hesabı',
+            'kolon-tasima-kapasitesi' => 'mühendislik hesabı', 'yapi-dinamigi' => 'mühendislik hesabı',
+            'pompa-gucu-hesabi' => 'mühendislik hesabı', 'klima-btu-hesaplayici' => 'mühendislik hesabı',
+            'malzeme-agirligi' => 'mühendislik hesabı', 'metrekup-hacim-hesaplama' => 'mühendislik hesabı',
+            'kesim-optimizasyonu' => 'mühendislik hesabı', 'pafta-olcu-hesaplayici' => 'mühendislik hesabı',
+            'havalandirma-kanali' => 'mühendislik hesabı',
+            'taks-kaks-hesaplayici' => 'imar hesabı', 'siginak-yonetmeligi' => 'imar hesabı',
+            'belge-olusturucu' => 'belge şablonu', 'duvar-rengi-gorsellestirici' => 'renk görselleştirme',
+            'oda-planlayici' => 'yapay zekâ tasarım',
+        ],
     ],
 ];

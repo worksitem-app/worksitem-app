@@ -252,8 +252,8 @@ document.getElementById('calculateBtn').addEventListener('click', function() {
     const sandTons = volume * 1.6;
 
     // FİYATLANDIRMA (Güncel Ortalama Piyasalar)
-    const cementPricePerBag = 180; // 50kg çimento torbası 
-    const sandPricePerTon = 450; // Ton bazında yıkanmış inşaat kumu
+    const cementPricePerBag = {{ (float) data_get($pricing ?? [], 'harc.cimento_50kg_torba', 220) }}; // 50 kg çimento torbası (fiyat robotu) 
+    const sandPricePerTon = {{ (float) data_get($pricing ?? [], 'harc.kum_ton', 450) }}; // ton, yıkanmış inşaat kumu (fiyat robotu)
 
     const materialTotal = (cementBags * cementPricePerBag) + (sandTons * sandPricePerTon);
 

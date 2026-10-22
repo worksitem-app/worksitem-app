@@ -76,7 +76,7 @@ class AppServiceProvider extends ServiceProvider
             $pricing[$p['category']][$p['key']] = $p['price'];
         }
 
-        return $pricing;
+        return \App\Services\Pricing\PriceRobotOverrides::applyToPricing($pricing);
     }
 
     /**

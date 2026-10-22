@@ -10,6 +10,7 @@ class PriceDate
 {
     public static function for(?string $tool = null): \Illuminate\Support\Carbon
     {
+        $tool = $tool ? (string) (config("worksitem_price_robot.coverage.linked.$tool") ?: $tool) : null;
         $dates = [(string) config('worksitem_estimators.prices_reviewed', now()->toDateString())];
         try {
             if ($tool && Schema::hasTable('price_robot_items')) {
@@ -30,6 +31,10 @@ class PriceDate
     /** Rapor notu: bu araçta fiyat robotunun izlediği kalem sayısı ve yenileme sıklığı (yalnız doğru olanı söyler) */
     public static function note(?string $tool = null): string
     {
+        if ($tool && ($src = config("worksitem_price_robot.coverage.official.$tool"))) {
+            return "Fiyatlar resmî kaynaktan alınır: $src.";
+        }
+        $tool = $tool ? (string) (config("worksitem_price_robot.coverage.linked.$tool") ?: $tool) : null;
         $n = $tool ? count(array_filter((array) config('worksitem_price_robot.items', []), fn ($i) => ($i['tool'] ?? '') === $tool)) : 0;
         $d = (int) config('worksitem_price_robot.refresh_days', 7);
 

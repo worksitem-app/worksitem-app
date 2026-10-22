@@ -49,7 +49,7 @@ class ProRaporUzmanTest extends TestCase
         $this->assertStringContainsString('1/3', $html);                 // 30×60 şaşırtma
         $this->assertStringContainsString('göllendirme testi', $html);
         $this->assertStringContainsString('Bu raporla ne yapmalı?', $html);
-        $this->assertStringContainsString('Bu araçtaki 2 kalem fiyat robotuyla en geç 7 günde bir yeniden araştırılır', $html);
+        $this->assertMatchesRegularExpression('/Bu araçtaki \d+ kalem fiyat robotuyla en geç 7 günde bir yeniden araştırılır/', $html);
         $this->assertStringNotContainsString('Bu kalemde sponsor marka', $html);  // sponsor yokken çıkmaz
     }
 

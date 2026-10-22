@@ -48,4 +48,12 @@ return [
     'siva' => [
         'kara_siva_m2' => 255.40, // ÇŞB Poz 15.275.1102 (İç/Dış cephe normal sıva yapılması)
     ],
+    // v102: hesaplayıcılarda sabit yazılı fiyatlar buraya taşındı; fiyat robotu her hafta günceller (KDV dahil)
+    'asansor' => ['paket' => 400000, 'durak' => 35000],            // kabin + makine + pano paketi; durak başına kat kapısı, ray, kablo
+    'kablo' => ['siva_alti_m' => 40, 'siva_ustu_m' => 60, 'yeralti_m' => 90, 'bakir_mm2_m' => 15],   // işçilik + kesit (mm²) başına metre
+    'is_makinesi' => ['ekskavator_gun' => 8000, 'beko_gun' => 5000, 'mobil_vinc_gun' => 12000, 'kule_vinc_ay' => 250000],
+    'akaryakit' => ['motorin_l' => 45],
+    'iscilik' => ['operator_gun' => 2500, 'duz_isci_gun' => 1500, 'yemek_yol_gun' => 350],
+    'lojistik' => ['sefer_ucreti' => 3500],                         // 25 t kamyon, şehir içi sefer
+    'yagmur' => ['boru_70_m' => 242.69, 'boru_100_m' => 315.65, 'boru_125_m' => 366.40],   // PVC iniş borusu, montaj dahil, metre
 ];

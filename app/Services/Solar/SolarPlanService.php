@@ -227,7 +227,7 @@ class SolarPlanService
     /** Maliyet ve geri dönüş: GES maliyet aracının kWp fiyatlarıyla */
     public function economics(float $kwp, string $use, bool $flat, float $yearly, float $monthlyKwh, float $price, bool $battery = false, array $site = []): array
     {
-        $P = SolarEstimator::P;
+        $P = SolarEstimator::prices();
         $scale = 1.0;
         foreach ((array) config('worksitem_solar.scale') as [$min, $f]) {
             if ($kwp >= $min) {

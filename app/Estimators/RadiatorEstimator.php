@@ -6,6 +6,12 @@ class RadiatorEstimator extends KitEstimator
 {
     private const P = ['h60' => 2600, 'h50' => 2200, 'h90' => 3600, 'mount' => 1200, 'valve' => 450, 'thermo' => 1300, 'piping_m2' => 650, 'boiler' => [36000, 42000, 60000], 'boiler_install' => 9000];
 
+    /** Fiyatlar: config('worksitem_estimators.radyator') (fiyat robotu günceller); sabit yalnız yedek */
+    private static function prices(): array
+    {
+        return array_replace(self::P, (array) config('worksitem_estimators.radyator', []));
+    }
+
     private const OUT = ['h60' => 1700, 'h50' => 1300, 'h90' => 2400];   // kcal/h per metre (Tip 22, ΔT50)
 
     public function key(): string { return 'radyator'; }
@@ -92,11 +98,11 @@ class RadiatorEstimator extends KitEstimator
         $kw = $kcal / 860;
         $bi = $kw <= 28 ? 0 : ($kw <= 35 ? 1 : 2);
         $items = [
-            'petek' => ['label' => 'Panel petek ('.self::n1($m).' m)', 'mid' => $m * self::P[$in['type']], 'color' => '#FFB800'],
-            'vana' => ['label' => $this->has($in, 'extras', 'thermo') ? 'Termostatik vana takımı' : 'Vana takımı', 'mid' => $n * ($this->has($in, 'extras', 'thermo') ? self::P['thermo'] : self::P['valve']), 'color' => '#8A6200'],
-            'montaj' => ['label' => 'Petek montajı', 'mid' => $n * self::P['mount'], 'color' => '#101318'],
-            'tesisat' => ['label' => 'Kalorifer tesisatı (boru, kolektör)', 'mid' => $in['scope'] === 'tesisat' ? (float) $in['area'] * self::P['piping_m2'] : 0, 'color' => '#2F6F8F'],
-            'kombi' => ['label' => 'Yoğuşmalı kombi + montaj', 'mid' => $this->has($in, 'extras', 'boiler') ? self::P['boiler'][$bi] + self::P['boiler_install'] : 0, 'color' => '#5B6472'],
+            'petek' => ['label' => 'Panel petek ('.self::n1($m).' m)', 'mid' => $m * self::prices()[$in['type']], 'color' => '#FFB800'],
+            'vana' => ['label' => $this->has($in, 'extras', 'thermo') ? 'Termostatik vana takımı' : 'Vana takımı', 'mid' => $n * ($this->has($in, 'extras', 'thermo') ? self::prices()['thermo'] : self::prices()['valve']), 'color' => '#8A6200'],
+            'montaj' => ['label' => 'Petek montajı', 'mid' => $n * self::prices()['mount'], 'color' => '#101318'],
+            'tesisat' => ['label' => 'Kalorifer tesisatı (boru, kolektör)', 'mid' => $in['scope'] === 'tesisat' ? (float) $in['area'] * self::prices()['piping_m2'] : 0, 'color' => '#2F6F8F'],
+            'kombi' => ['label' => 'Yoğuşmalı kombi + montaj', 'mid' => $this->has($in, 'extras', 'boiler') ? self::prices()['boiler'][$bi] + self::prices()['boiler_install'] : 0, 'color' => '#5B6472'],
             'temizlik' => ['label' => 'Tesisat temizliği', 'mid' => $this->has($in, 'extras', 'flush') ? 3500 : 0, 'color' => '#7FB3C8'],
         ];
         $days = $in['scope'] === 'tesisat' ? [3, 6] : [1, 2];

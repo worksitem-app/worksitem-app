@@ -43,7 +43,7 @@ class IsolatorEstimator extends KitEstimator
                 ['Mevzuat', 'Kamu hastaneleri gibi bazı yapılarda deprem bölgesine göre izolasyon zorunludur.'],
             ],
             'faq' => [
-                ['Deprem izolatörü tanesi kaç TL?', 'Konut sınıfı (2.500–5.000 kN) bir izolatör KDV dahil yaklaşık '.number_format(self::UNIT['konut'] * 1.2, 0, ',', '.').' TL\'dir; montaj ve mühendislik ayrıca eklenir.'],
+                ['Deprem izolatörü tanesi kaç TL?', 'Konut sınıfı (2.500–5.000 kN) bir izolatör KDV dahil yaklaşık '.number_format((float) config('worksitem_estimators.izolator.unit.konut', self::UNIT['konut']) * 1.2, 0, ',', '.').' TL\'dir; montaj ve mühendislik ayrıca eklenir.'],
                 ['40 kolonlu bir binada maliyet ne olur?', 'Yeni yapılan konut sınıfı bir binada montaj ve mühendislik dahil yaklaşık '.$this->exampleRange(['columns' => 40, 'floors' => 6, 'class' => 'konut', 'scope' => 'yeni']).' tutar.'],
                 ['Mevcut binaya izolatör yapılabilir mi?', 'Teknik olarak mümkündür ama kolonların kesilip yükün geçici desteklenmesi gerekir; maliyet ve süre belirgin artar.'],
                 ['Hesaba neler dahil?', 'İzolatör, montaj, izolasyon katı işleri, proje ve test. Statik güçlendirme ve mimari değişiklikler dahil değildir. KDV dahil yaklaşık değerlerdir.'],
@@ -74,7 +74,7 @@ class IsolatorEstimator extends KitEstimator
     protected function compute(array $in): array
     {
         $n = (int) round((float) $in['columns']);
-        $unit = self::UNIT[$in['class']] * 1.2;
+        $unit = (float) (config('worksitem_estimators.izolator.unit.'.$in['class']) ?? self::UNIT[$in['class']]) * 1.2;
         $iso = $n * $unit;
         $items = [
             'izolator' => ['label' => 'Sismik izolatör ('.$n.' adet)', 'mid' => $iso, 'color' => '#FFB800'],

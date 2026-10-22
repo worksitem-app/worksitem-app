@@ -120,7 +120,7 @@
             </div>
             <div class="form-group">
                 <label>Net Günlük Yevmiye (Kişi Başı TL)</label>
-                <input type="number" id="dailyWage" class="form-control" placeholder="Örn: 1500" value="1500" min="500" step="50">
+                <input type="number" id="dailyWage" class="form-control" placeholder="Örn: 1500" value="{{ (float) data_get($pricing ?? [], 'iscilik.duz_isci_gun', 1500) }}" min="500" step="50">
             </div>
         </div>
 
@@ -131,7 +131,7 @@
             </div>
             <div class="form-group">
                 <label>Günlük Yemek + Yol (Kişi Başı TL)</label>
-                <input type="number" id="foodTravel" class="form-control" placeholder="Örn: 350" value="350" min="0" step="10">
+                <input type="number" id="foodTravel" class="form-control" placeholder="Örn: 350" value="{{ (float) data_get($pricing ?? [], 'iscilik.yemek_yol_gun', 350) }}" min="0" step="10">
             </div>
         </div>
 

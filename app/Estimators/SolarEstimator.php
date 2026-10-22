@@ -6,6 +6,12 @@ class SolarEstimator extends KitEstimator
 {
     public const P = ['panel_kwp' => 10000, 'inverter_kwp' => 6000, 'mount_kwp' => ['cati' => 3500, 'arazi' => 5500], 'install_kwp' => 4000, 'project' => 15000, 'battery_kwh' => 12000, 'kwh_price' => 3.5];
 
+    /** Fiyatlar: config('worksitem_estimators.ges') (fiyat robotu günceller); sabit yalnız yedek */
+    public static function prices(): array
+    {
+        return array_replace(self::P, (array) config('worksitem_estimators.ges', []));
+    }
+
     public function key(): string { return 'ges'; }
 
     public function slug(): string { return 'gunes-paneli-hesaplama'; }
@@ -28,7 +34,7 @@ class SolarEstimator extends KitEstimator
             'sponsor_title' => 'Güneş enerjisi markaları',
             'facts' => ['Ücretsiz, kayıt gerekmez', 'Geri dönüş süresi', '$ € £ karşılığı'],
             'method' => [
-                'Aylık tüketim (kWh) = fatura ÷ birim fiyat (≈'.str_replace('.', ',', (string) self::P['kwh_price']).' TL/kWh).',
+                'Aylık tüketim (kWh) = fatura ÷ birim fiyat (≈'.str_replace('.', ',', (string) self::prices()['kwh_price']).' TL/kWh).',
                 'Kurulu güç (kWp) = aylık tüketim ÷ (günlük güneşlenme × 30 × 0,80 sistem verimi).',
                 'Panel, inverter, konstrüksiyon ve montaj kWp başına; proje ve başvuru sabit; batarya seçilirse kWp × 2 kWh kapasite eklenir.',
                 'Geri dönüş = toplam maliyet ÷ yıllık fatura tasarrufu (fiyat artışı hesaba katılmaz). %5 beklenmedik gider ve −%15 / +%20 aralık uygulanır.',
@@ -87,7 +93,7 @@ class SolarEstimator extends KitEstimator
 
     private function size(array $in): array
     {
-        $kwhMonth = (float) $in['bill'] / self::P['kwh_price'];
+        $kwhMonth = (float) $in['bill'] / self::prices()['kwh_price'];
         $kwp = max(1, round($kwhMonth / ((float) $in['sun'] * 30 * 0.8), 1));
 
         return [$kwhMonth, $kwp];
@@ -98,12 +104,12 @@ class SolarEstimator extends KitEstimator
         [, $kwp] = $this->size($in);
         $qf = $this->q($in, [0.85, 1.0, 1.25]);
         $items = [
-            'panel' => ['label' => 'Güneş paneli', 'mid' => $kwp * self::P['panel_kwp'] * $qf, 'color' => '#FFB800'],
-            'inverter' => ['label' => 'İnverter', 'mid' => $kwp * self::P['inverter_kwp'] * $qf, 'color' => '#101318'],
-            'kons' => ['label' => 'Konstrüksiyon', 'mid' => $kwp * self::P['mount_kwp'][$in['mount']], 'color' => '#5B6472'],
-            'montaj' => ['label' => 'Kablo, koruma ve montaj', 'mid' => $kwp * self::P['install_kwp'], 'color' => '#8A6200'],
-            'proje' => ['label' => 'Proje, başvuru ve kabul', 'mid' => self::P['project'], 'color' => '#2F6F8F'],
-            'batarya' => ['label' => 'Batarya ('.self::n1($kwp * 2).' kWh)', 'mid' => $this->has($in, 'extras', 'battery') ? $kwp * 2 * self::P['battery_kwh'] : 0, 'color' => '#7FB3C8'],
+            'panel' => ['label' => 'Güneş paneli', 'mid' => $kwp * self::prices()['panel_kwp'] * $qf, 'color' => '#FFB800'],
+            'inverter' => ['label' => 'İnverter', 'mid' => $kwp * self::prices()['inverter_kwp'] * $qf, 'color' => '#101318'],
+            'kons' => ['label' => 'Konstrüksiyon', 'mid' => $kwp * self::prices()['mount_kwp'][$in['mount']], 'color' => '#5B6472'],
+            'montaj' => ['label' => 'Kablo, koruma ve montaj', 'mid' => $kwp * self::prices()['install_kwp'], 'color' => '#8A6200'],
+            'proje' => ['label' => 'Proje, başvuru ve kabul', 'mid' => self::prices()['project'], 'color' => '#2F6F8F'],
+            'batarya' => ['label' => 'Batarya ('.self::n1($kwp * 2).' kWh)', 'mid' => $this->has($in, 'extras', 'battery') ? $kwp * 2 * self::prices()['battery_kwh'] : 0, 'color' => '#7FB3C8'],
             'izleme' => ['label' => 'Uzaktan izleme', 'mid' => $this->has($in, 'extras', 'monitor') ? 6000 : 0, 'color' => '#C9A55A'],
         ];
         $total = array_sum(array_column($items, 'mid')) * (1 + $this->contingencyRate());
@@ -126,7 +132,7 @@ class SolarEstimator extends KitEstimator
             ['Konstrüksiyon', (int) ceil($kwp * 1000 / 500), 'panel seti', $in['mount'] === 'cati' ? 'Çatı tipi' : 'Arazi tipi'],
             ['Solar kablo (4–6 mm²)', (int) ceil(20 + $kwp * 8), 'm', ''],
             ['Gerekli çatı / arazi alanı', (int) ceil($kwp * 5.5), 'm²', '≈5,5 m²/kWp'],
-            ['Aylık tüketim (fatura)', number_format($kwhMonth, 0, ',', '.'), 'kWh', '≈'.str_replace('.', ',', (string) self::P['kwh_price']).' TL/kWh ile'],
+            ['Aylık tüketim (fatura)', number_format($kwhMonth, 0, ',', '.'), 'kWh', '≈'.str_replace('.', ',', (string) self::prices()['kwh_price']).' TL/kWh ile'],
         ];
     }
 

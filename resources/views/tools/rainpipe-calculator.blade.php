@@ -56,9 +56,9 @@
         function calc() {
             let a = parseFloat(document.getElementById('area').value)||0; let h = parseFloat(document.getElementById('h').value)||0; let c = parseInt(document.getElementById('count').value)||1;
             let per = a / c;
-            let dia = 70; let price = 242.69; // ÇŞB 15.315.1001
-            if(per > 40 && per <= 80) { dia = 100; price = 315.65; } // ÇŞB 15.315.1002
-            else if(per > 80) { dia = 125; price = 366.40; } // ÇŞB 15.315.1003
+            let dia = 70; let price = {{ (float) data_get($pricing ?? [], 'yagmur.boru_70_m', 242.69) }}; // PVC iniş borusu, montaj dahil (fiyat robotu)
+            if(per > 40 && per <= 80) { dia = 100; price = {{ (float) data_get($pricing ?? [], 'yagmur.boru_100_m', 315.65) }}; }
+            else if(per > 80) { dia = 125; price = {{ (float) data_get($pricing ?? [], 'yagmur.boru_125_m', 366.4) }}; }
             
             let total = price * h * c;
             

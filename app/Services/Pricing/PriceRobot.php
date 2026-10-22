@@ -185,6 +185,7 @@ class PriceRobot
     /** Kalem admin fiyat defterine bağlıysa (unit_keys) yeni fiyatı oraya da yazar: ekonomik/orta/premium sırasıyla */
     private function writeUnitPrices(array $it, mixed $value): void
     {
+        $this->writeAdminPrices($it, $value);
         $keys = (array) ($it['unit_keys'] ?? []);
         if (! $keys || ! Schema::hasTable('unit_prices')) {
             return;
@@ -194,12 +195,42 @@ class PriceRobot
             if (! isset($vals[$i]) || ! is_numeric($vals[$i])) {
                 continue;
             }
-            DB::table('unit_prices')->where('key', $key)->update([
+            DB::table('unit_prices')->where('key', $key)->update(array_merge([
                 'price' => round((float) $vals[$i], 2), 'source_name' => 'Fiyat robotu (Google, ortanca)',
                 'source_date' => now()->toDateString(), 'updated_at' => now(),
-            ]);
+            ], ! empty($it['vat_included']) ? ['vat_included' => true] : []));
         }
         \Illuminate\Support\Facades\Cache::forget(\App\Services\BathroomPriceBook::CACHE_KEY);
+    }
+
+    /**
+     * Hesap motorunda admin kaydı config'in önüne geçiyorsa (pricing_settings / araç fiyat bağı)
+     * robotun değeri oraya da yazılır; yoksa robot güncellese de araç eski admin değerini kullanırdı.
+     * Resmî poz bağları (official_poz) değiştirilmez.
+     */
+    private function writeAdminPrices(array $it, mixed $value): void
+    {
+        $mid = PriceRobotItem::mid($value);
+        if (! $mid) {
+            return;
+        }
+        if (! empty($it['setting_key']) && Schema::hasTable('pricing_settings')) {
+            if (DB::table('pricing_settings')->where('key', $it['setting_key'])->exists()) {
+                DB::table('pricing_settings')->where('key', $it['setting_key'])->update(['value' => round($mid, 2), 'updated_at' => now()]);
+            }
+        }
+        if (! empty($it['tool_role']) && Schema::hasTable('tool_price_bindings') && Schema::hasTable('unit_prices')) {
+            [$tool, $role] = $it['tool_role'];
+            $b = DB::table('tool_price_bindings')->where('tool_slug', $tool)->where('role', $role)->first();
+            if ($b && ($b->source_type ?? 'market_key') === 'market_key' && ! empty($b->price_key)) {
+                $m = (float) ($b->multiplier ?? 1) ?: 1;
+                DB::table('unit_prices')->where('key', $b->price_key)->update([
+                    'price' => round($mid / $m, 2), 'vat_included' => true, 'source_name' => 'Fiyat robotu (Google, ortanca)',
+                    'source_date' => now()->toDateString(), 'updated_at' => now(),
+                ]);
+            }
+        }
+        \App\Services\CostEngine::clearCache();
     }
 
     // ── yardımcılar ──────────────────────────────────────────────

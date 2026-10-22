@@ -37,14 +37,14 @@
         <div class="form-grid">
             <div><label>Makine Türü</label>
             <select id="machineType" class="form-control">
-                <option value="8000" data-fuel="12">Paletli Ekskavatör (30 Ton) - 8.000 TL/Gün</option>
-                <option value="5000" data-fuel="8">Beko Loder (Kazıcı Yükleyici) - 5.000 TL/Gün</option>
-                <option value="12000" data-fuel="15">Mobil Vinç (35 Ton) - 12.000 TL/Gün</option>
-                <option value="250000" data-fuel="0">Kule Vinç (Aylık Sabit) - 250.000 TL/Ay</option>
+                <option value="{{ (float) data_get($pricing ?? [], 'is_makinesi.ekskavator_gun', 8000) }}" data-fuel="12">Paletli Ekskavatör (30 Ton) - {{ number_format((float) data_get($pricing ?? [], 'is_makinesi.ekskavator_gun', 8000), 0, ',', '.') }} TL/Gün</option>
+                <option value="{{ (float) data_get($pricing ?? [], 'is_makinesi.beko_gun', 5000) }}" data-fuel="8">Beko Loder (Kazıcı Yükleyici) - {{ number_format((float) data_get($pricing ?? [], 'is_makinesi.beko_gun', 5000), 0, ',', '.') }} TL/Gün</option>
+                <option value="{{ (float) data_get($pricing ?? [], 'is_makinesi.mobil_vinc_gun', 12000) }}" data-fuel="15">Mobil Vinç (35 Ton) - {{ number_format((float) data_get($pricing ?? [], 'is_makinesi.mobil_vinc_gun', 12000), 0, ',', '.') }} TL/Gün</option>
+                <option value="{{ (float) data_get($pricing ?? [], 'is_makinesi.kule_vinc_ay', 250000) }}" data-fuel="0">Kule Vinç (Aylık Sabit) - {{ number_format((float) data_get($pricing ?? [], 'is_makinesi.kule_vinc_ay', 250000), 0, ',', '.') }} TL/Ay</option>
             </select></div>
             <div><label>Çalışma Süresi (Gün)</label><input type="number" id="days" class="form-control" value="30"></div>
-            <div><label>Motorin (Mazot) Litre Fiyatı (TL)</label><input type="number" id="fuelPrice" class="form-control" value="45"></div>
-            <div><label>Operatör Günlük Yevmiye (TL)</label><input type="number" id="operator" class="form-control" value="2500"></div>
+            <div><label>Motorin (Mazot) Litre Fiyatı (TL)</label><input type="number" id="fuelPrice" class="form-control" value="{{ (float) data_get($pricing ?? [], 'akaryakit.motorin_l', 45) }}"></div>
+            <div><label>Operatör Günlük Yevmiye (TL)</label><input type="number" id="operator" class="form-control" value="{{ (float) data_get($pricing ?? [], 'iscilik.operator_gun', 2500) }}"></div>
         </div>
         <button class="btn" id="calcBtn">Toplam Makine Amortismanını Hesapla</button>
     </div>

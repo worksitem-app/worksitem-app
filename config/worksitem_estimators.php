@@ -245,4 +245,9 @@ return [
         'repair_point' => 900,                      // kanal kapatma, sıva/seramik tamiri
         'collector' => 9000, 'booster' => 28000, 'boiler' => 4500, 'meter' => 3000,
     ],
+
+    // v102: sınıf sabitlerinden taşındı (fiyat robotu günceller)
+    'radyator' => ['h60' => 2600, 'h50' => 2200, 'h90' => 3600, 'mount' => 1200, 'valve' => 450, 'thermo' => 1300, 'piping_m2' => 650, 'boiler' => [36000, 42000, 60000], 'boiler_install' => 9000],
+    'izolator' => ['unit' => ['konut' => 175035, 'agir' => 208199, 'hastane' => 240644]],   // KDV hariç, izolatör başına
+    'ges' => ['panel_kwp' => 10000, 'inverter_kwp' => 6000, 'mount_kwp' => ['cati' => 3500, 'arazi' => 5500], 'install_kwp' => 4000, 'project' => 15000, 'battery_kwh' => 12000, 'kwh_price' => 3.5],
 ];

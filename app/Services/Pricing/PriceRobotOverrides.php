@@ -45,10 +45,36 @@ class PriceRobotOverrides
     public static function apply(): void
     {
         foreach (self::map() as $path => $value) {
-            if (str_starts_with($path, 'worksitem_estimators.') || str_starts_with($path, 'worksitem_bathroom.')) {
+            if (self::applies($path)) {
                 config([$path => $value]);
             }
         }
+    }
+
+    /** Robotun yazabildiği config dalları */
+    public const PREFIXES = ['worksitem_estimators.', 'worksitem_bathroom.', 'worksitem_solar.', 'pricing.'];
+
+    public static function applies(string $path): bool
+    {
+        foreach (self::PREFIXES as $p) {
+            if (str_starts_with($path, $p)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /** pricing.* değerlerini verilen diziye yazar (DB fiyatları birleştirildikten sonra robotun güncel değeri geçerli olsun) */
+    public static function applyToPricing(array $pricing): array
+    {
+        foreach (self::map() as $path => $value) {
+            if (str_starts_with($path, 'pricing.')) {
+                \Illuminate\Support\Arr::set($pricing, substr($path, strlen('pricing.')), $value);
+            }
+        }
+
+        return $pricing;
     }
 
     public static function flush(): void

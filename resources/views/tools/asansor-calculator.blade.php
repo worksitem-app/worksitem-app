@@ -294,10 +294,10 @@ document.getElementById('calculateBtn').addEventListener('click', function() {
 
     // 2. BÜTÇE HESAPLAMASI (2026 Tahmini Rayiçleri)
     // Temel Paket (Kabin, Makine Motor, Pano): Ortalama 400.000 TL (Kapasite çarpanı etkiler)
-    const baseEngineCost = 400000 * capacityMultiplier;
+    const baseEngineCost = {{ (float) data_get($pricing ?? [], 'asansor.paket', 400000) }} * capacityMultiplier;
     
     // Durak Başına Ek Maliyet (Kat kapısı, kuyu içi raylar, kablolar vb.): Durak başı ~35.000 TL
-    const costPerStop = 35000 * capacityMultiplier;
+    const costPerStop = {{ (float) data_get($pricing ?? [], 'asansor.durak', 35000) }} * capacityMultiplier;
     const totalStopCost = floors * costPerStop;
 
     const grandTotal = baseEngineCost + totalStopCost;
