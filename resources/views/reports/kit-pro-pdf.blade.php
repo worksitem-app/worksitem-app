@@ -26,22 +26,23 @@
     .doc-title { font-size: 17px; font-weight: bold; }
     .pro { display: inline-block; background: #FFB800; color: #101318; font-weight: bold; font-size: 9px; padding: 2px 7px; border-radius: 8px; }
     .hero { margin-top: 8px; background: #101318; color: #fff; border-radius: 10px; }
-    .hero > tr > td, .hero td { padding: 12px 16px; }
-    .hero td { vertical-align: top; }
-    .hero .lbl { color: #FFFFFF; font-size: 11px; font-weight: bold; }
-    .hero .range { color: #FFB800; font-size: 25px; font-weight: bold; margin: 0 0 4px; }
-    .hero .typ { color: #DFE3E8; margin-top: 3px; }
-    .hero .ex { color: #AAB1BC; font-size: 8.8px; margin-top: 3px; }
-    .hero .fx { color: #DFE3E8; font-size: 10px; line-height: 1.55; }
-    .hero .fx b { color: #FFFFFF; }
-    .hero .side { border-left: 1px solid #3A414C; padding-left: 14px; }
-    .eq { font-size: 8.6px; color: #8A6200; margin-top: 2px; }
-    .eq .sptag { color: #8A6200; }
+    .hero td { vertical-align: middle; padding: 12px 16px; }
+    .hero .lbl { color: #C9CED6; font-size: 10px; }
+    .hero .range { color: #FFB800; font-size: 25px; font-weight: bold; margin: 0; }
+    .hero .typ { color: #DFE3E8; margin-top: 4px; }
+    .hero .fx { color: #AAB1BC; font-size: 9.5px; margin-top: 4px; }
+    .hero .side { border-left: 1px solid #3A414C; }
+    .sp-badge { display: inline-block; font-size: 7.5px; text-transform: uppercase; letter-spacing: .05em; color: #5B6472; border: 0.6px solid #8B93A0; border-radius: 3px; padding: 0 3px; }
+    .eq { font-size: 8.5px; color: #6B7280; margin-top: 2px; }
     .notes td { padding: 5px 7px; border-bottom: 1px solid #E3E6EA; vertical-align: top; }
     .notes td.t { width: 24%; font-weight: bold; }
     .next { margin-top: 10px; border: 1px solid #E3E6EA; border-radius: 8px; padding: 9px 12px; }
     .next ol { margin: 4px 0 0 16px; padding: 0; }
-    .sheet { margin-top: 6px; border: 1px dashed #C9A55A; border-radius: 6px; padding: 6px 9px; color: #6E4F00; }
+    .sheet { margin-top: 6px; border: 1px solid #E3E6EA; border-radius: 6px; padding: 6px 9px; }
+    .testenv { margin-top: 6px; background: #F5F6F8; border: 1px dashed #A0A7B2; border-radius: 6px; padding: 6px 9px; color: #5B6472; font-size: 8.5px; }
+    .ads { margin-top: 14px; border-top: 1px solid #D5D9DF; padding-top: 6px; }
+    .ads h3 { font-size: 11.5px; margin: 0 0 3px; color: #5B6472; }
+    .ads .sp td { background: #F5F6F8; border: 1px solid #E3E6EA; }
     h2 { font-size: 12.5px; margin: 14px 0 5px; padding-bottom: 3px; border-bottom: 2px solid #FFB800; }
     .grid td { padding: 3px 8px; border-bottom: 1px solid #E3E6EA; }
     .grid td.k { color: #5B6472; width: 38%; }
@@ -54,6 +55,7 @@
     .ck td { padding: 4px 6px; border-bottom: 1px dashed #E3E6EA; vertical-align: top; }
     .box { display: inline-block; width: 9px; height: 9px; border: 1.2px solid #101318; border-radius: 2px; }
     .sp td { width: 50%; border: 1px solid #E3E6EA; border-radius: 6px; padding: 7px 9px; vertical-align: top; }
+    .keep { page-break-inside: avoid; }
     .sptag { font-size: 8px; color: #8b93a0; text-transform: uppercase; letter-spacing: .05em; }
     .warn { margin-top: 10px; border-left: 4px solid #FFB800; background: #FFF8E1; padding: 9px 12px; border-radius: 6px; }
     .warn strong { display: block; margin-bottom: 3px; }
@@ -66,7 +68,7 @@
 </head>
 <body>
 
-<div class="foot">worksitem.com · Pro rapor {{ $reportNo }} · {{ $issuedAt->format('d.m.Y H:i') }} · Yaklaşık hesaptır, teklif değildir.</div>
+<div class="foot">worksitem.com · Pro rapor {{ $reportNo }} · {{ $issuedAt->format('d.m.Y H:i') }} · Yaklaşık hesaptır, teklif değildir. Sponsorlu içerikler “Sponsorlu” etiketiyle işaretlidir.</div>
 
 <table class="head">
     <tr>
@@ -86,17 +88,16 @@
                 <div class="fx">
                     @foreach ($currencies as $code => $sym)
                         @if (! empty($fx['rates'][$code]))
-                            <b>{{ $code }}</b> {{ $sym }}{{ number_format(round($est['low'] / $fx['rates'][$code], -1), 0, ',', '.') }} – {{ $sym }}{{ number_format(round($est['high'] / $fx['rates'][$code], -1), 0, ',', '.') }} · 1 {{ $code }} = {{ number_format($fx['rates'][$code], 2, ',', '.') }} TL<br>
+                            ≈&nbsp;{{ $sym }}{{ number_format(round($est['low'] / $fx['rates'][$code], -1), 0, ',', '.') }}&nbsp;–&nbsp;{{ $sym }}{{ number_format(round($est['high'] / $fx['rates'][$code], -1), 0, ',', '.') }}&nbsp;&nbsp;
                         @endif
                     @endforeach
                 </div>
+                <div class="fx" style="font-size:9px;margin-top:1px">(TCMB döviz satış kuru, {{ $fx['date'] }})</div>
             @endif
         </td>
         <td class="side">
-            <div class="lbl">Tahmini maliyet aralığı</div>
-            <div class="ex">Malzeme + işçilik, KDV dahil</div>
-            <div class="typ">En olası tutar <b>{{ $tl($est['mid']) }}</b>@if ($est['per_unit'] && $est['per_unit_label'])<br>{{ $est['per_unit_label'] }} yaklaşık {{ $tl($est['per_unit']) }}@endif @if ($est['days'])<br>{{ $est['days'][0] }}–{{ $est['days'][1] }} iş günü@endif</div>
-            @if ($fx)<div class="ex">Döviz karşılıkları TCMB döviz satış kuruyla ({{ $fx['date'] }}); bilgi amaçlıdır.</div>@endif
+            <div class="lbl">Tahmini maliyet aralığı (malzeme + işçilik, KDV dahil)</div>
+            <div class="typ">En olası tutar&nbsp;{{ $tl($est['mid']) }}@if ($est['per_unit'] && $est['per_unit_label']) · {{ $est['per_unit_label'] }} yaklaşık&nbsp;{{ $tl($est['per_unit']) }}@endif @if ($est['days'])· {{ $est['days'][0] }}–{{ $est['days'][1] }}&nbsp;iş&nbsp;günü@endif</div>
         </td>
     </tr>
 </table>
@@ -117,6 +118,7 @@
 </table>
 
 @if ($compare)
+<div class="keep">
 <h2>{{ ++$sec }}. Üç kalite seviyesinde karşılaştırma</h2>
 <table class="tbl">
     <tr><th>Kalite</th><th>Açıklama</th><th class="n">Alt</th><th class="n">En olası</th><th class="n">Üst</th></tr>
@@ -129,6 +131,7 @@
     @endforeach
 </table>
 <p class="muted" style="margin:4px 0 0">Diğer seçimler aynı tutularak yalnızca kalite değiştirilmiştir.</p>
+</div>
 @endif
 
 @if ($materials)
@@ -138,19 +141,18 @@
     @foreach ($materials as $mi => [$name, $qty, $unit, $note])
         @php $q = $equivalents[$mi] ?? null; @endphp
         <tr><td>{{ $name }}
-            @if ($q)<div class="eq"><span class="sptag">Sponsorlu eşdeğer</span> · {{ str_starts_with((string) $q->headline, (string) $q->brand) ? $q->headline : $q->brand.' — '.$q->headline }}</div>@endif
+            @if ($q)<div class="eq"><span class="sp-badge">Sponsorlu</span> Bu kalemde sponsor marka: {{ $q->brand }} — {{ \Illuminate\Support\Str::after((string) $q->headline, $q->brand.' · ') }}</div>@endif
         </td><td class="n"><b>{{ $qty }}</b></td><td>{{ $unit }}</td><td class="muted">{{ $note }}</td></tr>
     @endforeach
 </table>
+<p class="muted" style="margin:4px 0 0">Miktarlar yaygın sarfiyat oranlarıyla yaklaşık hesaplanmıştır; ürün ve uygulamaya göre değişir. Kesin metraj keşifte çıkarılır.</p>
+@if ($equivalents)
+<p class="muted" style="margin:3px 0 0;font-size:8.5px">“Sponsorlu” işaretli satırlar, o kalemde ürünü bulunan ve Worksitem'e sponsor olan markayı gösterir. Ürünün listedeki teknik sınıfa (ör. C2TE) uygunluğu Worksitem tarafından doğrulanmamıştır; miktar, tutar ve sıralama sponsordan bağımsızdır.</p>
+@endif
 @if ($sheetChecked->isNotEmpty())
 <p class="sheet"><b>Teknik föy kontrolü:</b> Yaklaşık malzeme listesindeki sarfiyat oranları {{ $sheetChecked->pluck('brand')->unique()->join(', ') }} teknik föyüyle karşılaştırılmıştır ({{ $sheetChecked->max('tech_sheet_checked_on')->format('d.m.Y') }}). Kalem kalem maliyet piyasa fiyatlarıyla hesaplanır; sponsor tutarı etkilemez.</p>
 @elseif ($eqDemo)
-<p class="sheet"><b>Örnek görünüm (staging):</b> Teknik föyünüz geldiğinde burada “Yaklaşık malzeme listesi {{ $eqSponsors->pluck('brand')->unique()->join(', ') }} teknik föyündeki sarfiyat oranlarıyla kontrol edilmiştir” ibaresi yer alır. Bu ibare yalnız föyle karşılaştırma yapıldıktan sonra açılır.</p>
-@else
-<p class="muted" style="margin:4px 0 0">Miktarlar yaygın sarfiyat oranlarıyla yaklaşık hesaplanmıştır; ürün ve uygulamaya göre değişir. Kesin metraj keşifte çıkarılır.</p>
-@endif
-@if ($equivalents)
-<p class="muted" style="margin:3px 0 0">“Sponsorlu eşdeğer” notu, aynı işi gören ürünü üretenlerden Worksitem sponsorunu gösterir; miktar ve tutarlar markadan bağımsızdır.</p>
+<p class="testenv"><b>TEST ORTAMI ·</b> Teknik föy karşılaştırması yapıldığında burada “Yaklaşık malzeme listesindeki sarfiyat oranları {{ $eqSponsors->pluck('brand')->unique()->join(', ') }} teknik föyüyle karşılaştırılmıştır” ibaresi yer alır. Canlı raporlarda bu kutu görünmez.</p>
 @endif
 @endif
 
@@ -198,27 +200,11 @@
     @endforeach
 </table>
 
-@if ($sponsors->isNotEmpty())
-    <h2>Sponsorlu markalar</h2>
-    <p class="muted" style="margin:0 0 5px">Aşağıdaki markalar Worksitem'e sponsor olarak destek vermektedir. Sıralama hesap sonucunuzu etkilemez; seçim tamamen size aittir.</p>
-    <table class="sp" style="border-collapse:separate;border-spacing:6px">
-        @foreach ($sponsors->chunk(2) as $row)
-            <tr>
-                @foreach ($row as $s)
-                    <td><div class="sptag">Sponsorlu</div><b>{{ $s->brand }}</b> — {{ $s->headline }}<br><span class="muted">{{ \Illuminate\Support\Str::limit((string) $s->body, 110) }}</span><br><span class="muted">{{ parse_url($s->target_url, PHP_URL_HOST) }}</span></td>
-                @endforeach
-                @if ($row->count() < 2)<td style="border:0"></td>@endif
-            </tr>
-        @endforeach
-    </table>
-@endif
-
 <div style="page-break-inside: avoid">
 <div class="next">
     <b>Bu raporla ne yapmalı?</b>
     <ol>
         <li>Malzeme listesi ve kalem kalem maliyet tablosunu ustanıza gönderin; teklifi aynı kalemlerle, marka ve modeli yazılı isteyin.</li>
-        @if ($eqSponsors->isNotEmpty())<li>Sponsorlu eşdeğer ürünlerin teknik föyünü ve bayisini marka sayfasında inceleyin: {{ $eqSponsors->map(fn ($s) => parse_url((string) $s->target_url, PHP_URL_HOST))->filter()->unique()->join(', ') }}.</li>@endif
         <li>Uygulama sırasında “Uzman notları” bölümünü kontrol listesi olarak kullanın; aşama bitmeden bir sonrakine geçilmesin.</li>
         <li>Kesin fiyat için yerinde keşif isteyin (aşağıda).</li>
     </ol>
@@ -234,5 +220,21 @@
     <div class="muted" style="margin-top:3px">worksitem.com/araclar/{{ $e->slug() }} · WhatsApp / Çağrı Merkezi: {{ config('worksitem_inspection.phone') }} · info@worksitem.com</div>
 </div>
 </div>
+@if ($sponsors->isNotEmpty())
+<div class="ads keep">
+    <h3>Reklam · Sponsorlu markalar</h3>
+    <p class="muted" style="margin:0 0 5px">Bu bölüm reklamdır. Aşağıdaki markalar Worksitem'e sponsordur; hesap sonucunu, miktarları ve sıralamayı etkilemez. Markalar alfabetik sıralıdır.</p>
+    <table class="sp" style="border-collapse:separate;border-spacing:6px">
+        @foreach ($sponsors->sortBy(fn ($s) => mb_strtolower((string) $s->brand.' '.$s->headline))->values()->chunk(2) as $row)
+            <tr>
+                @foreach ($row as $s)
+                    <td><span class="sp-badge">Sponsorlu</span> <b>{{ $s->brand }}</b> — {{ \Illuminate\Support\Str::after((string) $s->headline, $s->brand.' · ') }}<br><span class="muted">{{ \Illuminate\Support\Str::limit((string) $s->body, 110) }}</span><br><span class="muted">{{ parse_url($s->target_url, PHP_URL_HOST) }}</span></td>
+                @endforeach
+                @if ($row->count() < 2)<td style="border:0;background:none"></td>@endif
+            </tr>
+        @endforeach
+    </table>
+</div>
+@endif
 </body>
 </html>

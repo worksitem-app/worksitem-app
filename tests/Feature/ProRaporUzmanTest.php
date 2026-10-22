@@ -25,8 +25,9 @@ class ProRaporUzmanTest extends TestCase
         $content = $e->proReport($in);
         $data = $content + [
             'e' => $e, 'page' => $e->page(), 'fx' => app(FxRates::class)->current(),
-            'sponsors' => collect(), 'logo' => null, 'pricesLabel' => $e->pricesLabel(), 'reportNo' => 'WS-PRO-TEST',
-            'equivalents' => SponsorLines::forMaterials($e->slug(), $content['materials']),
+            'logo' => null, 'pricesLabel' => $e->pricesLabel(), 'reportNo' => 'WS-PRO-TEST',
+            'equivalents' => $eq = SponsorLines::forMaterials($e->slug(), $content['materials']),
+            'sponsors' => collect(array_values($eq))->concat(Sponsor::applyExclusive(Sponsor::query()->live()->where('tool_slug', $e->slug())->orderBy('priority')->get()))->unique('id')->take(max(4, count($eq)))->values(),
             'issuedAt' => now('Europe/Istanbul')->setTime(13, 8),
         ];
         if ($pdf && ($out = getenv('PRO_PDF_OUT'))) {
@@ -41,13 +42,14 @@ class ProRaporUzmanTest extends TestCase
         Cache::put(FxRates::CACHE_KEY, ['date' => '22.10.2026', 'rates' => ['USD' => 42.1, 'EUR' => 48.9, 'GBP' => 56.2]], 60);
         $html = $this->render();
         $this->assertStringContainsString('saat 13:08', $html);
-        $this->assertStringContainsString('<b>USD</b> $', $html);
-        $this->assertStringContainsString('<b>GBP</b> £', $html);
+        $this->assertStringContainsString('≈&nbsp;$360&nbsp;–&nbsp;$500', $html);
+        $this->assertStringContainsString('≈&nbsp;£', $html);
+        $this->assertStringContainsString('Tahmini maliyet aralığı (malzeme + işçilik, KDV dahil)', $html);
         $this->assertStringContainsString('Uzman notları', $html);
         $this->assertStringContainsString('1/3', $html);                 // 30×60 şaşırtma
         $this->assertStringContainsString('göllendirme testi', $html);
         $this->assertStringContainsString('Bu raporla ne yapmalı?', $html);
-        $this->assertStringNotContainsString('Sponsorlu eşdeğer', $html);  // sponsor yokken çıkmaz
+        $this->assertStringNotContainsString('Bu kalemde sponsor marka', $html);  // sponsor yokken çıkmaz
     }
 
     public function test_sponsorlu_esdeger_ve_teknik_foy_ibaresi(): void
@@ -55,10 +57,13 @@ class ProRaporUzmanTest extends TestCase
         Cache::put(FxRates::CACHE_KEY, ['date' => '22.10.2026', 'rates' => ['USD' => 42.1, 'EUR' => 48.9, 'GBP' => 56.2]], 60);
         $this->artisan('sponsors:demo', ['--brand' => 'Kalekim', '--url' => 'https://www.kalekim.com', '--tile-brand' => 'Kale', '--tile-url' => 'https://www.kale.com.tr'])->assertSuccessful();
         $html = $this->render(true);
-        $this->assertStringContainsString('Sponsorlu eşdeğer', $html);
-        $this->assertStringContainsString('Kalekim · Karo yapıştırıcısı', $html);
-        $this->assertStringContainsString('Kale · Seramik ve porselen karo', $html);
-        $this->assertStringContainsString('Örnek görünüm (staging)', $html);   // föy yok, demo: yalnız örnek kutusu
+        $this->assertStringContainsString('Bu kalemde sponsor marka: Kalekim — Karo yapıştırıcısı', $html);
+        $this->assertStringContainsString('Bu kalemde sponsor marka: Kale — Seramik ve porselen karo', $html);
+        $this->assertStringContainsString('Worksitem tarafından doğrulanmamıştır', $html);
+        $this->assertStringNotContainsString('eşdeğer', $html);
+        $this->assertStringContainsString('TEST ORTAMI', $html);   // föy yok, demo: yalnız test kutusu
+        $this->assertStringNotContainsString('marka sayfasında inceleyin', $html);   // tarafsız tavsiye listesinde sponsor yok
+        $this->assertStringContainsString('Reklam · Sponsorlu markalar', $html);
         $this->assertStringNotContainsString('Teknik föy kontrolü', $html);
 
         // Föyle karşılaştırma tarihi girilince gerçek ibare çıkar

@@ -123,6 +123,8 @@ class KitProReportController extends Controller
             : collect();
         $logo = public_path('brand/worksitem-logo.png');
         $equivalents = \App\Services\Sponsors\SponsorLines::forMaterials($e->slug(), (array) ($content['materials'] ?? []));
+        // Malzeme listesinde işaretlenen her sponsor, sondaki reklam bölümünde de yer alır
+        $sponsors = collect(array_values($equivalents))->concat($sponsors)->unique('id')->take(max(4, count($equivalents)))->values();
 
         $pdf = Pdf::loadView('reports.kit-pro-pdf', $content + [
             'equivalents' => $equivalents,
