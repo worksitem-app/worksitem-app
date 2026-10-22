@@ -7,7 +7,7 @@ use App\Services\Sponsors\SponsorPackages;
 use Illuminate\Console\Command;
 
 /**
- * Staging demosu: kurgusal "Örnek Yapı Kimyasalları" markasını tam kategori paketine yerleştirir.
+ * Staging demosu: yapı kimyasalı markasını Tam Kategori paketine (münhasır), seramik markasını Seramik ve Banyo ek paketine yerleştirir.
  * Canlı ortamda çalışmaz; canlıda bu kayıtlar Sponsor::live() tarafından da hiçbir zaman gösterilmez.
  */
 class SponsorDemo extends Command
@@ -21,11 +21,8 @@ class SponsorDemo extends Command
         {--tile-url= : Seramik markasının hedef adresi}
         {--tile-logo= : Seramik markasının logo adresi}';
 
-    /** Seramik / vitrifiye markasına giden kategoriler (diğerleri yapı kimyasalı markasına) */
-    public const TILE_CATS = ['seramik', 'vitrifiye', 'dus', 'armatur'];
-
-    /** Seramik markasının da görüneceği araçlar */
-    public const TILE_TOOLS = ['seramik-maliyet-hesaplayici', 'banyo-maliyet-hesaplayici', 'wc-maliyet-hesabi', 'zemin-kaplama', 'banyo-planlayici', 'wc-planlayici'];
+    /** Seramik markasının paketi (Tam Kategori'ye dahil olmayan ek paket) */
+    public const TILE_PACKAGE = 'seramik-banyo';
 
     protected $description = 'Staging: örnek marka ile sponsor demo kayıtları (canlıda çalışmaz)';
 
@@ -57,25 +54,25 @@ class SponsorDemo extends Command
         $slots = [];
         foreach (SponsorPackages::get(SponsorPackages::ALL)['tools'] as $tool => $cats) {
             foreach ($cats as $cat) {
-                $slots[] = [$tool, $cat, $chem];
+                $slots[] = [$tool, $cat, $chem, true];
             }
         }
         if ($tile) {
-            foreach (self::TILE_TOOLS as $tool) {
-                foreach (array_intersect(self::TILE_CATS, array_keys((array) ($tools[$tool]['categories'] ?? []))) as $cat) {
-                    $slots[] = [$tool, $cat, $tile];
+            foreach (SponsorPackages::get(self::TILE_PACKAGE)['tools'] as $tool => $cats) {
+                foreach ($cats as $cat) {
+                    $slots[] = [$tool, $cat, $tile, false];
                 }
             }
         }
         $n = 0;
-        foreach ($slots as [$tool, $cat, $b]) {
+        foreach ($slots as [$tool, $cat, $b, $excl]) {
             $label = $tools[$tool]['categories'][$cat] ?? $cat;
             Sponsor::query()->create([
                 'brand' => $b['brand'], 'tool_slug' => $tool, 'category' => $cat,
                 'headline' => mb_substr($b['brand'].' · '.$label, 0, 120),
                 'body' => 'Demo görünüm: sözleşme imzalanınca kart metnini ve hedef sayfayı siz belirlersiniz.',
                 'cta_label' => 'Ürünleri gör', 'target_url' => $b['url'], 'logo_url' => $b['logo'], 'priority' => 50, 'active' => true,
-                'notes' => Sponsor::DEMO_MARK.' staging demosu',
+                'notes' => Sponsor::DEMO_MARK.' staging demosu'.($excl ? ' '.Sponsor::EXCLUSIVE_MARK : ''),
             ]);
             $n++;
         }

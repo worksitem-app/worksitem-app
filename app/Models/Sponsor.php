@@ -22,6 +22,30 @@ class Sponsor extends Model
     /** Staging demo kayıtlarının işareti (sponsors:demo); canlı ortamda hiçbir zaman gösterilmez */
     public const DEMO_MARK = '[DEMO]';
 
+    /** Münhasır (Tam Kategori) kayıtların işareti: aynı araç ve kategoride başka marka gösterilmez */
+    public const EXCLUSIVE_MARK = '[TEK MARKA]';
+
+    public function isExclusive(): bool
+    {
+        return str_contains((string) $this->notes, self::EXCLUSIVE_MARK);
+    }
+
+    /**
+     * Münhasırlık: bir (araç, kategori) çiftinde yayında münhasır kayıt varsa o çiftte yalnız münhasır kayıtlar kalır.
+     *
+     * @param  \Illuminate\Support\Collection<int, self>  $rows
+     * @return \Illuminate\Support\Collection<int, self>
+     */
+    public static function applyExclusive(\Illuminate\Support\Collection $rows): \Illuminate\Support\Collection
+    {
+        $locked = $rows->filter(fn (self $s) => $s->isExclusive())->map(fn (self $s) => $s->tool_slug.'|'.$s->category)->unique()->all();
+        if (! $locked) {
+            return $rows;
+        }
+
+        return $rows->filter(fn (self $s) => $s->isExclusive() || ! in_array($s->tool_slug.'|'.$s->category, $locked, true))->values();
+    }
+
     /** Bugün yayında olanlar */
     public function scopeLive(Builder $q): Builder
     {

@@ -12,7 +12,9 @@
     $live = 0;
     try {
         if (\Illuminate\Support\Facades\Schema::hasTable('sponsors')) {
-            $live = \App\Models\Sponsor::query()->live()->where('tool_slug', $tool)->count();
+            $liveRows = \App\Models\Sponsor::query()->live()->where('tool_slug', $tool)->get();
+            // Münhasır sponsor varsa bu araçta boş yer gösterilmez
+            $live = $liveRows->contains(fn ($s) => $s->isExclusive()) ? $max : $liveRows->count();
         }
     } catch (\Throwable) {
         $live = 0;

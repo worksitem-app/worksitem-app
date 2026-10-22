@@ -105,7 +105,7 @@ class BathroomProReportController extends Controller
 
         $content = $report->build($input);
         $sponsors = \Illuminate\Support\Facades\Schema::hasTable('sponsors')
-            ? Sponsor::query()->live()->where('tool_slug', 'banyo-maliyet-hesaplayici')->orderBy('priority')->limit(4)->get()
+            ? Sponsor::applyExclusive(Sponsor::query()->live()->where('tool_slug', 'banyo-maliyet-hesaplayici')->orderBy('priority')->get())->take(4)->values()
             : collect();
         $logo = public_path('brand/worksitem-logo.png');
 

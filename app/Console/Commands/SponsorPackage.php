@@ -21,6 +21,7 @@ class SponsorPackage extends Command
         {--starts= : Başlangıç (YYYY-AA-GG)}
         {--ends= : Bitiş (YYYY-AA-GG)}
         {--amount= : Anlaşma bedeli, TL KDV hariç (rapor için)}
+        {--exclusive : Münhasır (kategoride tek marka); Tam Kategori paketinde her zaman açık}
         {--active : Hemen yayına al (yalnız imzalı sözleşmeyle)}
         {--dry-run : Kaydetmeden göster}';
 
@@ -31,8 +32,11 @@ class SponsorPackage extends Command
         $key = (string) $this->argument('package');
         if ($key === '') {
             foreach (SponsorPackages::all() as $k => $p) {
-                $this->line(sprintf('%-18s %-20s %2d araç · %2d kalem  %s', $k, $p['label'], count($p['tools']), SponsorPackages::slots($p), $p['desc']));
+                $m = SponsorPackages::monthly($k);
+                $this->line(sprintf('%-18s %-20s %2d araç · %2d kalem · %s/ay + KDV%s', $k, $p['label'], count($p['tools']), SponsorPackages::slots($p), $m ? SponsorPackages::tl($m) : '—', ! empty($p['addon']) ? ' · ek paket' : (! empty($p['exclusive']) ? ' · tek marka' : '')));
             }
+            $f = SponsorPackages::founding();
+            $this->line(sprintf('Kurucu sponsor: %s, %d ay, %s/ay + KDV. Pilot süresi: %d ay.', SponsorPackages::get($f['package'])['label'] ?? $f['package'], $f['months'], SponsorPackages::tl($f['monthly']), SponsorPackages::pilotMonths()));
 
             return self::SUCCESS;
         }
@@ -50,6 +54,7 @@ class SponsorPackage extends Command
             return self::FAILURE;
         }
         $active = (bool) $this->option('active');
+        $exclusive = (bool) $this->option('exclusive') || ! empty($pkg['exclusive']);
         $tools = (array) config('worksitem_sponsors.tools');
         $made = 0;
         foreach ($pkg['tools'] as $tool => $cats) {
@@ -61,7 +66,7 @@ class SponsorPackage extends Command
                     'cta_label' => 'İncele', 'logo_url' => $this->option('logo') ?: null, 'priority' => 10, 'active' => $active,
                     'starts_on' => $this->option('starts') ?: null, 'ends_on' => $this->option('ends') ?: null,
                     'contract_amount' => $this->option('amount') !== null ? (float) $this->option('amount') : null,
-                    'notes' => 'Paket: '.$pkg['label'],
+                    'notes' => 'Paket: '.$pkg['label'].($exclusive ? ' '.Sponsor::EXCLUSIVE_MARK : ''),
                 ];
                 $this->line(sprintf('  %-30s %-22s %s', $tool, $cat, $active ? 'YAYINDA' : 'kapalı'));
                 if (! $this->option('dry-run')) {

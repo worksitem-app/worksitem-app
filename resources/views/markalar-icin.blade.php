@@ -52,6 +52,8 @@
         .mk-pills input { width:auto; padding:0; }
         .mk-pills label:has(input:checked) { border-color:var(--y); background:var(--y-50); }
         .mk-form input[type=file] { border-style:dashed; }
+        .mk-price { font-size:14px; color:var(--muted); margin:6px 0 0; }
+        .mk-price strong { font-size:16px; color:#101318; }
         .mk-check { display:flex; gap:10px; align-items:flex-start; font-size:13px; color:var(--muted); }
         .mk-check input { width:18px; height:18px; flex:0 0 18px; }
         @media (max-width: 860px) {
@@ -107,13 +109,18 @@
 <section class="mk" id="yapi-kimyasallari"><div class="mk-in">
     <h2>Yapı kimyasalları paketleri</h2>
     <p class="lead">Yapıştırıcı, derz, su yalıtımı, tamir harcı gibi ürünler hesap sonucunda miktarıyla çıkar (kaç torba, kaç kg). Marka, tam o satırın yanında "Sponsorlu" etiketiyle görünür.</p>
+    @php($pm = \App\Services\Sponsors\SponsorPackages::pilotMonths())
+    @php($fd = \App\Services\Sponsors\SponsorPackages::founding())
     <div class="mk-grid">
         @foreach ($pkgs as $pk => $p)
-            <div class="mk-card" id="paket-{{ $pk }}"><h3>{{ $p['label'] }}</h3><p>{{ $p['desc'] }}</p>
+            @php($price = \App\Services\Sponsors\SponsorPackages::monthly($pk))
+            <div class="mk-card" id="paket-{{ $pk }}"><h3>{{ $p['label'] }}@if (! empty($p['addon'])) <small style="font-weight:600;color:var(--muted)">· ek paket</small>@endif</h3><p>{{ $p['desc'] }}</p>
+                @if ($price)<p class="mk-price"><strong>{{ \App\Services\Sponsors\SponsorPackages::tl($price) }} / ay</strong> + KDV · {{ $pm }} ay pilot · {{ count($p['tools']) }} araç · {{ ! empty($p['exclusive']) ? 'kategoride tek marka' : 'kalem başına en çok '.(int) config('worksitem_sponsors.max_cards', 3).' marka' }}</p>@endif
                 <ul>@foreach ($p['tools'] as $t => $cats)<li>{{ ($toolTitles[$t] ?? '') ?: (config("worksitem_sponsors.tools.$t.label") ?: $t) }}</li>@endforeach</ul>
             </div>
         @endforeach
     </div>
+    <p class="lead" style="margin-top:16px"><strong>Kurucu sponsor:</strong> {{ $pkgs[$fd['package']]['label'] ?? '' }}, {{ $fd['months'] }} ay, {{ \App\Services\Sponsors\SponsorPackages::tl($fd['monthly']) }} / ay + KDV; yenilemede 12 ay aynı bedel. Fiyatlar pilot dönem içindir, aylık sabittir; gösterim ve tıklama her ay raporlanır.</p>
 </div></section>
 
 <section class="mk"><div class="mk-in">

@@ -49,8 +49,8 @@ class SponsorLines
             if (! Schema::hasTable('sponsors')) {
                 return [];
             }
-            $rows = Sponsor::query()->live()->where('tool_slug', $tool)->whereIn('category', array_values(array_unique($cats)))
-                ->orderBy('priority')->orderBy('id')->get()->groupBy('category');
+            $rows = Sponsor::applyExclusive(Sponsor::query()->live()->where('tool_slug', $tool)->whereIn('category', array_values(array_unique($cats)))
+                ->orderBy('priority')->orderBy('id')->get())->groupBy('category');
         } catch (\Throwable) {
             return [];
         }

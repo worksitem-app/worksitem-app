@@ -119,7 +119,7 @@ class KitProReportController extends Controller
 
         $content = $e->proReport($in);
         $sponsors = Schema::hasTable('sponsors')
-            ? Sponsor::query()->live()->where('tool_slug', $e->slug())->orderBy('priority')->limit(4)->get()
+            ? Sponsor::applyExclusive(Sponsor::query()->live()->where('tool_slug', $e->slug())->orderBy('priority')->get())->take(4)->values()
             : collect();
         $logo = public_path('brand/worksitem-logo.png');
 

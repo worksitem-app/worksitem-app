@@ -370,7 +370,7 @@ return [
 
     /*
     | Tematik paketler (Markalar için sayfası + `php artisan sponsors:package`).
-    | araç → kategoriler. Fiyat burada tutulmaz; ölçüm verisi geldikçe teklifle belirlenir.
+    | araç → kategoriler. Fiyatlar aşağıda 'pricing' altında.
     */
     'packages' => [
         'su-yalitimi' => [
@@ -381,6 +381,7 @@ return [
                 'banyo-maliyet-hesaplayici' => ['yalitim'],
                 'seramik-maliyet-hesaplayici' => ['yalitim'],
                 'cati-maliyet-hesaplayici' => ['yalitim'],
+                'pvc-dograma-hesaplayici' => ['montaj'],
             ],
         ],
         'seramik-uygulama' => [
@@ -420,7 +421,41 @@ return [
                 'deprem-izolator-maliyeti' => ['grout'],
             ],
         ],
-        // 'tam-kategori': yukarıdakilerin hepsi (SponsorPackages::get('tam-kategori') birleştirir)
+        // 'tam-kategori': yukarıdaki beş yapı kimyasalı paketinin hepsi, tek marka (SponsorPackages::get('tam-kategori') birleştirir)
+
+        // Ek paket: Tam Kategori'ye dahil değildir; seramik ve vitrifiye markası için ayrıca eklenir
+        'seramik-banyo' => [
+            'label' => 'Seramik ve Banyo',
+            'addon' => true,
+            'desc' => 'Karo, vitrifiye, duşakabin ve armatür: banyo, WC ve seramik hesabında ve 2D / 3D planlayıcılarda.',
+            'tools' => [
+                'seramik-maliyet-hesaplayici' => ['seramik'],
+                'banyo-maliyet-hesaplayici' => ['seramik', 'vitrifiye', 'dus'],
+                'wc-maliyet-hesabi' => ['seramik', 'vitrifiye'],
+                'zemin-kaplama' => ['seramik'],
+                'banyo-planlayici' => ['seramik', 'vitrifiye', 'dus', 'armatur'],
+                'wc-planlayici' => ['seramik', 'vitrifiye', 'armatur'],
+            ],
+        ],
+    ],
+
+    /*
+    | Pilot dönem fiyatları (TL / ay, KDV hariç). Sunum, Markalar için sayfası ve `sponsors:package` aynı rakamı buradan okur.
+    | Tek aile paketi kalem başına en çok 3 marka; Tam Kategori kategoride tek marka (münhasır).
+    */
+    'pricing' => [
+        'pilot_months' => 3,
+        'monthly' => [
+            'su-yalitimi' => 18000,
+            'seramik-uygulama' => 18000,
+            'endustriyel-zemin' => 18000,
+            'boya-cephe' => 18000,
+            'onarim-grout' => 18000,
+            'tam-kategori' => 55000,
+            'seramik-banyo' => 20000,
+        ],
+        // Kurucu sponsor: Tam Kategori 6 ay, aylık bedel düşük; yenilemede 12 ay aynı bedel
+        'founding' => ['package' => 'tam-kategori', 'months' => 6, 'monthly' => 45000],
     ],
 
     // Aynı anda gösterilecek en fazla sponsor kartı

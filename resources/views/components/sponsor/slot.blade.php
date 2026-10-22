@@ -12,7 +12,7 @@
             $q->whereIn('category', (array) $categories);
         }
         // Aynı öncelikte olanlar her gösterimde karışık sırayla (adil dönüşüm)
-        $cards = $q->get()->sortBy(fn ($s) => [$s->priority, mt_rand()])->take((int) config('worksitem_sponsors.max_cards', 3))->values();
+        $cards = \App\Models\Sponsor::applyExclusive($q->get())->sortBy(fn ($s) => [$s->priority, mt_rand()])->take((int) config('worksitem_sponsors.max_cards', 3))->values();
         if ($cards->isNotEmpty()) {
             \App\Models\Sponsor::query()->whereIn('id', $cards->pluck('id'))->increment('impressions');
         }
