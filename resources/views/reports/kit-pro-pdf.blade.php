@@ -95,7 +95,7 @@
 <h2>{{ ++$sec }}. Proje bilgileri</h2>
 <table class="grid">
     @foreach ($inputs as [$k, $v])<tr><td class="k">{{ $k }}</td><td>{{ $v }}</td></tr>@endforeach
-    <tr><td class="k">Fiyat tarihi</td><td>{{ $pricesLabel }}</td></tr>
+    <tr><td class="k">Fiyatların güncellendiği tarih</td><td>{{ $pricesLabel }}<br><span class="muted" style="font-size:8.5px">{{ \App\Support\PriceDate::note($e->slug()) }}</span></td></tr>
 </table>
 
 <h2>{{ ++$sec }}. Kalem kalem maliyet</h2>

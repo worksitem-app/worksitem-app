@@ -26,4 +26,15 @@ class PriceDate
 
         return $best ?? now();
     }
+
+    /** Rapor notu: bu araçta fiyat robotunun izlediği kalem sayısı ve yenileme sıklığı (yalnız doğru olanı söyler) */
+    public static function note(?string $tool = null): string
+    {
+        $n = $tool ? count(array_filter((array) config('worksitem_price_robot.items', []), fn ($i) => ($i['tool'] ?? '') === $tool)) : 0;
+        $d = (int) config('worksitem_price_robot.refresh_days', 7);
+
+        return $n > 0 && config('worksitem_price_robot.enabled', true)
+            ? "Bu araçtaki $n kalem fiyat robotuyla en geç $d günde bir yeniden araştırılır; diğer fiyatlar uzman kontrolündedir."
+            : 'Fiyatlar uzman kontrolünde güncellenir.';
+    }
 }

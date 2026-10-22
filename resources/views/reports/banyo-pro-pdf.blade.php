@@ -84,7 +84,7 @@
     <tr><td class="k">Kapsam</td><td>{{ $scope['label'] }} — {{ $scope['hint'] }}</td></tr>
     <tr><td class="k">Malzeme kalitesi</td><td>{{ $quality['label'] ?? '' }}</td></tr>
     <tr><td class="k">Ekstralar</td><td>{{ $extraLabels ? implode(', ', $extraLabels) : 'Seçilmedi' }}</td></tr>
-    <tr><td class="k">Fiyat tarihi</td><td>{{ $pricesLabel }}</td></tr>
+    <tr><td class="k">Fiyatların güncellendiği tarih</td><td>{{ $pricesLabel }}<br><span class="muted" style="font-size:8.5px">{{ \App\Support\PriceDate::note('banyo-maliyet-hesaplayici') }}</span></td></tr>
 </table>
 
 <h2>2. Üç kalite seviyesinde karşılaştırma</h2>

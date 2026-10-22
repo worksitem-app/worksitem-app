@@ -19,7 +19,7 @@
 return [
     'enabled' => (bool) env('PRICE_ROBOT_ENABLED', true),
     'daily_limit' => (int) env('PRICE_ROBOT_DAILY_LIMIT', 20),
-    'refresh_days' => (int) env('PRICE_ROBOT_REFRESH_DAYS', 30),   // yalnız yeni kalemler + bu kadar gün önce araştırılanlar
+    'refresh_days' => (int) env('PRICE_ROBOT_REFRESH_DAYS', 7),    // her kalem en geç bu kadar günde bir yeniden araştırılır (50 kalem ≈ ayda 215 arama, ücretsiz kota 5.000)
     'poz_multiplier' => 1.40,
     'market_multiplier' => 1.00,
     'min_sources' => 2,
