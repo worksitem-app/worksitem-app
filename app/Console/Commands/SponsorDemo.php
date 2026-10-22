@@ -76,7 +76,7 @@ class SponsorDemo extends Command
             ]);
             $n++;
         }
-        $this->info("$n demo kaydı hazır. Örnek: ".url('/araclar/seramik-maliyet-hesaplayici?surface=zemin&floor=40&size=60x60&quality=orta&scope=hazir&grout=epoksi&extras[]=seviye&extras[]=temizlik'));
+        $this->info("$n demo kaydı hazır. Örnek: ".url('/araclar/seramik-maliyet-hesaplayici?surface=zemin&en=5&boy=8&size=60x60&quality=orta&scope=hazir&grout=epoksi&extras[]=seviye&extras[]=temizlik'));
         $this->line('Kaldırmak için: php artisan sponsors:demo --remove');
 
         return self::SUCCESS;

@@ -171,7 +171,41 @@ class KitEngineTest extends TestCase
         $e = KitRegistry::get('seramik-maliyet-hesaplayici');
         $miss = $e->estimate($e->normalize(['surface' => 'zemin', 'wall' => '20', 'size' => '60x60', 'quality' => 'orta', 'scope' => 'hazir']));
         $this->assertFalse($miss['ready']);
-        $this->assertContains('zemin alanı', $miss['missing']);
+        $this->assertContains('zemin eni ve boyu', $miss['missing']);
+    }
+
+    public function test_seramik_olculerden_alan(): void
+    {
+        $e = KitRegistry::get('seramik-maliyet-hesaplayici');
+        $base = ['size' => '30x60', 'quality' => 'orta', 'scope' => 'hazir'];
+
+        // Zemin: en × boy (4 × 5 = 20 m²); duvar alanı sorulmaz
+        $z = $e->estimate($e->normalize(['surface' => 'zemin', 'en' => '4', 'boy' => '5'] + $base));
+        $this->assertTrue($z['ready']);
+        $area = fn ($r) => collect($r['meta'])->firstWhere(0, 'Kaplanacak alan')[1];
+        $this->assertSame('20,0 m²', $area($z));
+        $this->assertStringContainsString('4,00 × 5,00 m = 20', collect($z['meta'])->pluck(1)->implode(' '));
+        $steps = collect($e->steps())->filter(fn ($s) => $s['type'] === 'numbers' && $e->visible($s, ['surface' => 'zemin']))->pluck('title')->all();
+        $this->assertSame(['Zemin ölçüleri'], array_values($steps));
+
+        // Duvar: genişlik × yükseklik (yükseklik boşsa 2,6 m)
+        $d = $e->estimate($e->normalize(['surface' => 'duvar', 'dw' => '3'] + $base));
+        $this->assertSame('7,8 m²', $area($d));
+
+        // Zemin + duvar: zemin en × boy, duvar 2 × (en + boy) × yükseklik − kapı
+        $zd = $e->estimate($e->normalize(['surface' => 'zemin_duvar', 'en' => '1.8', 'boy' => '2.4', 'kapi' => '1.9'] + $base));
+        $this->assertSame('24,3 m²', $area($zd));   // 4,32 + (21,84 − 1,9 = 19,94)
+        $this->assertStringContainsString('2 × (1,80 + 2,40) × 2,60 m − 1,90 m² kapı/pencere', collect($zd['meta'])->pluck(1)->implode(' '));
+
+        // Malzeme listesinde karo adedi: 30×60 = 0,18 m², 1 m² ≈ 5,56 karo
+        $mat = collect($e->materials($e->normalize(['surface' => 'zemin', 'en' => '4', 'boy' => '5'] + $base)));
+        $row = $mat->first(fn ($r) => str_contains($r[0], 'adedi'));
+        $this->assertSame((int) ceil(22 / 0.18), $row[1]);   // 20 m² + %10 fire = 22 m²
+        $this->assertStringContainsString('5,56', $row[3]);
+
+        // Eski bağlantı (?floor=20) aynı sonucu verir
+        $old = $e->estimate($e->normalize(['surface' => 'zemin', 'floor' => '20'] + $base));
+        $this->assertSame($z['mid'], $old['mid']);
     }
 
     public function test_boya_dis_cephe_modu_iskele_ve_kosullu_adimlar(): void

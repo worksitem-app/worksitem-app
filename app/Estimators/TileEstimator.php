@@ -35,7 +35,7 @@ class TileEstimator extends KitEstimator
         return [
             'title' => 'Seramik metraj ve maliyet',
             'h1' => "Seramik döşeme maliyeti ve metraj hesaplama ($y)",
-            'lede' => 'Zemin veya duvar alanını girin, karo ebadını ve kalitesini seçin; seramik malzemesi, yapıştırıcı, derz, işçilik ve fire kalem kalem hesaplansın. Kaç kutu, kaç torba gerektiği Pro raporda.',
+            'lede' => 'Zeminin enini ve boyunu (duvarda genişlik ve yüksekliği) girin, karo ebadını ve kalitesini seçin; seramik malzemesi, yapıştırıcı, derz, işçilik ve fire kalem kalem hesaplansın. Kaç kutu, kaç torba gerektiği Pro raporda.',
             'seo_title' => "Seramik Hesaplama $y: m² Maliyet, Kutu ve Yapıştırıcı | Worksitem",
             'seo_desc' => "$y seramik ve porselen döşeme fiyatı: m², karo ebadı (60×60, 60×120), fire, yapıştırıcı ve derz dahil seramik maliyetini kalem kalem, ücretsiz hesaplayın.",
             'service' => 'Seramik Döşeme',
@@ -44,7 +44,8 @@ class TileEstimator extends KitEstimator
             'sponsor_title' => 'Seramik ve yapı kimyasalı markaları',
             'facts' => ['Ücretsiz, kayıt gerekmez', 'Zemin ve duvar ayrı ürün', 'Fire ve kutu hesabı'],
             'method' => [
-                'Kaplanacak alan = seçilen yüzeylere göre zemin m² + duvar m². Zemin + duvarda iki yüzey için ayrı ebat ve malzeme seçilebilir; her biri kendi fire ve işçilik katsayısıyla hesaplanır.',
+                'Zemin m² = en × boy (ör. 4 m × 5 m = 20 m²). Duvar m² = genişlik × yükseklik. Zemin + duvarda duvar alanı odanın çevresinden bulunur: 2 × (en + boy) × yükseklik, kapı ve pencere alanı düşülür; yükseklik girilmezse 2,6 m alınır. İki yüzey için ayrı ebat ve malzeme seçilebilir; her biri kendi fire ve işçilik katsayısıyla hesaplanır.',
+                'Karo adedi = (alan + fire) ÷ bir karonun alanı. 60×60 karo 0,36 m² olduğundan 1 m²\'ye 1 ÷ 0,36 ≈ 2,78 karo, 30×60 karoda ≈ 5,56 karo gider.',
                 'Seramik malzemesi: alan × (1 + fire oranı) × kaliteye göre m² fiyatı. Fire oranı ebatla artar (60×60\'ta %10, 120×120\'de %15).',
                 'Yapıştırıcı yaklaşık 5 kg/m² (25 kg torba), derz yaklaşık 0,5 kg/m² (5 kg paket) alınır.',
                 'İşçilik: m² döşeme fiyatı × ebat katsayısı (büyük ebatta 1,35–1,6). Eski seramik üzerine döşemede %10 eklenir.',
@@ -60,7 +61,9 @@ class TileEstimator extends KitEstimator
                 ['1 m² seramik döşeme kaç TL?', now()->year.' fiyatlarıyla yalnız döşeme işçiliği yaklaşık '.number_format($this->setting('tile_labor_standard_m2', $this->p()['labor_m2']), 0, ',', '.').' TL/m²\'dir; malzeme, yapıştırıcı, derz ve fire eklendiğinde 60×60 mat porselen için toplam m² maliyeti yaklaşık '.$this->exampleRange(['surface' => 'zemin', 'floor' => 20, 'size' => '60x60', 'quality' => 'orta', 'scope' => 'hazir'], true).' olur.'],
                 ['Seramik firesi ne kadar alınmalı?', 'Düz döşemede %10, büyük ebat veya çapraz döşemede %12–15 fire önerilir. Aynı parti (lot) numarasından fazladan 1 kutu almak ileride tamirde işe yarar.'],
                 ['1 m² için kaç kg yapıştırıcı gerekir?', 'Karo ebadı ve zemin düzgünlüğüne göre 4–6 kg; 60×60 ve üzeri ebatta çift taraflı sürme nedeniyle üst sınıra yakındır.'],
-                ['Banyoda zemin ve duvar için ayrı seramik nasıl hesaplanır?', 'Zemin + duvarı seçip iki alanı ayrı girin; duvar için farklı ebat (ör. 30×60) ve malzeme seçtiğinizde her yüzey kendi firesi, kutu sayısı ve işçiliğiyle ayrı satırda hesaplanır. Örneğin 5 m² zemin 60×60 mat porselen ve 22 m² duvar 30×60 seramik için '.now()->year.' fiyatlarıyla toplam yaklaşık '.$this->exampleRange(['surface' => 'zemin_duvar', 'floor' => 5, 'wall' => 22, 'size' => '60x60', 'quality' => 'orta', 'wsize' => '30x60', 'wquality' => 'ekonomik', 'scope' => 'hazir']).' tutar.'],
+                ['Metrekare nasıl hesaplanır?', 'Dikdörtgen bir alanın metrekaresi en ile boyun çarpımıdır: 4 m × 5 m = 20 m². Odanın komşu iki duvarını metreyle ölçüp çarpın; L biçimli odayı iki dikdörtgene bölüp sonuçları toplayın. Duvar için genişlik × yükseklik; bir odanın tüm duvarları için çevre × yükseklik = 2 × (en + boy) × yükseklik alınır, kapı ve pencere alanı düşülür.'],
+                ['1 m²\'ye kaç karo gider?', 'Bir karonun kapladığı alan en × boydur; 1 m² bu alana bölünür. 60×60 cm karo 0,36 m² kaplar, 1 m²\'ye ≈ 2,78 karo (yaklaşık 3) gider; 30×60 karo 0,18 m², 1 m²\'ye ≈ 5,56 karo. Fireyle birlikte toplam adet Pro raporun malzeme listesinde yazar.'],
+                ['Banyoda zemin ve duvar için ayrı seramik nasıl hesaplanır?', 'Zemin + duvarı seçip odanın enini, boyunu ve yüksekliğini girin; zemin ve duvar alanı otomatik çıkar. Duvar için farklı ebat (ör. 30×60) ve malzeme seçtiğinizde her yüzey kendi firesi, kutu sayısı ve işçiliğiyle ayrı satırda hesaplanır. Örneğin 5 m² zemin 60×60 mat porselen ve 22 m² duvar 30×60 seramik için '.now()->year.' fiyatlarıyla toplam yaklaşık '.$this->exampleRange(['surface' => 'zemin_duvar', 'floor' => 5, 'wall' => 22, 'size' => '60x60', 'quality' => 'orta', 'wsize' => '30x60', 'wquality' => 'ekonomik', 'scope' => 'hazir']).' tutar.'],
                 ['Eski seramik üzerine seramik döşenir mi?', 'Eski kaplama sağlam, düz ve boşluksuzsa uygun astar ve yapıştırıcıyla döşenebilir; kapı yüksekliği ve gider kotları kontrol edilmelidir.'],
             ],
             'related' => [['/araclar/banyo-maliyet-hesaplayici', 'Banyo tadilat maliyeti'], ['/araclar/mutfak-maliyet-hesaplayici', 'Mutfak tadilat maliyeti'], ['/araclar/seramik-gorsellestirici', 'Seramiği mekânında gör (AI)'], ['/araclar/su-yalitimi-hesaplayici', 'Su yalıtımı maliyeti']],
@@ -80,10 +83,21 @@ class TileEstimator extends KitEstimator
                 'duvar' => ['label' => 'Duvar', 'hint' => 'Banyo / mutfak duvarı'],
                 'zemin_duvar' => ['label' => 'Zemin + duvar', 'hint' => 'Banyo, ıslak hacim'],
             ]],
-            ['type' => 'numbers', 'title' => 'Alan', 'cols' => 2, 'required_any' => 'zemin veya duvar alanı', 'fields' => [
-                ['key' => 'floor', 'label' => 'Zemin alanı', 'unit' => 'm²', 'min' => 0.5, 'max' => 2000, 'step' => 0.5, 'placeholder' => 'Örn. 20'],
-                ['key' => 'wall', 'label' => 'Duvar alanı', 'unit' => 'm²', 'min' => 0.5, 'max' => 2000, 'step' => 0.5, 'placeholder' => 'Örn. 24'],
-            ], 'help' => 'Duvar alanı = duvar uzunluğu × yükseklik (kapı ve pencereleri düşün). Seçtiğiniz yüzeye ait alan hesaba katılır.'],
+            ['type' => 'numbers', 'title' => 'Zemin ölçüleri', 'cols' => 2, 'show' => ['surface' => ['zemin']], 'fields' => [
+                ['key' => 'en', 'label' => 'En', 'unit' => 'm', 'min' => 0.3, 'max' => 100, 'step' => 0.01, 'placeholder' => 'Örn. 4'],
+                ['key' => 'boy', 'label' => 'Boy', 'unit' => 'm', 'min' => 0.3, 'max' => 100, 'step' => 0.01, 'placeholder' => 'Örn. 5'],
+            ], 'help' => 'Odanın iki komşu duvarını metre cinsinden ölçün: zemin m² = en × boy (ör. 4 m × 5 m = 20 m²). L biçimli odayı iki dikdörtgene bölüp ayrı hesaplayın.'],
+            ['type' => 'numbers', 'title' => 'Duvar ölçüleri', 'cols' => 2, 'show' => ['surface' => ['duvar']], 'fields' => [
+                ['key' => 'dw', 'label' => 'Duvar genişliği', 'unit' => 'm', 'min' => 0.3, 'max' => 200, 'step' => 0.01, 'placeholder' => 'Örn. 3'],
+                ['key' => 'h', 'label' => 'Kaplama yüksekliği', 'unit' => 'm', 'min' => 0.3, 'max' => 6, 'step' => 0.01, 'placeholder' => '2,6', 'default' => 2.6],
+            ], 'help' => 'Duvar m² = genişlik × yükseklik. Birden fazla duvar kaplanacaksa genişlikleri toplayın (ör. 3 + 2,4 = 5,4 m). Yükseklik boş kalırsa tavan yüksekliği 2,6 m alınır; tezgah arası için 0,6 m yazın.'],
+            ['type' => 'numbers', 'title' => 'Oda ölçüleri', 'cols' => 3, 'show' => ['surface' => ['zemin_duvar']], 'fields' => [
+                ['key' => 'en', 'label' => 'En', 'unit' => 'm', 'min' => 0.3, 'max' => 100, 'step' => 0.01, 'placeholder' => 'Örn. 1,8'],
+                ['key' => 'boy', 'label' => 'Boy', 'unit' => 'm', 'min' => 0.3, 'max' => 100, 'step' => 0.01, 'placeholder' => 'Örn. 2,4'],
+                ['key' => 'h', 'label' => 'Yükseklik', 'unit' => 'm', 'min' => 0.3, 'max' => 6, 'step' => 0.01, 'placeholder' => '2,6', 'default' => 2.6],
+                ['key' => 'kapi', 'label' => 'Kapı ve pencere', 'unit' => 'm²', 'min' => 0, 'max' => 200, 'step' => 0.1, 'placeholder' => 'Örn. 1,9'],
+                ['key' => 'wall', 'label' => 'Duvar alanı (biliyorsanız)', 'unit' => 'm²', 'min' => 0.5, 'max' => 2000, 'step' => 0.5, 'placeholder' => 'Otomatik'],
+            ], 'help' => 'Zemin m² = en × boy. Duvar m² = çevre × yükseklik = 2 × (en + boy) × yükseklik; kapı ve pencere alanı düşülür (standart kapı ≈ 0,9 × 2,1 = 1,9 m²). Yükseklik boş kalırsa 2,6 m alınır. Duvar seramiği tavana kadar değilse kaplama yüksekliğini yazın.'],
             ['type' => 'cards', 'key' => 'size', 'title' => 'Karo ebadı', 'short' => 'Karo ebadı', 'required' => true, 'cols' => 4, 'hide' => ['surface' => ['zemin_duvar']], 'options' => [
                 '30x60' => ['label' => '30×60', 'hint' => 'Duvar seramiği'],
                 '60x60' => ['label' => '60×60', 'hint' => 'En yaygın zemin'],
@@ -137,14 +151,65 @@ class TileEstimator extends KitEstimator
         ];
     }
 
+    /** Eski bağlantılar (?floor=20&wall=24) yeni ölçü alanlarına çevrilir: alan, en × 1 m olarak taşınır */
+    public function normalize(array $raw): array
+    {
+        $num = fn ($v) => is_numeric(str_replace(',', '.', trim((string) $v)));
+        $s = (string) ($raw['surface'] ?? '');
+        if (isset($raw['floor']) && $num($raw['floor']) && ! isset($raw['en']) && in_array($s, ['zemin', 'zemin_duvar'], true)) {
+            $raw['en'] = $raw['floor'];
+            $raw['boy'] = 1;
+        }
+        if ($s === 'duvar' && isset($raw['wall']) && $num($raw['wall']) && ! isset($raw['dw'])) {
+            $raw['dw'] = $raw['wall'];
+            $raw['h'] = 1;
+        }
+
+        return parent::normalize($raw);
+    }
+
+    /** @return array{0:float,1:float} [zemin m², duvar m²] */
     private function areas(array $in): array
     {
         $s = $in['surface'] ?? '';
-        $floor = in_array($s, ['zemin', 'zemin_duvar'], true) && ! empty($in['_given_floor']) ? (float) $in['floor'] : 0.0;
-        $wall = in_array($s, ['duvar', 'zemin_duvar'], true) && ! empty($in['_given_wall']) ? (float) $in['wall'] : 0.0;
+        $en = ! empty($in['_given_en']) ? (float) $in['en'] : 0.0;
+        $boy = ! empty($in['_given_boy']) ? (float) $in['boy'] : 0.0;
+        $h = (float) ($in['h'] ?? 2.6) ?: 2.6;
+        $floor = in_array($s, ['zemin', 'zemin_duvar'], true) ? round($en * $boy, 2) : 0.0;
+        $wall = 0.0;
+        if ($s === 'duvar') {
+            $wall = ! empty($in['_given_dw']) ? round((float) $in['dw'] * $h, 2) : 0.0;
+        } elseif ($s === 'zemin_duvar' && $en > 0 && $boy > 0) {
+            $wall = ! empty($in['_given_wall'])
+                ? (float) $in['wall']
+                : round(max(0.0, 2 * ($en + $boy) * $h - (float) ($in['kapi'] ?? 0)), 2);
+        }
 
         return [$floor, $wall];
     }
+
+    /** Sonuçta ölçü → alan hesabının açık yazımı */
+    private function measureRows(array $in, float $floor, float $wall): array
+    {
+        $f = fn ($v) => number_format((float) $v, 2, ',', '.');
+        $s = $in['surface'] ?? '';
+        $h = (float) ($in['h'] ?? 2.6) ?: 2.6;
+        $rows = [];
+        if ($floor > 0 && ! empty($in['_given_boy']) && (float) $in['boy'] !== 1.0) {
+            $rows[] = ['Zemin', $f($in['en']).' × '.$f($in['boy']).' m = '.self::n1($floor).' m²'];
+        }
+        if ($s === 'duvar' && $wall > 0 && $h !== 1.0) {
+            $rows[] = ['Duvar', $f($in['dw']).' × '.$f($h).' m = '.self::n1($wall).' m²'];
+        } elseif ($s === 'zemin_duvar' && $wall > 0) {
+            $rows[] = ['Duvar', ! empty($in['_given_wall']) ? self::n1($wall).' m² (girilen)'
+                : '2 × ('.$f($in['en']).' + '.$f($in['boy']).') × '.$f($h).' m'.((float) ($in['kapi'] ?? 0) > 0 ? ' − '.$f($in['kapi']).' m² kapı/pencere' : '').' = '.self::n1($wall).' m²'];
+        }
+
+        return $rows;
+    }
+
+    /** Karo adedi: 1 m²'yi kaç karo kaplar (1 ÷ karo alanı) */
+    private const TILE_M2 = ['30x60' => 0.18, '60x60' => 0.36, '60x120' => 0.72, '120x120' => 1.44];
 
     public function missing(array $in): array
     {
@@ -152,7 +217,7 @@ class TileEstimator extends KitEstimator
         if (($in['surface'] ?? '') !== '' && ! in_array('zemin veya duvar alanı', $m, true)) {
             [$f, $w] = $this->areas($in);
             if ($f + $w <= 0) {
-                $m[] = ['zemin' => 'zemin alanı', 'duvar' => 'duvar alanı', 'zemin_duvar' => 'zemin veya duvar alanı'][$in['surface']];
+                $m[] = ['zemin' => 'zemin eni ve boyu', 'duvar' => 'duvar genişliği', 'zemin_duvar' => 'oda eni ve boyu'][$in['surface']];
             }
         }
 
@@ -231,7 +296,7 @@ class TileEstimator extends KitEstimator
             'per_unit' => $area,
             'days' => $days,
             'meta' => array_merge([['Tahmini süre', $days[0].'–'.$days[1].' iş günü'], ['Kaplanacak alan', self::n1($area).' m²']],
-                $split ? [['Zemin / duvar', self::n1($floor).' m² · '.self::n1($wall).' m²']] : []),
+                $this->measureRows($in, $floor, $wall)),
             'notes' => $this->has($in, 'extras', 'sap') || $in['scope'] !== 'hazir' ? [] : ['Zemin düzgün değilse tesviye şapı gerekebilir.'],
         ];
     }
@@ -245,8 +310,11 @@ class TileEstimator extends KitEstimator
         $tile = function (string $name, float $a, string $sz) use ($p) {
             $need = $a * (1 + $p['size_waste'][$sz]);
 
+            $per = 1 / self::TILE_M2[$sz];
+
             return [
                 [$name.' ('.$this->sizeLabel($sz).')', self::n1($need), 'm²', 'Alan '.self::n1($a).' m² + %'.round($p['size_waste'][$sz] * 100).' fire'],
+                [$name.' adedi', (int) ceil($need * $per), 'adet', 'Bir karo '.number_format(self::TILE_M2[$sz], 2, ',', '.').' m²; 1 m² = 1 ÷ '.number_format(self::TILE_M2[$sz], 2, ',', '.').' ≈ '.number_format($per, 2, ',', '.').' karo'],
                 [$name.' kutusu', (int) ceil($need / $p['box_m2'][$sz]), 'kutu', 'Kutu başına yaklaşık '.self::n1($p['box_m2'][$sz]).' m² (markaya göre değişir)'],
             ];
         };
