@@ -56,3 +56,6 @@ html[data-theme="dark"] :focus-visible { outline-color: var(--ws-yellow); }
 /* Başlık vurgusu (hero'daki renkli ifade): beyaz zeminde ≥4.5:1 kontrast */
 :root { --ws-highlight: #9A6E00; }
 html[data-theme="dark"] { --ws-highlight: #FFC94B; }
+
+/* v105 dokunma hedefi: telefonda alt bilgi bağlantıları daha kolay basılır */
+@media (max-width:760px){.wks-footer a{display:inline-block;padding-block:6px}}

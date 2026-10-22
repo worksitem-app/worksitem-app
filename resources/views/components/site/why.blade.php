@@ -6,8 +6,7 @@
 @php
     $free = \App\Services\Market\Marketplace::isFree();
     $freeUntil = \App\Services\Market\Marketplace::freeUntil()?->format('d.m.Y');
-    $tools = collect((array) config('worksitem_tools.tools'))->keys()
-        ->filter(fn ($s) => (((array) config('worksitem_tools.tool_status.overrides'))[$s] ?? config('worksitem_tools.tool_status.default')) === 'active')->count();
+    $tools = \App\Support\Tools::activeCount();
     $groups = [
         'users' => [
             'kicker' => 'Ev sahipleri ve proje sahipleri için',

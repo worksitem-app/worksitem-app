@@ -5,7 +5,8 @@
 
     foreach ($wksToolConfig as $slug => $tool) {
 
-        if ($slug === 'havalandirma-kanali') {
+        // Aramada yalnız kullanılabilen araçlar (incelemedeki araca götürüp "kapalı" penceresi göstermeyelim)
+        if ($slug === 'havalandirma-kanali' || ! \App\Support\Tools::isActive($slug)) {
             continue;
         }
 
@@ -649,7 +650,7 @@ html[data-theme="dark"] .wks-search-open:hover{
             class="wks-search-meta"
             id="wksGlobalSearchTitle"
         >
-            74 araç içinde ara
+            {{ count($wksSearchTools) }} araç içinde ara
         </div>
 
 

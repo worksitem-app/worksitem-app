@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Tadilat ve İnşaat Maliyeti Hesapla 2026: Ücretsiz | Worksitem</title>
-<meta name="description" content="Banyo, mutfak, boya veya bina: maliyetini 2026 fiyatlarıyla ücretsiz hesapla, kalem kalem PDF al, uzmandan teklif iste. 70'ten fazla araç, üyelik yok.">
+<meta name="description" content="Banyo, mutfak, boya veya bina: maliyetini 2026 fiyatlarıyla ücretsiz hesapla, kalem kalem PDF al, uzmandan teklif iste. {{ \App\Support\Tools::label() }} ücretsiz araç, üyelik yok.">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
 <link rel="canonical" href="https://worksitem.com/">
 <meta property="og:type" content="website">
@@ -198,11 +198,12 @@ html[data-theme=dark] body .wks-brand img,html[data-theme=dark] body .wks-foot-l
     {"@@type":"Question","name":"Kaba inşaat ve anahtar teslim metrekare birim fiyatı farkı nedir?","acceptedAnswer":{"@@type":"Answer","text":"Kaba inşaat ve anahtar teslim m² birim fiyatı aynı kapsamı ifade etmez. Kaba inşaat, projede tanımlanan taşıyıcı sistem ve kaba yapı imalatlarıyla sınırlı olabilir; anahtar teslim kapsam ise sözleşmeye göre elektrik, mekanik, ince işler, kaplamalar ve diğer tamamlayıcı imalatları içerebilir. WORKSİTEM ana sayfa sonucu bu iki kapsam için ayrı ayrı kesin teklif vermez; ekranda belirtilen hesaplama yöntemine göre yaklaşık ön bütçe sunar. Kapsam karşılaştırması için metraj ve teknik şartname birlikte değerlendirilmelidir."}},
     {"@@type":"Question","name":"Hangi proje dosyalarını yükleyebilirim?","acceptedAnswer":{"@@type":"Answer","text":"En fazla 10 MB boyutunda PDF, CSV, JPG, JPEG veya PNG dosyası yükleyebilirsiniz. Dosyanız yoksa toplam m² üzerinden hesap yapabilirsiniz. Dosya analizi için okunabilir ölçü ve iş kalemi bilgileri gerekir."}},
     {"@@type":"Question","name":"Fiyatlandırılamayan işler toplamda yer alır mı?","acceptedAnswer":{"@@type":"Answer","text":"Hayır. Fiyatı veya güvenilir miktarı bulunamayan kalemler ayrı gösterilir ve hesaplanan ara toplama dahil edilmez. Bütün dosya kalemleri fiyatlandırılmış olsa bile dosyada yer almayan proje işleri bu tutara dahil değildir."}},
-    {"@@type":"Question","name":"Net teklif almak için ne yapmalıyım?","acceptedAnswer":{"@@type":"Answer","text":"Hesaplama sonucundan sonra proje değerlendirmesi talep edebilirsiniz. İletişim bilgilerinizi ve proje notunuzu paylaşmanızın ardından kapsam ve saha koşulları değerlendirilir. Uygun projelerde profesyonel saha keşfi ücretli olabilir."}}
+    {"@@type":"Question","name":"Net teklif almak için ne yapmalıyım?","acceptedAnswer":{"@@type":"Answer","text":"Hesaplama sonucundan sonra proje değerlendirmesi talep edebilirsiniz. İletişim bilgilerinizi ve proje notunuzu paylaşmanızın ardından kapsam ve saha koşulları değerlendirilir. İstanbul'da yerinde keşif bedeli {{ \App\Support\InspectionOffer::feeLabel() }}; keşiften sonra 15 gün içinde sözleşme imzalanırsa bu bedel iş bedelinden düşülür."}}
   ]
 }
 </script>
 <link rel="stylesheet" href="/css/worksitem-design.css">
+<style id="ws-v105-home">@media(max-width:760px){.hero h1,h1{font-size:34px;letter-spacing:-1.2px;line-height:1.08}.hero{padding-top:28px}}</style>
 </head>
 <body data-tool-slug="homepage">
 <a class="skip-link" href="#ana-icerik">Ana içeriğe geç</a>
@@ -216,7 +217,7 @@ html[data-theme=dark] body .wks-brand img,html[data-theme=dark] body .wks-foot-l
 <div>
 <div class="eyebrow"><span class="dot" aria-hidden="true"></span> İnşaat · Tadilat · Kentsel dönüşüm</div>
 <h1>İnşaat ve tadilat <span>maliyetinizi</span> hesaplayın.</h1>
-<p class="hero-copy">Proje türünüzü, alanınızı ve konumunuzu girin; yaklaşık bütçenizi 2026 fiyatlarıyla ücretsiz görün.@if (config('services.ai_spend_enabled')) Dosyanız varsa yapay zekâ ön keşifle iş kalemlerini inceleyin.@endif Banyo, mutfak, boya gibi işler için 70'ten fazla araç tek yerde.</p>
+<p class="hero-copy">Proje türünüzü, alanınızı ve konumunuzu girin; yaklaşık bütçenizi 2026 fiyatlarıyla ücretsiz görün.@if (config('services.ai_spend_enabled')) Dosyanız varsa yapay zekâ ön keşifle iş kalemlerini inceleyin.@endif Banyo, mutfak, boya gibi işler için {{ \App\Support\Tools::label() }} araç tek yerde.</p>
 <div class="hero-actions">
 <a class="btn btn-primary" href="#proje-hesaplayici" {!! \App\Support\Ab::attr('home_hero_cta') !!}>{{ \App\Support\Ab::text('home_hero_cta') }}</a>
 <a class="btn btn-secondary" href="/araclar">Tüm Hesaplama Araçları</a>
@@ -523,7 +524,7 @@ Seçtiğiniz yapı türü ve toplam alana göre yaklaşık ön bütçe güvenli 
 <div class="faq-item"><button class="faq-q" type="button"><span>Kaba inşaat ve anahtar teslim metrekare birim fiyatı farkı nedir?</span><b>+</b></button><div class="faq-a">Kaba inşaat ve anahtar teslim m² birim fiyatı aynı kapsamı ifade etmez. Kaba inşaat, projede tanımlanan taşıyıcı sistem ve kaba yapı imalatlarıyla sınırlı olabilir; anahtar teslim kapsam ise sözleşmeye göre elektrik, mekanik, ince işler, kaplamalar ve diğer tamamlayıcı imalatları içerebilir. WORKSİTEM ana sayfa sonucu bu iki kapsam için ayrı ayrı kesin teklif vermez; ekranda belirtilen hesaplama yöntemine göre yaklaşık ön bütçe sunar. Kapsam karşılaştırması için metraj ve teknik şartname birlikte değerlendirilmelidir.</div></div>
 <div class="faq-item"><button class="faq-q" type="button"><span>Hangi proje dosyalarını yükleyebilirim?</span><b>+</b></button><div class="faq-a">En fazla 10 MB boyutunda PDF, CSV, JPG, JPEG veya PNG dosyası yükleyebilirsiniz. Dosyanız yoksa toplam m² üzerinden hesap yapabilirsiniz. Dosya analizi için okunabilir ölçü ve iş kalemi bilgileri gerekir.</div></div>
 <div class="faq-item"><button class="faq-q" type="button"><span>Fiyatlandırılamayan işler toplamda yer alır mı?</span><b>+</b></button><div class="faq-a">Hayır. Fiyatı veya güvenilir miktarı bulunamayan kalemler ayrı gösterilir ve hesaplanan ara toplama dahil edilmez. Bütün dosya kalemleri fiyatlandırılmış olsa bile dosyada yer almayan proje işleri bu tutara dahil değildir.</div></div>
-<div class="faq-item"><button class="faq-q" type="button"><span>Net teklif almak için ne yapmalıyım?</span><b>+</b></button><div class="faq-a">Hesaplama sonucundan sonra proje değerlendirmesi talep edebilirsiniz. İletişim bilgilerinizi ve proje notunuzu paylaşmanızın ardından kapsam ve saha koşulları değerlendirilir. Uygun projelerde profesyonel saha keşfi ücretli olabilir.</div></div>
+<div class="faq-item"><button class="faq-q" type="button"><span>Net teklif almak için ne yapmalıyım?</span><b>+</b></button><div class="faq-a">Hesaplama sonucundan sonra proje değerlendirmesi talep edebilirsiniz. İletişim bilgilerinizi ve proje notunuzu paylaşmanızın ardından kapsam ve saha koşulları değerlendirilir. İstanbul'da yerinde keşif bedeli {{ \App\Support\InspectionOffer::feeLabel() }}; keşiften sonra 15 gün içinde sözleşme imzalanırsa bu bedel iş bedelinden düşülür.</div></div>
 </div>
 </div>
 </section>

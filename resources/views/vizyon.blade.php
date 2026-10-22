@@ -33,7 +33,7 @@
                     <div style="font-size: 28px;">📅</div>
                     <h3 class="ws-h3" style="margin-top: 12px;">2026 — Temel</h3>
                     <p class="ws-muted" style="margin-top: 8px; font-size: 14px;">
-                        70+ ücretsiz araç, 2D/3D planlayıcılar, güncel fiyatlı maliyet motoru ve firma teklif altyapısı.
+                        {{ \App\Support\Tools::label() }} ücretsiz araç, 2D/3D planlayıcılar, güncel fiyatlı maliyet motoru ve firma teklif altyapısı.
                     </p>
                 </div>
                 <div class="ws-card ws-card-lg">

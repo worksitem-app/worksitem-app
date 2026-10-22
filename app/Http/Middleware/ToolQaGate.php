@@ -92,9 +92,9 @@ class ToolQaGate
 
         $labels = [
             'review' => [
-                'badge' => 'İNCELEMEDE',
-                'title' => 'Bu araç kalite kontrolünden geçiyor',
-                'text' => 'Hesaplama özelliği kısa süreliğine kullanıma kapalıdır. Sayfa ve SEO içeriği korunmaktadır.',
+                'badge' => 'YAKINDA',
+                'title' => 'Bu araç yakında açılıyor',
+                'text' => 'Hesaplarını son kez kontrol ediyoruz. Bu arada benzer hesabı diğer araçlarımızla ücretsiz yapabilirsiniz.',
             ],
             'soon' => [
                 'badge' => 'YAKINDA',

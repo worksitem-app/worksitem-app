@@ -47,6 +47,10 @@ class BrandShell
             $html = substr($html, 0, $b).self::CSRF_REFRESH_SCRIPT.substr($html, $b);
             $response->setContent($html);
         }
+        // Erişilebilirlik (v105): eski hesaplayıcılarda <label> ile alanı bağla; ekran okuyucu alanın adını söylesin
+        if ($request->is('araclar/*')) {
+            $html = self::linkLabels($html);
+        }
         // Küçük ortak CSS'ler sayfaya gömülür: ayrı istek oluşturmayı engellemesin (v86; ölçüm: 150–550 ms)
         $html = self::inlineCss($html);
         if (! str_contains($html, 'id="ws-brand-css"') && ! str_contains($html, '/css/ws-brand.css')) {
@@ -57,6 +61,25 @@ class BrandShell
         $response->setContent(self::deferFonts($html));
 
         return $response;
+    }
+
+    /**
+     * for= özelliği olmayan <label>'ı, ardından gelen ilk id'li alana bağlar (arada başka label ya da alan yoksa).
+     * 45 eski hesaplayıcının şablonuna tek tek dokunmadan alan adlarını ekran okuyucuya açar.
+     */
+    public static function linkLabels(string $html): string
+    {
+        return (string) preg_replace_callback(
+            '#<label\b(?![^>]*\bfor=)([^>]*)>((?:(?!</label>|<input\\b|<select\\b|<textarea\\b).){1,300}?)</label>((?:(?!<label\b|<input\b|<select\b|<textarea\b).){0,400}?)<(input|select|textarea)\b([^>]*?\bid=["\']([A-Za-z][\w-]*)["\'])#s',
+            function (array $m): string {
+                if (preg_match('#\btype=["\']?(hidden|submit|button)#i', $m[5])) {
+                    return $m[0];
+                }
+
+                return '<label for="'.$m[6].'"'.$m[1].'>'.$m[2].'</label>'.$m[3].'<'.$m[4].$m[5];
+            },
+            $html
+        ) ?: $html;
     }
 
     /** Sayfaya gömülen (oluşturmayı engelleyen ayrı istek olmasın diye) küçük yerel CSS dosyaları */
