@@ -122,11 +122,14 @@ class KitProReportController extends Controller
             ? Sponsor::applyExclusive(Sponsor::query()->live()->where('tool_slug', $e->slug())->orderBy('priority')->get())->take(4)->values()
             : collect();
         $logo = public_path('brand/worksitem-logo.png');
+        $equivalents = \App\Services\Sponsors\SponsorLines::forMaterials($e->slug(), (array) ($content['materials'] ?? []));
 
         $pdf = Pdf::loadView('reports.kit-pro-pdf', $content + [
+            'equivalents' => $equivalents,
+            'issuedAt' => now('Europe/Istanbul'),
             'e' => $e,
             'page' => $e->page(),
-            'fx' => $fx->current(),
+            'fx' => $fx->forReport(),
             'sponsors' => $sponsors,
             'logo' => is_file($logo) ? 'data:image/png;base64,'.base64_encode((string) file_get_contents($logo)) : null,
             'pricesLabel' => $e->pricesLabel(),

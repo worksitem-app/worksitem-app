@@ -58,7 +58,7 @@
         <td>@if ($logo)<img src="{{ $logo }}" style="height:34px">@else<b style="font-size:18px">worksitem</b>@endif</td>
         <td class="r">
             <div class="doc-title">Banyo Tadilat Maliyet Raporu</div>
-            <div class="muted">Rapor no: {{ $reportNo }} · {{ now()->locale('tr')->translatedFormat('d F Y') }}</div>
+            <div class="muted">Rapor no: {{ $reportNo }} · {{ now('Europe/Istanbul')->locale('tr')->translatedFormat('d F Y') }}, saat {{ now('Europe/Istanbul')->format('H:i') }}</div>
         </td>
     </tr>
 </table>

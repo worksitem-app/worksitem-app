@@ -60,7 +60,7 @@ class BathroomReportController extends Controller
             'quality' => $cfg['qualities'][$input['quality']] ?? $cfg['qualities']['orta'],
             'shower' => $type['shower'] ? ($cfg['showers'][$input['shower']] ?? null) : null,
             'extraLabels' => array_map(fn ($k) => $cfg['extras'][$k]['label'], $extras),
-            'fx' => $fx->current(),
+            'fx' => $fx->forReport(),
             'logo' => is_file($logo) ? 'data:image/png;base64,'.base64_encode(file_get_contents($logo)) : null,
             'pricesLabel' => $estimator->pricesLabel(),
             'reportNo' => 'WS-'.now()->format('ymd').'-'.strtoupper(substr(md5(json_encode($input)), 0, 5)),

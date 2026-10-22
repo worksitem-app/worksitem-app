@@ -369,6 +369,31 @@ return [
     ],
 
     /*
+    | Pro rapor malzeme listesi: malzeme adındaki ifade → sponsor kategorisi (ilk eşleşen; araçta o kategori yoksa atlanır).
+    | Satırda yalnız "Sponsorlu eşdeğer" notu çıkar; miktar ve tutar değişmez.
+    */
+    'material_map' => [
+        'tamir harc' => 'tamir',
+        'grout' => 'grout',
+        'yapıştırıcı' => 'yapistirici',
+        'epoksi derz' => 'derz',
+        'derz dolgu' => 'derz',
+        'klips' => 'seviyeleme',
+        'temizleyici' => 'temizlik',
+        'su yalıtım' => 'yalitim',
+        'yalıtım bandı' => 'bant',
+        'tesviye' => 'tesviye',
+        'şap' => 'sap',
+        'kür' => 'kur',
+        'sertleştirici' => 'sertlestirici',
+        'astar' => 'astar',
+        'macun' => 'hazirlik',
+        'dış cephe boya' => 'dis_cephe',
+        'boya' => 'boya',
+        'karo' => 'seramik',
+    ],
+
+    /*
     | Tematik paketler (Markalar için sayfası + `php artisan sponsors:package`).
     | araç → kategoriler. Fiyatlar aşağıda 'pricing' altında.
     */

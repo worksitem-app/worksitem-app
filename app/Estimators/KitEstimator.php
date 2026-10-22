@@ -368,7 +368,18 @@ abstract class KitEstimator
             'payments' => $payments,
             'checklist' => $this->checklist(),
             'inputs' => $this->inputRows($in),
+            'expert' => $this->expertNotes($in),
         ];
+    }
+
+    /**
+     * Pro rapor "Uzman notları": seçimlere göre uygulama ipuçları (başlık, metin). Araç tanımlamazsa bölüm çıkmaz.
+     *
+     * @return list<array{0:string,1:string}>
+     */
+    public function expertNotes(array $in): array
+    {
+        return [];
     }
 
     // ───────────────────────── Yardımcılar ─────────────────────────

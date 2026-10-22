@@ -53,6 +53,9 @@ class SponsorResource extends Resource
                     Forms\Components\TextInput::make('target_url')->label('Hedef adres')->url()->required()->maxLength(500)
                         ->helperText('UTM parametreleri otomatik eklenir.'),
                     Forms\Components\TextInput::make('logo_url')->label('Logo adresi (https)')->url()->maxLength(500),
+                    Forms\Components\TextInput::make('tech_sheet_url')->label('Teknik föy adresi (https)')->url()->maxLength(500),
+                    Forms\Components\DatePicker::make('tech_sheet_checked_on')->label('Föyle karşılaştırma tarihi')
+                        ->helperText('Yalnız sarfiyat oranlarımız bu föyle tek tek karşılaştırıldıysa girin. Girilirse Pro raporda "teknik föyüne göre kontrol edilmiştir" ibaresi çıkar.'),
                 ])->columns(2),
             Forms\Components\Section::make('Yayın')
                 ->schema([

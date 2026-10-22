@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Sponsor extends Model
 {
     protected $fillable = [
-        'brand', 'headline', 'body', 'cta_label', 'target_url', 'logo_url', 'tool_slug', 'category',
+        'brand', 'headline', 'body', 'cta_label', 'target_url', 'logo_url', 'tech_sheet_url', 'tech_sheet_checked_on', 'tool_slug', 'category',
         'priority', 'active', 'starts_on', 'ends_on', 'contract_amount', 'contact', 'notes',
     ];
 
@@ -16,6 +16,7 @@ class Sponsor extends Model
         'active' => 'boolean',
         'starts_on' => 'date',
         'ends_on' => 'date',
+        'tech_sheet_checked_on' => 'date',
         'contract_amount' => 'decimal:2',
     ];
 
@@ -24,6 +25,11 @@ class Sponsor extends Model
 
     /** Münhasır (Tam Kategori) kayıtların işareti: aynı araç ve kategoride başka marka gösterilmez */
     public const EXCLUSIVE_MARK = '[TEK MARKA]';
+
+    public function isDemo(): bool
+    {
+        return str_contains((string) $this->notes, self::DEMO_MARK);
+    }
 
     public function isExclusive(): bool
     {

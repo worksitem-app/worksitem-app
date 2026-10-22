@@ -273,6 +273,40 @@ class TileEstimator extends KitEstimator
         return $rows;
     }
 
+    public function expertNotes(array $in): array
+    {
+        [$floor, $wall] = $this->areas($in);
+        [$fs, $ws, $fq, $wq] = $this->specs($in);
+        $sizes = array_unique(array_filter([$floor > 0 ? $fs : null, $wall > 0 ? $ws : null]));
+        $big = (bool) array_intersect($sizes, ['60x60', '60x120', '120x120']);
+        $porc = in_array($fq, ['orta', 'premium'], true) || in_array($wq, ['orta', 'premium'], true);
+        $notes = [];
+
+        $notes[] = ['Yapıştırıcı sınıfı', $big || $porc
+            ? 'Porselen ve 60 cm üzeri karoda en az C2TE, büyük ebatta tercihen C2TE S1 (esnek) yapıştırıcı kullanılır. Karonun arkasına da ince kat sürülür (çift taraflı uygulama); altında boşluk kalan karo zamanla çatlar ya da kopar.'
+            : 'Standart seramikte C2TE sınıfı yapıştırıcı yeterlidir. Taraklı mala ile sürülür, karo yerine bastırılarak oturtulur; açık bekleme süresi geçen yapıştırıcının üzerine karo konmaz.'];
+        if (in_array('30x60', $sizes, true) || in_array('60x120', $sizes, true)) {
+            $notes[] = ['Dikdörtgen karo', 'Uzun kenarı 60 cm ve üzeri dikdörtgen karoda şaşırtma en çok 1/3 kaydırılır. Yarım kaydırmada karonun doğal eğriliği yüzünden kenarlarda kot farkı oluşur.'];
+        }
+        if ($big || $this->has($in, 'extras', 'seviye')) {
+            $notes[] = ['Seviyeleme', 'Klips ve kama sistemi, büyük ebatta karo kenarlarının aynı hizada kalmasını sağlar. Klipsler derz açıklığını da sabitler; kamalar bir sonraki işte tekrar kullanılır.'];
+        }
+        $notes[] = ($in['grout'] ?? '') === 'epoksi'
+            ? ['Epoksi derz', 'Epoksi derz küçük partiler hâlinde karıştırılır; çalışma süresi sınırlıdır. Taşan kısım sertleşmeden su ve sünger ile alınır, yoksa yüzeyde parlak film kalır. Duş zemini ve mutfak tezgâh arkası için en dayanıklı seçimdir.']
+            : ['Derz', 'Derz dolgu, yapıştırıcı kuruduktan sonra (genellikle 24 saat) yapılır. Rektifiyeli karoda 2 mm, standart karoda 3 mm derz aralığı bırakılır; ıslak hacim zemininde epoksi derz daha uzun ömürlüdür.'];
+        if ($this->has($in, 'extras', 'yalitim')) {
+            $notes[] = ['Su yalıtımı', 'Çimento esaslı yalıtım iki kat ve çapraz yönde sürülür; duvar-zemin köşelerine ve gider çevresine yalıtım bandı konur. Seramikten önce 24–48 saat göllendirme testi yapılır.'];
+        }
+        if ($this->has($in, 'extras', 'sap')) {
+            $notes[] = ['Tesviye', 'Tesviye şapının üzerine döşeme için üreticinin bekleme süresi beklenir. Zemindeki 2 m mastarda 3 mm üzeri bozukluk, yapıştırıcıyla kapatılmaz.'];
+        }
+        if (($in['scope'] ?? '') === 'ustune') {
+            $notes[] = ['Eski seramik üstüne', 'Eski karo sağlam ve boşluksuz olmalıdır; tıklatıldığında boş ses veren karo sökülür. Yüzey yağdan arındırılır ve uygun astar sürülür.'];
+        }
+
+        return $notes;
+    }
+
     public function phases(array $in): array
     {
         return array_values(array_filter([

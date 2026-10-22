@@ -114,7 +114,7 @@ class BathroomProReportController extends Controller
             'cfg' => $cfg,
             'type' => $cfg['types'][$input['type']] ?? $cfg['types']['standart'],
             'scope' => $cfg['scopes'][$input['scope']] ?? $cfg['scopes']['komple'],
-            'fx' => $fx->current(),
+            'fx' => $fx->forReport(),
             'sponsors' => $sponsors,
             'logo' => is_file($logo) ? 'data:image/png;base64,'.base64_encode((string) file_get_contents($logo)) : null,
             'pricesLabel' => $estimator->pricesLabel(),

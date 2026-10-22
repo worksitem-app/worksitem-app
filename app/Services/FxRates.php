@@ -33,6 +33,28 @@ class FxRates
         return is_array($v) && ! empty($v['rates']) ? $v : null;
     }
 
+    /**
+     * Rapor (PDF) için: önbellek boşsa bir kez TCMB'den çekmeyi dener (zamanlayıcısı olmayan staging dahil).
+     * Başarısız denemeden sonra 30 dakika yeniden denenmez; sayfa açılışlarında kullanılmaz.
+     *
+     * @return array{date:string,rates:array<string,float>}|null
+     */
+    public function forReport(): ?array
+    {
+        if ($v = $this->current()) {
+            return $v;
+        }
+        if (! app()->runningUnitTests() && Cache::add('fx:tcmb:try', 1, now()->addMinutes(30))) {
+            try {
+                return $this->refresh();
+            } catch (\Throwable) {
+                return null;
+            }
+        }
+
+        return null;
+    }
+
     /** TCMB'den çeker ve önbelleğe yazar. Başarısızsa eski değer korunur. */
     public function refresh(): ?array
     {
