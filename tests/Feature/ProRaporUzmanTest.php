@@ -25,7 +25,7 @@ class ProRaporUzmanTest extends TestCase
         $content = $e->proReport($in);
         $data = $content + [
             'e' => $e, 'page' => $e->page(), 'fx' => app(FxRates::class)->current(),
-            'logo' => null, 'pricesLabel' => $e->pricesLabel(), 'reportNo' => 'WS-PRO-TEST',
+            'logo' => 'data:image/png;base64,'.base64_encode((string) file_get_contents(public_path('brand/worksitem-logo.png'))), 'pricesLabel' => $e->pricesLabel(), 'reportNo' => 'WS-PRO-TEST',
             'equivalents' => $eq = SponsorLines::forMaterials($e->slug(), $content['materials']),
             'sponsors' => collect(array_values($eq))->concat(Sponsor::applyExclusive(Sponsor::query()->live()->where('tool_slug', $e->slug())->orderBy('priority')->get()))->unique('id')->take(max(4, count($eq)))->values(),
             'issuedAt' => now('Europe/Istanbul')->setTime(13, 8),

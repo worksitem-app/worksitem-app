@@ -23,15 +23,16 @@
     table { width: 100%; border-collapse: collapse; }
     .head td { vertical-align: middle; }
     .head .r { text-align: right; }
-    .doc-title { font-size: 17px; font-weight: bold; }
-    .pro { display: inline-block; background: #FFB800; color: #101318; font-weight: bold; font-size: 9px; padding: 2px 7px; border-radius: 8px; }
-    .hero { margin-top: 8px; background: #101318; color: #fff; border-radius: 10px; }
-    .hero td { vertical-align: middle; padding: 12px 16px; }
+    .head { border-bottom: 1px solid #E5E7EB; }
+    .head td { padding: 0 0 12px; }
+    .doc-title { font-size: 15px; font-weight: bold; color: #111111; }
+    .doc-meta { font-size: 9px; color: #6B7280; margin-top: 2px; }
+    .pro { display: inline-block; background: #FFB800; color: #101318; font-weight: bold; font-size: 9px; padding: 2px 6px; border-radius: 4px; margin-left: 6px; vertical-align: middle; }
+    .hero { margin-top: 16px; background: #101318; color: #fff; border-radius: 10px; padding: 12px 16px; text-align: right; }
     .hero .lbl { color: #C9CED6; font-size: 10px; }
-    .hero .range { color: #FFB800; font-size: 25px; font-weight: bold; margin: 0; }
-    .hero .typ { color: #DFE3E8; margin-top: 4px; }
-    .hero .fx { color: #AAB1BC; font-size: 9.5px; margin-top: 4px; }
-    .hero .side { border-left: 1px solid #3A414C; }
+    .hero .range { color: #FFB800; font-size: 25px; font-weight: bold; margin: 3px 0 4px; }
+    .hero .typ { color: #DFE3E8; }
+    .hero .fx { color: #AAB1BC; font-size: 9px; margin-top: 6px; }
     .sp-badge { display: inline-block; font-size: 7.5px; text-transform: uppercase; letter-spacing: .05em; color: #5B6472; border: 0.6px solid #8B93A0; border-radius: 3px; padding: 0 3px; }
     .eq { font-size: 8.5px; color: #6B7280; margin-top: 2px; }
     .notes td { padding: 5px 7px; border-bottom: 1px solid #E3E6EA; vertical-align: top; }
@@ -72,35 +73,24 @@
 
 <table class="head">
     <tr>
-        <td>@if ($logo)<img src="{{ $logo }}" style="height:34px">@else<b style="font-size:18px">worksitem</b>@endif</td>
-        <td class="r">
-            <div class="doc-title">{{ $page['title'] }} Pro Raporu <span class="pro">PRO</span></div>
-            <div class="muted">Rapor no: {{ $reportNo }} · {{ $issuedAt->locale('tr')->translatedFormat('d F Y') }}, saat {{ $issuedAt->format('H:i') }}</div>
+        <td style="width:40%">@if ($logo)<img src="{{ $logo }}" style="height:52px">@else<b style="font-size:18px">worksitem</b>@endif</td>
+        <td class="r" style="width:60%">
+            <div class="doc-title">{{ $page['title'] }} Pro Raporu<span class="pro">PRO</span></div>
+            <div class="doc-meta">Rapor no: {{ $reportNo }} · {{ $issuedAt->locale('tr')->translatedFormat('d F Y') }}, saat {{ $issuedAt->format('H:i') }}</div>
         </td>
     </tr>
 </table>
 
-<table class="hero">
-    <tr>
-        <td style="width:52%">
-            <div class="range">{{ $tl($est['low']) }} – {{ $tl($est['high']) }}</div>
-            @if ($fx)
-                <div class="fx">
-                    @foreach ($currencies as $code => $sym)
-                        @if (! empty($fx['rates'][$code]))
-                            ≈&nbsp;{{ $sym }}{{ number_format(round($est['low'] / $fx['rates'][$code], -1), 0, ',', '.') }}&nbsp;–&nbsp;{{ $sym }}{{ number_format(round($est['high'] / $fx['rates'][$code], -1), 0, ',', '.') }}&nbsp;&nbsp;
-                        @endif
-                    @endforeach
-                </div>
-                <div class="fx" style="font-size:9px;margin-top:1px">(TCMB döviz satış kuru, {{ $fx['date'] }})</div>
-            @endif
-        </td>
-        <td class="side">
-            <div class="lbl">Tahmini maliyet aralığı (malzeme + işçilik, KDV dahil)</div>
-            <div class="typ">En olası tutar&nbsp;{{ $tl($est['mid']) }}@if ($est['per_unit'] && $est['per_unit_label']) · {{ $est['per_unit_label'] }} yaklaşık&nbsp;{{ $tl($est['per_unit']) }}@endif @if ($est['days'])· {{ $est['days'][0] }}–{{ $est['days'][1] }}&nbsp;iş&nbsp;günü@endif</div>
-        </td>
-    </tr>
-</table>
+<div class="hero">
+    <div class="lbl">Tahmini maliyet aralığı (malzeme + işçilik, KDV dahil)</div>
+    <div class="range">{{ $tl($est['low']) }} – {{ $tl($est['high']) }}</div>
+    <div class="typ">En olası tutar {{ $tl($est['mid']) }}@if ($est['per_unit'] && $est['per_unit_label']) · {{ $est['per_unit_label'] }} yaklaşık {{ $tl($est['per_unit']) }}@endif @if ($est['days'])· {{ $est['days'][0] }}–{{ $est['days'][1] }} iş günü@endif</div>
+    @if ($fx)
+        <div class="fx">
+            {!! collect($currencies)->filter(fn ($sym, $code) => ! empty($fx['rates'][$code]))->map(fn ($sym, $code) => '≈&nbsp;'.e($sym).number_format(round($est['low'] / $fx['rates'][$code], -1), 0, ',', '.').'&nbsp;–&nbsp;'.e($sym).number_format(round($est['high'] / $fx['rates'][$code], -1), 0, ',', '.'))->join('&nbsp;&nbsp;&nbsp; ') !!}&nbsp;&nbsp;&nbsp; (TCMB döviz satış kuru, {{ $fx['date'] }})
+        </div>
+    @endif
+</div>
 
 <h2>{{ ++$sec }}. Proje bilgileri</h2>
 <table class="grid">
