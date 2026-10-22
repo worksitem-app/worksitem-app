@@ -188,4 +188,11 @@ class InsulationEstimator extends KitEstimator
             'Sistem bileşenlerinin (harç, file, levha) aynı sistem onayına sahip olduğunu sorun.',
         ], array_slice(parent::checklist(), 0, 5));
     }
+
+    public function visuals(): array
+    {
+        return self::openVisuals([
+            ['duvar-rengi-gorsellestirici', route('tools.paint_visualizer'), 'Cephe rengini binanızda görün', 'Binanızın fotoğrafında son kat rengini deneyin.'],
+        ]);
+    }
 }

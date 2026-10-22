@@ -394,4 +394,12 @@ class TileEstimator extends KitEstimator
             'Islak hacimde su yalıtımı ve göllendirme testi yapılmadan seramiğe geçilmesin.',
         ], array_slice(parent::checklist(), 0, 5));
     }
+
+    public function visuals(): array
+    {
+        return self::openVisuals([
+            ['seramik-gorsellestirici', route('tools.tile_visualizer'), 'Seramiği kendi odanızda görün', 'Odanızın fotoğrafını yükleyin; seçtiğiniz karoyu zeminde ve duvarda deneyin.'],
+            ['banyo-planlayici', route('tools.banyo_planner'), 'Banyonuzu 2D / 3D planlayın', 'Ölçüleri girin; lavabo, klozet ve duş yerleşsin, seramiği planda deneyin.'],
+        ]);
+    }
 }

@@ -233,6 +233,14 @@
             }
         }
     </script>
+    <section class="ws-room-cost" style="max-width:1100px;margin:24px auto 0;padding:0 16px">
+        <h2 style="font-size:20px;margin:0 0 10px">Beğendiğiniz tasarımın maliyetini hesaplayın</h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px">
+            @foreach ([['/araclar/parke-maliyet-hesaplayici', 'Parke maliyeti'], ['/araclar/zemin-kaplama', 'Zemin kaplama'], ['/araclar/seramik-maliyet-hesaplayici', 'Seramik maliyeti'], ['/araclar/boya-hesaplayici', 'Boya maliyeti']] as [$u, $t])
+                <a href="{{ $u }}" style="display:block;padding:12px 14px;border:1.5px solid #101318;border-radius:12px;color:#101318;text-decoration:none;font-weight:700">{{ $t }} →</a>
+            @endforeach
+        </div>
+    </section>
     <x-site.contech-footer />
     <script src="/js/tool-events.js" defer></script>
 </body>

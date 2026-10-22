@@ -25,9 +25,11 @@ abstract class CatalogPozEstimator extends PozEstimator
 
         return [
             ['type' => 'cards', 'key' => 'system', 'title' => $this->systemTitle(), 'short' => $this->systemTitle(), 'required' => true, 'cols' => 2, 'options' => $opts],
-            ['type' => 'numbers', 'title' => 'Alan', 'cols' => 1, 'fields' => [
-                ['key' => 'area', 'label' => $this->areaLabel(), 'unit' => 'm²', 'min' => 1, 'max' => 200000, 'step' => 0.5, 'placeholder' => 'Örn. 100', 'required' => true],
-            ]],
+            ['type' => 'numbers', 'title' => 'Ölçüler', 'cols' => 3, 'fields' => [
+                ['key' => 'area_en', 'label' => 'En', 'unit' => 'm', 'min' => 0.1, 'max' => 2000, 'step' => 0.01, 'placeholder' => 'Örn. 8'],
+                ['key' => 'area_boy', 'label' => 'Boy', 'unit' => 'm', 'min' => 0.1, 'max' => 2000, 'step' => 0.01, 'placeholder' => 'Örn. 12'],
+                ['key' => 'area', 'label' => $this->areaLabel().' (biliyorsanız)', 'from' => ['area_en', 'area_boy'], 'unit' => 'm²', 'min' => 1, 'max' => 200000, 'step' => 0.5, 'placeholder' => 'Örn. 100', 'required' => true, 'missing' => mb_strtolower($this->areaLabel()).' (en × boy ya da m²)'],
+            ], 'help' => 'En × boy girin; alan m² kendiliğinden hesaplanır (ör. 8 m × 12 m = 96 m²). Alanı biliyorsanız doğrudan yazabilirsiniz. Birden fazla bölüm varsa alanları toplayıp yazın.'],
         ];
     }
 

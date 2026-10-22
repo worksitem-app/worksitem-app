@@ -373,4 +373,11 @@ class PaintEstimator extends KitEstimator
             'Nem lekesi varsa önce nem kaynağı çözülmeli; yoksa boya kısa sürede kabarır.',
         ], array_slice(parent::checklist(), 2, 4));
     }
+
+    public function visuals(): array
+    {
+        return self::openVisuals([
+            ['duvar-rengi-gorsellestirici', route('tools.paint_visualizer'), 'Rengi duvarınızda görün', 'Odanızın ya da cephenizin fotoğrafında renk kartelasındaki tonları deneyin.'],
+        ]);
+    }
 }

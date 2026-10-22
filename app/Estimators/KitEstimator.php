@@ -70,6 +70,32 @@ abstract class KitEstimator
         return null;
     }
 
+    /**
+     * Sonuç kutusunda görselleştirme yönlendirmeleri: [['url', 'label', 'hint'], ...]
+     * Yalnız yayında olan araçlar gösterilir.
+     */
+    public function visuals(): array
+    {
+        return [];
+    }
+
+    /** Görsel aracı yayında mı (araç listesinde yoksa her zaman açık) */
+    protected static function toolOpen(string $slug): bool
+    {
+        $st = (array) config('worksitem_tools.tool_status', []);
+        if (! array_key_exists($slug, (array) config('worksitem_tools.tools', [])) || ! empty($st['staging_test_mode'])) {
+            return true;
+        }
+
+        return (($st['overrides'][$slug] ?? $st['default'] ?? 'review') === 'active');
+    }
+
+    /** @param list<array{0:string,1:string,2:string,3:string}> $list [araç slug, adres, başlık, açıklama] */
+    protected static function openVisuals(array $list): array
+    {
+        return array_values(array_map(fn ($v) => ['url' => $v[1], 'label' => $v[2], 'hint' => $v[3]], array_filter($list, fn ($v) => self::toolOpen($v[0]))));
+    }
+
     public function sponsorTitle(): string
     {
         return 'Projeniz için markalar';
@@ -108,6 +134,20 @@ abstract class KitEstimator
                     }
                     $in[$step['key']] = array_values(array_intersect(array_keys($step['options']), array_map('strval', $vals)));
                     break;
+            }
+        }
+
+        // Ölçüden alan: 'from' => [en alanı, boy alanı] — alan girilmemişse en × boy kullanılır
+        foreach ($this->steps() as $step) {
+            if ($step['type'] !== 'numbers') {
+                continue;
+            }
+            foreach ($step['fields'] as $f) {
+                [$a, $b] = array_pad((array) ($f['from'] ?? []), 2, null);
+                if ($a && $b && empty($in['_given_'.$f['key']]) && ! empty($in['_given_'.$a]) && ! empty($in['_given_'.$b])) {
+                    $in[$f['key']] = min((float) $f['max'], max((float) $f['min'], round((float) $in[$a] * (float) $in[$b], 2)));
+                    $in['_given_'.$f['key']] = true;
+                }
             }
         }
 
@@ -184,7 +224,7 @@ abstract class KitEstimator
                 }
                 foreach ($step['fields'] as $f) {
                     if (($f['required'] ?? false) && empty($in['_given_'.$f['key']])) {
-                        $miss[] = mb_strtolower($f['label']);
+                        $miss[] = $f['missing'] ?? mb_strtolower($f['label']);
                     }
                 }
             }

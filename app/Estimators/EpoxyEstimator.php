@@ -55,8 +55,10 @@ class EpoxyEstimator extends PozEstimator
         $l = $this->layers();
 
         return [
-            ['type' => 'numbers', 'title' => 'Alan', 'cols' => 1, 'fields' => [
-                ['key' => 'area', 'label' => 'Zemin alanı', 'unit' => 'm²', 'min' => 5, 'max' => 200000, 'step' => 1, 'placeholder' => 'Örn. 300', 'required' => true],
+            ['type' => 'numbers', 'title' => 'Alan', 'cols' => 3, 'fields' => [
+                ['key' => 'area_en', 'label' => 'En', 'unit' => 'm', 'min' => 0.1, 'max' => 2000, 'step' => 0.01, 'placeholder' => 'Örn. 4'],
+                ['key' => 'area_boy', 'label' => 'Boy', 'unit' => 'm', 'min' => 0.1, 'max' => 2000, 'step' => 0.01, 'placeholder' => 'Örn. 5'],
+                ['key' => 'area', 'label' => 'Alan (biliyorsanız)', 'from' => ['area_en', 'area_boy'], 'unit' => 'm²', 'min' => 5, 'max' => 200000, 'step' => 1, 'placeholder' => 'Örn. 300', 'required' => true, 'missing' => 'alan (en × boy ya da m²)'],
             ]],
             ['type' => 'checks', 'key' => 'layers', 'title' => 'Ek katmanlar', 'options' => ['leveling' => $l['leveling']['label'], 'uv_topcoat' => $l['uv_topcoat']['label']]],
         ];

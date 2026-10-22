@@ -152,6 +152,12 @@
                         <span><strong>{{ $plan['label'] }}</strong><small>{{ $plan['hint'] }}</small></span>
                     </a>
                 @endif
+                @foreach ($e->visuals() as $vis)
+                    <a class="bt-plan bt-vis" href="{{ $vis['url'] }}" data-kainta-auto-link="off" data-visual="{{ parse_url($vis['url'], PHP_URL_PATH) }}">
+                        <svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><path d="M3 17s5.5-9 14-9 14 9 14 9-5.5 9-14 9S3 17 3 17z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17" cy="17" r="5" fill="#FFB800"/></svg>
+                        <span><strong>{{ $vis['label'] }}</strong><small>{{ $vis['hint'] }}</small></span>
+                    </a>
+                @endforeach
                 <div class="bt-share"><button type="button" id="shareBtn">🔗 Bu hesabı paylaş</button></div>
             </div>
         </aside>

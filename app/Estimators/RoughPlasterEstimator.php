@@ -61,7 +61,9 @@ class RoughPlasterEstimator extends KitEstimator
                 'dis' => ['label' => 'Dış cephe', 'hint' => 'Bina dış duvarları'],
             ]],
             ['type' => 'numbers', 'title' => 'Ölçüler', 'cols' => 2, 'fields' => [
-                ['key' => 'area', 'label' => 'Sıvanacak alan', 'unit' => 'm²', 'min' => 1, 'max' => 50000, 'step' => 1, 'placeholder' => 'Örn. 120', 'required' => true],
+                ['key' => 'area_en', 'label' => 'Duvar uzunluğu (toplam)', 'unit' => 'm', 'min' => 0.1, 'max' => 2000, 'step' => 0.01, 'placeholder' => 'Örn. 4'],
+                ['key' => 'area_boy', 'label' => 'Yükseklik', 'unit' => 'm', 'min' => 0.1, 'max' => 2000, 'step' => 0.01, 'placeholder' => 'Örn. 3'],
+                ['key' => 'area', 'label' => 'Alan (biliyorsanız)', 'from' => ['area_en', 'area_boy'], 'unit' => 'm²', 'min' => 1, 'max' => 50000, 'step' => 1, 'placeholder' => 'Örn. 120', 'required' => true, 'missing' => 'alan (en × boy ya da m²)'],
                 ['key' => 'thickness', 'label' => 'Kalınlık', 'unit' => 'cm', 'min' => 1, 'max' => 5, 'step' => 0.5, 'placeholder' => '2', 'default' => 2],
             ], 'help' => 'Kapı ve pencere boşluklarını düşün. Kalınlığı bilmiyorsanız boş bırakın; 2 cm alınır.'],
             ['type' => 'checks', 'key' => 'extras', 'title' => 'Ekstralar', 'options' => ['mesh' => 'Sıva filesi', 'scaffold' => 'İskele (dış cephe)']],

@@ -163,4 +163,11 @@ class WcEstimator extends KitEstimator
             ? [['Vitrifiye sökümü', .15], ['Seramik', .5], ['Vitrifiye montajı', .25], ['Temizlik ve teslim', .1]]
             : [['Kırım ve moloz', .15], ['Tesisat', .2], ['Su yalıtımı ve kuruma', .15], ['Seramik', .3], ['Vitrifiye montajı', .15], ['Teslim', .05]];
     }
+
+    public function visuals(): array
+    {
+        return self::openVisuals([
+            ['seramik-gorsellestirici', route('tools.tile_visualizer'), 'Seramiği WC\'nizde görün', 'Fotoğraf yükleyin; karoyu zeminde ve duvarda deneyin.'],
+        ]);
+    }
 }

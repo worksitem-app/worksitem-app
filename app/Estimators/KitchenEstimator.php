@@ -84,7 +84,9 @@ class KitchenEstimator extends KitEstimator
             ]],
             ['type' => 'numbers', 'title' => 'Ölçüler', 'cols' => 2, 'fields' => [
                 ['key' => 'length', 'label' => 'Alt dolap uzunluğu', 'unit' => 'm', 'min' => 1, 'max' => 15, 'step' => 0.1, 'placeholder' => 'Örn. 3,6', 'required' => true],
-                ['key' => 'floor', 'label' => 'Mutfak zemin alanı', 'unit' => 'm²', 'min' => 3, 'max' => 60, 'step' => 0.5, 'placeholder' => 'Örn. 9', 'default' => 9],
+                ['key' => 'floor_en', 'label' => 'Zemin eni', 'unit' => 'm', 'min' => 0.1, 'max' => 2000, 'step' => 0.01, 'placeholder' => 'Örn. 4'],
+                ['key' => 'floor_boy', 'label' => 'Zemin boyu', 'unit' => 'm', 'min' => 0.1, 'max' => 2000, 'step' => 0.01, 'placeholder' => 'Örn. 3'],
+                ['key' => 'floor', 'label' => 'Zemin alanı (biliyorsanız)', 'from' => ['floor_en', 'floor_boy'], 'unit' => 'm²', 'min' => 3, 'max' => 60, 'step' => 0.5, 'placeholder' => 'Örn. 9', 'default' => 9],
             ], 'help' => 'L veya U mutfakta tüm alt dolap kollarını toplayın. Zemin alanı yalnız komple yenilemede kullanılır; bilmiyorsanız boş bırakın (9 m² alınır).'],
             ['type' => 'cards', 'key' => 'quality', 'title' => 'Dolap kalitesi', 'short' => 'Dolap kalitesi', 'required' => true, 'cols' => 3, 'options' => [
                 'ekonomik' => ['label' => 'Ekonomik', 'hint' => 'Suntalam gövde ve kapak'],
@@ -195,5 +197,13 @@ class KitchenEstimator extends KitEstimator
             'Menteşe ve ray markasını sorun; frenli (yavaş kapanan) donanım standart mı öğrenin.',
             'Tezgah birleşim yerlerinin ve eviye kesiminin nasıl yapılacağını önceden konuşun.',
         ], array_slice(parent::checklist(), 0, 5));
+    }
+
+    public function visuals(): array
+    {
+        return self::openVisuals([
+            ['seramik-gorsellestirici', route('tools.tile_visualizer'), 'Tezgah arası ve zemini mutfağınızda görün', 'Mutfağınızın fotoğrafında seramik ve renkleri deneyin.'],
+            ['duvar-rengi-gorsellestirici', route('tools.paint_visualizer'), 'Duvar rengini deneyin', 'Renk kartelasındaki tonları mutfağınızın fotoğrafında görün.'],
+        ]);
     }
 }

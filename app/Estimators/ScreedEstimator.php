@@ -61,7 +61,9 @@ class ScreedEstimator extends KitEstimator
         return [
             ['type' => 'cards', 'key' => 'type', 'title' => 'Şap türü', 'short' => 'Şap türü', 'required' => true, 'cols' => 2, 'options' => self::TYPES],
             ['type' => 'numbers', 'title' => 'Ölçüler', 'cols' => 2, 'fields' => [
-                ['key' => 'area', 'label' => 'Alan', 'unit' => 'm²', 'min' => 1, 'max' => 20000, 'step' => 1, 'placeholder' => 'Örn. 100', 'required' => true],
+                ['key' => 'area_en', 'label' => 'En', 'unit' => 'm', 'min' => 0.1, 'max' => 2000, 'step' => 0.01, 'placeholder' => 'Örn. 4'],
+                ['key' => 'area_boy', 'label' => 'Boy', 'unit' => 'm', 'min' => 0.1, 'max' => 2000, 'step' => 0.01, 'placeholder' => 'Örn. 5'],
+                ['key' => 'area', 'label' => 'Alan (biliyorsanız)', 'from' => ['area_en', 'area_boy'], 'unit' => 'm²', 'min' => 1, 'max' => 20000, 'step' => 1, 'placeholder' => 'Örn. 100', 'required' => true, 'missing' => 'alan (en × boy ya da m²)'],
                 ['key' => 'thickness', 'label' => 'Ortalama kalınlık', 'unit' => 'cm', 'min' => 0.3, 'max' => 15, 'step' => 0.5, 'placeholder' => 'Örn. 5', 'required' => true],
             ], 'help' => 'Hazır tesviye şapında kalınlık genellikle 0,3–1 cm; klasik şapta 4–7 cm\'dir.'],
             ['type' => 'checks', 'key' => 'extras', 'title' => 'Ekstralar', 'options' => ['fiber' => 'Elyaf (fiber) katkı', 'mesh' => 'Çelik hasır', 'edge' => 'Kenar (dilatasyon) bandı']],

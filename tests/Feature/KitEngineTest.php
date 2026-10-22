@@ -263,4 +263,30 @@ class KitEngineTest extends TestCase
         $zemin = $e->normalize(['surface' => 'zemin', 'floor' => '5', 'size' => '60x60', 'quality' => 'orta', 'scope' => 'hazir', 'wsize' => '120x120']);
         $this->assertSame('', $zemin['wsize']);
     }
+
+    public function test_olcuden_alan_ve_gorsellestirme_baglantilari(): void
+    {
+        // En × boy verilince alan kendiliğinden hesaplanır (alan alanı boş)
+        $e = KitRegistry::get('parke-maliyet-hesaplayici');
+        $in = $e->normalize(['type' => 'laminat', 'area_en' => '4', 'area_boy' => '6', 'rooms' => 'tek', 'quality' => 'orta', 'scope' => 'hazir']);
+        $this->assertSame(24.0, (float) $in['area']);
+        $this->assertTrue($e->estimate($in)['ready']);
+        $miss = $e->estimate($e->normalize(['type' => 'laminat', 'area_en' => '4', 'rooms' => 'tek', 'quality' => 'orta', 'scope' => 'hazir']));
+        $this->assertContains('alan (en × boy ya da m²)', $miss['missing']);
+
+        $w = KitRegistry::get('su-yalitimi-hesaplayici');
+        $this->assertSame(96.0, (float) $w->normalize(['area_en' => '8', 'area_boy' => '12'])['area']);
+
+        // Görselleştirme yönlendirmeleri sonuç kutusunda
+        config(['worksitem_tools.tool_status.default' => 'active']);
+        $this->get('/araclar/seramik-maliyet-hesaplayici')->assertOk()
+            ->assertSee('Seramiği kendi odanızda görün')->assertSee('/araclar/seramik-gorsellestirici', false);
+        $this->get('/araclar/boya-hesaplayici')->assertOk()->assertSee('Rengi duvarınızda görün');
+        $this->get('/araclar/parke-maliyet-hesaplayici')->assertOk()->assertSee('Odanızı yeni zeminle görün');
+        $this->get('/araclar/oda-planlayici')->assertOk()->assertSee('Beğendiğiniz tasarımın maliyetini hesaplayın');
+
+        // Yayında olmayan görsel araca yönlendirme yapılmaz
+        config(['worksitem_tools.tool_status.default' => 'review', 'worksitem_tools.tool_status.overrides' => ['boya-hesaplayici' => 'active']]);
+        $this->assertSame([], KitRegistry::get('parke-maliyet-hesaplayici')->visuals());
+    }
 }

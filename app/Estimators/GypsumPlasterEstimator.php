@@ -57,9 +57,13 @@ class GypsumPlasterEstimator extends KitEstimator
                 'saten' => ['label' => 'Yalnız saten', 'hint' => 'Boya altı ince perdah'],
                 'makine' => ['label' => 'Makine alçısı', 'hint' => 'Tek katta dolgu + perdah'],
             ]],
-            ['type' => 'numbers', 'title' => 'Alan', 'cols' => 2, 'fields' => [
-                ['key' => 'wall', 'label' => 'Duvar alanı', 'unit' => 'm²', 'min' => 1, 'max' => 50000, 'step' => 1, 'placeholder' => 'Örn. 120', 'required' => true],
-                ['key' => 'ceiling', 'label' => 'Tavan alanı (varsa)', 'unit' => 'm²', 'min' => 1, 'max' => 20000, 'step' => 1, 'placeholder' => 'Boş bırakın'],
+            ['type' => 'numbers', 'title' => 'Alan', 'cols' => 3, 'fields' => [
+                ['key' => 'wall_en', 'label' => 'Duvar uzunluğu (toplam)', 'unit' => 'm', 'min' => 0.1, 'max' => 2000, 'step' => 0.01, 'placeholder' => 'Örn. 4'],
+                ['key' => 'wall_boy', 'label' => 'Yükseklik', 'unit' => 'm', 'min' => 0.1, 'max' => 2000, 'step' => 0.01, 'placeholder' => 'Örn. 3'],
+                ['key' => 'wall', 'label' => 'Duvar alanı (biliyorsanız)', 'from' => ['wall_en', 'wall_boy'], 'unit' => 'm²', 'min' => 1, 'max' => 50000, 'step' => 1, 'placeholder' => 'Örn. 120', 'required' => true, 'missing' => 'duvar alanı (en × boy ya da m²)'],
+                ['key' => 'ceiling_en', 'label' => 'Tavan eni', 'unit' => 'm', 'min' => 0.1, 'max' => 2000, 'step' => 0.01, 'placeholder' => 'Örn. 4'],
+                ['key' => 'ceiling_boy', 'label' => 'Tavan boyu', 'unit' => 'm', 'min' => 0.1, 'max' => 2000, 'step' => 0.01, 'placeholder' => 'Örn. 3'],
+                ['key' => 'ceiling', 'label' => 'Tavan alanı (biliyorsanız)', 'from' => ['ceiling_en', 'ceiling_boy'], 'unit' => 'm²', 'min' => 1, 'max' => 20000, 'step' => 1, 'placeholder' => 'Boş bırakın'],
             ]],
             ['type' => 'checks', 'key' => 'extras', 'title' => 'Ekstralar', 'options' => ['corner' => 'Köşe profili', 'mesh' => 'Alçı filesi (çatlak riski)']],
         ];

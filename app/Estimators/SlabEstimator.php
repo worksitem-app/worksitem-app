@@ -62,7 +62,9 @@ class SlabEstimator extends KitEstimator
     {
         return [
             ['type' => 'numbers', 'title' => 'Ölçüler', 'cols' => 2, 'fields' => [
-                ['key' => 'area', 'label' => 'Beton alanı', 'unit' => 'm²', 'min' => 2, 'max' => 100000, 'step' => 1, 'placeholder' => 'Örn. 200', 'required' => true],
+                ['key' => 'area_en', 'label' => 'En', 'unit' => 'm', 'min' => 0.1, 'max' => 2000, 'step' => 0.01, 'placeholder' => 'Örn. 4'],
+                ['key' => 'area_boy', 'label' => 'Boy', 'unit' => 'm', 'min' => 0.1, 'max' => 2000, 'step' => 0.01, 'placeholder' => 'Örn. 5'],
+                ['key' => 'area', 'label' => 'Alan (biliyorsanız)', 'from' => ['area_en', 'area_boy'], 'unit' => 'm²', 'min' => 2, 'max' => 100000, 'step' => 1, 'placeholder' => 'Örn. 200', 'required' => true, 'missing' => 'alan (en × boy ya da m²)'],
                 ['key' => 'thickness', 'label' => 'Beton kalınlığı', 'unit' => 'cm', 'min' => 5, 'max' => 50, 'step' => 1, 'placeholder' => 'Örn. 15', 'required' => true],
             ]],
             ['type' => 'cards', 'key' => 'class', 'title' => 'Beton sınıfı', 'short' => 'Beton sınıfı', 'required' => true, 'cols' => 3, 'options' => [

@@ -70,8 +70,10 @@ class FloorEstimator extends KitEstimator
 
         return [
             ['type' => 'cards', 'key' => 'type', 'title' => 'Kaplama türü', 'short' => 'Kaplama türü', 'required' => true, 'cols' => 3, 'options' => $types],
-            ['type' => 'numbers', 'title' => 'Alan', 'cols' => 1, 'fields' => [
-                ['key' => 'area', 'label' => 'Zemin alanı', 'unit' => 'm²', 'min' => 1, 'max' => 5000, 'step' => 0.5, 'placeholder' => 'Örn. 30', 'required' => true],
+            ['type' => 'numbers', 'title' => 'Alan', 'cols' => 3, 'fields' => [
+                ['key' => 'area_en', 'label' => 'En', 'unit' => 'm', 'min' => 0.1, 'max' => 2000, 'step' => 0.01, 'placeholder' => 'Örn. 4'],
+                ['key' => 'area_boy', 'label' => 'Boy', 'unit' => 'm', 'min' => 0.1, 'max' => 2000, 'step' => 0.01, 'placeholder' => 'Örn. 5'],
+                ['key' => 'area', 'label' => 'Alan (biliyorsanız)', 'from' => ['area_en', 'area_boy'], 'unit' => 'm²', 'min' => 1, 'max' => 5000, 'step' => 0.5, 'placeholder' => 'Örn. 30', 'required' => true, 'missing' => 'alan (en × boy ya da m²)'],
             ]],
             ['type' => 'cards', 'key' => 'quality', 'title' => 'Kalite', 'short' => 'Kalite', 'required' => true, 'cols' => 3, 'options' => [
                 'ekonomik' => ['label' => 'Ekonomik', 'hint' => 'Yerli, giriş seviyesi'],
@@ -143,5 +145,13 @@ class FloorEstimator extends KitEstimator
             ['Döşeme', .45],
             ['Süpürgelik, temizlik, teslim', .15],
         ]));
+    }
+
+    public function visuals(): array
+    {
+        return self::openVisuals([
+            ['seramik-gorsellestirici', route('tools.tile_visualizer'), 'Zemin kaplamasını odanızda görün', 'Odanızın fotoğrafını yükleyin; seramik ve taş görünümlü karoları zeminde deneyin.'],
+            ['oda-planlayici', route('tools.room'), 'Odanızı yeni stille görün', 'Yapay zekâ odanızı seçtiğiniz stilde yeniden tasarlasın.'],
+        ]);
     }
 }

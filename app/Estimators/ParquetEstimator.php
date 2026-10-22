@@ -71,8 +71,10 @@ class ParquetEstimator extends KitEstimator
                 'spc' => ['label' => 'SPC / vinil', 'hint' => 'Suya dayanıklı'],
                 'ahsap' => ['label' => 'Lamine / masif ahşap', 'hint' => 'Doğal ahşap yüzey'],
             ]],
-            ['type' => 'numbers', 'title' => 'Alan', 'cols' => 1, 'fields' => [
-                ['key' => 'area', 'label' => 'Döşenecek alan', 'unit' => 'm²', 'min' => 2, 'max' => 3000, 'step' => 0.5, 'placeholder' => 'Örn. 24', 'required' => true],
+            ['type' => 'numbers', 'title' => 'Alan', 'cols' => 3, 'fields' => [
+                ['key' => 'area_en', 'label' => 'En', 'unit' => 'm', 'min' => 0.1, 'max' => 2000, 'step' => 0.01, 'placeholder' => 'Örn. 4'],
+                ['key' => 'area_boy', 'label' => 'Boy', 'unit' => 'm', 'min' => 0.1, 'max' => 2000, 'step' => 0.01, 'placeholder' => 'Örn. 5'],
+                ['key' => 'area', 'label' => 'Alan (biliyorsanız)', 'from' => ['area_en', 'area_boy'], 'unit' => 'm²', 'min' => 2, 'max' => 3000, 'step' => 0.5, 'placeholder' => 'Örn. 24', 'required' => true, 'missing' => 'alan (en × boy ya da m²)'],
             ], 'help' => 'Birden fazla oda ise alanları toplayın (net m²).'],
             ['type' => 'cards', 'key' => 'rooms', 'title' => 'Oda yapısı', 'short' => 'Oda yapısı', 'required' => true, 'cols' => 3, 'options' => [
                 'tek' => ['label' => 'Tek düz oda', 'hint' => '%5 fire'],
@@ -170,5 +172,12 @@ class ParquetEstimator extends KitEstimator
             $this->has($in, 'extras', 'supurgelik') ? ['Süpürgelik ve profiller', .2] : null,
             ['Temizlik ve teslim', .1],
         ]));
+    }
+
+    public function visuals(): array
+    {
+        return self::openVisuals([
+            ['oda-planlayici', route('tools.room'), 'Odanızı yeni zeminle görün', 'Fotoğrafını yükleyin; yapay zekâ odanızı seçtiğiniz stilde yeniden tasarlasın.'],
+        ]);
     }
 }
