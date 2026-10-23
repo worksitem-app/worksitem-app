@@ -84,7 +84,7 @@
 <ul>
     <li>Kişisel veriler <a href="/legal/kvkk-aydinlatma">KVKK Aydınlatma Metni</a>'ne uygun olarak işlenir.</li>
     <li>Sözleşme metni ve elektronik onay kayıtları Hizmet Sağlayıcı tarafından yasal saklama süreleri boyunca saklanır; Alıcı sipariş sonrasında PDF kopyasını indirebilir veya e-posta ile talep edebilir.</li>
-    <li>Alıcı'nın tacir veya tüzel kişi olarak ticari ya da mesleki amaçla sipariş vermesi halinde tüketici mevzuatına özgü hükümler (cayma hakkı dahil) uygulanmaz.</li>
+    <li>Alıcı'nın tacir veya tüzel kişi olarak ticari ya da mesleki amaçla sipariş vermesi hâlinde tüketici mevzuatına özgü hükümler (cayma hakkı dahil) uygulanmaz.</li>
     <li>Sözleşme dili Türkçedir.</li>
 </ul>
 

@@ -23,7 +23,7 @@
 <h2>3. Teklif davetleri ve teklif verme</h2>
 <p>3.1. Kullanıcı teklif istediğinde talep; iş kolu ve hizmet bölgesi (il/ilçe) uyan, iş almaya açık en fazla beş Firma'ya SMS ve e-posta ile iletilir. Davet sırası öne çıkan üyelik ve en uzun süre davet almamış olma esasına göre belirlenir; Worksitem davet sayısı veya iş miktarı garanti etmez.</p>
 <p>3.2. Teklif vermek ücretsizdir. Teklif, KDV dahil toplam tutar olarak verilir ve yerinde keşifle netleşecek ön teklif niteliğindedir. Firma, teklif notlarında telefon, e-posta, internet adresi veya başka iletişim bilgisi paylaşmamayı kabul eder; bu bilgiler otomatik gizlenir.</p>
-<p>3.3. Eşleşme gerçekleşmeden Kullanıcı'nın adı ve telefonu Firma ile paylaşılmaz. Firma, Worksitem üzerinden öğrendiği bir talep için Kullanıcı'ya eşleşme dışında ulaşmaya veya eşleşme bedelini dolanmaya yönelik hiçbir girişimde bulunmaz; aksi halde üyelik derhal sona erdirilir ve doğan zarar talep edilir.</p>
+<p>3.3. Eşleşme gerçekleşmeden Kullanıcı'nın adı ve telefonu Firma ile paylaşılmaz. Firma, Worksitem üzerinden öğrendiği bir talep için Kullanıcı'ya eşleşme dışında ulaşmaya veya eşleşme bedelini dolanmaya yönelik hiçbir girişimde bulunmaz; aksi hâlde üyelik derhal sona erdirilir ve doğan zarar talep edilir.</p>
 <p>3.4. Firma'nın isteğe bağlı olarak verdiği hizmet bilgileri (en küçük iş tutarı, ekip, birim fiyat beyanları) Kullanıcı'lara ve diğer firmalara gösterilmez; yalnızca uygun işlerin seçilmesi ve hesaplama araçlarındaki bölgesel fiyatların doğrulanması için toplu ve anonim olarak kullanılır.</p>
 
 <h2>4. Eşleşme bedeli</h2>
@@ -36,18 +36,18 @@
 <h2>5. Firma'nın yükümlülükleri ve sorumluluğu</h2>
 <p>5.1. Kullanıcı ile yapılacak işin keşfi, fiyatı, sözleşmesi, malzemesi, uygulaması, süresi, garantisi, iş sağlığı ve güvenliği, sigorta, ruhsat ve izinler, vergi ve SGK yükümlülükleri, atık ve komşuluk ilişkileri dahil tüm sonuçlarından <strong>yalnızca Firma sorumludur</strong>. Firma, Kullanıcı'ya kendi adına fatura düzenler; işe başlamadan önce yazılı sözleşme yapar; tüketici mevzuatına (6502 sayılı Kanun) uyar.</p>
 <p>5.2. Firma, kendi fiil, ihmal, ayıplı ifa veya mevzuata aykırılığı nedeniyle Kullanıcı veya üçüncü kişilerce Worksitem'e yöneltilen her türlü talep, dava, idari para cezası, tazminat, avukatlık ücreti ve masrafı ilk talepte <strong>Worksitem'e ödemeyi ve Worksitem'i bu taleplerden ari tutmayı</strong> kabul eder.</p>
-<p>5.3. Worksitem; Kullanıcı ile Firma arasındaki uyuşmazlıklardan, işin hiç veya ayıplı yapılmasından, ödemelerden ve bunlardan doğan doğrudan veya dolaylı zararlardan, kanunen sınırlandırılamayan haller (kast, ağır ihmal ve tüketiciye karşı emredici sorumluluk halleri) dışında sorumlu değildir.</p>
+<p>5.3. Worksitem; Kullanıcı ile Firma arasındaki uyuşmazlıklardan, işin hiç veya ayıplı yapılmasından, ödemelerden ve bunlardan doğan doğrudan veya dolaylı zararlardan, kanunen sınırlandırılamayan hâller (kast, ağır ihmal ve tüketiciye karşı emredici sorumluluk hâlleri) dışında sorumlu değildir.</p>
 
 <h2>6. Şikâyet, askıya alma ve fesih</h2>
-<p>Kullanıcı şikâyetleri Firma'ya iletilir; Firma 3 iş günü içinde yanıt verir. Tekrarlanan veya ağır şikâyet, sahte bilgi, iletişim bilgisi paylaşma girişimi veya ödeme yapmama halinde Worksitem üyeliği askıya alabilir veya sona erdirebilir. Firma üyeliğini her zaman sonlandırabilir; ödenmiş bedeller bu nedenle iade edilmez.</p>
+<p>Kullanıcı şikâyetleri Firma'ya iletilir; Firma 3 iş günü içinde yanıt verir. Tekrarlanan veya ağır şikâyet, sahte bilgi, iletişim bilgisi paylaşma girişimi veya ödeme yapmama hâlinde Worksitem üyeliği askıya alabilir veya sona erdirebilir. Firma üyeliğini her zaman sonlandırabilir; ödenmiş bedeller bu nedenle iade edilmez.</p>
 
 <h2>7. Firma rehberi ve öne çıkan üyelik</h2>
 <p>Onaylanan Firma'nın adı, türü, iş kolları, hizmet bölgesi, kuruluş yılı ve tanıtım yazısı firma rehberinde yayınlanabilir; vergi numarası, vergi levhası, fatura adresi ve e-posta yayınlanmaz. Öne çıkan üyelik bir yıl sürer ve peşin ödenir; hesaplama sonuçları ve fiyatlar üyelikten etkilenmez.</p>
 
 <h2>8. Kişisel veriler</h2>
-<p>Yetkili kişinin verileri <a href="/legal/kvkk-aydinlatma">KVKK Aydınlatma Metni</a> kapsamında işlenir. Firma, eşleşme ile kendisine iletilen Kullanıcı verilerini yalnız o iş için kullanır, üçüncü kişilerle paylaşmaz, işin bitiminden sonra gereksiz hale gelen verileri siler ve 6698 sayılı Kanun'a göre ayrı bir veri sorumlusu olarak sorumludur.</p>
+<p>Yetkili kişinin verileri <a href="/legal/kvkk-aydinlatma">KVKK Aydınlatma Metni</a> kapsamında işlenir. Firma, eşleşme ile kendisine iletilen Kullanıcı verilerini yalnız o iş için kullanır, üçüncü kişilerle paylaşmaz, işin bitiminden sonra gereksiz hâle gelen verileri siler ve 6698 sayılı Kanun'a göre ayrı bir veri sorumlusu olarak sorumludur.</p>
 
 <h2>9. Diğer hükümler</h2>
-<p>Worksitem, bu sözleşmeden doğan hak ve yükümlülüklerini platformu devralan veya işletecek olan şirkete devredebilir; devir Firma'ya bildirilir. Worksitem bu sözleşmeyi değiştirebilir; değişiklikler bu sayfada yayınlanır ve kayıtlı e-posta/SMS ile bildirilir, Firma'nın kullanmaya devam etmesi kabul sayılır. Worksitem'in kayıtları (sistem kayıtları, SMS ve ödeme kayıtları) HMK m.193 uyarınca delil sözleşmesi niteliğindedir. Uyuşmazlıklarda Worksitem'in künyede yazılı merkezinin bulunduğu yer mahkemeleri ve icra daireleri yetkilidir.</p>
+<p>Worksitem, bu sözleşmeden doğan hak ve yükümlülüklerini platformu devralan veya işletecek olan şirkete devredebilir; devir Firma'ya bildirilir. Worksitem bu sözleşmeyi değiştirebilir; değişiklikler bu sayfada yayımlanır ve kayıtlı e-posta/SMS ile bildirilir, Firma'nın kullanmaya devam etmesi kabul sayılır. Worksitem'in kayıtları (sistem kayıtları, SMS ve ödeme kayıtları) HMK m.193 uyarınca delil sözleşmesi niteliğindedir. Uyuşmazlıklarda Worksitem'in künyede yazılı merkezinin bulunduğu yer mahkemeleri ve icra daireleri yetkilidir.</p>
 <p style="margin-top:16px;font-size:13px;color:#6b7280">Bu metin taslaktır ve avukat incelemesindedir. Not: Anayasa Mahkemesi'nin 12.02.2026 tarihli, E.2024/187, K.2026/42 sayılı kararıyla aracı hizmet sağlayıcıların tüketici sözleşmelerindeki sorumsuzluğuna ilişkin hükümler iptal edilmiştir (RG 02.06.2026; yürürlük yayımdan 9 ay sonra).</p>
 </x-legal.document>

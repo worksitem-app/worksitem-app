@@ -578,7 +578,7 @@ a{color:inherit;text-decoration:none;}
             <h3>Projenizi görselleştirin</h3>
             <p>
                 Seçtiğiniz <strong id="renderParamText">Kalite</strong> standartlarına uygun
-                konsept bir 3D render oluşturmak için yapay zekayı tetikleyin.
+                konsept bir 3D render oluşturmak için yapay zekâyı çalıştırın.
             </p>
 
             @if(config('services.ai_spend_enabled'))
@@ -597,7 +597,7 @@ a{color:inherit;text-decoration:none;}
 
             <div id="aiRenderContainer" style="display:none; margin-top: 20px;">
                 <div id="aiLoader" style="color: #a1a1aa; font-size: 13px; font-weight: 600; text-align: center; margin-bottom: 10px;">
-                    ⏳ Gemini AI vizyonunuzu hazırlıyor... Lütfen bekleyin.
+                    ⏳ Yapay zekâ tasarımınızı hazırlıyor... Lütfen bekleyin.
                 </div>
                 <img id="aiResultImage" src="" alt="Proje Render" style="display:none; width: 100%; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
             </div>

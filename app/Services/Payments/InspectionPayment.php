@@ -104,6 +104,26 @@ class InspectionPayment
         if ($lead->inspection_status === 'odendi') {
             return ['lead' => $lead, 'paid' => true];
         }
+        // v106: aynı anda gelen iki geri dönüş SMS/e-postayı iki kez göndermesin
+        $lock = \Illuminate\Support\Facades\Cache::lock('kesif-pay:'.$lead->id, 30);
+        if (! $lock->get()) {
+            return ['lead' => $lead->fresh(), 'paid' => $lead->fresh()->inspection_status === 'odendi'];
+        }
+        try {
+            $lead->refresh();
+            if ($lead->inspection_status === 'odendi') {
+                return ['lead' => $lead, 'paid' => true];
+            }
+
+            return $this->completeLocked($lead, $token);
+        } finally {
+            $lock->release();
+        }
+    }
+
+    /** @return array{lead: ?Lead, paid: bool, error?: string} */
+    private function completeLocked(Lead $lead, string $token): array
+    {
 
         $res = $this->iyzico->retrieve($token, $lead->public_id);
         $total = (float) InspectionOffer::amounts()['total'];

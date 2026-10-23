@@ -31,7 +31,7 @@
 </ul>
 
 <h2>5. Sorumluluk</h2>
-<p>İşin yapılması, kalitesi, süresi, garantisi, ödemeler ve bunlardan doğan uyuşmazlıklardan işi üstlenen Firma sorumludur. Worksitem; Firma'ların vergi kaydını kontrol eder, şikâyetleri değerlendirir ve kurallara uymayan Firma'ları askıya alır. Worksitem'in sorumluluğu, kanunen sınırlandırılamayan haller ve tüketiciye karşı emredici hükümler saklı kalmak kaydıyla, kendi aracılık hizmetinin ifasıyla sınırlıdır.</p>
+<p>İşin yapılması, kalitesi, süresi, garantisi, ödemeler ve bunlardan doğan uyuşmazlıklardan işi üstlenen Firma sorumludur. Worksitem; Firma'ların vergi kaydını kontrol eder, şikâyetleri değerlendirir ve kurallara uymayan Firma'ları askıya alır. Worksitem'in sorumluluğu, kanunen sınırlandırılamayan hâller ve tüketiciye karşı emredici hükümler saklı kalmak kaydıyla, kendi aracılık hizmetinin ifasıyla sınırlıdır.</p>
 
 <h2>6. Şikâyet</h2>
 <p>Bir Firma ile yaşadığınız sorunu talep numaranızla birlikte WhatsApp ({{ config('worksitem_inspection.phone') }}) veya info@worksitem.com adresine iletin. Şikâyetiniz Firma'ya iletilir; kurallara aykırılık tespit edilirse Firma'nın üyeliği askıya alınır. Tüketici hakem heyetlerine ve tüketici mahkemelerine başvuru hakkınız saklıdır.</p>

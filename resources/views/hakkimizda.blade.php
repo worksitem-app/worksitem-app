@@ -119,7 +119,7 @@
 
             <div>
                 <p class="ws-muted">
-                    Bir inşaat projesinin daha başlamadan önce cevaplanması gereken
+                    Bir inşaat projesinin başlamadan önce cevaplanması gereken
                     temel sorular vardır: Yaklaşık maliyet nedir? Ne kadar malzeme
                     gerekir? Hangi iş kalemleri hesaba katılmalıdır? İlk bütçe ne
                     kadar gerçekçidir?

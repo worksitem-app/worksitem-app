@@ -39,7 +39,7 @@
     <li><strong>Proje verileri:</strong> Proje türü, metrekare, bütçe, zamanlama, proje açıklaması</li>
     <li><strong>Teknik veriler:</strong> Form gönderim sayfası, yönlendiren sayfa, kampanya kaynağı, kullanıcı ajanı</li>
     <li><strong>Güvenlik verileri:</strong> Tek yönlü özetlenmiş IP adresi (SHA-256 HMAC)</li>
-    <li><strong>Görsel ve dosya verileri:</strong> AI iç mekan tasarımı için yüklediğiniz oda fotoğrafları;
+    <li><strong>Görsel ve dosya verileri:</strong> AI iç mekân tasarımı için yüklediğiniz oda fotoğrafları;
         banyo / WC planlayıcıda gerçekçi görsel için yüklediğiniz banyo fotoğrafı (saklanmaz, yalnızca görsel üretimi için
         yapay zekâ hizmet sağlayıcısına iletilir) ve altlık olarak seçtiğiniz kat planı resmi (sunucuya gönderilmez, yalnızca tarayıcınızda kullanılır);
         otomatik keşif (Auto-BOQ) için yüklediğiniz proje dosyaları (PDF, görsel, CSV/Excel).

@@ -50,12 +50,18 @@ function renderCostModal(data) {
         return new Intl.NumberFormat("tr-TR", { maximumFractionDigits: 0 }).format(n) + " TL";
     };
 
+    var esc = function (v) {
+        return String(v == null ? "" : v).replace(/[&<>"']/g, function (c) {
+            return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+        });
+    };
+
     var itemsHTML = "";
     for (var i = 0; i < data.items.length; i++) {
         var item = data.items[i];
         itemsHTML += '<div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #21262d;">'
-            + '<div><strong style="color:#f0f6fc;">' + item.label + '</strong><br>'
-            + '<span style="color:#8b949e;font-size:12px;">' + item.quantity + " " + item.unit + " × " + money(item.price) + '</span></div>'
+            + '<div><strong style="color:#f0f6fc;">' + esc(item.label) + '</strong><br>'
+            + '<span style="color:#8b949e;font-size:12px;">' + esc(item.quantity) + " " + esc(item.unit) + " × " + money(item.price) + '</span></div>'
             + '<div style="color:#38bdf8;font-weight:700;">' + money(item.total) + '</div>'
             + '</div>';
     }
@@ -63,7 +69,7 @@ function renderCostModal(data) {
     modal.innerHTML = '<div style="background:#151c28;border-radius:16px;max-width:700px;width:100%;padding:30px;position:relative;max-height:90vh;overflow-y:auto;">'
         + '<button onclick="document.getElementById(\'costModal\').remove()" style="position:absolute;top:15px;right:15px;background:transparent;border:none;color:#8b949e;font-size:24px;cursor:pointer;">✕</button>'
         + '<h2 style="font-family:Bebas Neue,sans-serif;color:#38bdf8;font-size:28px;margin-bottom:10px;">💰 Maliyet Dökümü</h2>'
-        + '<p style="color:#8b949e;margin-bottom:20px;">Stil: ' + data.style + ' | Alan: ' + data.room_area + ' m²</p>'
+        + '<p style="color:#8b949e;margin-bottom:20px;">Stil: ' + esc(data.style) + ' | Alan: ' + esc(data.room_area) + ' m²</p>'
         + '<div style="background:#0d1117;border-radius:12px;padding:20px;margin-bottom:20px;">' + itemsHTML + '</div>'
         + '<div style="background:#0d1117;border-radius:12px;padding:20px;margin-bottom:20px;">'
         + '<div style="display:flex;justify-content:space-between;padding:5px 0;"><span style="color:#8b949e;">Ara Toplam</span><span style="color:#f0f6fc;">' + money(data.subtotal) + '</span></div>'

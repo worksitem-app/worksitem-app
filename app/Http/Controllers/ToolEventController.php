@@ -25,7 +25,7 @@ class ToolEventController extends Controller
             'session_key' => ['nullable', 'string', 'max:64'],
             'sponsor_key' => ['nullable', 'string', 'max:120'],
             'target_url'  => ['nullable', 'string', 'max:2048'],
-            'metadata'    => ['nullable', 'array'],
+            'metadata'    => ['nullable', 'array', 'max:20'],
         ]);
 
         DB::table('tool_events')->insert([
@@ -34,8 +34,9 @@ class ToolEventController extends Controller
             'session_key' => $data['session_key'] ?? null,
             'sponsor_key' => $data['sponsor_key'] ?? null,
             'target_url'  => $data['target_url'] ?? null,
+            // v106: anonim uç noktada tablo şişmesin — en fazla 2 KB
             'metadata'    => isset($data['metadata'])
-                ? json_encode($data['metadata'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)
+                ? mb_substr(json_encode($data['metadata'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), 0, 2048)
                 : null,
             'created_at'  => now(),
         ]);

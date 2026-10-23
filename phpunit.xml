@@ -22,6 +22,13 @@
         <env name="APP_ENV" value="testing"/>
         <!-- Pilot dönem kodda varsayılan açık; firma altyapısı testleri için kapalı, PilotTest açar -->
         <env name="WORKSITEM_PILOT" value="false"/>
+        <!-- v106: testler sunucunun .env'indeki staging/canlı anahtarlarını kullanmasın -->
+        <env name="WORKSITEM_TOOL_QA_STAGING_UNLOCK" value="false" force="true"/>
+        <env name="TILE_VISUALIZER_TEST_MODE" value="false" force="true"/>
+        <env name="IYZICO_KESIF_ENABLED" value="false" force="true"/>
+        <env name="GEMINI_API_KEY" value="" force="true"/>
+        <env name="OPENAI_API_KEY" value="" force="true"/>
+        <env name="REPLICATE_API_TOKEN" value="" force="true"/>
         <env name="APP_MAINTENANCE_DRIVER" value="file"/>
         <env name="BCRYPT_ROUNDS" value="4"/>
         <env name="BROADCAST_CONNECTION" value="null"/>

@@ -106,6 +106,9 @@ class AppServiceProvider extends ServiceProvider
         // DB'ye kayıt açan public form endpoint'leri (proje, hesaplama)
         RateLimiter::for('public-write', fn (Request $r) => Limit::perMinute(20)->by($r->ip()));
 
+        // İletişim bilgisi bırakan formlar (SMS ve e-posta tetikler): 10 dakikada 5 deneme
+        RateLimiter::for('lead-submit', fn (Request $r) => Limit::perMinutes(10, 5)->by('lead-submit:'.$r->ip()));
+
         // Arama / JSON okuma
         RateLimiter::for('public-read', fn (Request $r) => Limit::perMinute(60)->by($r->ip()));
     }

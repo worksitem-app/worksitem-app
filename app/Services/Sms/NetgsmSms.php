@@ -2,6 +2,7 @@
 
 namespace App\Services\Sms;
 
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -61,6 +62,17 @@ class NetgsmSms
         if (! $this->configured()) {
             return ['ok' => false, 'code' => null, 'jobid' => null, 'message' => 'Netgsm ayarları eksik (.env)'];
         }
+
+        // Son güvenlik tavanı: bir açık ya da hata günde binlerce SMS'e dönüşmesin
+        $capKey = 'sms-hard-cap:'.now('Europe/Istanbul')->format('Ymd');
+        $cap = (int) config('worksitem_sms.hard_cap_day', 1500);
+        if ($cap > 0 && (int) Cache::get($capKey, 0) >= $cap) {
+            Log::error('Günlük SMS tavanı doldu, gönderim durduruldu', ['tavan' => $cap]);
+
+            return ['ok' => false, 'code' => null, 'jobid' => null, 'message' => 'Günlük SMS tavanı doldu'];
+        }
+        Cache::add($capKey, 0, now()->addDay());
+        Cache::increment($capKey);
 
         $mode = (string) config('services.netgsm.api', 'auto');
         $rest = $mode === 'legacy' ? null : $this->sendRest($no, $message);
