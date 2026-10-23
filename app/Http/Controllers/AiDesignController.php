@@ -51,7 +51,8 @@ class AiDesignController extends Controller
             ], 429);
         }
 
-        $path = $request->file('room_image')->store('ai_inputs', 'public');
+        // v107: müşteri oda fotoğrafı herkese açık diske değil özel diske (KVKK)
+        $path = $request->file('room_image')->store('ai_inputs', 'local');
 
         $generation = AiGeneration::create([
             'tool_name' => 'ic-mekan',
@@ -66,7 +67,7 @@ class AiDesignController extends Controller
         ]);
 
         $result = $this->aiService->startAsync(
-            storage_path('app/public/' . $path),
+            \Illuminate\Support\Facades\Storage::disk('local')->path($path),
             $request->style,
             $request->input('user_prompt')
         );
