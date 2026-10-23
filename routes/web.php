@@ -176,7 +176,7 @@ Route::controller(ProjectController::class)->prefix('maliyet-hesapla')->group(fu
         Route::post('/kaydet', 'store')->name('projects.store');
         Route::post('/baslat/{projectType:slug}', 'start')->name('projects.start');
         Route::post('/proje/{project}/cevaplar', 'saveAnswers')->name('projects.answers.save');
-        Route::post('/proje/{project}/iletisim', 'saveLead')->name('projects.lead.save');
+        Route::post('/proje/{project}/iletisim', 'saveLead')->middleware('throttle:lead-submit')->name('projects.lead.save');
         Route::get('/proje/{project}/pdf', 'downloadPdf')->name('projects.pdf');
     });
 

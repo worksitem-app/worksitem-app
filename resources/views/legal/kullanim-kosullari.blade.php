@@ -40,7 +40,7 @@
 
 <h2>4. Yapay Zekâ Çıktıları</h2>
 <p>
-    AI iç mekan tasarımı, otomatik keşif ve benzeri araçların çıktıları yapay zekâ tarafından
+    AI iç mekân tasarımı, otomatik keşif ve benzeri araçların çıktıları yapay zekâ tarafından
     otomatik üretilir; hatalı, eksik veya gerçekle uyuşmayan sonuçlar içerebilir. Görseller
     temsilîdir; uygulanabilirlik, malzeme ve mevzuat uygunluğu ayrıca doğrulanmalıdır.
     Yüklediğiniz görsel ve dosyaların size ait olduğunu veya kullanma hakkınız bulunduğunu,
@@ -99,7 +99,7 @@
 
 <h2>9. Değişiklikler ve Uygulanacak Hukuk</h2>
 <p>
-    Bu koşullar güncellenebilir; güncel sürüm bu sayfada yayınlanır. Uyuşmazlıklarda Türk hukuku
+    Bu koşullar güncellenebilir; güncel sürüm bu sayfada yayımlanır. Uyuşmazlıklarda Türk hukuku
     uygulanır; tüketici işlemlerinde tüketici hakem heyetleri ve tüketici mahkemelerinin
     yetkisi saklıdır.
 </p>

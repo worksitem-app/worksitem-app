@@ -59,7 +59,7 @@
     <li>Keşfi, konusunda yetkin mühendis veya teknik personel ile, mesleki özen ve dürüstlük kuralları çerçevesinde yapmak.</li>
     <li>Keşif Raporu'nu ve yazılı teklifi süresinde, açık ve anlaşılır biçimde iletmek; teklifin geçerlilik süresini teklifte yazmak.</li>
     <li>Alıcı'nın talep ve şikâyetlerini en geç 5 iş günü içinde yanıtlamak.</li>
-    <li>Ayıplı ifa halinde Alıcı'nın 6502 sayılı Kanun'un 15. maddesindeki seçimlik haklarına (yeniden ifa, bedelden indirim, sözleşmeden dönme, tazminat) saygı göstermek.</li>
+    <li>Ayıplı ifa hâlinde Alıcı'nın 6502 sayılı Kanun'un 15. maddesindeki seçimlik haklarına (yeniden ifa, bedelden indirim, sözleşmeden dönme, tazminat) saygı göstermek.</li>
 </ul>
 
 <h2>Madde 7 — Alıcı'nın Yükümlülükleri</h2>
@@ -102,9 +102,9 @@
 </p>
 <p>
     10.3. Mesafeli Sözleşmeler Yönetmeliği'nin 15. maddesi uyarınca, cayma süresi dolmadan Alıcı'nın onayıyla ifasına başlanan hizmetlerde
-    cayma hakkı kullanılamaz. Alıcı'nın sipariş sırasında keşfin 14 günlük süre dolmadan yapılmasını açıkça talep etmesi halinde, keşif
+    cayma hakkı kullanılamaz. Alıcı'nın sipariş sırasında keşfin 14 günlük süre dolmadan yapılmasını açıkça talep etmesi hâlinde, keşif
     yerinde yapıldıktan sonra cayma hakkı sona erer. Bu istisna, yalnızca Alıcı'nın ayrı ve önceden işaretlenmemiş bir kutuyla onay verdiği
-    hallerde uygulanır (Ek-2).
+    hâllerde uygulanır (Ek-2).
 </p>
 <p>
     10.4. Ön Bilgilendirme Formu'nda cayma hakkına ilişkin bilgilendirme yapılmamışsa Alıcı, cayma hakkını 14 günlük süreye bağlı olmaksızın,
@@ -144,7 +144,7 @@
 <h2>Madde 15 — Yürürlük</h2>
 <p>
     İşbu Sözleşme 15 maddeden ve 2 ekten ibaret olup, Alıcı'nın Platform üzerinden siparişi elektronik ortamda onaylaması ile kurulmuş ve
-    yürürlüğe girmiştir. Sözleşme'nin bir kopyası sipariş onayının ardından Alıcı'ya PDF olarak sunulur ve talep halinde e-posta ile gönderilir.
+    yürürlüğe girmiştir. Sözleşme'nin bir kopyası sipariş onayının ardından Alıcı'ya PDF olarak sunulur ve talep hâlinde e-posta ile gönderilir.
 </p>
 
 <table class="lg-sign-t" style="width:100%;margin-top:18px;border-collapse:separate;border-spacing:8px 0">

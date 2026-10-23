@@ -48,7 +48,8 @@ class AiGenerationResource extends Resource
                         ->label('Orijinal Oda')
                         ->image()
                         ->disabled()
-                        ->disk('public'),
+                        ->disk('local')
+                        ->visibility('private'),
                     Forms\Components\FileUpload::make('output_image')
                         ->label('AI Tasarım')
                         ->image()
@@ -76,7 +77,8 @@ class AiGenerationResource extends Resource
             ->columns([
                 Tables\Columns\ImageColumn::make('input_image')
                     ->label('Orijinal')
-                    ->disk('public')
+                    ->disk('local')
+                    ->visibility('private')
                     ->height(60)
                     ->width(80),
 

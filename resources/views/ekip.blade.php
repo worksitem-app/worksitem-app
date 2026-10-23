@@ -126,7 +126,7 @@
                 </h2>
 
                 <p class="ws-body ws-muted" style="margin-top:16px;line-height:1.75">
-                    Yeni bir özellik eklemekten önce bunun sahada hangi
+                    Yeni bir özellik eklemeden önce bunun sahada hangi
                     kararı kolaylaştıracağını ve kullanıcıya hangi veriyi
                     sağlayacağını sorguluyoruz.
                 </p>

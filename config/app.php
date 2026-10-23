@@ -81,9 +81,12 @@ return [
     |
     */
 
-    'locale' => env('APP_LOCALE', 'en'),
+    'locale' => env('APP_LOCALE', 'tr'),
 
-    'fallback_locale' => env('APP_FALLBACK_LOCALE', 'en'),
+    // İçerik Güvenlik Politikası: report | enforce | off (SecurityHeaders)
+    'csp_mode' => env('CSP_MODE', 'report'),
+
+    'fallback_locale' => env('APP_FALLBACK_LOCALE', 'tr'),
 
     'faker_locale' => env('APP_FAKER_LOCALE', 'en_US'),
 

@@ -77,7 +77,9 @@ class IyzicoClient
 
             return is_array($json) ? $json : ['status' => 'failure', 'errorMessage' => 'Geçersiz yanıt (HTTP '.$response->status().')'];
         } catch (\Throwable $e) {
-            return ['status' => 'failure', 'errorMessage' => 'Bağlantı hatası: '.$e->getMessage()];
+            \Illuminate\Support\Facades\Log::error('iyzico bağlantı hatası', ['error' => $e->getMessage()]);
+
+            return ['status' => 'failure', 'errorMessage' => 'Ödeme servisine şu an ulaşılamıyor. Lütfen birkaç dakika sonra tekrar deneyin.'];
         }
     }
 }

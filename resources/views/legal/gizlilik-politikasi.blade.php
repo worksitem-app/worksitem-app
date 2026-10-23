@@ -59,7 +59,7 @@
 </p>
 
 <ul>
-    <li><strong>72 saat içinde</strong> KVKK Kurulu'na bildiririz.</li>
+    <li><strong>72 saat içinde</strong> Kişisel Verileri Koruma Kurulu'na bildiririz.</li>
     <li>Etkilenen kullanıcılara en kısa sürede bildirim yaparız.</li>
     <li>İhlalin kapsamını ve alınan tedbirleri kamuoyuyla paylaşırız.</li>
 </ul>

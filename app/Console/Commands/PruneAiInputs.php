@@ -20,18 +20,21 @@ class PruneAiInputs extends Command
     {
         $days = max(1, (int) $this->option('days'));
         $cutoff = now()->subDays($days)->getTimestamp();
-        $disk = Storage::disk('public');
         $deleted = 0;
 
-        foreach ($disk->allFiles('ai_inputs') as $file) {
-            if ($disk->lastModified($file) >= $cutoff) {
-                continue;
-            }
+        // v107: yeni yüklemeler özel diskte; eski public kopyalar da temizlenir
+        foreach (['local', 'public'] as $name) {
+            $disk = Storage::disk($name);
+            foreach ($disk->allFiles('ai_inputs') as $file) {
+                if ($disk->lastModified($file) >= $cutoff) {
+                    continue;
+                }
 
-            if (! $this->option('dry-run')) {
-                $disk->delete($file);
+                if (! $this->option('dry-run')) {
+                    $disk->delete($file);
+                }
+                $deleted++;
             }
-            $deleted++;
         }
 
         $this->info(($this->option('dry-run') ? '[dry-run] ' : '')."{$deleted} dosya silindi ({$days} günden eski).");

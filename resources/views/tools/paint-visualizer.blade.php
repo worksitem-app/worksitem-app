@@ -451,7 +451,7 @@ body{
             {{-- LEAD CONVERSION BANNER --}}
             <div class="lead-banner" id="leadBanner" style="display: none;">
                 <div class="lead-text">
-                    <h4>Bu Rengi Odanızda Çok Beğendiniz Mi?</h4>
+                    <h4>Bu Rengi Odanızda Çok Beğendiniz mi?</h4>
                     <p>Seçtiğiniz bu tonun malzeme ihtiyacını ve usta işçilik bütçesini güncel piyasa ve saha referanslarıyla hesaplayın.</p>
                 </div>
                 <a href="/araclar/boya-hesaplayici" class="lead-btn">Boya Maliyetini Hesapla →</a>
