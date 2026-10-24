@@ -32,6 +32,14 @@ class PilotTest extends TestCase
         $this->assertTrue(Pilot::inArea(null, 'Ümraniye, istanbul'));
         $this->assertFalse(Pilot::inArea('İzmir', 'Karşıyaka'));
         $this->assertNull(Pilot::inArea(null, ''));
+        // v111: ilçe adından tanıma; tanınmayan metin "dışında" sayılmaz
+        $this->assertTrue(Pilot::inArea(null, 'Kadıköy'));
+        $this->assertTrue(Pilot::inArea('34', 'ataşehir'));
+        $this->assertTrue(Pilot::inArea('Istanbul Anadolu', null));
+        $this->assertFalse(Pilot::inArea('Kocaeli', 'Gebze'));
+        $this->assertFalse(Pilot::inArea(null, 'Ankara, Çankaya'));
+        $this->assertNull(Pilot::inArea('Merkez', null));
+        $this->assertTrue(Pilot::inArea(null, 'Kartal'));
 
         config(['worksitem_pilot.enabled' => false]);
         $this->assertTrue(Pilot::inArea('İzmir'));

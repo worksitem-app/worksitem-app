@@ -39,25 +39,47 @@ class Pilot
     }
 
     /**
-     * Konum pilot bölgede mi? true: içinde · false: dışında · null: bilinmiyor (şehir yazılmamış).
+     * Konum pilot bölgede mi? true: içinde · false: dışında · null: bilinmiyor.
      * Pilot kapalıysa her yer hizmet bölgesidir.
+     * v111: Yalnız il adı değil, pilot ilin ilçe adları da tanınır ("Kadıköy" → İstanbul).
+     * "Dışında" ancak başka bir il ya da başka ilin ilçesi açıkça tanınırsa denir; tanınmayan metin
+     * bilinmiyor (null) sayılır — İstanbul'daki müşteri yanlışlıkla geri çevrilmesin.
      */
     public static function inArea(?string ...$parts): ?bool
     {
         if (! self::enabled()) {
             return true;
         }
-        $text = self::norm(implode(' ', array_filter(array_map(fn ($p) => trim((string) $p), $parts))));
-        if ($text === '') {
+        $text = ' '.preg_replace('/[^a-z0-9]+/', ' ', self::norm(implode(' ', array_filter(array_map(fn ($p) => trim((string) $p), $parts))))).' ';
+        if (trim($text) === '') {
             return null;
         }
-        foreach ((array) config('worksitem_pilot.cities', []) as $city) {
-            if (str_contains($text, self::norm((string) $city))) {
+        $has = fn (string $name) => str_contains($text, ' '.trim(preg_replace('/[^a-z0-9]+/', ' ', self::norm($name))).' ');
+        $districts = (array) config('turkey_districts', []);
+        $pilot = (array) config('worksitem_pilot.cities', []);
+
+        foreach ($pilot as $city) {
+            if ($has((string) $city)) {
                 return true;
             }
         }
+        foreach ($pilot as $city) {
+            foreach ((array) ($districts[$city] ?? []) as $d) {
+                if ($has((string) $d)) {
+                    return true;
+                }
+            }
+        }
+        foreach ($districts as $province => $list) {
+            if (in_array($province, $pilot, true)) {
+                continue;
+            }
+            if ($has((string) $province)) {
+                return false;
+            }
+        }
 
-        return false;
+        return null;
     }
 
     private static function norm(string $s): string
