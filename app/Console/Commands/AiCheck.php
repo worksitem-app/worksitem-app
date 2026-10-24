@@ -27,6 +27,9 @@ class AiCheck extends Command
         $key = (string) config('services.gemini.api_key');
         $key !== '' ? $ok('GEMINI_API_KEY tanımlı ('.strlen($key).' karakter)') : $no('GEMINI_API_KEY yok');
         $ok('Günlük toplam tavan: '.config('services.ai.global_daily_limit').' istek (AI_GLOBAL_DAILY_LIMIT)');
+        $ok('30 günlük toplam tavan: '.config('services.ai.global_monthly_limit').' istek (AI_GLOBAL_MONTHLY_LIMIT)');
+        $ok('Maliyet hesaplayıcı AI tavsiyesi: '.(config('services.ai.cost_advice') ? 'AÇIK (kota dışı, her hesapta 1 çağrı)' : 'kapalı'));
+        $ok('Kullanıcı başına (IP) sınır: dakikada 5, günde 30 istek');
         $ok('Kullanıcı başına günlük ücretsiz: '.config('worksitem_ai_credits.free_per_day').' · kredi sistemi '.(config('worksitem_ai_credits.enabled') ? 'açık' : 'kapalı'));
 
         if ($key === '') {

@@ -68,7 +68,11 @@ return [
     // Google Analytics 4
     'ai' => [
         // Tüm kullanıcılar için günlük toplam AI isteği tavanı (throttle:ai)
-        'global_daily_limit' => (int) env('AI_GLOBAL_DAILY_LIMIT', 300),
+        'global_daily_limit' => (int) env('AI_GLOBAL_DAILY_LIMIT', 40),
+        // v111: 30 günlük kayan pencerede toplam tavan — Google tarafındaki harcama sınırından ÖNCE devreye girer
+        'global_monthly_limit' => (int) env('AI_GLOBAL_MONTHLY_LIMIT', 600),
+        // v111: maliyet hesaplayıcının her hesapta yaptığı "uzman tavsiyesi" Gemini çağrısı (kota dışı) — varsayılan kapalı
+        'cost_advice' => (bool) env('AI_COST_ADVICE_ENABLED', false),
     ],
 
     'ga4' => [
