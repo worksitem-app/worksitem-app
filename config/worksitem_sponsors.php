@@ -9,6 +9,44 @@
 | Bağlantılar rel="sponsored nofollow" ile verilir (Google politikası).
 */
 
+/*
+| v114: poz tanımı → ürün grubu (Yapı Kimyasalları Sponsorluk Haritası'ndaki 40 grup, 43.290 poz üzerinde denendi).
+| Yeni sponsor/ürün grubu: buraya bir satır ekleyin, sonra  php artisan sponsors:poz-esle --rapor
+| Anahtar hiyerarşisi: 'yalitim_bitum' eşleşirse genel 'yalitim' düşer; sponsor kartında 'yalitim' sponsorları da gösterilir.
+| Desenler küçük harfe çevrilmiş metinde aranır (Türkçe İ/I doğru çevrilir); poz tanımı parça ise ('(40 x 40 cm)…') grubun son başlığı bağlam olur.
+*/
+$pozRules = [
+    'yalitim_cimento' => ['label' => 'Çimento esaslı su yalıtımı', 'match' => '/çimento esaslı.{0,80}(su yalıtım|yalıtım harcı)|(su yalıtım|yalıtım harcı).{0,60}çimento esaslı|kristalize/u', 'except' => null],
+    'yalitim_poliurea' => ['label' => 'Poliürea su yalıtımı', 'match' => '/poli[üu]re[ae] (bazlı|esaslı)|polyurea/u', 'except' => '/zemin kaplama/u'],
+    'yalitim_likit' => ['label' => 'Likit su yalıtımı (PU, akrilik)', 'match' => '/(poli[üu]retan|akrilik|elastomerik reçine|elastromerik reçine).{0,40}(esaslı|bazlı).{0,120}(su yalıtım|sıvı (plastik )?kaplama|likit)|likit membran|sıvı membran/u', 'except' => '/zemin kaplama/u'],
+    'yalitim_bitum' => ['label' => 'Bitümlü membran ve örtüler', 'match' => '/bitüm|bitum|asfalt emülsiyon|shingle/u', 'except' => '/yol|asfalt betonu|kaplama tabakası|bağlayıcı tabaka|aşınma tabakası|binder/u'],
+    'yalitim_membran' => ['label' => 'Sentetik membran ve su yalıtım örtüsü', 'match' => '/(tpo|pvc|epdm|hdpe|sentetik|tekstil|polimer).{0,30}(membran|örtü)|jeomembran|su yalıtım örtüsü|nefes alan/u', 'except' => '/sandviç|panel|bitüm/u'],
+    'yalitim_bant' => ['label' => 'Su yalıtım bandı ve su tutucu', 'match' => '/su ?tutucu bant|waterstop|su yalıtım bandı|dilatasyon.{0,30}yalıtım bandı|yalıtım bandı/u', 'except' => '/alçı/u'],
+    'yalitim' => ['label' => 'Su yalıtımı', 'match' => '/su yalıtım|su geçirimsiz|nem yalıtım|sürme yalıtım|su izolasyon/u', 'except' => null],
+    'yapistirici_reaktif' => ['label' => 'Reaktif (reçine) karo yapıştırıcısı', 'match' => '/(reaksiyon reçine|epoksi|reçine) esaslı.{0,120}karo yapıştırıcı/u', 'except' => null],
+    'yapistirici' => ['label' => 'Karo yapıştırıcısı', 'match' => '/karo yapıştırıcı|seramik yapıştırıcı|(seramik|karo|fayans|porselen|granit).{0,160}yapıştırıcı|c2te|c1te/u', 'except' => '/pvc|linolyum|kalıp ayırıcı/u'],
+    'derz_reaktif' => ['label' => 'Reaktif (reçine) derz dolgu', 'match' => '/(reaksiyon reçine|epoksi) esaslı.{0,80}derz dolgu/u', 'except' => '/mastik/u'],
+    'derz' => ['label' => 'Derz dolgu', 'match' => '/(seramik|karo|fayans|porselen|granit|mozaik).{0,200}derz (aralıklı|dolgu)|derz dolgusu|derz dolgu (harcı|malzemesi)|derz harcı/u', 'except' => '/horasan|moloz|taş duvar|kireç|mastik|alçı/u'],
+    'boya_dis' => ['label' => 'Dış cephe boyası', 'match' => '/dış cephe.{0,40}boya|boya.{0,60}dış cephe/u', 'except' => '/ahşap|metal|demir|iç cephe/u'],
+    'boya_ic' => ['label' => 'İç cephe boyası', 'match' => '/iç cephe.{0,40}boya|boya.{0,60}iç cephe|tavan boyası/u', 'except' => '/ahşap|metal|demir|yol|zemin|epoksi|dış cephe/u'],
+    'astar_macun' => ['label' => 'Astar, macun ve yüzey hazırlık', 'match' => '/(boya|su bazlı|silikon|akrilik|dolgu|alçı) astar|astar(ı)? uygulan|macun|tamir alçısı|saten alçı/u', 'except' => '/metal|galvaniz|sac|ahşap|epoksi astar|makine/u'],
+    'dekoratif' => ['label' => 'Dekoratif boya ve sıva', 'match' => '/dekoratif (boya|sıva|kaplama)|mineral sıva|silikon(lu)? (esaslı )?sıva|grenli|tekstürlü|taş görünümlü/u', 'except' => '/zemin/u'],
+    'mantolama' => ['label' => 'Mantolama (ısı yalıtım sistemi) harç ve aksesuarları', 'match' => '/mantolama|ısı yalıtım sistemi|ısı yalıtım levha(sı|ları)? (yapıştırıcı|sıva)|yalıtım (levhası|levha) (yapıştırıcısı|sıvası)|yalıtım dübel|sıva filesi/u', 'except' => '/boru|kanal|demir|kaynak|kolon/u'],
+    'sap' => ['label' => 'Şap ve zemin tesviye', 'match' => '/(^|[^a-zçğıöşü])şap([^a-zçğıöşü]|$)|tesviye (tabakası|harcı|şapı)|zemin tesviye|kendinden yayılan|kendiliğinden (yerleşen|yayılan)|self.?level/u', 'except' => '/horasan|priz kutu|moloz/u'],
+    'epoksi_zemin' => ['label' => 'Epoksi ve poliüretan zemin kaplama', 'match' => '/(epoksi|poli[üu]retan|poliürea).{0,40}(esaslı|bazlı).{0,40}zemin kaplama|zemin kaplaması.{0,60}(epoksi|poliüretan)|endüstriyel zemin/u', 'except' => null],
+    'sertlestirici' => ['label' => 'Yüzey sertleştirici', 'match' => '/yüzey sertleştirici|korund/u', 'except' => '/toprak/u'],
+    'kur' => ['label' => 'Kür malzemesi', 'match' => '/kür (malzemesi|maddesi|kimyasalı|uygulaması)|kür yapılması/u', 'except' => null],
+    'beton_katki' => ['label' => 'Beton ve harç katkısı, lif', 'match' => '/beton katkı|harç katkı|katkı maddesi|akışkanlaştırıcı|priz (geciktirici|hızlandırıcı|çabuklaştırıcı)|antifriz|hava sürükleyici|su geçirimsizlik katkı|(sentetik|polipropilen|çelik|makro).{0,10}(lif|fiber)/u', 'except' => null],
+    'tamir' => ['label' => 'Tamir ve onarım harcı', 'match' => '/tamir harc|onarım harc|korozyon tamiri|mikrobeton|yapısal onarım/u', 'except' => null],
+    'grout' => ['label' => 'Grout ve döküm harcı', 'match' => '/grout|döküm harcı|ekspansif harç/u', 'except' => '/jet grout|saatlik|makine/u'],
+    'ankraj' => ['label' => 'Kimyasal ankraj', 'match' => '/ankraj.{0,60}(epoksi|reçine|kimyasal)|kimyasal ankraj|enjeksiyon reçinesi ile çubuk/u', 'except' => null],
+    'korozyon' => ['label' => 'Pas ve korozyon koruma', 'match' => '/korozyon (önleyici|inhibitör|hızını yavaşlatan)|antipas|pas (önleyici|sökücü)/u', 'except' => null],
+    'enjeksiyon' => ['label' => 'Çatlak enjeksiyonu', 'match' => '/(epoksi|poliüretan) enjeksiyon|çatlak enjeksiyon|enjeksiyon ile çatlak/u', 'except' => null],
+    'mastik' => ['label' => 'Mastik ve sızdırmazlık', 'match' => '/mastik|poliüretan köpük|pu köpük|montaj köpüğü|sızdırmazlık (bandı|mastiği|malzemesi)/u', 'except' => '/boru|conta|vida/u'],
+    'seramik' => ['label' => 'Seramik ve porselen karo', 'match' => '/seramik (yer|duvar)?\\s?karo|seramik kaplama|seramik ile|seramik (yer|duvar) kaplama|porselen karo|granit seramik|sırlı porselen|fayans (ile|kaplama)/u', 'except' => '/terrazo|karosiman|radyant|sabunluk|ısıtıcı|lavabo|klozet/u'],
+    'isi_yalitim' => ['label' => 'Isı yalıtım levhası (EPS, XPS, taş yünü)', 'match' => '/(eps|xps|taş ?yünü|cam ?yünü|ekstrüde polistiren|ekspande polistren|genleştirilmiş polistiren|poliizosiyanurat).{0,60}(levha|şilte|plaka|ısı yalıtım)|ısı yalıtım (levhası|malzemesi|şiltesi)/u', 'except' => '/boru|kanal|tesisat|sandviç|panel|baca/u'],
+];
+
 return [
     // Araç → o araçta kullanılabilen sponsor kategorileri
     'tools' => [
@@ -349,16 +387,10 @@ return [
             ],
         ],
         // v113: 43 bin resmî poz sayfası. Kategori poz tanımından seçilir (poz_matching); kart yalnız eşleşen pozda çıkar.
+        // v114: 43 bin resmî poz sayfası; kategoriler yukarıdaki $pozRules'tan (etiketler kartta görünür)
         'poz-sayfalari' => [
             'label' => 'Poz sayfaları (resmî birim fiyat)',
-            'categories' => [
-                'seramik' => 'Seramik ve porselen karo',
-                'yapistirici' => 'Karo yapıştırıcısı',
-                'derz' => 'Derz dolgu',
-                'yalitim' => 'Su yalıtımı',
-                'sap' => 'Şap ve tesviye',
-                'tamir' => 'Tamir harcı ve grout',
-            ],
+            'categories' => array_map(fn ($r) => $r['label'], $pozRules),
         ],
     ],
 
@@ -413,16 +445,11 @@ return [
     | v113: poz tanımı → poz sayfası marka kartı kategorisi (küçük harfle aranır).
     | Bir poz birden fazla kategoriye girebilir (ör. seramik + yapıştırıcı); en fazla max_cards kart çıkar.
     */
-    // Söküm, kırım ve taşıma pozlarında marka kartı çıkmaz (ürün satın alma anı değil)
-    'poz_matching_exclude' => '/sökülmesi|söküm|kırılması|yıkılması|taşınması|nakli/u',
-    'poz_matching' => [
-        'seramik' => ['/seramik|porselen karo|\\bkaro\\b|fayans/u'],
-        'yapistirici' => ['/yapıştırıcı|yapıştırma harcı/u'],
-        'derz' => ['/derz dolgu|derz harcı|derzlerinin doldurulması|derzlenmesi/u'],
-        'yalitim' => ['/su yalıtım|su geçirimsiz|nem yalıtım|bitümlü|membran|sürme yalıtım/u'],
-        'sap' => ['/(^|[^a-zçğıöşü])şap([^a-zçğıöşü]|$)|tesviye tabakası|kendinden yayılan/u'],
-        'tamir' => ['/tamir harcı|onarım harcı|grout|epoksi harç|beton onarım/u'],
-    ],
+    // Söküm, kırım, taşıma pozlarında ve laboratuvar deneyi / makine kirası kalemlerinde marka kartı çıkmaz
+    'poz_matching_exclude' => '/sökülmesi|söküm|kırılması|yıkılması|taşınması|nakli|kazınması|temizlenmesi|tayini|deneyi|deneyleri|deney numune|analizi|saatlik ücreti|kiralanması|bulunması|ustası|usta yardımcısı|işçisi/u',
+    // Bu desenle başlayan poz tanımı parça sayılır ('(40 x 40 cm) …'); grubun son başlığı bağlama eklenir
+    'poz_fragment' => '/^[\\(\\d\\-–\\.%a-zçğıöşü"\\\'“]/u',
+    'poz_matching' => $pozRules,
 
     'packages' => [
         'su-yalitimi' => [
@@ -434,7 +461,7 @@ return [
                 'seramik-maliyet-hesaplayici' => ['yalitim'],
                 'cati-maliyet-hesaplayici' => ['yalitim'],
                 'pvc-dograma-hesaplayici' => ['montaj'],
-                'poz-sayfalari' => ['yalitim'],
+                'poz-sayfalari' => ['yalitim', 'yalitim_cimento', 'yalitim_poliurea', 'yalitim_likit', 'yalitim_bitum', 'yalitim_membran', 'yalitim_bant', 'mastik'],
             ],
         ],
         'seramik-uygulama' => [
@@ -445,7 +472,7 @@ return [
                 'banyo-maliyet-hesaplayici' => ['yapistirici'],
                 'wc-maliyet-hesabi' => ['yapistirici'],
                 'zemin-kaplama' => ['yapistirici'],
-                'poz-sayfalari' => ['yapistirici', 'derz'],
+                'poz-sayfalari' => ['yapistirici', 'yapistirici_reaktif', 'derz', 'derz_reaktif'],
             ],
         ],
         'endustriyel-zemin' => [
@@ -456,7 +483,7 @@ return [
                 'saha-betonu-hesaplayici' => ['sertlestirici', 'kur'],
                 'sap-hesaplayici' => ['sap', 'katki'],
                 'beton-hesaplayici' => ['katki', 'kur'],
-                'poz-sayfalari' => ['sap'],
+                'poz-sayfalari' => ['sap', 'epoksi_zemin', 'sertlestirici', 'kur', 'beton_katki'],
             ],
         ],
         'boya-cephe' => [
@@ -466,6 +493,7 @@ return [
                 'boya-hesaplayici' => ['boya', 'dis_cephe', 'astar', 'hazirlik', 'dekoratif'],
                 'duvar-rengi-gorsellestirici' => ['boya', 'dekor', 'renk'],
                 'mantolama-maliyeti' => ['sistem', 'dekoratif'],
+                'poz-sayfalari' => ['boya_ic', 'boya_dis', 'astar_macun', 'dekoratif', 'mantolama'],
             ],
         ],
         'onarim-grout' => [
@@ -474,7 +502,7 @@ return [
             'tools' => [
                 'beton-onarim-maliyeti' => ['tamir', 'grout', 'korozyon', 'enjeksiyon'],
                 'deprem-izolator-maliyeti' => ['grout'],
-                'poz-sayfalari' => ['tamir'],
+                'poz-sayfalari' => ['tamir', 'grout', 'ankraj', 'korozyon', 'enjeksiyon'],
             ],
         ],
         // 'tam-kategori': yukarıdaki beş yapı kimyasalı paketinin hepsi, tek marka (SponsorPackages::get('tam-kategori') birleştirir)

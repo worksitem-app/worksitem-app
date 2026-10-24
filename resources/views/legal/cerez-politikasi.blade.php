@@ -110,7 +110,7 @@
 
 <ul>
     <li><a href="https://support.google.com/chrome/answer/95647" target="_blank" rel="noopener">Google Chrome</a></li>
-    <li><a href="https://support.mozilla.org/tr/kb/cerezleri-silme" target="_blank" rel="noopener">Mozilla Firefox</a></li>
+    <li><a href="https://support.mozilla.org/tr/kb/clear-cookies-and-site-data-firefox" target="_blank" rel="noopener">Mozilla Firefox</a></li>
     <li><a href="https://support.apple.com/tr-tr/guide/safari/sfri11471/mac" target="_blank" rel="noopener">Safari</a></li>
     <li><a href="https://support.microsoft.com/tr-tr/microsoft-edge" target="_blank" rel="noopener">Microsoft Edge</a></li>
 </ul>

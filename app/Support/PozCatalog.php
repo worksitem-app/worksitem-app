@@ -112,31 +112,87 @@ final class PozCatalog
             ->unique('institution')->values();
     }
 
+    /** Türkçe küçük harf (PHP mb_strtolower 'İ'yi "i̇", 'I'yı "i" yapar; poz metinleri büyük harfli olabilir) */
+    public static function lower(string $s): string
+    {
+        return mb_strtolower(strtr($s, ['İ' => 'i', 'I' => 'ı']), 'UTF-8');
+    }
+
+    /** Poz tanımı tek başına anlamsız bir parça mı ("(40 x 40 cm) …", "3.3 mm …") */
+    public static function isFragment(string $description): bool
+    {
+        $d = trim($description);
+        $re = (string) config('worksitem_sponsors.poz_fragment', '');
+
+        return mb_strlen($d) < 12 || ($re !== '' && preg_match($re, $d) === 1);
+    }
+
     /**
-     * Poz tanımından marka kartı kategorileri (config worksitem_sponsors.tools.poz-sayfalari).
-     * Yalnız kart seçimi içindir; hesap ve fiyat değişmez.
+     * Poz tanımından (ve parça ise grubun başlığından) sponsor ürün grupları.
+     * Kurallar: config/worksitem_sponsors.php › poz_matching. Yalnız kart seçimi içindir; hesap ve fiyat değişmez.
      *
      * @return list<string>
      */
-    public static function sponsorCategories(?string $description): array
+    public static function sponsorCategories(?string $description, ?string $context = null): array
     {
-        $d = mb_strtolower((string) $description, 'UTF-8');
-        $exclude = (string) config('worksitem_sponsors.poz_matching_exclude', '');
-        if ($d === '' || ($exclude !== '' && @preg_match($exclude, $d) === 1)) {
+        $txt = self::lower((string) $description);
+        if (trim($txt) === '') {
             return [];
         }
-        $rules = (array) config('worksitem_sponsors.poz_matching', []);
-        $cats = [];
-        foreach ($rules as $cat => $patterns) {
-            foreach ((array) $patterns as $re) {
-                if (@preg_match($re, $d) === 1) {
-                    $cats[] = $cat;
-                    break;
-                }
+        if ($context !== null && trim($context) !== '') {
+            $txt .= ' || '.self::lower($context);
+        }
+        $exclude = (string) config('worksitem_sponsors.poz_matching_exclude', '');
+        if ($exclude !== '' && @preg_match($exclude, $txt) === 1) {
+            return [];
+        }
+        $out = [];
+        foreach ((array) config('worksitem_sponsors.poz_matching', []) as $key => $rule) {
+            $match = is_array($rule) ? ($rule['match'] ?? null) : null;
+            if (! $match || @preg_match($match, $txt) !== 1) {
+                continue;
             }
+            if (! empty($rule['except']) && @preg_match($rule['except'], $txt) === 1) {
+                continue;
+            }
+            $out[] = (string) $key;
         }
 
-        return array_values(array_unique($cats));
+        // Hiyerarşi: daha özel bir alt grup eşleştiyse genel üst grup düşer (yalitim_bitum varsa yalitim yok)
+        return array_values(array_filter($out, fn ($k) => ! collect($out)->contains(fn ($o) => $o !== $k && str_starts_with($o, $k.'_'))));
+    }
+
+    /**
+     * Kart sorgusu için üst grupları da ekler: 'yalitim_bitum' → ['yalitim_bitum', 'yalitim'].
+     *
+     * @param  list<string>  $cats
+     * @return list<string>
+     */
+    public static function withParents(array $cats): array
+    {
+        $out = [];
+        foreach ($cats as $c) {
+            $out[] = $c;
+            $parts = explode('_', $c);
+            while (count($parts) > 1) {
+                array_pop($parts);
+                $out[] = implode('_', $parts);
+            }
+        }
+        $known = array_keys((array) config('worksitem_sponsors.tools.poz-sayfalari.categories', []));
+
+        return array_values(array_intersect(array_unique($out), $known));
+    }
+
+    /** Kayıtlı eşleşme (sponsors:poz-esle) varsa onu, yoksa yalnız tanımdan hesaplanan */
+    public static function categoriesFor(TenderPoz $poz): array
+    {
+        $stored = $poz->getAttribute('sponsor_categories');
+        if ($stored !== null) {
+            return array_values(array_filter(explode(',', (string) $stored)));
+        }
+
+        return self::sponsorCategories((string) $poz->description);
     }
 
     public static function forget(): void

@@ -89,8 +89,8 @@ class PozSeoV113Test extends TestCase
 
     public function test_sponsor_kategorisi_poz_tanimindan(): void
     {
-        $this->assertSame(['seramik', 'yapistirici'], PozCatalog::sponsorCategories('Duvarlara 30x60 cm sırlı seramik karo kaplama yapılması (yapıştırıcı ile)'));
-        $this->assertSame(['yalitim'], PozCatalog::sponsorCategories('Çimento esaslı iki bileşenli su yalıtım malzemesi ile yalıtım yapılması'));
+        $this->assertSame(['yapistirici', 'seramik'], PozCatalog::sponsorCategories('Duvarlara 30x60 cm sırlı seramik karo kaplama yapılması (yapıştırıcı ile)'));
+        $this->assertSame(['yalitim_cimento'], PozCatalog::sponsorCategories('Çimento esaslı iki bileşenli su yalıtım malzemesi ile yalıtım yapılması'));
         $this->assertSame(['sap'], PozCatalog::sponsorCategories('200 kg çimento dozlu tesviye tabakası yapılması'));
         $this->assertSame([], PozCatalog::sponsorCategories('Şap sökülmesi'));
         $this->assertSame([], PozCatalog::sponsorCategories('Kazı yapılması'));
@@ -123,7 +123,9 @@ class PozSeoV113Test extends TestCase
 
     public function test_tam_kategori_ve_seramik_paketi_poz_sayfalarini_kapsar(): void
     {
-        $this->assertSame(['yalitim', 'yapistirici', 'derz', 'sap', 'tamir'], SponsorPackages::get(SponsorPackages::ALL)['tools']['poz-sayfalari']);
+        $this->assertContains('yapistirici', SponsorPackages::get(SponsorPackages::ALL)['tools']['poz-sayfalari']);
+        $this->assertContains('yalitim_bitum', SponsorPackages::get(SponsorPackages::ALL)['tools']['poz-sayfalari']);
+        $this->assertNotContains('seramik', SponsorPackages::get(SponsorPackages::ALL)['tools']['poz-sayfalari']);
         $this->assertSame(['seramik'], SponsorPackages::get('seramik-banyo')['tools']['poz-sayfalari']);
 
         $this->artisan('sponsors:demo', ['--brand' => 'Kimya Demo', '--tile-brand' => 'Karo Demo'])->assertSuccessful();

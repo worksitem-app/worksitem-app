@@ -48,6 +48,13 @@ Schedule::command('poz:enrich-seo --limit=100')
     ->withoutOverlapping()
     ->onOneServer();
 
+// v114: poz → sponsor ürün grubu eşleşmesi (poz listesi ya da kurallar değişince tazelenir)
+Schedule::command('sponsors:poz-esle')
+    ->weeklyOn(1, '03:25')
+    ->timezone('Europe/Istanbul')
+    ->withoutOverlapping()
+    ->onOneServer();
+
 // KVKK saklama süresi: kullanıcıların yüklediği oda fotoğrafları 30 gün sonra silinir
 Schedule::command('app:prune-ai-inputs --days=30')
     ->dailyAt('03:30')

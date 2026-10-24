@@ -12,7 +12,8 @@
             $q->whereIn('category', (array) $categories);
         }
         // Aynı öncelikte olanlar her gösterimde karışık sırayla (adil dönüşüm)
-        $cards = \App\Models\Sponsor::applyExclusive($q->get())->sortBy(fn ($s) => [$s->priority, mt_rand()])->take((int) config('worksitem_sponsors.max_cards', 3))->values();
+        // Aynı marka birden çok kategoride eşleşirse tek kart (v114)
+        $cards = \App\Models\Sponsor::applyExclusive($q->get())->sortBy(fn ($s) => [$s->priority, mt_rand()])->unique(fn ($s) => mb_strtolower(trim((string) $s->brand)))->take((int) config('worksitem_sponsors.max_cards', 3))->values();
         // Arama motoru ve önizleme botları markaya raporlanan gösterime sayılmaz (v113)
         if ($cards->isNotEmpty() && ! preg_match('/bot|crawl|spider|slurp|preview|lighthouse|headless/i', (string) request()->userAgent())) {
             \App\Models\Sponsor::query()->whereIn('id', $cards->pluck('id'))->increment('impressions');

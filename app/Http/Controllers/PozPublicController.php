@@ -61,7 +61,7 @@ class PozPublicController extends Controller
         $after = (clone $base)->where('poz_no', '>', $poz->poz_no)->orderBy('poz_no')->limit(10 - $before->count())->get();
         $related = $before->concat($after)->unique('poz_no')->values();
 
-        $sponsorCategories = PozCatalog::sponsorCategories((string) $poz->description);
+        $sponsorCategories = PozCatalog::withParents(PozCatalog::categoriesFor($poz));
         $groupUrl = PozCatalog::groupUrl((string) $poz->institution, $group);
         $institutionUrl = PozCatalog::institutionUrl((string) $poz->institution);
 
