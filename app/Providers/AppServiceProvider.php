@@ -96,6 +96,12 @@ class AppServiceProvider extends ServiceProvider
                 ->response(fn () => response()->json([
                     'message' => 'Yoğunluk nedeniyle AI servisi bugün için geçici olarak kapalı. Lütfen yarın tekrar deneyin.',
                 ], 429)),
+            // v111: aylık toplam tavan (30 günlük pencere)
+            Limit::perMinutes(43200, max(1, (int) config('services.ai.global_monthly_limit', 600)))
+                ->by('ai-global-month')
+                ->response(fn () => response()->json([
+                    'message' => 'Yapay zekâ servisinin bu ayki kullanım sınırı doldu. Hesaplayıcılar ücretsiz çalışmaya devam ediyor.',
+                ], 429)),
         ]);
 
         // AI durum sorgulama (polling) — sık ama sınırsız değil

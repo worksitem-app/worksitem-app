@@ -62,7 +62,7 @@ class KaintaCostEngine
 
     private function getAiExpertAdvice($projectType, $area, $totalCost)
     {
-        if (!config('services.ai_spend_enabled')) {
+        if (!config('services.ai_spend_enabled') || !config('services.ai.cost_advice')) {
             return 'Kesin teklif öncesinde saha ölçülerinin ve malzeme sınıflarının doğrulanması önerilir.';
         }
 
