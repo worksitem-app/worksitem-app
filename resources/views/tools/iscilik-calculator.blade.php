@@ -84,6 +84,7 @@
         .btn-submit { background: var(--accent); color: #000; margin-top: 10px; }
         .btn-submit:hover { background: #e5a500; }
 
+        .wc-warn { color:#b91c1c; font-size:13px; font-weight:700; margin-top:10px; }
         @media(max-width: 600px) {
             .form-grid, .breakdown-grid, .budget-confirm-actions { grid-template-columns: 1fr; }
             .card, .result-box, .lead-box, .budget-confirm-box { padding: 20px; }
@@ -135,7 +136,16 @@
             </div>
         </div>
 
+        <div class="form-group">
+            <label>SGK Prim Teşviki (5510 s. Kanun)</label>
+            <select id="incentive" class="form-control">
+                <option value="1" selected>Var (inşaat: işveren payında 2 puan indirim)</option>
+                <option value="0">Yok</option>
+            </select>
+        </div>
+
         <button type="button" class="btn btn-calc" id="calculateBtn">İşveren Maliyetini Analiz Et →</button>
+        <p class="wc-warn" id="formErr" role="alert" hidden></p>
     </div>
 
     <aside class="wc-aside">
@@ -148,7 +158,7 @@
         <div class="result-price" id="totalPrice" data-wc-price>0 TL</div>
         
         <p style="font-size: 11px; color: #6b7280; margin-bottom:20px;">
-            ⚠️ Bu tablo işçi yevmiyesinin üzerine binen resmi yükleri (Brütleşme) ve günlük giderleri hesaplar.
+            Net yevmiye 30 günlük net ücrete çevrilip 2026 parametreleriyle brütleştirilir; üzerine işveren SGK ve işsizlik payı eklenir. Gelir vergisinde ilk dilim (%15) varsayılmıştır.
         </p>
 
         <div class="breakdown-grid">
@@ -161,7 +171,7 @@
                 <strong id="foodTotal">0 TL</strong>
             </div>
             <div class="break-item highlight">
-                <span>SGK ve Vergi Yükü (%37.5 Ort.)</span>
+                <span id="taxLbl">SGK, Vergi ve İşveren Payı</span>
                 <strong id="taxTotal">0 TL</strong>
             </div>
             <div class="break-item">
@@ -174,7 +184,7 @@
             <div class="ai-insight-icon">⚠️</div>
             <div class="ai-insight-text">
                 <strong>İş Güvenliği ve Yasal Risk Notu</strong>
-                <p>Bir işçinin net yevmiyesinin üzerinde; işverene SGK, stopaj ve işsizlik fonu gibi ciddi bir yasal maliyet biner. Bu tabloya olası iş kazası riskleri ve zorunlu İSG (Baret, Yelek, Emniyet Kemeri) ekipmanı giderleri dahil edilmemiştir.</p>
+                <p>Net yevmiyenin üzerine işçi SGK payı, gelir ve damga vergisi ile işveren SGK (%21,75) ve işsizlik (%2) payı biner. Yıl içinde gelir vergisi matrahı 190.000 TL'yi aşınca vergi dilimi yükselir ve maliyet artar. Yemek ve yol ödemeleri ayni ya da belirli tutarı aşan nakit ödemelerde prime tabi olabilir. İSG ekipmanı ve iş kazası riskleri dahil değildir.</p>
             </div>
         </div>
 
@@ -249,31 +259,46 @@
 
 <script>
 document.getElementById('calculateBtn').addEventListener('click', function() {
-    const workers = parseInt(document.getElementById('workers').value) || 0;
-    const dailyWage = parseFloat(document.getElementById('dailyWage').value) || 0;
-    const days = parseInt(document.getElementById('days').value) || 0;
-    const foodTravel = parseFloat(document.getElementById('foodTravel').value) || 0;
-    
-    if (workers <= 0 || dailyWage <= 0 || days <= 0) {
-        alert('Lütfen geçerli veriler giriniz.');
-        return;
-    }
+    const num = id => { const v = document.getElementById(id).value; return v === '' ? NaN : parseFloat(v); };
+    const workers = num('workers'), dailyWage = num('dailyWage'), days = num('days');
+    const ftRaw = document.getElementById('foodTravel').value;
+    const foodTravel = ftRaw === '' ? 0 : parseFloat(ftRaw);
+    const incentive = document.getElementById('incentive').value === '1';
+    const formErr = document.getElementById('formErr');
+    const fail = msg => { formErr.textContent = msg; formErr.hidden = false; document.getElementById('resultBox').classList.remove('active'); };
+    formErr.hidden = true;
+    if (!(workers > 0) || !(dailyWage > 0) || !(days > 0)) return fail('İşçi sayısı, yevmiye ve gün için pozitif bir değer girin.');
+    if (!Number.isInteger(workers) || !Number.isInteger(days)) return fail('İşçi sayısı ve gün tam sayı olmalı.');
+    if (!(foodTravel >= 0)) return fail('Yemek ve yol gideri negatif olamaz.');
 
-    // 1. Net Yevmiye Toplamı
+    // 2026 parametreleri (EY 2026 asgari ücret notu; config/worksitem_mevzuat_2026.php)
+    const MW_GROSS = {{ (float) config('worksitem_mevzuat_2026.asgari_brut') }}, MW_NET = {{ (float) config('worksitem_mevzuat_2026.asgari_net') }};
+    const SGK_W = {{ (float) config('worksitem_mevzuat_2026.sgk_isci') }}, GV = {{ (float) config('worksitem_mevzuat_2026.gv_ilk_dilim') }}, DV = {{ (float) config('worksitem_mevzuat_2026.damga') }};
+    const SGK_E = {{ (float) config('worksitem_mevzuat_2026.sgk_isveren') }} - (incentive ? {{ (float) config('worksitem_mevzuat_2026.sgk_tesvik_puan') }} : 0);
+
+    // 1. Net yevmiye toplamı
     const netTotal = workers * dailyWage * days;
-    
-    // 2. SGK ve Vergi Yükü (Net üzerinden ortalama brütleşme oranı ~%37.5)
-    // Brüt = Net / 0.714. SGK+İşsizlik İşveren = Brüt * 0.225 vs.. Pratik hesapla Net'in yaklaşık %37.5'i.
-    const taxTotal = netTotal * 0.375;
 
-    // 3. Yemek ve Yol Toplamı
+    // 2. Net → brüt (aylık, 30 gün): asgari ücret kadar kısım GV ve DV'den istisna
+    //    net = brüt × (1 − SGK_W − GV×(1−SGK_W) − DV) + (asgari GV + DV istisnası)
+    const netMonth = dailyWage * 30;
+    const k = 1 - SGK_W - GV * (1 - SGK_W) - DV;
+    const exempt = GV * MW_GROSS * (1 - SGK_W) + DV * MW_GROSS;
+    const grossMonth = netMonth <= MW_NET ? netMonth / MW_NET * MW_GROSS : (netMonth - exempt) / k;
+    const employerMonth = grossMonth * (1 + SGK_E);
+    const loadRate = employerMonth / netMonth - 1;   // nete göre işveren yükü
+    const taxTotal = netTotal * loadRate;
+
+    // 3. Yemek ve yol toplamı
     const foodTotal = workers * foodTravel * days;
 
-    // 4. Genel Toplam
+    // 4. Genel toplam
     const grandTotal = netTotal + taxTotal + foodTotal;
 
-    // 5. Kişi Başı Günlük Gerçek Maliyet
+    // 5. Kişi başı günlük maliyet
     const costPerWorkerPerDay = grandTotal / (workers * days);
+
+    document.getElementById('taxLbl').innerText = 'SGK, Vergi ve İşveren Payı (nete göre %' + (loadRate * 100).toLocaleString('tr-TR', { maximumFractionDigits: 1 }) + ')';
 
     const money = new Intl.NumberFormat('tr-TR', { maximumFractionDigits: 0 });
 

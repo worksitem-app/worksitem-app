@@ -11,12 +11,13 @@ class BuildingCostEstimator extends KitEstimator
     use DbPrices;
 
     // Resmî sınıf kodu ve (DB'de yoksa) 2026 yaklaşık birim maliyet (TL/m²)
+    // ÇŞB 2026 Yapı Yaklaşık Birim Maliyetleri Tebliği (RG 03.02.2026, 33157): köy evi/bungalov II-C, 5 yıldızlı otel/şehir hastanesi V-D
     protected const TYPES = [
-        'mustakil_basit' => ['label' => 'Köy evi / bungalov', 'hint' => 'Basit yapı', 'class' => '2B', 'fallback' => 15100],
+        'mustakil_basit' => ['label' => 'Köy evi / bungalov', 'hint' => 'Basit yapı', 'class' => '2C', 'fallback' => 15100],
         'apartman' => ['label' => 'Apartman / müstakil ev', 'hint' => 'Konut, 3. sınıf', 'class' => '3B', 'fallback' => 21050],
         'rezidans' => ['label' => 'Rezidans / otel / AVM', 'hint' => 'Lüks konut, 4. sınıf', 'class' => '4A', 'fallback' => 26450],
         'kampus' => ['label' => 'Üniversite / stadyum', 'hint' => '5. sınıf', 'class' => '5A', 'fallback' => 42350],
-        'hastane' => ['label' => 'Hastane / 5 yıldızlı otel', 'hint' => '5. sınıf ileri', 'class' => '5C', 'fallback' => 53500],
+        'hastane' => ['label' => 'Hastane / 5 yıldızlı otel', 'hint' => '5. sınıf ileri', 'class' => '5D', 'fallback' => 53500],
     ];
 
     public function key(): string { return 'bina'; }

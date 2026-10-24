@@ -272,7 +272,7 @@ return array (
     array (
       'title' => 'İnşaat Mühendisi Maaş Hesabı',
       'cat' => 'mevzuat',
-      'desc' => 'TMMOB asgari ücreti, deneyim ve pozisyona göre inşaat mühendisi tahmini net maaş aralığı.',
+      'desc' => 'Deneyim ve pozisyona göre inşaat mühendisi için kaba net maaş tahmini (piyasa varsayımı).',
     ),
     'is-makinesi-maliyeti' => 
     array (

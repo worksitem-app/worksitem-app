@@ -106,18 +106,34 @@ abstract class KitEstimator
     public function normalize(array $raw): array
     {
         $in = [];
+        $clamped = [];
         foreach ($this->steps() as $step) {
             switch ($step['type']) {
                 case 'cards':
-                    $v = (string) ($raw[$step['key']] ?? '');
+                    // ?target[]=x gibi dizi biçimli değer yok sayılır (500 yerine "seçilmedi")
+                    $v = $raw[$step['key']] ?? '';
+                    $v = is_scalar($v) ? (string) $v : '';
                     $in[$step['key']] = isset($step['options'][$v]) ? $v : '';
                     break;
                 case 'numbers':
                     foreach ($step['fields'] as $f) {
-                        $s = str_replace(',', '.', trim((string) ($raw[$f['key']] ?? '')));
-                        $n = is_numeric($s) ? (float) $s : null;
+                        $rv = $raw[$f['key']] ?? '';
+                        $s = is_scalar($rv) ? str_replace(',', '.', trim((string) $rv)) : '';
+                        $n = is_numeric($s) && is_finite((float) $s) ? (float) $s : null;
                         if ($n !== null) {
-                            $n = min((float) $f['max'], max((float) $f['min'], $n));
+                            $min = (float) $f['min'];
+                            $max = (float) $f['max'];
+                            if ($n < 0 || ($n <= 0 && $min > 0)) {
+                                // Negatif / sıfır ölçü anlamsız: girilmemiş sayılır, kullanıcıya not düşülür
+                                $clamped[$f['key']] = ['label' => $f['label'], 'kind' => 'invalid'];
+                                $n = null;
+                            } elseif ($n > $max) {
+                                $clamped[$f['key']] = ['label' => $f['label'], 'kind' => 'max', 'to' => $max, 'unit' => $f['unit'] ?? ''];
+                                $n = $max;
+                            } elseif ($n < $min) {
+                                $clamped[$f['key']] = ['label' => $f['label'], 'kind' => 'min', 'to' => $min, 'unit' => $f['unit'] ?? ''];
+                                $n = $min;
+                            }
                         }
                         $in[$f['key']] = $n ?? ($f['default'] ?? null);
                         $in['_given_'.$f['key']] = $n !== null;
@@ -125,7 +141,8 @@ abstract class KitEstimator
                     break;
                 case 'checks':
                     $vals = $raw[$step['key']] ?? [];
-                    $vals = is_array($vals) ? $vals : explode(',', (string) $vals);
+                    // ?extras[][]=x gibi iç içe dizi öğeleri yok sayılır
+                    $vals = is_array($vals) ? array_filter($vals, 'is_scalar') : (is_scalar($vals) ? explode(',', (string) $vals) : []);
                     // tekil ?ex_x=1 biçimi de kabul edilir
                     foreach (array_keys($step['options']) as $k) {
                         if (($raw[$k] ?? null) === '1' || ($raw[$k] ?? null) === 1) {
@@ -145,7 +162,11 @@ abstract class KitEstimator
             foreach ($step['fields'] as $f) {
                 [$a, $b] = array_pad((array) ($f['from'] ?? []), 2, null);
                 if ($a && $b && empty($in['_given_'.$f['key']]) && ! empty($in['_given_'.$a]) && ! empty($in['_given_'.$b])) {
-                    $in[$f['key']] = min((float) $f['max'], max((float) $f['min'], round((float) $in[$a] * (float) $in[$b], 2)));
+                    $prod = round((float) $in[$a] * (float) $in[$b], 2);
+                    $in[$f['key']] = min((float) $f['max'], max((float) $f['min'], $prod));
+                    if ($prod > (float) $f['max']) {
+                        $clamped[$f['key']] = ['label' => $f['label'], 'kind' => 'max', 'to' => (float) $f['max'], 'unit' => $f['unit'] ?? ''];
+                    }
                     $in['_given_'.$f['key']] = true;
                 }
             }
@@ -171,8 +192,12 @@ abstract class KitEstimator
                 $in[$k] = match ($step['type']) { 'checks' => [], 'cards' => '', default => null };
                 if ($step['type'] === 'numbers') {
                     $in['_given_'.$k] = false;
+                    unset($clamped[$k]);
                 }
             }
+        }
+        if ($clamped) {
+            $in['_clamped'] = $clamped;
         }
 
         return $in;
@@ -237,9 +262,10 @@ abstract class KitEstimator
 
     public function estimate(array $in): array
     {
+        $notices = $this->notices($in);
         $missing = $this->missing($in);
         if ($missing) {
-            return ['ready' => false, 'missing' => $missing];
+            return ['ready' => false, 'missing' => $missing, 'notices' => $notices];
         }
 
         $c = $this->compute($in);
@@ -251,8 +277,12 @@ abstract class KitEstimator
         $items = [];
         $sub = 0.0;
         $i = 0;
+        // Küçük işlerde (ör. 1 m² sıva) 100/1000 TL'lik yuvarlama sonucu ₺0 yapıyordu: tutara göre yuvarlama birimi
+        // (kalem: 500 TL altı toplamda 10 TL; toplam: ≥2.000 → 1.000, ≥500 → 100, altı → 10 TL)
+        $rawSub = array_sum(array_map(fn ($it) => max(0, (float) $it['mid']), $c['items']));
+        $ri = $rawSub < 500 ? 10 : 100;
         foreach ($c['items'] as $k => $it) {
-            $mid = round(max(0, (float) $it['mid']) / 100) * 100;
+            $mid = round(max(0, (float) $it['mid']) / $ri) * $ri;
             if ($mid <= 0) {
                 continue;
             }
@@ -262,28 +292,47 @@ abstract class KitEstimator
         }
         $rate = $c['contingency'] ?? $this->contingencyRate();
         if ($rate > 0 && $sub > 0) {
-            $items['beklenmedik'] = ['label' => 'Beklenmedik gider payı (%'.round($rate * 100).')', 'mid' => round($sub * $rate / 100) * 100, 'color' => '#D5D9DF'];
+            $items['beklenmedik'] = ['label' => 'Beklenmedik gider payı (%'.round($rate * 100).')', 'mid' => round($sub * $rate / $ri) * $ri, 'color' => '#D5D9DF'];
         }
         $mid = array_sum(array_column($items, 'mid'));
         foreach ($items as &$it) {
-            $it['low'] = round($it['mid'] * $band['low'] / 100) * 100;
-            $it['high'] = round($it['mid'] * $band['high'] / 100) * 100;
+            $it['low'] = round($it['mid'] * $band['low'] / $ri) * $ri;
+            $it['high'] = round($it['mid'] * $band['high'] / $ri) * $ri;
         }
         unset($it);
+        $r = $mid >= 2000 ? 1000 : ($mid >= 500 ? 100 : 10);
 
         return [
             'ready' => true,
             'items' => $items,
-            'low' => round($mid * $band['low'] / 1000) * 1000,
-            'mid' => round($mid / 1000) * 1000,
-            'high' => round($mid * $band['high'] / 1000) * 1000,
+            'low' => round($mid * $band['low'] / $r) * $r,
+            'mid' => round($mid / $r) * $r,
+            'high' => round($mid * $band['high'] / $r) * $r,
             'per_unit' => isset($c['per_unit']) && $c['per_unit'] > 0 ? round($mid / $c['per_unit'] / 10) * 10 : null,
             'per_unit_label' => $c['per_unit_label'] ?? $this->perUnitLabel(),
             'meta' => $c['meta'] ?? [],
             'days' => $c['days'] ?? null,
             'notes' => $c['notes'] ?? [],
+            'notices' => $notices,
             'summary' => $this->summary($in),
         ];
+    }
+
+    /** Aralık dışı / geçersiz girilip düzeltilen değerler için kısa notlar ("Yükseklik 10 m ile sınırlandı") */
+    public function notices(array $in): array
+    {
+        $out = [];
+        foreach ((array) ($in['_clamped'] ?? []) as $c) {
+            $unit = ($c['unit'] ?? '') !== '' ? ' '.$c['unit'] : '';
+            $val = isset($c['to']) ? rtrim(rtrim(number_format((float) $c['to'], 2, ',', '.'), '0'), ',') : '';
+            $out[] = match ($c['kind']) {
+                'max' => $c['label'].' en fazla '.$val.$unit.' olabilir; '.$val.$unit.' ile sınırlandı.',
+                'min' => $c['label'].' en az '.$val.$unit.' olabilir; '.$val.$unit.' alındı.',
+                default => $c['label'].': pozitif bir değer girin.',
+            };
+        }
+
+        return $out;
     }
 
     /** Teklif formuna ve rapora yazılan kısa özet */

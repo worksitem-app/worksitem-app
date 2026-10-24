@@ -42,7 +42,7 @@ class WallEstimator extends KitEstimator
             ],
             'faq' => [
                 ['1 m² duvar örmek kaç TL?', '13,5 cm yatay delikli tuğla ile malzeme, harç ve işçilik dahil '.now()->year.' fiyatlarıyla m² başına yaklaşık '.$this->exampleRange(['material' => 'tugla135', 'length' => 10, 'height' => 2.8, 'plaster' => 'yok'], true).' tutar (sıva hariç).'],
-                ['1 m² duvar için kaç tuğla gerekir?', '13,5 ve 19 cm yatay delikli tuğlada yaklaşık 25 adet, 60×25 gazbetonda yaklaşık 6,7 adet gerekir; %5 fire eklenmelidir.'],
+                ['1 m² duvar için kaç tuğla gerekir?', '13,5 ve 19 cm yatay delikli tuğlada yaklaşık 25 adet, 60×25 gazbetonda yaklaşık 6,7 adet, 39×19×19 bims blokta 12,5 adet gerekir; %5 fire eklenmelidir.'],
                 ['Gazbeton mu, tuğla mı?', 'Gazbeton hafif ve yalıtımlıdır, hızlı örülür; tuğla daha ekonomiktir. Islak hacimde ve dış duvarda üretici önerilerine uyulmalıdır.'],
                 ['Hesaba neler dahil?', 'Blok, harç/yapıştırıcı, işçilik ve lento; seçerseniz sıva. KDV dahil yaklaşık değerlerdir.'],
             ],

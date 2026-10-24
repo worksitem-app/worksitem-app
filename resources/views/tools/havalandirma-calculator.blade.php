@@ -1147,13 +1147,19 @@ function calculate() {
 
     const lines = [];
 
-
-    addLine(
-        lines,
-        duct.item,
-        duct.surface,
-        'm²'
-    );
+    // v120: katalog dışı kanal ölçüsü (ör. Ø2000) eskiden satırı hiç eklemiyordu → "0,00 TL" tam sonuç
+    // ve bütçe onayı açılıyordu. Artık eksik kalem olarak listelenir.
+    if (duct.item) {
+        addLine(lines, duct.item, duct.surface, 'm²');
+    } else if (duct.surface > 0) {
+        lines.push({
+            found:false,
+            label:'Kanal ' + duct.dimension + ' (katalog dışı ölçü)',
+            poz:'—',
+            quantity:duct.surface,
+            quantityUnit:'m²'
+        });
+    }
 
 
     const insulationPoz =
@@ -1256,16 +1262,16 @@ function calculate() {
 
 
     let grandTotal = 0;
-    let allFound = true;
+    let allFound = !!duct.item && lines.length > 0;
     let verifiedCount = 0;
+    let missingCount = 0;
 
 
     lines.forEach(line => {
 
         if (!line.found) {
-
             allFound = false;
-
+            missingCount++;
             return;
         }
 
@@ -1339,9 +1345,11 @@ function calculate() {
 
     document.getElementById('rTotal')
         .innerText =
-            allFound
+            allFound && grandTotal > 0
             ? money.format(grandTotal) + ' TL'
-            : money.format(grandTotal) + ' TL + eksik kalem';
+            : (verifiedCount > 0
+                ? money.format(grandTotal) + ' TL + ' + missingCount + ' eksik kalem'
+                : 'Hesaplanamadı (' + Math.max(missingCount, 1) + ' kalemde fiyat yok)');
 
 
     document.getElementById('rSurface')
@@ -1383,7 +1391,13 @@ function calculate() {
     if (!duct.item) {
 
         warnings.push(
-            'Bu kanal ölçüsü için doğrulanmış uygun kanal pozu bulunamadı.'
+            'Bu kanal ölçüsü için doğrulanmış uygun kanal pozu bulunamadı; kanal bedeli toplama dahil değil.'
+        );
+    }
+
+    if (missingCount > 0) {
+        warnings.push(
+            missingCount + ' kalemin fiyatı bulunamadı; toplam eksiktir, bütçe onayı için kullanılamaz.'
         );
     }
 
@@ -1459,7 +1473,7 @@ function calculate() {
 
     document.getElementById('budgetBox')
         .style.display =
-            allFound
+            allFound && grandTotal > 0
             ? 'block'
             : 'none';
 

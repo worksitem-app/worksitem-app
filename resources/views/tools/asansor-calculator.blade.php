@@ -86,6 +86,7 @@
         .btn-submit { background: var(--accent); color: #000; margin-top: 10px; }
         .btn-submit:hover { background: #e5a500; }
 
+        .wc-warn { color:#b91c1c; font-size:13px; font-weight:700; margin-top:10px; }
         @media(max-width: 600px) {
             .form-grid, .breakdown-grid, .budget-confirm-actions { grid-template-columns: 1fr; }
             .card, .result-box, .lead-box, .budget-confirm-box { padding: 20px; }
@@ -117,12 +118,29 @@
     <div class="card wc-panel">
         <div class="form-grid">
             <div class="form-group">
-                <label>Bina Toplam Kat Sayısı</label>
-                <input type="number" id="floors" class="form-control" placeholder="Örn: 4 (Zemin + Katlar)" value="4" min="1" step="1">
+                <label>Zemin Üstü Kat Sayısı</label>
+                <input type="number" id="floors" class="form-control" placeholder="Zemin kat dahil. Örn: 4" value="4" min="1" step="1">
             </div>
             <div class="form-group">
-                <label>Bina Yüksekliği (m)</label>
-                <input type="number" id="height" class="form-control" placeholder="Zeminden en üst döşemeye" value="13.6" min="3" step="0.1">
+                <label>Bodrum Kat Sayısı</label>
+                <input type="number" id="basements" class="form-control" value="0" min="0" step="1">
+            </div>
+        </div>
+
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Bodrumda bağımsız bölüm, ortak alan veya eklenti var mı?</label>
+                <select id="basementUsed" class="form-control">
+                    <option value="1" selected>Evet (kat adedine sayılır)</option>
+                    <option value="0">Hayır, yalnız teknik hacim (kazan dairesi vb.)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Bağımsız Bölüm Sayısı</label>
+                <select id="singleUnit" class="form-control">
+                    <option value="0" selected>Birden fazla bağımsız bölüm</option>
+                    <option value="1">Tek bağımsız bölümlü konut (villa vb.)</option>
+                </select>
             </div>
         </div>
 
@@ -145,6 +163,7 @@
         </div>
 
         <button type="button" class="btn btn-calc" id="calculateBtn">Mevzuatı Kontrol Et ve Bütçe Çıkar →</button>
+        <p class="wc-warn" id="formErr" role="alert" hidden></p>
     </div>
 
     <aside class="wc-aside">
@@ -183,15 +202,15 @@
             <div class="ai-insight-icon">⚖️</div>
             <div class="ai-insight-text">
                 <strong>Yönetmelik ve Ruhsat Notu</strong>
-                <p id="insightText">Planlı Alanlar İmar Yönetmeliği Madde 34'e göre; tek bağımsız bölümlü konutlar hariç, iskan edilebilir kat sayısı 4 ve daha fazla olan veya bina yüksekliği 13.50 metreyi aşan yapılarda asansör tesisi zorunludur.</p>
+                <p id="insightText">Hesaplanıyor...</p>
             </div>
         </div>
 
         <div class="cross-sell">
             <div class="cross-sell-title">💡 İskan Alırken Sürpriz Yaşamayın!</div>
-            <div class="cross-sell-text">Asansör zorunluluğu gibi maddeler iskan ruhsatı aşamasında denetlenir. Aynı aşamada ödemeniz gereken SGK eksik işçilik (Fark SPEK) cezanızı da önceden hesapladınız mı?</div>
+            <div class="cross-sell-text">Asansör şartı iskan aşamasında denetlenir. Aynı aşamada çıkabilecek SGK fark işçilik primini de önceden hesaplayabilirsiniz.</div>
             <div class="cross-sell-links">
-                <a href="/araclar/sgk-asgari-iscilik">🏛️ SGK İskan Cezası Hesapla</a>
+                <a href="/araclar/sgk-asgari-iscilik">🏛️ SGK Fark İşçilik Hesapla</a>
             </div>
         </div>
     </div>
@@ -258,39 +277,36 @@
 
 <script>
 document.getElementById('calculateBtn').addEventListener('click', function() {
-    const floors = parseInt(document.getElementById('floors').value) || 0;
-    const height = parseFloat(document.getElementById('height').value) || 0;
+    const num = id => { const v = document.getElementById(id).value; return v === '' ? NaN : parseFloat(v); };
+    const floors = num('floors');
+    const basRaw = document.getElementById('basements').value;
+    const basements = basRaw === '' ? 0 : parseFloat(basRaw);
+    const basementUsed = document.getElementById('basementUsed').value === '1';
+    const singleUnit = document.getElementById('singleUnit').value === '1';
     const bType = document.getElementById('buildingType').value;
     const capacityMultiplier = parseFloat(document.getElementById('capacity').value) || 1.0;
-    
-    if (floors <= 0 || height <= 0) {
-        alert('Lütfen geçerli bina verileri giriniz.');
-        return;
-    }
+    const formErr = document.getElementById('formErr');
+    const fail = msg => { formErr.textContent = msg; formErr.hidden = false; document.getElementById('resultBox').classList.remove('active'); };
+    formErr.hidden = true;
 
-    // 1. MEVZUAT KONTROLÜ (Planlı Alanlar İmar Yönetmeliği Madde 34)
-    // Kat sayısı 4 ve üzeri VEYA bina yüksekliği 13.50m'den fazla ise zorunlu.
-    let isRequired = false;
-    if (floors >= 4 || height > 13.50) {
-        isRequired = true;
-    }
-    
-    // Ticari ve kamu binalarında erişilebilirlik (engelli) standartları gereği çoğu zaman daha düşük katlarda bile platform veya asansör istenir.
-    let typeInsight = "";
-    if (bType === 'commercial' && !isRequired && floors > 1) {
-        isRequired = true; 
-        typeInsight = "Ticari/Kamu binası seçtiğiniz için, engelli erişilebilirlik standartları gereği TS ISO 21542 normlarında taşıma sistemi/asansör yapılması zorunludur.";
-    }
+    if (!(floors > 0) || !(basements >= 0)) return fail('Kat sayısı için pozitif bir değer girin (bodrum 0 olabilir).');
+    if (!Number.isInteger(floors) || !Number.isInteger(basements)) return fail('Kat sayıları tam sayı olmalı.');
+    if (floors + basements > 200) return fail('Kat sayısı çok büyük görünüyor; değeri kontrol edin.');
 
-    // Arayüz Rengi ve Metni
+    // 1. MEVZUAT: PAİY m.34 (RG 01.07.2026, sayı 33297). Metre ölçütü yok.
+    //    Kat adedine bağımsız bölüm/ortak alan/eklenti bulunan bodrumlar dahil; teknik hacimli bodrum sayılmaz.
+    //    Tek bağımsız bölümlü konut hariç: 3 kat → asansör yeri bırakılır, 4 ve üzeri → asansör tesisi zorunlu.
+    const countedFloors = floors + (basementUsed ? basements : 0);
+    let status = 'opt';
+    if (singleUnit && bType === 'residential') status = 'exempt';
+    else if (countedFloors >= {{ (int) config('worksitem_mevzuat_2026.asansor_zorunlu_kat', 4) }}) status = 'req';
+    else if (countedFloors === {{ (int) config('worksitem_mevzuat_2026.asansor_yer_kat', 3) }}) status = 'space';
+
     const statusResult = document.getElementById('statusResult');
-    if (isRequired) {
-        statusResult.innerText = "YASAL OLARAK ZORUNLU";
-        statusResult.className = "result-price price-req";
-    } else {
-        statusResult.innerText = "ZORUNLU DEĞİL (OPSİYONEL)";
-        statusResult.className = "result-price price-opt";
-    }
+    const labels = { req: 'ASANSÖR ZORUNLU', space: 'ASANSÖR YERİ BIRAKILMALI', opt: 'ZORUNLU DEĞİL', exempt: 'ZORUNLU DEĞİL (TEK BAĞIMSIZ BÖLÜM)' };
+    statusResult.innerText = labels[status];
+    statusResult.className = 'result-price ' + (status === 'req' ? 'price-req' : 'price-opt');
+    const isRequired = status === 'req';
 
     // 2. BÜTÇE HESAPLAMASI (2026 Tahmini Rayiçleri)
     // Temel Paket (Kabin, Makine Motor, Pano): Ortalama 400.000 TL (Kapasite çarpanı etkiler)
@@ -298,25 +314,27 @@ document.getElementById('calculateBtn').addEventListener('click', function() {
     
     // Durak Başına Ek Maliyet (Kat kapısı, kuyu içi raylar, kablolar vb.): Durak başı ~35.000 TL
     const costPerStop = {{ (float) data_get($pricing ?? [], 'asansor.durak', 35000) }} * capacityMultiplier;
-    const totalStopCost = floors * costPerStop;
+    const stops = floors + (basementUsed ? basements : 0); // bodrum katlara da durak
+    const totalStopCost = stops * costPerStop;
 
     const grandTotal = baseEngineCost + totalStopCost;
 
     const money = new Intl.NumberFormat('tr-TR', { maximumFractionDigits: 0 });
 
-    document.getElementById('stopCount').innerText = floors + ' Durak';
+    document.getElementById('stopCount').innerText = stops + ' Durak';
     document.getElementById('engineCost').innerText = money.format(baseEngineCost) + ' TL';
     document.getElementById('stopCost').innerText = money.format(totalStopCost) + ' TL';
     document.getElementById('totalBudget').innerText = money.format(grandTotal) + ' TL';
 
-    // Insight Metni
-    let insightStr = `Planlı Alanlar İmar Yönetmeliği Madde 34'e göre; kat sayısı 4 ve daha fazla olan (Zemin dahil) veya bina yüksekliği 13.50 metreyi aşan yapılarda asansör tesisi zorunludur. `;
-    if (typeInsight !== "") {
-        insightStr += `<br><br><strong>Not:</strong> ${typeInsight}`;
+    // Not metni
+    let insightStr = 'Planlı Alanlar İmar Yönetmeliği m.34 (01.07.2026 değişikliği): tek bağımsız bölümlü konutlar hariç, kat adedi 3 olan binalarda asansör yeri bırakılır, 4 ve daha fazla olan binalarda asansör tesisi zorunludur. Bağımsız bölüm, ortak alan veya eklenti bulunan bodrum katlar kat adedine dahildir. Sayılan kat adedi: <strong>' + countedFloors + '</strong>.';
+    if (status === 'req') insightStr += '<br><br>Zorunlu asansör, bağımsız bölüm/ortak alan/eklenti bulunan bodrumlar dahil tüm katlara hizmet vermelidir.';
+    if (bType === 'commercial') {
+        insightStr += '<br><br><strong>Not:</strong> Kamuya açık ve ticari yapılarda erişilebilirlik (TS ISO 21542) için katlar arası engelsiz ulaşım çözümü gerekir; bu, duruma göre asansör, platform ya da rampa ile sağlanabilir.';
     }
     document.getElementById('insightText').innerHTML = insightStr;
 
-    document.getElementById('leadCalculatedData').value = `Durum: ${isRequired?'ZORUNLU':'DEĞİL'} | Durak: ${floors} | Kapasite Çarpanı: ${capacityMultiplier} | Tahmini Bütçe: ${money.format(grandTotal)} TL`;
+    document.getElementById('leadCalculatedData').value = `Durum: ${labels[status]} | Durak: ${stops} | Kapasite Çarpanı: ${capacityMultiplier} | Tahmini Bütçe: ${money.format(grandTotal)} TL`;
 
     document.getElementById('resultBox').classList.add('active');
     document.getElementById('budgetConfirmBox').style.display = 'block';

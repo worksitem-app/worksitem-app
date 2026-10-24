@@ -290,6 +290,8 @@
 
     <div class="bt-grid">
         <form class="bt-form" id="btForm" onsubmit="return false" aria-label="Banyo bilgileri">
+            {{-- PDF rapor ölçüsüz istenirse (BathroomReportController) hata teklif formunda değil, ölçülerin yanında görünür --}}
+            <div class="bt-errors" id="bPdfErr" role="alert" @unless ($errors->has('width')) hidden @endunless>{{ $errors->first('width') ?: 'PDF rapor için önce banyonun en ve boy ölçülerini girin.' }}</div>
             <input type="hidden" id="bathType" value="standart">
             <input type="hidden" id="scope" value="">
             <input type="hidden" id="quality" value="">
@@ -406,10 +408,11 @@
     <div class="bt-sponsors"><x-sponsor.slot tool="banyo-maliyet-hesaplayici" title="Banyonuz için markalar" /></div>
 
     <div class="bt-lead-area" id="teklif">
-        @if ($errors->any())
+        @php($leadErrors = collect($errors->getMessages())->except('width')->flatten())
+        @if ($leadErrors->isNotEmpty())
             <div class="bt-errors" role="alert">
                 <strong>Teklif talebiniz gönderilemedi:</strong>
-                <ul>@foreach ($errors->all() as $err)<li>{{ $err }}</li>@endforeach</ul>
+                <ul>@foreach ($leadErrors as $err)<li>{{ $err }}</li>@endforeach</ul>
             </div>
         @endif
         <x-market.choice tool="banyo-maliyet-hesaplayici" />
@@ -610,6 +613,7 @@
             return;
         }
         $('bTotal').classList.remove('is-waiting');
+        $('bPdfErr').hidden = true;
         document.querySelectorAll('.bt-step.is-missing').forEach(function (el) { el.classList.remove('is-missing'); });
         ['width', 'length'].forEach(function (id) { $(id).parentNode.classList.remove('is-missing'); });
         var res = estimate(inp); last = res;
@@ -690,6 +694,16 @@
         showConfirm();
         $('budgetConfirmBox').scrollIntoView({ behavior: 'smooth', block: 'center' });
     });
+    // "PDF rapor indir": ölçü girilmeden basılırsa sunucuya gitmeden ölçülerin yanında uyarı (yakalama aşamasında, ortak araç çubuğundan önce)
+    document.addEventListener('click', function (ev) {
+        var b = ev.target && ev.target.closest ? ev.target.closest('[data-ws-print]') : null;
+        if (!b || !$('bTotal').classList.contains('is-waiting')) return;
+        ev.preventDefault(); ev.stopImmediatePropagation();
+        var box = $('bPdfErr');
+        box.textContent = 'PDF rapor için önce banyonun en ve boy ölçülerini girin ve seçimleri tamamlayın.';
+        box.hidden = false;
+        box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, true);
     // Pro rapor ve planlayıcı bağlantıları: güncel girdileri (paylaş linkiyle aynı alanlar) taşır
     ['proBtn', 'planBtn'].forEach(function (btnId) {
         var pro = document.getElementById(btnId);

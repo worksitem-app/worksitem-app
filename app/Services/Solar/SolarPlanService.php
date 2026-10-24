@@ -149,15 +149,30 @@ class SolarPlanService
         });
     }
 
+    /** v120: PVGIS süre sınırları (sn). Tüm çağrılar için toplam bütçe; asılı PVGIS PHP zaman aşımına yol açmasın. */
+    private const PVGIS_BUDGET = 15.0;
+    private const PVGIS_TIMEOUT = 6;
+    private const PVGIS_CONNECT_TIMEOUT = 3;
+    /** Başarısız yanıt bu kadar dakika önbellekte: her hesapta/yüzeyde yeniden denenmesin */
+    private const PVGIS_FAIL_MINUTES = 10;
+    /** Bağlantı hatası/zaman aşımı/5xx → PVGIS'e bu kadar dakika hiç gidilmez (tüm konumlar) */
+    private const PVGIS_DOWN_MINUTES = 3;
+
+    /** Bu istekteki PVGIS süre bütçesinin bitiş anı (microtime) */
+    private ?float $pvgisDeadline = null;
+
     /**
      * @param  list<array{kwp:float, angle:float, azimuth:float}>  $faces  azimuth: pusula (0=K, 90=D, 180=G, 270=B)
-     * @return array{monthly: list<float>, yearly: float, source: string, faces: list<float>}
+     * @return array{monthly: list<float>, yearly: float, source: string, faces: list<float>, estimated: bool, note: ?string}
      */
     public function yield(float $lat, float $lon, array $faces, bool $ground = false): array
     {
         $monthly = array_fill(0, 12, 0.0);
         $perFace = [];
         $source = 'PVGIS';
+        $budget = (float) config('worksitem_solar.pvgis_budget', self::PVGIS_BUDGET);
+        $this->pvgisDeadline = microtime(true) + max(1.0, min(25.0, $budget));
+        $seen = [];   // aynı (eğim, yön) yüzeyler için PVGIS tek kez sorulur
         foreach ($faces as $f) {
             $kwp = max(0.0, (float) $f['kwp']);
             if ($kwp <= 0) {
@@ -165,9 +180,13 @@ class SolarPlanService
 
                 continue;
             }
-            $angle = max(0, min(90, round((float) $f['angle'])));
+            $angle = (int) max(0, min(90, round((float) $f['angle'])));
             $aspect = (int) round(fmod(((float) $f['azimuth'] - 180) + 540, 360) - 180);   // PVGIS: 0=güney, 90=batı, -90=doğu
-            $m = $this->pvgisPerKwp($lat, $lon, $angle, $aspect, $ground ? 'free' : 'building');
+            $k = $angle.':'.$aspect;
+            if (! array_key_exists($k, $seen)) {
+                $seen[$k] = $this->pvgisPerKwp($lat, $lon, $angle, $aspect, $ground ? 'free' : 'building');
+            }
+            $m = $seen[$k];
             if (! $m) {
                 $source = 'yaklaşık';
                 $m = self::fallbackPerKwp($lat, $angle, $aspect);
@@ -179,35 +198,78 @@ class SolarPlanService
             }
             $perFace[] = round($sum);
         }
+        $this->pvgisDeadline = null;
+        $estimated = $source !== 'PVGIS';
 
-        return ['monthly' => array_map(fn ($v) => round($v), $monthly), 'yearly' => round(array_sum($monthly)), 'source' => $source, 'faces' => $perFace];
+        return ['monthly' => array_map(fn ($v) => round($v), $monthly), 'yearly' => round(array_sum($monthly)), 'source' => $source, 'faces' => $perFace,
+            'estimated' => $estimated,
+            'note' => $estimated ? 'Üretim tahminidir: PVGIS güneş verisi şu an alınamadı, bölgesel yaklaşık değer kullanıldı.' : null];
     }
 
-    /** 1 kWp için aylık kWh (PVGIS), önbellekli */
+    /**
+     * 1 kWp için aylık kWh (PVGIS), önbellekli.
+     * v120: kısa zaman aşımı, toplam süre bütçesi, başarısız yanıt kısa süre önbellekte (Cache::remember null saklamıyordu),
+     * PVGIS erişilemezse birkaç dakika hiç denenmez.
+     */
     private function pvgisPerKwp(float $lat, float $lon, int $angle, int $aspect, string $place = 'building'): ?array
     {
         $key = sprintf('ges:pvgis:%.2F:%.2F:%d:%d:%s', $lat, $lon, $angle, $aspect, $place);
+        $hit = Cache::get($key);
+        if (is_array($hit) && count($hit) === 12) {
+            return $hit;
+        }
+        if (Cache::has($key.':fail') || Cache::has('ges:pvgis:down')) {
+            return null;
+        }
 
-        return Cache::remember($key, now()->addDays(90), function () use ($lat, $lon, $angle, $aspect, $place) {
-            try {
-                $r = $this->http()->retry(2, 400, throw: false)->get((string) config('worksitem_solar.pvgis'), [
-                    'lat' => round($lat, 4), 'lon' => round($lon, 4), 'peakpower' => 1, 'loss' => (int) config('worksitem_solar.system_loss', 14),
-                    'angle' => $angle, 'aspect' => $aspect, 'mountingplace' => $place, 'outputformat' => 'json',
-                ]);
-            } catch (\Throwable $e) {
-                Log::info('PVGIS alınamadı', ['error' => $e->getMessage()]);
-
+        $data = null;
+        $down = false;
+        for ($attempt = 1; $attempt <= 2; $attempt++) {
+            $left = $this->pvgisDeadline === null ? (float) self::PVGIS_TIMEOUT : $this->pvgisDeadline - microtime(true);
+            if ($left < 1.0) {   // bütçe bitti: bu istekte yedek katsayı (önbelleğe "başarısız" yazılmaz, sonra tekrar denenir)
                 return null;
+            }
+            $timeout = (int) max(1, min((int) config('worksitem_solar.pvgis_timeout', self::PVGIS_TIMEOUT), floor($left)));
+            try {
+                $r = Http::timeout($timeout)->connectTimeout(min(self::PVGIS_CONNECT_TIMEOUT, $timeout))
+                    ->withHeaders(['User-Agent' => (string) config('worksitem_solar.user_agent'), 'Accept-Language' => 'tr'])
+                    ->get((string) config('worksitem_solar.pvgis'), [
+                        'lat' => round($lat, 4), 'lon' => round($lon, 4), 'peakpower' => 1, 'loss' => (int) config('worksitem_solar.system_loss', 14),
+                        'angle' => $angle, 'aspect' => $aspect, 'mountingplace' => $place, 'outputformat' => 'json',
+                    ]);
+            } catch (\Throwable $e) {   // bağlantı hatası / zaman aşımı: yeniden deneme yok, PVGIS kısa süre "kapalı"
+                Log::info('PVGIS alınamadı', ['error' => $e->getMessage()]);
+                $down = true;
+
+                break;
             }
             $rows = (array) $r->json('outputs.monthly.fixed');
-            if (! $r->successful() || count($rows) !== 12) {
-                Log::info('PVGIS yanıtı kullanılamadı', ['status' => $r->status(), 'body' => mb_substr($r->body(), 0, 200)]);
+            if ($r->successful() && count($rows) === 12) {
+                $data = array_map(fn ($row) => (float) ($row['E_m'] ?? 0), $rows);
 
-                return null;
+                break;
+            }
+            Log::info('PVGIS yanıtı kullanılamadı', ['status' => $r->status(), 'body' => mb_substr($r->body(), 0, 200)]);
+            if (! $r->serverError()) {   // 4xx (ör. denizde konum): yeniden denemenin anlamı yok
+                break;
+            }
+            $down = $attempt === 2;
+            if ($attempt === 1) {
+                usleep(300000);
+            }
+        }
+
+        if ($data === null) {
+            Cache::put($key.':fail', 1, now()->addMinutes(self::PVGIS_FAIL_MINUTES));
+            if ($down) {
+                Cache::put('ges:pvgis:down', 1, now()->addMinutes(self::PVGIS_DOWN_MINUTES));
             }
 
-            return array_map(fn ($row) => (float) ($row['E_m'] ?? 0), $rows);
-        }) ?: null;
+            return null;
+        }
+        Cache::put($key, $data, now()->addDays(90));
+
+        return $data;
     }
 
     /** PVGIS yanıt vermezse: enleme göre kaba aylık üretim (kWh/kWp) × yön/eğim kaybı */

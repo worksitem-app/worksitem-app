@@ -56,7 +56,7 @@ class InsulationEstimator extends KitEstimator
             ],
             'faq' => [
                 ['Mantolama m² fiyatı ne kadar?', 'Karbonlu EPS 5 cm, boya son kat ve iskele dahil '.now()->year.' fiyatlarıyla yaklaşık '.$this->exampleRange(['facade' => 1000, 'board' => 'grafit', 'thickness' => '5', 'finish' => 'boya', 'quality' => 'orta', 'scaffold' => 'var'], true).' / m² arasıdır.'],
-                ['Mantolama kaç cm olmalı?', 'TS 825\'e göre iklim bölgesine bağlıdır; 1. bölgede 3–4 cm, İstanbul (2. bölge) 5–6 cm, iç ve doğu bölgelerde 8–10 cm önerilir.'],
+                ['Mantolama kaç cm olmalı?', 'TS 825\'in 1 Nisan 2025\'te yürürlüğe giren revizyonu Türkiye\'yi 6 iklim bölgesine ayırır; gereken kalınlık binanın bölgesine ve levhanın ısı iletkenliğine göre ısı yalıtım projesinde belirlenir. Uygulamada ılıman kıyı bölgelerinde 4–5 cm, İstanbul gibi orta bölgelerde 5–6 cm, iç ve doğu bölgelerde 8–10 cm ve üzeri yaygındır.'],
                 ['Mantolama yakıt tasarrufu sağlar mı?', 'Yalıtımsız bir binada ısıtma giderini %30–50 azaltabilir; geri dönüş süresi genellikle 4–7 yıldır.'],
                 ['Kat malikleri kararı gerekir mi?', 'Ortak alan olan dış cephe için kat malikleri kurulunda karar gerekir; ayrıntı için yönetiminize danışın.'],
             ],

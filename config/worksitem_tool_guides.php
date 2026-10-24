@@ -34,7 +34,8 @@ return [
 
         'banyo-maliyet-hesaplayici' => [
             'name' => 'Banyo Tadilat Maliyeti Hesaplayıcı',
-            'fields' => ['bathType', 'width', 'length', 'height', 'scope', 'quality', 'shower', 'ex_dolap', 'ex_rezervuar', 'ex_havlupan', 'ex_tavan', 'ex_elektrik'],
+            // v120: ex_epoksi_derz / ex_temizlik eklendi — PDF, Pro rapor ve paylaş bağlantısı ekrandaki tutarı versin
+            'fields' => ['bathType', 'width', 'length', 'height', 'scope', 'quality', 'shower', 'ex_dolap', 'ex_rezervuar', 'ex_havlupan', 'ex_tavan', 'ex_elektrik', 'ex_epoksi_derz', 'ex_temizlik'],
             'calc' => '#calculateBtn',
             'total' => '#bTotal',
             'result' => '#resultBody',
@@ -233,22 +234,22 @@ return [
 
         'kat-karsiligi-analiz' => [
             'name' => 'Kat Karşılığı Fizibilite Analizi',
-            'fields' => ['area', 'kaks', 'ownerShare', 'costPerM2', 'salePrice'],
+            'fields' => ['area', 'kaks', 'ownerShare', 'costPerM2', 'salePrice', 'exRate', 'extraRate'],
             'calc' => '#calculateBtn',
             'total' => '#totalCost',
             'result' => '#resultBox',
             'band' => [0.90, 1.15],
             'method' => [
-                'Brüt inşaat alanı = arsa alanı × emsal (KAKS) × 1,30 (merdiven, balkon gibi emsal dışı alanlar için %30 pay).',
-                'Müteahhit payı alanı = brüt alan × (100 − arsa sahibi payı) / 100.',
-                'Toplam maliyet = brüt alanın tamamı × seçilen m² inşaat maliyeti (müteahhit tüm binayı inşa eder).',
-                'Beklenen gelir = müteahhit payı alanı × m² satış fiyatı. Net kâr = gelir − maliyet; kâr marjı = net kâr / maliyet.',
+                'Emsale dahil alan = arsa alanı × emsal (KAKS). Brüt inşaat alanı = emsale dahil alan × (1 + seçilen emsal harici oran); emsal harici oran en çok %30 seçilebilir.',
+                'Satılabilir alan yalnız emsale dahil alandır; müteahhit payı alanı = emsale dahil alan × (100 − arsa sahibi payı) / 100.',
+                'Toplam maliyet = brüt alanın tamamı × m² inşaat maliyeti, üzerine seçilen ek gider yüzdesi (ruhsat, harç, proje, finansman gibi) eklenir.',
+                'Beklenen gelir = müteahhit payı alanı × m² satış fiyatı. Net kâr = gelir − maliyet; kâr marjı = net kâr / maliyet. Tutarlara KDV dahil değildir.',
                 'Maliyet için olası aralık tahminin %10 altı ile %15 üstü arasında gösterilir.',
             ],
             'faq' => [
                 ['q' => 'Kat karşılığında arsa sahibine ne kadar pay verilir?', 'a' => 'Pay; arsanın konumu, emsali, satış fiyatları ve inşaat maliyetine göre değişir. Müteahhidin makul bir kâr bırakabileceği en yüksek pay kabaca 1 − (toplam maliyet / toplam satış geliri) formülüyle bulunur; bu araçta arsa sahibi payını değiştirerek kâr marjının nasıl değiştiğini görebilirsiniz.'],
                 ['q' => 'Emsal (KAKS) nedir?', 'a' => 'Kat Alanları Katsayısı, arsa alanı ile çarpıldığında yapılabilecek toplam inşaat alanını verir. Örneğin 500 m² arsada emsal 1,5 ise emsale dahil inşaat alanı 750 m²\'dir. Güncel değer imar durumu belgesinden öğrenilir.'],
-                ['q' => 'Emsal dışı alanlar neden %30 eklenir?', 'a' => 'Merdiven, asansör boşluğu, açık balkon gibi bazı alanlar mevzuata göre belirli sınırlar içinde emsale dahil edilmez. Araç bu alanlar için ortalama %30 ek alan kabul eder; gerçek oran projeye ve imar yönetmeliğine göre değişir.'],
+                ['q' => 'Emsal harici alan nedir, satışa katılır mı?', 'a' => 'Merdiven, asansör boşluğu, açık balkon gibi bazı alanlar mevzuata göre emsale dahil edilmez; bunların toplamı emsale dahil alanın %30\'unu geçemez. Bu alanlar inşa edildiği için maliyete girer ama ayrı satılabilir alan değildir; araç bu yüzden onları maliyete katar, satış gelirine katmaz. Oranı projenize göre seçin.'],
                 ['q' => 'Kat karşılığı sözleşmesinde nelere dikkat edilmeli?', 'a' => 'Sözleşme noterde düzenleme şeklinde yapılmalı; teslim süresi, gecikme cezası, daire dağılımı, malzeme listesi, teminatlar ve tapu devrinin inşaat ilerlemesine bağlanması açıkça yazılmalıdır. İmzadan önce bir avukata danışmanız önerilir.'],
             ],
         ],

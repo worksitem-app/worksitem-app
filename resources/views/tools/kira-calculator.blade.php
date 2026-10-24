@@ -88,6 +88,7 @@
         .btn-submit { background: var(--accent); color: #000; margin-top: 10px; }
         .btn-submit:hover { background: #e5a500; }
 
+        .wc-warn { color:#b91c1c; font-size:13px; font-weight:700; margin-top:10px; }
         @media(max-width: 600px) {
             .form-grid, .breakdown-grid, .budget-confirm-actions { grid-template-columns: 1fr; }
             .card, .result-box, .lead-box, .budget-confirm-box { padding: 20px; }
@@ -127,7 +128,7 @@
             <div class="form-group">
                 <label>Hedeflenen Amortisman Süresi (Yıl)</label>
                 <input type="number" id="amortization" class="form-control" placeholder="Örn: 18" value="18" min="5" step="1">
-                <p style="font-size: 11px; color: #6b7280; margin-top: 5px;">Türkiye konut piyasasında ortalama geri dönüş süresi 16-20 yıl arasıdır.</p>
+                <p style="font-size: 11px; color: #6b7280; margin-top: 5px;">Türkiye konut piyasasında geri dönüş süresi çoğunlukla 16–23 yıl arasındadır.</p>
             </div>
             <div class="form-group">
                 <label>Mülkün Mevcut Fiziki Durumu</label>
@@ -140,6 +141,7 @@
         </div>
 
         <button type="button" class="btn btn-calc" id="calculateBtn">Adil Kira Değerini Belirle →</button>
+        <p class="wc-warn" id="formErr" role="alert" hidden></p>
     </div>
 
     <aside class="wc-aside">
@@ -160,9 +162,13 @@
                 <span>Hedeflenen Yıllık Brüt Kira Geliri</span>
                 <strong id="annualRent">0 TL</strong>
             </div>
+            <div class="break-item">
+                <span>Duruma Göre Geri Dönüş Süresi</span>
+                <strong id="effYears">0 yıl</strong>
+            </div>
             <div class="break-item highlight">
                 <span>Yıllık Getiri Oranı (ROI)</span>
-                <strong id="roiPercent">% 0.00</strong>
+                <strong id="roiPercent">%0,00</strong>
             </div>
         </div>
 
@@ -258,10 +264,11 @@ document.getElementById('calculateBtn').addEventListener('click', function() {
     const amortization = parseFloat(document.getElementById('amortization').value) || 0;
     const conditionMult = parseFloat(document.getElementById('condition').value) || 1.0;
     
-    if (propertyValue <= 0 || amortization <= 0) {
-        alert('Lütfen geçerli mülk değeri ve yıl bilgisi giriniz.');
-        return;
-    }
+    const formErr = document.getElementById('formErr');
+    const fail = msg => { formErr.textContent = msg; formErr.hidden = false; document.getElementById('resultBox').classList.remove('active'); };
+    formErr.hidden = true;
+    if (!(propertyValue > 0) || !(amortization > 0)) return fail('Mülk değeri ve amortisman süresi için pozitif bir değer girin.');
+    if (amortization < 5 || amortization > 60) return fail('Amortisman süresi 5 ile 60 yıl arasında olmalı.');
 
     // 1. Temel Yıllık Kira (Değer / Amortisman Yılı)
     const baseAnnualRent = propertyValue / amortization;
@@ -275,11 +282,17 @@ document.getElementById('calculateBtn').addEventListener('click', function() {
     // 4. Getiri Oranı (ROI)
     const roi = (adjustedAnnualRent / propertyValue) * 100;
 
-    const money = new Intl.NumberFormat('tr-TR', { maximumFractionDigits: 0 });
+    // 5. Durum katsayısı sonrası gerçek geri dönüş süresi (uyarılar bununla seçilir)
+    const effYears = propertyValue / adjustedAnnualRent;
 
+    const money = new Intl.NumberFormat('tr-TR', { maximumFractionDigits: 0 });
+    const pct = v => v.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const yrs = v => v.toLocaleString('tr-TR', { maximumFractionDigits: 1 });
+
+    document.getElementById('effYears').innerText = yrs(effYears) + ' yıl';
     document.getElementById('monthlyRent').innerText = money.format(monthlyRent) + ' TL';
     document.getElementById('annualRent').innerText = money.format(adjustedAnnualRent) + ' TL';
-    document.getElementById('roiPercent').innerText = '% ' + roi.toFixed(2);
+    document.getElementById('roiPercent').innerText = '%' + pct(roi);
 
     // Uzman notu ve Cross-Sell Mantığı
     const insightBox = document.getElementById('aiInsight');
@@ -294,27 +307,27 @@ document.getElementById('calculateBtn').addEventListener('click', function() {
     renoCrossSell.style.display = 'none';
     investCrossSell.style.display = 'none';
 
-    if (amortization <= 15) {
+    if (effYears <= 15) {
         insightBox.className = 'ai-insight success';
         insightTitle.innerText = `Getiri oranı yüksek`;
-        insightText.innerHTML = `Yıllık <strong>%${roi.toFixed(2)}</strong> ROI (Yatırım Getirisi) oranı konut piyasasında bulması çok zor bir orandır. Genellikle ticari gayrimenkuller bu seviyede bir geri dönüş sağlar. Bu yatırımı korumanızı tavsiye ederiz.`;
+        insightText.innerHTML = `Yıllık <strong>%${pct(roi)}</strong> brüt getiri (yaklaşık ${yrs(effYears)} yılda geri dönüş) konut piyasası için yüksektir. Bu kira bölgede gerçekten alınabiliyor mu, emsal ilanlarla karşılaştırın.`;
         insightIcon.innerText = '📈';
         investCrossSell.style.display = 'block'; // Yeni yatırımlara aç
-    } else if (amortization > 15 && amortization <= 23) {
+    } else if (effYears <= 23) {
         insightBox.className = 'ai-insight';
         insightTitle.innerText = `İdeal ve Güvenli Geri Dönüş`;
-        insightText.innerHTML = `Mülkünüzün amortisman süresi Türkiye standartlarındaki <strong>16-20 yıl</strong> bandına tam oturmaktadır. Enflasyon karşısında güvenli ve standart bir kira getirisi sunar.`;
+        insightText.innerHTML = `Duruma göre geri dönüş süresi yaklaşık <strong>${yrs(effYears)} yıl</strong>; Türkiye konut piyasasındaki yaygın <strong>16–23 yıl</strong> aralığında.`;
         insightIcon.innerText = '⚖️';
         if(conditionMult < 1.0) renoCrossSell.style.display = 'block'; // Tadilat öner
     } else {
         insightBox.className = 'ai-insight warning';
         insightTitle.innerText = `Uzun Amortisman Süresi Uyarı`;
-        insightText.innerHTML = `Mülkünüz kendini <strong>${amortization} yılda</strong> amorti ediyor. Bu süre konut piyasasında oldukça uzundur. Bu gayrimenkul kira getirisinden ziyade 'sermaye kazancı / değer artışı' beklentisiyle elde tutulmalıdır.`;
+        insightText.innerHTML = `Mülkünüz duruma göre kendini yaklaşık <strong>${yrs(effYears)} yılda</strong> amorti ediyor. Bu süre konut piyasasında oldukça uzundur. Bu gayrimenkul kira getirisinden ziyade 'sermaye kazancı / değer artışı' beklentisiyle elde tutulmalıdır.`;
         insightIcon.innerText = '⚠️';
         renoCrossSell.style.display = 'block'; // Kesin tadilat öner
     }
 
-    document.getElementById('leadCalculatedData').value = `Mülk Değeri: ${money.format(propertyValue)} TL | Hedef Yıl: ${amortization} | Aylık Kira: ${money.format(monthlyRent)} TL | ROI: %${roi.toFixed(2)}`;
+    document.getElementById('leadCalculatedData').value = `Mülk Değeri: ${money.format(propertyValue)} TL | Hedef Yıl: ${amortization} | Aylık Kira: ${money.format(monthlyRent)} TL | Geri dönüş: ${yrs(effYears)} yıl | ROI: %${pct(roi)}`;
 
     document.getElementById('resultBox').classList.add('active');
     document.getElementById('budgetConfirmBox').style.display = 'block';

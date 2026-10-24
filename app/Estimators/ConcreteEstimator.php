@@ -12,11 +12,11 @@ class ConcreteEstimator extends KitEstimator
     private const ELEMENTS = [
         'doseme' => ['label' => 'Döşeme / saha', 'hint' => 'Uzunluk × genişlik × kalınlık'],
         'radye' => ['label' => 'Radye temel', 'hint' => 'Plak temel'],
-        'surekli' => ['label' => 'Sürekli temel', 'hint' => 'Uzunluk × genişlik × yükseklik'],
+        'surekli' => ['label' => 'Sürekli temel', 'hint' => 'Adet × uzunluk × genişlik × yükseklik'],
         'tekil' => ['label' => 'Tekil temel', 'hint' => 'Adet × ölçü'],
         'kolon' => ['label' => 'Kolon', 'hint' => 'Adet × kesit × yükseklik'],
-        'kiris' => ['label' => 'Kiriş', 'hint' => 'Uzunluk × genişlik × yükseklik'],
-        'perde' => ['label' => 'Perde duvar', 'hint' => 'Uzunluk × kalınlık × yükseklik'],
+        'kiris' => ['label' => 'Kiriş', 'hint' => 'Adet × uzunluk × genişlik × yükseklik'],
+        'perde' => ['label' => 'Perde duvar', 'hint' => 'Adet × uzunluk × kalınlık × yükseklik'],
         'hacim' => ['label' => 'Hacmi biliyorum', 'hint' => 'Net m³ girin'],
     ];
 
@@ -52,7 +52,7 @@ class ConcreteEstimator extends KitEstimator
             'sponsor_title' => 'Hazır beton ve pompa firmaları',
             'facts' => ['Ücretsiz, kayıt gerekmez', 'Mikser ve pompa', '$ € £ karşılığı'],
             'method' => [
-                'Net hacim eleman tipine göre ölçülerden hesaplanır (döşeme: uzunluk × genişlik × kalınlık; kolon ve tekil temel: adet × kesit × yükseklik).',
+                'Net hacim eleman tipine göre ölçülerden hesaplanır (döşeme: uzunluk × genişlik × kalınlık; kolon, kiriş, perde, tekil ve sürekli temel: adet × uzunluk × genişlik × yükseklik).',
                 'Sipariş miktarı = net hacim × (1 + fire). Mikser sayısı 8 m³ kapasiteyle bulunur.',
                 'Beton m³ fiyatı seçilen sınıfa göre Worksitem fiyat veritabanından (yoksa yaklaşık piyasa değeri), pompa döküm başına eklenir.',
                 'Döküm ve vibrasyon işçiliği m³ başına; numune/laboratuvar ve kür seçilirse eklenir. Aralık −%15 / +%20.',
@@ -108,7 +108,8 @@ class ConcreteEstimator extends KitEstimator
             return 0.0;
         }
         $v = (float) $in['length'] * (float) $in['width'] * (float) $in['thickness'] / 100;
-        if (in_array($in['element'], ['kolon', 'tekil'], true)) {
+        // Tekrarlı elemanlarda (kolon, tekil/sürekli temel, kiriş, perde) adet çarpılır; döşeme ve radye tek parça (v120)
+        if (! in_array($in['element'], ['doseme', 'radye'], true)) {
             $v *= max(1, (int) round((float) ($in['count'] ?? 1)));
         }
 

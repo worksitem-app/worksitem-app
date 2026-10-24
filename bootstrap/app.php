@@ -69,9 +69,55 @@ return Application::configure(basePath: dirname(__DIR__))
             }
         });
 
-        // QueryException'i 422 olarak render et (Integer overflow icin)
-        $exceptions->render(function (\Illuminate\Database\QueryException $e, Request $request) {
-            if ($request->expectsJson()) {
+        // Veritabanı bağlantı/limit hatası (eşzamanlı yükte MySQL 1040/1203 vb.): 500 yerine 503 + Retry-After.
+        // Yalnız yanıt değişir; rapor()/log her zamanki gibi yazılır.
+        $isDbConnectionError = static function (\Throwable $e): bool {
+            for ($x = $e, $depth = 0; $x !== null && $depth < 5; $x = $x->getPrevious(), $depth++) {
+                if (! $x instanceof \PDOException) {
+                    continue;
+                }
+                $msg = (string) $x->getMessage();
+                $codes = [(string) $x->getCode()];
+                if (is_array($x->errorInfo ?? null)) {
+                    $codes[] = (string) ($x->errorInfo[0] ?? '');
+                    $codes[] = (string) ($x->errorInfo[1] ?? '');
+                }
+                if (preg_match('/SQLSTATE\[(\w+)\](?:\s*\[(\d+)\]|: [^:]+: (\d+))?/', $msg, $m)) {
+                    $codes[] = $m[1];
+                    $codes[] = $m[2] ?? '';
+                    $codes[] = $m[3] ?? '';
+                }
+                foreach ($codes as $c) {
+                    // 1040 Too many connections, 1203/1226 kullanıcı bağlantı sınırı, 2002/2006/2013 sunucuya ulaşılamadı / bağlantı koptu
+                    if (in_array($c, ['1040', '1203', '1226', '2002', '2006', '2013'], true) || str_starts_with($c, '08')) {
+                        return true;
+                    }
+                }
+                if (stripos($msg, 'max_user_connections') !== false || stripos($msg, 'Too many connections') !== false) {
+                    return true;
+                }
+            }
+
+            return false;
+        };
+
+        $exceptions->render(function (\PDOException $e, Request $request) use ($isDbConnectionError) {
+            if (! $isDbConnectionError($e)) {
+                return null;
+            }
+            $headers = ['Retry-After' => '30'];
+            if ($request->is('api/*') || $request->expectsJson()) {
+                return response()->json([
+                    'message' => 'Sunucu şu an yoğun. Lütfen birkaç saniye sonra tekrar deneyin.',
+                ], 503, $headers);
+            }
+
+            return response()->view('errors.503', ['busy' => true], 503, $headers);
+        });
+
+        // QueryException'i 422 olarak render et (Integer overflow icin) — yalnız girdi kaynaklı (bağlantı dışı) hatalar
+        $exceptions->render(function (\Illuminate\Database\QueryException $e, Request $request) use ($isDbConnectionError) {
+            if ($request->expectsJson() && ! $isDbConnectionError($e)) {
                 return response()->json([
                     'message' => 'Girilen değerler işlenemedi. Lütfen kontrol edin.',
                 ], 422);

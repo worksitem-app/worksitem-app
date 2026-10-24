@@ -103,7 +103,7 @@
 
 <main class="wc-wrap">
     <x-calc.hero title="Çimento ve kum hesaplama: kaç torba çimento gerekir?" crumb="Çimento ve kum">
-        Kara sıva, şap veya betonarme işlemleri için gereken torba çimento ve kum tonajını belirleyin.
+        Kara sıva, şap ve duvar harcı için gereken torba çimento ve kum tonajını belirleyin.
     </x-calc.hero>
 
     <div class="wc-grid">
@@ -122,11 +122,13 @@
         <div class="form-group">
             <label>Harç Dozu (Karışım Oranı)</label>
             <select id="dosage" class="form-control">
-                <option value="250" selected>250 Doz (Kara Sıva ve Normal Şap İçin İdeal)</option>
-                <option value="350">350 Doz (Daha Sert/Betonumsu Yüzeyler İçin)</option>
+                {{-- Dozlar kara sıva (250) ve şap (350) araçlarıyla aynı (RoughPlasterEstimator / ScreedEstimator) --}}
+                <option value="250" selected>250 doz: kara sıva ve duvar harcı</option>
+                <option value="350">350 doz: şap (1:4)</option>
             </select>
         </div>
 
+        <p id="csErr" role="alert" style="display:none;color:#B42318;font-size:14px;margin:0 0 12px"></p>
         <button type="button" class="btn btn-calc" id="calculateBtn">Malzeme Metrajı ve Bütçeyi Hesapla →</button>
     </div>
 
@@ -234,10 +236,17 @@ document.getElementById('calculateBtn').addEventListener('click', function() {
     const thickness = parseFloat(document.getElementById('thickness').value) || 0;
     const dosage = parseFloat(document.getElementById('dosage').value) || 0;
     
-    if (area <= 0 || thickness <= 0) {
-        alert('Lütfen geçerli ölçüler giriniz.');
+    const err = document.getElementById('csErr');
+    if (!(area > 0) || !(thickness > 0) || !isFinite(area) || !isFinite(thickness)) {
+        // Geçersiz girişte eski sonuç ekranda kalmasın
+        err.textContent = 'Alan ve kalınlık için pozitif bir değer girin.';
+        err.style.display = 'block';
+        document.getElementById('resultBox').classList.remove('active');
+        document.getElementById('budgetConfirmBox').style.display = 'none';
+        document.getElementById('leadBox').style.display = 'none';
         return;
     }
+    err.style.display = 'none';
 
     // 1. Hacim Hesabı (m3) = Alan * (Kalınlık / 100)
     const volume = area * (thickness / 100);
@@ -258,13 +267,14 @@ document.getElementById('calculateBtn').addEventListener('click', function() {
     const materialTotal = (cementBags * cementPricePerBag) + (sandTons * sandPricePerTon);
 
     const money = new Intl.NumberFormat('tr-TR', { maximumFractionDigits: 0 });
+    const fmt2 = new Intl.NumberFormat('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
     document.getElementById('totalPrice').innerText = money.format(materialTotal) + ' TL';
-    document.getElementById('mortarVolume').innerText = volume.toFixed(2) + ' m³';
-    document.getElementById('cementBags').innerText = cementBags + ' Torba';
-    document.getElementById('sandTons').innerText = sandTons.toFixed(2) + ' Ton';
+    document.getElementById('mortarVolume').innerText = fmt2.format(volume) + ' m³';
+    document.getElementById('cementBags').innerText = money.format(cementBags) + ' torba';
+    document.getElementById('sandTons').innerText = fmt2.format(sandTons) + ' ton';
 
-    document.getElementById('leadCalculatedData').value = `Hacim: ${volume.toFixed(2)}m3 | Çimento: ${cementBags} Torba | Kum: ${sandTons.toFixed(2)} Ton | Malzeme Bütçesi: ${money.format(materialTotal)} TL`;
+    document.getElementById('leadCalculatedData').value = `Hacim: ${fmt2.format(volume)} m³ | Çimento: ${money.format(cementBags)} torba | Kum: ${fmt2.format(sandTons)} ton | Malzeme bütçesi: ${money.format(materialTotal)} TL`;
 
     document.getElementById('resultBox').classList.add('active');
     document.getElementById('budgetConfirmBox').style.display = 'block';

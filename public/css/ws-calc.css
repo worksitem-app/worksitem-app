@@ -109,4 +109,6 @@ body.wc .paint-wrap .wc-head h1{font-size:clamp(26px,5vw,40px)}
 /* Sonuç altı hukuki kısa uyarı (tüm hesaplayıcılar) */
 .ws-result-legal{margin:12px 0 0;padding:10px 12px;border-radius:10px;background:rgba(16,19,24,.04);border:1px dashed rgba(16,19,24,.18);font-size:12px;line-height:1.55;color:#5B6472;text-align:left}
 .ws-result-legal a{color:inherit;text-decoration:underline}
+/* v120: flex düzenli sonuç kutularında not ayrı satıra düşsün (sonuç sütunlarını sıkıştırmasın) */
+.ws-result-legal{flex:1 0 100%;max-width:100%;box-sizing:border-box}
 html[data-theme="dark"] .ws-result-legal{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.18);color:#AAB1BC}

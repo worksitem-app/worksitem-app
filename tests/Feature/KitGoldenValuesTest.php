@@ -43,9 +43,11 @@ class KitGoldenValuesTest extends TestCase
             'alci_siva' => ['alci-siva-hesaplama', ['type' => 'perlit_saten', 'wall' => '120', 'ceiling' => '40'], ['perlit' => 10600, 'perlit_is' => 28600, 'saten' => 2700, 'saten_is' => 15100, 'beklenmedik' => 5700], [53000, 63000, 75000], 390],
             'duvar' => ['duvar-maliyet-hesaplayici', ['material' => 'gazbeton20', 'length' => '12', 'height' => '2.8', 'openings' => '2', 'plaster' => 'tek'], ['blok' => 27100, 'harc' => 1300, 'iscilik' => 6500, 'lento' => 2100, 'siva' => 11200, 'beklenmedik' => 4800], [45000, 53000, 64000], 1790],
             'duvar_orgu' => ['duvar-orgu', ['material' => 'tugla135', 'length' => '10', 'height' => '2.8', 'plaster' => 'yok'], ['blok' => 7000, 'harc' => 2700, 'iscilik' => 7300, 'beklenmedik' => 1700], [16000, 19000, 22000], 670],
-            'bahce' => ['bahce-duvari-maliyeti', ['type' => 'betonarme', 'length' => '40', 'height' => '1.5', 'extras' => ['coping']], ['temel' => 108000, 'govde' => 180000, 'harpusta' => 18000, 'beklenmedik' => 30600], [286000, 337000, 404000], 8420],
+            // v120: temel kazısı eklendi — 40 × 0,7 × 0,7 = 19,6 m³ × (120 + 1,2 × (2.400/16 + 80)) = 7.762
+            'bahce' => ['bahce-duvari-maliyeti', ['type' => 'betonarme', 'length' => '40', 'height' => '1.5', 'extras' => ['coping']], ['kazi' => 7800, 'temel' => 108000, 'govde' => 180000, 'harpusta' => 18000, 'beklenmedik' => 31400], [293000, 345000, 414000], 8630],
             'iskele' => ['iskele-metraji-maliyeti', ['type' => 'cephe', 'length' => '60', 'height' => '15', 'months' => '2', 'net' => 'evet'], ['kira' => 249600, 'ek_ay' => 87400, 'file' => 52800, 'nakliye' => 6000, 'beklenmedik' => 19800], [353000, 416000, 499000], 430],
-            'kalip' => ['kalip-plywood-maliyeti', ['element' => 'doseme', 'volume' => '100', 'material' => 'plywood'], ['kalip' => 705200, 'dikme' => 43200, 'beklenmedik' => 37400], [668000, 786000, 943000], 1310],
+            // v120: ÇŞB kalıp fiyatı KDV hariç → ×1,2 (600 m² × 1.175,39 × 1,2 = 846.300)
+            'kalip' => ['kalip-plywood-maliyeti', ['element' => 'doseme', 'volume' => '100', 'material' => 'plywood'], ['kalip' => 846300, 'dikme' => 43200, 'beklenmedik' => 44500], [794000, 934000, 1121000], 1560],
             'hafriyat' => ['hafriyat-kazi-hesabi', ['width' => '15', 'length' => '20', 'depth' => '3', 'soil' => 'normal', 'truck' => '16'], ['kazi' => 108000, 'nakliye' => 163200, 'dokum' => 86400, 'beklenmedik' => 35800], [334000, 393000, 472000], 440],
             'saha' => ['saha-betonu-hesaplayici', ['area' => '200', 'thickness' => '15', 'class' => 'c25', 'mesh' => 'tek', 'finish' => 'helikopter', 'pump' => 'evet'], ['hasir' => 27600, 'beton' => 136100, 'pompa' => 9000, 'iscilik' => 14200, 'perdah' => 44000, 'beklenmedik' => 11500], [206000, 242000, 291000], 1210],
             'alcipan' => ['alcipan-hesaplayici', ['system' => 'c75', 'board' => 'water', 'area' => '30'], ['imalat' => 35400, 'kdv' => 7100], [38000, 43000, 49000], 1420],
@@ -56,7 +58,8 @@ class KitGoldenValuesTest extends TestCase
             // elle: 500×2.150 (YFK) = 1.075.000; KDV %20
             'sandvic' => ['sandvic-panel-hesaplayici', ['system' => 'roof_pu50', 'area' => '500'], ['imalat' => 1075000, 'kdv' => 215000], [1161000, 1290000, 1484000], 2580],
             'radyator' => ['radyator-petek-hesaplayici', ['insulation' => 'standart', 'area' => '100', 'type' => 'h60', 'scope' => 'petek', 'extras' => ['thermo']], ['petek' => 15900, 'vana' => 9100, 'montaj' => 8400, 'beklenmedik' => 3300], [31000, 37000, 44000], 370],
-            'ges' => ['gunes-paneli-hesaplama', ['bill' => '2000', 'sun' => '4.5', 'mount' => 'cati', 'quality' => 'orta'], ['panel' => 53000, 'inverter' => 31800, 'kons' => 18600, 'montaj' => 21200, 'proje' => 15000, 'beklenmedik' => 7000], [125000, 147000, 176000], 27660],
+            // v120: elektrik birim fiyatı tek kaynaktan (pricing.enerji 3,24 TL/kWh, önce 3,5) → aynı faturadan daha çok kWh, sistem 5,3 → 5,7 kWp
+            'ges' => ['gunes-paneli-hesaplama', ['bill' => '2000', 'sun' => '4.5', 'mount' => 'cati', 'quality' => 'orta'], ['panel' => 57000, 'inverter' => 34200, 'kons' => 20000, 'montaj' => 22800, 'proje' => 15000, 'beklenmedik' => 7500], [133000, 157000, 188000], 27460],
             'izolator' => ['deprem-izolator-maliyeti', ['columns' => '40', 'floors' => '6', 'class' => 'konut', 'scope' => 'yeni'], ['izolator' => 8401700, 'montaj' => 2100400, 'muhendislik' => 672100, 'beklenmedik' => 558700], [9973000, 11733000, 14079000], 293320],
             // elle: hazırlık 12×(450+3×90)×1,2=10.368; harç 12×3×20×1,1=792 kg ×38=30.096; işçilik 12×(650+3×160)×1,2=16.272; pas 12×280; astar 12×90
             'beton_onarim' => ['beton-onarim-maliyeti', ['mode' => 'onarim', 'area' => '12', 'depth' => '3', 'element' => 'kolon', 'rebar' => 'hafif', 'material' => 'cimento'], ['hazirlik' => 10400, 'pas' => 3400, 'astar' => 1100, 'harc' => 30100, 'iscilik' => 16300, 'beklenmedik' => 6100], [57000, 67000, 81000], 5620],
@@ -98,7 +101,7 @@ class KitGoldenValuesTest extends TestCase
 
         // Kalemler aralığı tutarlı oluşturuyor
         $sum = array_sum($items);
-        $this->assertSame((int) (round($sum / 1000) * 1000), (int) $r['mid']);
+        $this->assertSame((int) (round($sum / 1000) * 1000), (int) $r['mid']);   // altın değerlerin hepsi ≥ 2.000 TL
         foreach ($r['items'] as $it) {
             $this->assertSame(0.0, fmod((float) $it['mid'], 100), $slug.': kalemler 100 TL\'ye yuvarlı');
         }
@@ -125,7 +128,9 @@ class KitGoldenValuesTest extends TestCase
             'kalem yarımın altı' => [[2749.99], [2700], [2000, 3000, 3000]],
             'toplam yarım yukarı' => [[2500], [2500], [2000, 3000, 3000]],   // 2.125 / 2.500 / 3.000
             'sıfır ve negatif kalem düşer' => [[0, -500, 4049], [4000], [3000, 4000, 5000]],   // 3.400 / 4.000 / 4.800
-            'kuruşlu girdi' => [[1049.5, 0.49], [1000, 0], [1000, 1000, 1000]],   // 1.049,5 → 1.000; 0,49 → 0 düşer
+            // v120: 2.000 TL altı toplam 100 TL'ye yuvarlanır (önceden 1.000 → küçük işte ₺0 – ₺0 çıkıyordu)
+            'kuruşlu girdi' => [[1049.5, 0.49], [1000, 0], [900, 1000, 1200]],   // 1.049,5 → 1.000; 0,49 → 0 düşer
+            'küçük iş ₺0 olmaz' => [[260, 30], [260, 30], [250, 290, 350]],   // v120: 500 TL altı kalem ve toplam 10 TL'ye yuvarlanır
         ];
     }
 

@@ -6,10 +6,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>İnşaat Mühendisi Maaş Hesaplama 2026 | WORKSİTEM</title>
-    <meta name="description" content="TMMOB asgari ücretleri, deneyim yılı ve pozisyona göre inşaat mühendisleri için tahmini net maaş aralığını hesaplayın.">
+    <meta name="description" content="Deneyim yılı, pozisyon ve yabancı dile göre inşaat mühendisleri için kaba bir net maaş tahmini çıkarın (piyasa varsayımı).">
     <link rel="canonical" href="https://worksitem.com/araclar/insaat-muhendisi-maas-hesabi">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
+        *,*::before,*::after { box-sizing: border-box; }
+        .wc-warn { color:#b91c1c; font-size:12px; font-weight:600; margin-top:6px; display:block; }
         :root { --bg: #f5f6f8; --card-bg: #ffffff; --border: #e5e7eb; --yellow: #9a6e00; --text: #101318; --muted: #5b6472; --green: #10b981; --cyan: #8a6200; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; overflow-x: hidden; }
         .container { max-width: 1200px; margin: 40px auto; padding: 0 4%; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
@@ -39,10 +41,10 @@
     <x-site.contech-header />
     <div class="container">
         <div>
-            <x-calc.hero title="İnşaat mühendisi maaşı hesaplama" crumb="Mühendis maaşı">TMMOB asgari ücretleri, deneyim yılı ve pozisyonunuza göre piyasadaki tahmini net maaşınızı öğrenin.</x-calc.hero>
+            <x-calc.hero title="İnşaat mühendisi maaşı hesaplama" crumb="Mühendis maaşı">Deneyim yılı, pozisyon ve yabancı dile göre kaba bir net maaş tahmini görün. Taban değer resmî bir ücret değil, piyasa varsayımıdır.</x-calc.hero>
             <div class="form-card">
                 <div class="grid-2">
-                    <div class="form-group"><label>Sektörel Deneyim (Yıl)</label><input type="number" id="exp" class="form-control" value="3" oninput="calc()"></div>
+                    <div class="form-group"><label>Sektörel Deneyim (Yıl)</label><input type="number" id="exp" class="form-control" value="3" min="0" max="45" step="1" oninput="calc()"><span class="wc-warn" id="expErr" hidden></span></div>
                     <div class="form-group">
                         <label>Yabancı Dil Seviyesi</label>
                         <select id="lang" class="form-control" onchange="calc()">
@@ -65,9 +67,9 @@
         <div>
             <div class="form-card" style="border-color:var(--green); position:sticky; top:20px;" data-wc-result>
                 <div style="font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size:24px; color:var(--green); margin-bottom:15px;">📊 2026 KARİYER ANALİZİ</div>
-                <div class="res-item"><span>TMMOB Brüt Asgari Ücret (Taban)</span> <strong>45.000 TL</strong></div>
+                <div class="res-item"><span>Taban net ücret (piyasa tahmini, varsayım)</span> <strong id="r_base">0 TL</strong></div>
                 <div class="res-item"><span>Deneyim Etkisi</span> <strong id="r_exp_impact">+0 TL</strong></div>
-                <div class="res-item total"><span>TAHMİNİ NET PİYASA MAAŞI</span> <span id="r_total" data-wc-price>0 TL</span></div>
+                <div class="res-item total"><span>TAHMİNİ NET MAAŞ (KABA)</span> <span id="r_total" data-wc-price>0 TL</span></div>
                 
                 <div class="ai-box">
                     <div style="color:var(--cyan); font-family:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size:22px; margin-bottom:10px;">💡 Kariyer Tavsiyesi</div>
@@ -78,43 +80,33 @@
     </div>
 
     <script>
-                // --- MERKEZİ ÇŞB FİYAT MOTORU & KAİNTA ÇARPANI ---
-        const CSB_PRICES = {!! isset($SYSTEM_PRICES) ? $SYSTEM_PRICES : '{}' !!};
-        const KAINTA_MULTIPLIER = {!! isset($KAINTA_MULTIPLIER) ? $KAINTA_MULTIPLIER : 1.40 !!};
-
-        function getDbPrice(key, fallback) {
-            let baseCsbPrice = CSB_PRICES[key] !== undefined ? parseFloat(CSB_PRICES[key]) : fallback;
-            // ÇŞB Ham Fiyatı x 1.40 Kainta Çarpanı
-            return baseCsbPrice * KAINTA_MULTIPLIER; 
-        }
-        
-        function getRawCsbPrice(key, fallback) {
-            // Sadece ham ÇŞB maliyeti görmek istenirse (İhale modülü vb. için çarpanı yoksay)
-            return CSB_PRICES[key] !== undefined ? parseFloat(CSB_PRICES[key]) : fallback;
-        }
-        // ------------------------------------------------
+        // TMMOB 2023'ten beri asgari ücret açıklamıyor; taban resmî değil, piyasa tahmini (config/worksitem_mevzuat_2026.php)
+        const BASE = {{ (float) config('worksitem_mevzuat_2026.muhendis_taban_net', 38000) }};
+        const PER_YEAR = {{ (float) config('worksitem_mevzuat_2026.muhendis_yil_artis', 2500) }};
+        const tl = v => new Intl.NumberFormat('tr-TR').format(Math.round(v)) + ' TL';
         function calc() {
-            let exp = parseInt(document.getElementById('exp').value) || 0;
-            let lang = parseFloat(document.getElementById('lang').value);
-            let pos = parseFloat(document.getElementById('pos').value);
-
-            // TMMOB referans taban net maaş varsayımı
-            let base = 38000; 
-            
-            // Yıla göre değer artışı (Her yıl için ort. 2500 TL çarpanı)
-            let expImpact = exp * 2500;
-            
-            let subTotal = base + expImpact;
-            let finalSalary = subTotal * pos * lang;
-
-            document.getElementById('r_exp_impact').innerText = '+' + new Intl.NumberFormat('tr-TR').format(expImpact) + ' TL';
-            document.getElementById('r_total').innerText = new Intl.NumberFormat('tr-TR').format(Math.round(finalSalary)) + ' TL';
+            const raw = document.getElementById('exp').value;
+            const exp = parseFloat(raw);
+            const lang = parseFloat(document.getElementById('lang').value);
+            const pos = parseFloat(document.getElementById('pos').value);
+            const err = document.getElementById('expErr');
+            document.getElementById('r_base').innerText = tl(BASE);
+            if (raw === '' || !(exp >= 0) || exp > 45) {
+                err.textContent = 'Deneyim 0 ile 45 yıl arasında olmalı.'; err.hidden = false;
+                document.getElementById('r_exp_impact').innerText = '—'; document.getElementById('r_total').innerText = '—';
+                document.getElementById('ai_notes').innerHTML = ''; return;
+            }
+            err.hidden = true;
+            const expImpact = Math.floor(exp) * PER_YEAR; // yıl başına sabit artış (kaba varsayım)
+            const finalSalary = (BASE + expImpact) * pos * lang;
+            document.getElementById('r_exp_impact').innerText = '+' + tl(expImpact);
+            document.getElementById('r_total').innerText = tl(finalSalary);
 
             let notes = [];
-            notes.push("Bu hesaplama Türkiye'deki kurumsal firmaların piyasa ortalamalarını yansıtır, taşeron veya küçük çaplı firmalarda rakamlar %20-30 daha düşük olabilir.");
-            if(exp < 5 && pos === 1.6) notes.push("⚠️ 5 yıldan az tecrübe ile Proje Müdürü pozisyonu kurumsal firmalarda nadiren karşılaşılan bir durumdur.");
-            if(lang === 1.0) notes.push("İngilizce seviyenizi geliştirmek, uluslararası projelerde (Rusya, Orta Doğu) veya yabancı ortaklı firmalarda maaşınızı %30'a kadar artıracaktır.");
-            
+            notes.push("Bu bir kaba tahmindir: taban ücret ve yıllık artış resmî bir tarife değil, piyasa varsayımıdır. TMMOB 2023'ten beri mühendis asgari ücreti açıklamıyor. Firma, şehir ve projeye göre gerçek ücret belirgin biçimde farklı olabilir.");
+            if (exp < 5 && pos === 1.6) notes.push("5 yıldan az deneyimle proje müdürü pozisyonu az rastlanan bir durumdur.");
+            if (lang === 1.0) notes.push("Yabancı dil, uluslararası ya da yabancı ortaklı projelerde ücreti artırabilir.");
+
             let notesBox = document.getElementById('ai_notes');
             notesBox.innerHTML = '';
             notes.forEach(n => { let li = document.createElement('li'); li.innerText = n; li.style.marginBottom = "5px"; notesBox.appendChild(li); });

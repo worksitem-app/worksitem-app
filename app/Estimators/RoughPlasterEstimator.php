@@ -41,7 +41,7 @@ class RoughPlasterEstimator extends KitEstimator
             ],
             'faq' => [
                 ['Kaba sıva m² fiyatı ne kadar?', 'İç cephe, 2 cm geleneksel kaba sıva malzeme ve işçilik dahil '.now()->year.' fiyatlarıyla m² başına yaklaşık '.$this->exampleRange(['method' => 'geleneksel', 'area' => 100, 'thickness' => 2, 'side' => 'ic'], true).' arasıdır.'],
-                ['1 m² sıva için ne kadar çimento gerekir?', '2 cm kalınlıkta 1 m² sıva yaklaşık 0,02 m³ harç ister; bu da 6–7 kg çimento demektir.'],
+                ['1 m² sıva için ne kadar çimento gerekir?', '2 cm kalınlıkta 1 m² sıva yaklaşık 0,02 m³ harç ister; 250 dozlu (250 kg/m³) harçla bu yaklaşık 5 kg çimento ve 0,023 m³ kum demektir. Kaç torba çimento gerektiği Pro raporda yazar.'],
                 ['Makine sıvası mı, geleneksel sıva mı?', 'Büyük alanlarda makine sıvası hız kazandırır; küçük ve tamir işlerinde geleneksel sıva daha ekonomiktir.'],
                 ['Hesaba neler dahil?', 'Harç malzemesi ve işçilik; seçerseniz file ve iskele. KDV dahil yaklaşık değerlerdir.'],
             ],
