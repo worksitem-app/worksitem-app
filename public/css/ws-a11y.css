@@ -21,7 +21,6 @@ html body .home-estimator .est-file-name { font-size: 12px !important; }
 html body .home-estimator .est-mode { font-size: 13px !important; }
 
 /* 3) Açık temada bölüm etiketleri ve alt bilgi başlıkları: sarı/altın tonlar 1.7–3.8:1 idi → #7A5600 (≥ 6:1) */
-html:not([data-theme="dark"]) body .wks-footer .wks-foot-title,
 html:not([data-theme="dark"]) body .eyebrow,
 html:not([data-theme="dark"]) body .kicker,
 html:not([data-theme="dark"]) body .ws-collab-kicker,
@@ -40,9 +39,7 @@ html[data-theme="dark"] body .ws-collab-topics { color: #C9CFD8 !important; }
 html:not([data-theme="dark"]) body .ws-sp-note { color: #5B6472 !important; }
 html[data-theme="dark"] body .ws-sp-note { color: #C9CFD8 !important; }
 
-/* 6) Alt bilgideki tek satırlık bağlantılar 13–19 px yüksekti → en az 24 px dokunma alanı */
-html body .wks-footer .wks-foot-grid nav a,
-html body .wks-footer .wks-foot-pro a { display: inline-block; min-height: 24px; line-height: 24px; }
+/* 6) Alt bilgi bağlantılarının dokunma alanı v117'den beri css/wk-shell.css'te (en az 32 px) */
 
 /* 7) Klavye ile gezinene her yerde görünür odak çerçevesi */
 html body :focus-visible { outline: 3px solid #1764D8 !important; outline-offset: 2px !important; }

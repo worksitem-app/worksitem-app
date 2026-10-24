@@ -58,4 +58,3 @@ html[data-theme="dark"] :focus-visible { outline-color: var(--ws-yellow); }
 html[data-theme="dark"] { --ws-highlight: #FFC94B; }
 
 /* v105 dokunma hedefi: telefonda alt bilgi bağlantıları daha kolay basılır */
-@media (max-width:760px){.wks-footer a{display:inline-block;padding-block:6px}}

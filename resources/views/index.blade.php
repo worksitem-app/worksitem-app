@@ -139,17 +139,8 @@ html[data-theme=dark] .est-errors{background:#381d25;color:#ffd4d7;border-color:
 html[data-theme=dark] .est-unpriced{background:#322b1a;border-color:#8f793d}
 html[data-theme=dark] .est-unpriced-title{color:#ffda80}
 html[data-theme=dark] .est-unpriced-row{color:#e7d5a7}
-/* Higher specificity is necessary for the existing component's inline CSS overrides. */
-html[data-theme=dark] body .wks-header,html[data-theme=dark] body .wks-nav,html[data-theme=dark] body .wks-footer{background:var(--surface)!important;color:var(--text)!important;border-color:var(--line)!important}
-html[data-theme=dark] body .wks-menu{background:var(--s2);color:var(--text);border-color:var(--line)}
-html[data-theme=dark] body .wks-nav a,html[data-theme=dark] body .wks-footer a{color:var(--text)!important}
-html[data-theme=dark] body .wks-nav a:hover,html[data-theme=dark] body .wks-partner{background:var(--s2)!important;border-color:var(--line)!important}
-html[data-theme=dark] body .wks-offer{color:#111827!important;background:var(--yellow)!important}
-html[data-theme=dark] body .wks-foot-text,html[data-theme=dark] body .wks-partner span,html[data-theme=dark] body .wks-foot-bottom{color:var(--muted)!important;border-color:var(--line)!important}
-html[data-theme=dark] body .wks-foot-title{color:var(--yellow2)!important}
-html[data-theme=dark] body .wks-brand img,html[data-theme=dark] body .wks-foot-logo{background:transparent!important;border-radius:0}
 @media(max-width:980px){.hero-grid{grid-template-columns:1fr}.hero-copy{max-width:720px}.home-estimator{max-width:720px;width:100%}}
-@media(max-width:760px){html body .wks-foot-grid{grid-template-columns:1fr!important}.hero{padding-top:28px}.home-toolbar nav{gap:12px}.home-estimator{padding:18px}.trust{grid-template-columns:1fr 1fr}.theme-toggle{width:40px;height:40px;min-width:40px;min-height:40px;flex-basis:40px;font-size:18px}}
+@media(max-width:760px){.hero{padding-top:28px}.home-toolbar nav{gap:12px}.home-estimator{padding:18px}.trust{grid-template-columns:1fr 1fr}.theme-toggle{width:40px;height:40px;min-width:40px;min-height:40px;flex-basis:40px;font-size:18px}}
 @media(max-width:440px){.est-choice{grid-template-columns:1fr}.est-mode{min-height:46px;text-align:left;padding:10px 14px}.home-toolbar{align-items:flex-start}.home-toolbar nav{gap:0 12px}.hero-actions .btn{padding:0 12px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition:none!important;animation:none!important}}
 
@@ -543,39 +534,6 @@ Seçtiğiniz yapı türü ve toplam alana göre yaklaşık ön bütçe güvenli 
 
 <script>
 (function(){
-const menuBtn=document.querySelector('.wks-menu');
-const mobileNav=document.querySelector('.wks-nav');
-
-if(menuBtn&&mobileNav){
- mobileNav.id=mobileNav.id||'homeMainNav';
- menuBtn.setAttribute('aria-controls',mobileNav.id);
- menuBtn.setAttribute('aria-expanded',mobileNav.classList.contains('wks-open')?'true':'false');
- menuBtn.setAttribute('aria-label',mobileNav.classList.contains('wks-open')?'Menüyü kapat':'Menüyü aç');
-
- menuBtn.addEventListener('click',()=>{
-  const isOpen=mobileNav.classList.contains('wks-open');
-  menuBtn.setAttribute('aria-expanded',isOpen?'true':'false');
-  menuBtn.setAttribute('aria-label',isOpen?'Menüyü kapat':'Menüyü aç');
- });
-
- mobileNav.querySelectorAll('a').forEach(link=>{
-  link.addEventListener('click',()=>{
-   mobileNav.classList.remove('wks-open');
-   menuBtn.setAttribute('aria-expanded','false');
-   menuBtn.setAttribute('aria-label','Menüyü aç');
-  });
- });
-
- document.addEventListener('keydown',event=>{
-  if(event.key==='Escape'&&mobileNav.classList.contains('wks-open')){
-   mobileNav.classList.remove('wks-open');
-   menuBtn.setAttribute('aria-expanded','false');
-   menuBtn.setAttribute('aria-label','Menüyü aç');
-   menuBtn.focus();
-  }
- });
-}
-
 document.querySelectorAll('.faq-item').forEach((item,index)=>{
  const button=item.querySelector('.faq-q');
  const answer=item.querySelector('.faq-a');

@@ -22,7 +22,7 @@ class AnalizDuzeltmeleriTest extends TestCase
         $this->assertStringContainsString("$n ücretsiz araç, üyelik yok.", $home);
         $this->assertStringContainsString("$n araç tek yerde", $home);
         $this->assertStringNotContainsString("70'ten fazla", $home);
-        $this->assertStringContainsString("$n araç içinde ara", $home);
+        $this->assertStringContainsString("$n araç ve resmî pozlar içinde ara", $home);
 
         config(['worksitem_tools.tool_status.default' => 'review', 'worksitem_tools.tool_status.overrides' => ['boya-hesaplayici' => 'active']]);
         $this->assertSame('Onlarca', Tools::label());

@@ -24,7 +24,7 @@ class AppPagesTest extends TestCase
     {
         $html = $this->followingRedirects()->get($url)->assertOk()->getContent();
         $this->assertSame(1, substr_count($html, '<h1'), 'tek h1');
-        $this->assertSame(1, substr_count($html, 'class="wks-footer'), 'footer');
+        $this->assertSame(1, substr_count($html, '<footer class="wk-footer"'), 'footer');
         $this->assertSame(1, substr_count(strtolower($html), '</body>'), 'betik içinde </body> kalmamalı');
     }
 

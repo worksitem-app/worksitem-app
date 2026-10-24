@@ -167,7 +167,7 @@ html[data-theme="dark"] .lg-filled{color:#fff}
 @media print{
   @page{margin:16mm 14mm 18mm}
   body{background:#fff;color:#111}
-  .wks-header,.wks-footer,.lg-hero,.lg-aside,.lg-toc-m,#ws-legal-notice,.cookie-manage button,.lg-toast,#wsCookieBanner,[data-cookie-banner]{display:none!important}
+  .wk-header,.wk-footer,.lg-hero,.lg-aside,.lg-toc-m,#ws-legal-notice,.cookie-manage button,.lg-toast,#wsCookieBanner,[data-cookie-banner]{display:none!important}
   .lg-wrap{display:block;padding:0;max-width:none}
   .lg-paper{border:0;box-shadow:none;border-radius:0}
   .lg-paper-top{padding:0 0 10px;background:none;border-bottom:2px solid #111}

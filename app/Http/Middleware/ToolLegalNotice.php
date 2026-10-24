@@ -30,7 +30,7 @@ class ToolLegalNotice
             return $response;
         }
 
-        $pos = stripos($html, '<footer class="wks-footer');
+        $pos = stripos($html, '<footer class="wk-footer');
         if ($pos === false) {
             $pos = strripos($html, '</body>');
         }

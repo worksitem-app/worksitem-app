@@ -58,6 +58,9 @@ class BrandShell
             $html = substr($html, 0, $pos).'<style id="ws-brand-css">'.\App\Support\Asset::inline('css/ws-brand.css').'</style>'."\n".substr($html, $pos);
         }
 
+        // v117 ortak kabuk: tasarım token'ları + üst menü/alt bilgi stilleri her sayfada, sayfa stillerinden sonra
+        $html = self::injectShell($html);
+
         // v115 UI/UX denetimi: ortak erişilebilirlik katmanı sayfanın en sonunda (sayfa ve bileşen stillerinin üstüne yazar)
         if (! str_contains($html, 'id="ws-a11y-css"') && ($b = strripos($html, '</body>')) !== false) {
             $html = substr($html, 0, $b).'<style id="ws-a11y-css">'.\App\Support\Asset::inline('css/ws-a11y.css').'</style>'.substr($html, $b);
@@ -67,6 +70,38 @@ class BrandShell
 
         return $response;
     }
+
+    /**
+     * v117 ortak kabuk:
+     *  - <head> başına tema başlatıcı (kayıtlı tema ilk boyamadan önce; koyu temada beyaz yanıp sönme olmaz)
+     *  - </head> öncesine wk-tokens.css + wk-shell.css (gömülü; küçük, her sayfada gerekli)
+     *  - yeni tasarıma geçmiş sayfalara (.wk-root) wk-ui.css + wk-ui.js (sürümlü, önbelleğe alınır)
+     */
+    public static function injectShell(string $html): string
+    {
+        if (! str_contains($html, 'id="wk-theme-init"') && preg_match('#<head\b[^>]*>#i', $html, $m, PREG_OFFSET_CAPTURE)) {
+            $at = $m[0][1] + strlen($m[0][0]);
+            $html = substr($html, 0, $at).self::THEME_INIT_SCRIPT.substr($html, $at);
+        }
+        $pos = stripos($html, '</head>');
+        if ($pos === false) {
+            return $html;
+        }
+        $add = '';
+        if (! str_contains($html, 'id="wk-shell-css"')) {
+            $add .= '<style id="wk-tokens-css">'.\App\Support\Asset::inline('css/wk-tokens.css').'</style>'
+                .'<style id="wk-shell-css">'.\App\Support\Asset::inline('css/wk-shell.css').'</style>';
+        }
+        if (preg_match('#class=["\'][^"\']*\bwk-root\b#', $html) && ! str_contains($html, '/css/wk-ui.css')) {
+            $add .= '<link rel="stylesheet" href="'.\App\Support\Asset::url('css/wk-ui.css').'">'
+                .'<script src="'.\App\Support\Asset::url('js/wk-ui.js').'" defer></script>';
+        }
+
+        return $add === '' ? $html : substr($html, 0, $pos).$add."\n".substr($html, $pos);
+    }
+
+    /** Kayıtlı tema (worksitem-theme) ilk boyamadan önce; kayıt yoksa sayfanın kendi data-theme'i kalır */
+    public const THEME_INIT_SCRIPT = '<script id="wk-theme-init">try{var t=localStorage.getItem("worksitem-theme");if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>';
 
     /**
      * for= özelliği olmayan <label>'ı, ardından gelen ilk id'li alana bağlar (arada başka label ya da alan yoksa).

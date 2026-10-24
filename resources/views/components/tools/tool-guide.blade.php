@@ -100,7 +100,7 @@ html[data-theme="dark"] .ws-tg-faq details,html[data-theme="dark"] .ws-tg-btn{ba
 html[data-theme="dark"] .ws-tg-faq p,html[data-theme="dark"] .ws-tg-meta{color:#9aa4b2}
 html[data-theme="dark"] .ws-tg-note{background:#2a2410;color:#e6e8eb}
 @media print{
-  .wks-header,.wks-footer,#ws-cookie-banner,.ws-tg-toolbar,.ws-tg-faq,#sss,
+  .wk-header,.wk-footer,#ws-cookie-banner,.ws-tg-toolbar,.ws-tg-faq,#sss,
   #leadBox,#budgetConfirmBox,#qualifiedMessage,#bConf,#leadForm,#budget,#quote,#budgetBox,#quoteBox,
   #calculateBtn,#calcBtn,#calculate{display:none!important}
   .ws-tg{background:#fff;padding:12px 0}
