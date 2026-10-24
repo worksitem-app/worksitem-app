@@ -1080,7 +1080,7 @@ echo json_encode(
     var theme=null;
     try{theme=localStorage.getItem("worksitem-theme");}catch(e){}
     if(theme!=="light" && theme!=="dark"){
-        theme=window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+        theme="light";
     }
     document.documentElement.setAttribute("data-theme",theme);
     document.documentElement.classList.toggle("dark",theme==="dark");
@@ -2337,12 +2337,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     } else {
 
-        applyTheme(
-            window.matchMedia &&
-            window.matchMedia('(prefers-color-scheme: dark)').matches
-                ? 'dark'
-                : 'light'
-        );
+        applyTheme('light');
 
     }
 
