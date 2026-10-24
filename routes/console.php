@@ -40,8 +40,9 @@ Schedule::command('prices:daily-material-report')
     ->onOneServer();
 
 // Poz sayfaları için AI SEO zenginleştirme (canlıda elle eklenmişti).
-// AI_SPEND_ENABLED=false iken komut kendini durdurur; harcama yapmaz.
+// AI_SPEND_ENABLED=false iken hiç çalıştırılmaz (v108: her gece hata logu düşürüyordu).
 Schedule::command('poz:enrich-seo --limit=100')
+    ->when(fn () => (bool) config('services.ai_spend_enabled'))
     ->dailyAt('02:00')
     ->timezone('Europe/Istanbul')
     ->withoutOverlapping()
