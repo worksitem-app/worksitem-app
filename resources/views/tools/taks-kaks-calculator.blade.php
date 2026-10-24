@@ -84,6 +84,7 @@
         .btn-submit { background: var(--accent); color: #000; margin-top: 10px; }
         .btn-submit:hover { background: #e5a500; }
 
+        .wc-warn { color:#b91c1c; font-size:13px; font-weight:700; margin-top:10px; }
         @media(max-width: 600px) {
             .form-grid, .breakdown-grid, .budget-confirm-actions { grid-template-columns: 1fr; }
             .card, .result-box, .lead-box, .budget-confirm-box { padding: 20px; }
@@ -130,7 +131,19 @@
             </div>
         </div>
 
+        <div class="form-group" style="margin-top:20px">
+            <label>Emsal Harici Alan Oranı (%)</label>
+            <select id="exRate" class="form-control">
+                <option value="0">%0 (yalnız emsale dahil alan)</option>
+                <option value="10">%10</option>
+                <option value="20">%20</option>
+                <option value="30" selected>%30 (yönetmelikteki üst sınır)</option>
+            </select>
+            <p style="font-size: 11px; color: #6b7280; margin-top: 5px;">Merdiven, asansör, şaft gibi alanlar emsale dahil edilmez; toplamları emsale esas alanın %30'unu aşamaz. Otopark ve sığınak bu sınırın ayrıca dışındadır.</p>
+        </div>
+
         <button type="button" class="btn btn-calc" id="calculateBtn">İmar ve Yapı Analizini Getir →</button>
+        <p class="wc-warn" id="formErr" role="alert" hidden></p>
     </div>
 
     <aside class="wc-aside">
@@ -139,11 +152,11 @@
         Bilgileri girip hesaplayın; sonuç, döküm ve yaklaşık bütçe burada görünür.
     </div>
     <div class="result-box wc-result" data-wc-result id="resultBox">
-        <div class="result-label">GERÇEKLEŞECEK BRÜT İNŞAAT ALANI YAKLAŞIK</div>
+        <div class="result-label">YAKLAŞIK BRÜT İNŞAAT ALANI</div>
         <div class="result-price" id="grossArea" data-wc-price>0 m²</div>
         
         <p style="font-size: 11px; color: #6b7280; margin-bottom:20px;">
-            ⚠️ Planlı Alanlar İmar Yönetmeliği'ne göre emsale dahil edilmeyen (asansör, şaft, ortak alan vb.) %30 pay eklenerek hesaplanmıştır.
+            <span id="grossNote">Emsale dahil alana seçtiğiniz emsal harici oran eklenmiştir. Otopark ve sığınak alanları dahil değildir.</span>
         </p>
 
         <div class="breakdown-grid">
@@ -156,11 +169,11 @@
                 <strong id="netArea">0 m²</strong>
             </div>
             <div class="break-item highlight">
-                <span>Çıkarılabilecek Kat Sayısı</span>
+                <span>Tam Kat Sayısı (KAKS / TAKS)</span>
                 <strong id="floors">0 Kat</strong>
             </div>
             <div class="break-item">
-                <span>Emsal Dışı Pay (%30 Yasal Artış)</span>
+                <span id="bonusLbl">Emsal Harici Alan (seçilen oran, üst sınır %30)</span>
                 <strong id="bonusArea">0 m²</strong>
             </div>
         </div>
@@ -169,7 +182,7 @@
             <div class="ai-insight-icon">💡</div>
             <div class="ai-insight-text">
                 <strong>Mimari Proje Notu</strong>
-                <p>Emsal (KAKS) hesabına asansör boşlukları, yangın merdivenleri, tesisat şaftları ve açık çıkmalar yönetmelikteki sınırlar dahilinde girmez. Bu sebeple inşa edeceğiniz ve kaba inşaat maliyetine girecek olan gerçek brüt alanınız her zaman KAKS'tan daha büyük çıkacaktır.</p>
+                <p id="insightP">Emsal (KAKS) hesabına asansör boşlukları, yangın merdivenleri, tesisat şaftları ve açık çıkmalar yönetmelikteki sınırlar dahilinde girmez. Bu nedenle inşa edilecek brüt alan çoğu projede emsale dahil alandan büyüktür; ancak bu alanlar satılabilir alan değildir ve kesin değeri mimari proje belirler.</p>
             </div>
         </div>
 
@@ -249,23 +262,26 @@ document.getElementById('calculateBtn').addEventListener('click', function() {
     const taks = parseFloat(document.getElementById('taks').value) || 0;
     const kaks = parseFloat(document.getElementById('kaks').value) || 0;
     
-    if (plotArea <= 0 || taks <= 0 || kaks <= 0) {
-        alert('Lütfen geçerli arsa ve emsal değerleri giriniz.');
-        return;
-    }
+    const formErr = document.getElementById('formErr');
+    const fail = msg => { formErr.textContent = msg; formErr.hidden = false; document.getElementById('resultBox').classList.remove('active'); };
+    formErr.hidden = true;
+    const exRate = (parseFloat(document.getElementById('exRate').value) || 0) / 100;
+    if (!(plotArea > 0) || !(taks > 0) || !(kaks > 0)) return fail('Arsa alanı, TAKS ve KAKS için pozitif bir değer girin.');
+    if (taks > 1) return fail('TAKS 1\'den büyük olamaz (taban alanı arsadan büyük olamaz). Örn: 0,30 girin.');
 
     // 1. TAKS (Taban Alanı)
     const baseArea = plotArea * taks;
-    
-    // 2. KAKS / Emsal (Net İnşaat Alanı)
-    const netArea = plotArea * kaks;
-    
-    // 3. Kat Sayısı Tahmini (KAKS / TAKS)
-    // Örn: 1.5 / 0.3 = 5 Kat
-    const floors = (kaks / taks).toFixed(1);
 
-    // 4. Brüt İnşaat Alanı (+%30 Emsal Harici Pay Yönetmeliği)
-    const bonusArea = netArea * 0.30;
+    // 2. KAKS / Emsal (emsale dahil alan)
+    const netArea = plotArea * kaks;
+
+    // 3. Kat sayısı: tam kat (aşağı yuvarla), kalan alan ayrıca
+    const ratio = kaks / taks;
+    const fullFloors = Math.floor(ratio + 1e-9);
+    const restArea = Math.max(0, netArea - fullFloors * baseArea);
+
+    // 4. Brüt alan: emsal harici oran kullanıcı seçimi (PAİY: en çok %30, otomatik hak değil)
+    const bonusArea = netArea * exRate;
     const grossArea = netArea + bonusArea;
 
     const money = new Intl.NumberFormat('tr-TR', { maximumFractionDigits: 2 });
@@ -273,10 +289,17 @@ document.getElementById('calculateBtn').addEventListener('click', function() {
     document.getElementById('grossArea').innerText = money.format(grossArea) + ' m²';
     document.getElementById('baseArea').innerText = money.format(baseArea) + ' m²';
     document.getElementById('netArea').innerText = money.format(netArea) + ' m²';
-    document.getElementById('floors').innerText = floors.replace('.0', '') + ' Kat';
+    document.getElementById('floors').innerText = fullFloors >= 1
+        ? fullFloors + ' kat' + (restArea > 0.5 ? ' + ' + money.format(restArea) + ' m² kalan' : '')
+        : '1 kat bile dolmuyor';
     document.getElementById('bonusArea').innerText = '+ ' + money.format(bonusArea) + ' m²';
+    document.getElementById('bonusLbl').innerText = 'Emsal Harici Alan (%' + Math.round(exRate * 100) + ', üst sınır %30)';
 
-    document.getElementById('leadCalculatedData').value = `Arsa: ${plotArea}m2 | Taban(TAKS): ${baseArea}m2 | Net Emsal: ${netArea}m2 | Brüt(Satılabilir): ${grossArea}m2`;
+    let warn = '';
+    if (kaks < taks) warn = 'KAKS, TAKS\'tan küçük: taban alanının tamamı kullanılırsa tek kat bile dolmaz. Değerleri imar durumundan kontrol edin. ';
+    document.getElementById('insightP').innerText = warn + "Emsal (KAKS) hesabına asansör boşlukları, yangın merdivenleri, tesisat şaftları ve açık çıkmalar yönetmelikteki sınırlar dahilinde girmez. Bu nedenle inşa edilecek brüt alan çoğu projede emsale dahil alandan büyüktür; ancak bu alanlar satılabilir alan değildir ve kesin değeri mimari proje belirler.";
+
+    document.getElementById('leadCalculatedData').value = `Arsa: ${plotArea}m2 | Taban(TAKS): ${baseArea}m2 | Net Emsal: ${netArea}m2 | Brüt (emsal harici %${Math.round(exRate*100)} dahil): ${money.format(grossArea)}m2`;
 
     document.getElementById('resultBox').classList.add('active');
     document.getElementById('budgetConfirmBox').style.display = 'block';

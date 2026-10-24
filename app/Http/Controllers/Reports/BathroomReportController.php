@@ -21,7 +21,8 @@ class BathroomReportController extends Controller
         $num = fn ($k) => (float) str_replace(',', '.', (string) $request->input($k, ''));
         $w = $num('width');
         $l = $num('length');
-        if ($w < 0.5 || $l < 0.5 || $w > 20 || $l > 20) {
+        // Hesap motoru en/boyu 10 m'ye kırpıyor: PDF'te yazan ölçü ile hesaplanan alan aynı olsun (v118)
+        if ($w < 0.5 || $l < 0.5 || $w > 10 || $l > 10) {
             return null;
         }
 

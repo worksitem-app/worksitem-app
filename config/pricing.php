@@ -21,18 +21,11 @@ return [
     'enerji' => [
         'ges_kw_maliyeti' => 25000, // 1 kW Güneş Enerjisi kurulumu ort. 25.000 TL
         'jenerator_kva_maliyeti' => 4500, // 1 kVA Jeneratör ort. 4.500 TL
-        'elektrik_kwh_fiyati' => 2.25, // Mesken kWh fiyatı
-    ],
-    'harc' => [
-        'cimento_50kg_torba' => 220, // 50kg Portland Çimentosu
-        'kum_ton' => 450, // 1 Ton inşaat kumu
-        'alci_25kg_torba' => 120, // Perlitli sıva alçısı
-        'saten_alci_25kg_torba' => 140, // Saten yüzey alçısı
-    ],
-    'enerji' => [
-        'ges_kw_maliyeti' => 25000, // 1 kW Güneş Enerjisi kurulumu ort. 25.000 TL
-        'jenerator_kva_maliyeti' => 4500, // 1 kVA Jeneratör ort. 4.500 TL
-        'elektrik_kwh_fiyati' => 2.25, // Mesken kWh fiyatı
+        // v118: mesken, vergiler dahil, alt kademe. EPDK 4 Nisan 2026 tarifesi (%25 zam): 100 kWh = 323,8 TL
+        // (uzmanpara.milliyet.com.tr). Fiyat robotu günceller. Not: gunes-paneli-hesaplama / ges-planlayici
+        // v118: GES araçları (güneş paneli, GES planlayıcı) da bu değeri kullanır.
+        'elektrik_kwh_fiyati' => 3.24,
+        'elektrik_kwh_donemi' => 'Nisan 2026',
     ],
     'harc' => [
         'cimento_50kg_torba' => 220, // 50kg Portland Çimentosu

@@ -122,7 +122,7 @@ return [
             'tahmini-bina-maliyeti' => 'ÇŞB yapı yaklaşık birim maliyetleri tebliği',
             'statik-proje-bedeli' => 'ÇŞB yapı yaklaşık birim maliyetleri tebliği',
             'sgk-asgari-iscilik' => 'SGK asgari işçilik oranları',
-            'insaat-muhendisi-maas-hesabi' => 'TMMOB asgari ücret',
+            'insaat-muhendisi-maas-hesabi' => 'piyasa maaş varsayımı (config/worksitem_mevzuat_2026.php)',
         ],
         'no_price' => [
             'azami-konut-kredisi' => 'kullanıcı girdisi (gelir, faiz, vade)',

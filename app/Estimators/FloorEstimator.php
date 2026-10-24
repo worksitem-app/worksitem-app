@@ -86,7 +86,7 @@ class FloorEstimator extends KitEstimator
                 'sert' => ['label' => 'Seramik / mermer var', 'hint' => 'Kırılacak'],
                 'tesviye' => ['label' => 'Bozuk zemin', 'hint' => 'Tesviye şapı'],
             ]],
-            ['type' => 'checks', 'key' => 'extras', 'title' => 'Ekstralar', 'options' => ['supurgelik' => 'Süpürgelik', 'sap' => 'Ek tesviye şapı (söküm sonrası)']],
+            ['type' => 'checks', 'key' => 'extras', 'title' => 'Ekstralar', 'options' => ['supurgelik' => 'Süpürgelik', 'sap' => 'Ek tesviye şapı']],
         ];
     }
 
@@ -96,7 +96,8 @@ class FloorEstimator extends KitEstimator
         $t = $p['types'][$in['type']];
         $a = (float) $in['area'];
         $qf = $this->q($in, $p['quality_factor']);
-        $screed = $in['scope'] === 'tesviye' || ($this->has($in, 'extras', 'sap') && in_array($in['scope'], ['yumusak', 'sert'], true));
+        // Ek tesviye şapı seçildiyse mevcut zemin ne olursa olsun tutara girer (v118: hazır zeminde düşüyordu, programda görünüyordu)
+        $screed = $in['scope'] === 'tesviye' || $this->has($in, 'extras', 'sap');
         $items = [
             'sokum' => ['label' => 'Eski kaplama sökümü', 'mid' => in_array($in['scope'], ['yumusak', 'sert'], true) ? $a * $p['removal_m2'][$in['scope']] : 0, 'color' => '#5B6472'],
             'sap' => ['label' => 'Tesviye şapı', 'mid' => $screed ? $a * $p['screed_m2'] : 0, 'color' => '#2F6F8F'],

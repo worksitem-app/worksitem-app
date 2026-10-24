@@ -152,7 +152,17 @@
             </select>
         </div>
 
+        <div class="form-group">
+            <label for="cosphi">Güç Faktörü (cos φ)</label>
+            <select id="cosphi" class="form-control">
+                <option value="1" selected>Rezistif yük: ısıtıcı, aydınlatma, priz (1,0)</option>
+                <option value="0.9">Karma yük: konut / ofis genel (0,9)</option>
+                <option value="0.8">Motorlu yük: pompa, kompresör, klima (0,8)</option>
+            </select>
+        </div>
+
         <button type="button" class="btn btn-calc" id="calculateBtn">Kablo kesitini ve bütçeyi hesapla</button>
+        <div id="inputWarn" role="alert" style="display:none; color:#b91c1c; font-size:13px; font-weight:700; margin-top:10px;"></div>
     </div>
 
     <aside class="wc-aside">
@@ -186,6 +196,8 @@
                 <strong id="unitPrice">0 TL/m</strong>
             </div>
         </div>
+
+        <div id="limitWarn" role="alert" style="display:none; background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.5); color:#fecaca; border-radius:12px; padding:12px 15px; margin-top:15px; text-align:left; font-size:13px; line-height:1.5;"></div>
 
         <div class="ai-insight" id="aiInsight">
             <div class="ai-insight-icon">💡</div>
@@ -265,10 +277,17 @@ document.getElementById('calculateBtn').addEventListener('click', function() {
     const vType = parseInt(document.getElementById('voltage').value);
     const installMultiplier = parseFloat(document.getElementById('installation').value);
     
-    if (p <= 0 || l <= 0) {
-        alert('Lütfen geçerli güç ve mesafe giriniz.');
+    const inputWarn = document.getElementById('inputWarn');
+    // v118: alert yerine alanın altında uyarı; negatif/0/boş girdide hesap yapılmaz
+    if (!(p > 0) || !(l > 0)) {
+        inputWarn.textContent = 'Güç ve mesafe için pozitif bir değer girin.';
+        inputWarn.style.display = 'block';
+        document.getElementById('resultBox').classList.remove('active');
+        document.getElementById('budgetConfirmBox').style.display = 'none';
         return;
     }
+    inputWarn.style.display = 'none';
+    const cosPhi = parseFloat((document.getElementById('cosphi') || {}).value) || 1;
 
     // DÜZELTME (12.10.2026): güç kW girilir; formüller watt ister (eski sürümde 1000 kat düşük gerilim düşümü çıkıyordu).
     const pW = p * 1000;
@@ -277,10 +296,10 @@ document.getElementById('calculateBtn').addEventListener('click', function() {
     let current, s_voltage;
 
     if (vType === 220) {
-        current = pW / 220;                                        // I = P / U
+        current = pW / (220 * cosPhi);                             // I = P / (U·cos φ)
         s_voltage = (200 * pW * l) / (k * limitE * 220 * 220);     // S = 200·P·L / (k·%e·U²)
     } else {
-        current = pW / (1.732 * 380);                              // I = P / (√3·U)
+        current = pW / (1.732 * 380 * cosPhi);                     // I = P / (√3·U·cos φ)
         s_voltage = (100 * pW * l) / (k * limitE * 380 * 380);     // S = 100·P·L / (k·%e·U²)
     }
 
@@ -304,22 +323,38 @@ document.getElementById('calculateBtn').addEventListener('click', function() {
     const grandTotal = unitPrice * l;
 
     const money = new Intl.NumberFormat('tr-TR', { maximumFractionDigits: 0 });
+    const nf = (x, d) => x.toLocaleString('tr-TR', { minimumFractionDigits: d, maximumFractionDigits: d });
 
-    document.getElementById('totalPrice').innerText = money.format(grandTotal) + ' TL';
-    document.getElementById('currentAmps').innerText = current.toFixed(1) + ' Amper';
-    document.getElementById('voltageDrop').innerText = '%' + actual_e.toFixed(2);
+    // v118: sınır aşımı — en büyük kesit (240 mm²) akımı taşımıyor ya da gerilim düşümü sınırı aşılıyor
+    const overCurrent = current > 330;
+    const overDrop = actual_e > limitE;
+    const limitWarn = document.getElementById('limitWarn');
+    const lw = [];
+    if (overCurrent) lw.push(`Çekilen akım (${nf(current, 1)} A) tek kablonun taşıyabileceği değeri (240 mm² için yaklaşık 330 A) aşıyor.`);
+    if (overDrop) lw.push(`Gerilim düşümü %${nf(actual_e, 2)}; izin verilen %${nf(limitE, 1)} sınırını aşıyor.`);
+    if (vType === 220 && p > 10) lw.push('Monofaze hatta 10 kW üzeri yük için trifaze besleme değerlendirilmelidir.');
+    if (overCurrent || overDrop) lw.push('Paralel kablo, trifaze besleme ya da daha kısa hat gerekir; aşağıdaki kesit ve bütçe bu hat için geçerli değildir.');
+    limitWarn.innerHTML = lw.length ? '<strong>⚠️ Sınır aşımı</strong><br>' + lw.join('<br>') : '';
+    limitWarn.style.display = lw.length ? 'block' : 'none';
+
+    document.getElementById('totalPrice').innerText = (overCurrent || overDrop) ? 'Hesaplanamadı' : money.format(grandTotal) + ' TL';
+    document.getElementById('currentAmps').innerText = nf(current, 1) + ' Amper';
+    document.getElementById('voltageDrop').innerText = '%' + nf(actual_e, 2);
+    document.getElementById('dropBox').classList.toggle('warning', overDrop);
     document.getElementById('cableSize').innerText = chosen_s + (chosen_s >= 240 ? ' mm² veya üzeri' : ' mm²');
     document.getElementById('unitPrice').innerText = money.format(unitPrice) + ' TL/m';
 
     // Uzman notu / Mühendislik Notu
     const insightText = document.getElementById('insightText');
-    if (s_voltage > s_current) {
+    if (overCurrent || overDrop) {
+        insightText.innerHTML = `Bu güç ve mesafe tek bir bakır kabloyla karşılanamıyor. Hattı yetkili bir elektrik mühendisine projelendirin.`;
+    } else if (s_voltage > s_current) {
         insightText.innerHTML = `Dikkat: Girdiğiniz hat mesafesi (${l}m) çok uzun olduğu için, kablo kesiti cihazın çektiği akımdan ziyade <strong>gerilim düşümü (voltaj kaybı)</strong> sınırlarına göre büyütülerek <strong>${chosen_s} mm²</strong> seçilmiştir. Aksi halde cihazlarınız düşük voltajdan dolayı zarar görebilirdi.`;
     } else {
         insightText.innerHTML = `Elektrik İç Tesisleri Yönetmeliğine göre aydınlatma hatlarında %1,5, kuvvet/priz hatlarında %3 gerilim düşümüne izin verilir. Bu hesapta kesiti belirleyen, hattın çektiği <strong>${current.toFixed(1)} Amper</strong> akımdır; gerilim düşümü sınırın altındadır. Sigorta değeri ve kesin kesit, yetkili elektrik mühendisince onaylanmalıdır.`;
     }
 
-    document.getElementById('leadCalculatedData').value = `Güç: ${p}kW | Mesafe: ${l}m | Gerilim: ${vType}V | Önerilen Kesit: ${chosen_s}mm2 | Bütçe: ${money.format(grandTotal)} TL`;
+    document.getElementById('leadCalculatedData').value = `Güç: ${p}kW | Mesafe: ${l}m | Gerilim: ${vType}V | cos φ: ${cosPhi} | Önerilen Kesit: ${chosen_s}mm2 | Bütçe: ${money.format(grandTotal)} TL`;
 
     document.getElementById('resultBox').classList.add('active');
     document.getElementById('budgetConfirmBox').style.display = 'block';

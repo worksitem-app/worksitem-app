@@ -28,7 +28,7 @@ class GardenWallEstimator extends KitEstimator
             'sponsor_title' => 'Yapı malzemesi markaları',
             'facts' => ['Ücretsiz, kayıt gerekmez', 'Temel dahil', '$ € £ karşılığı'],
             'method' => [
-                'Temel: uzunluk × 0,5 m × 0,6 m betonarme sürekli temel.',
+                'Temel: uzunluk × 0,5 m × 0,6 m betonarme sürekli temel; temel kazısı uzunluk × 0,7 m × 0,7 m (çalışma payı dahil), kazı ve döküm hafriyat aracıyla aynı fiyatlardan.',
                 'Taş duvar 50 cm, betonarme duvar 25 cm kalınlıkla m³ fiyatından; blok duvar m² fiyatından hesaplanır (blokta iki yüz sıva eklenir).',
                 'Harpuşta, korkuluk/panel çit ve boya seçilirse metre veya m² başına eklenir.',
                 '%10 beklenmedik gider ve −%15 / +%20 aralık uygulanır.',
@@ -75,7 +75,13 @@ class GardenWallEstimator extends KitEstimator
             'betonarme' => $L * $H * 0.25 * $p['concrete_m3'],
             default => $L * $H * $p['block_m2'],
         };
+        // Temel kazısı (v118): 0,5 m temel + iki yanda 10 cm çalışma payı, 0,6 m + 10 cm tesviye → 0,7 × 0,7 m kesit.
+        // Birim fiyat hafriyat aracından: kazı + kabarmış hacmin nakliye ve döküm bedeli
+        $h = (array) config('worksitem_estimators.hafriyat');
+        [$swell, $digM3] = $h['soils']['normal'];
+        $trenchM3 = $digM3 + $swell * ($h['truck_trip'] / 16 + $h['dump_m3']);
         $items = [
+            'kazi' => ['label' => 'Temel kazısı ve moloz atımı', 'mid' => $L * 0.7 * 0.7 * $trenchM3, 'color' => '#7FB3C8'],
             'temel' => ['label' => 'Sürekli temel (betonarme)', 'mid' => $L * 0.5 * 0.6 * $p['footing_m3'], 'color' => '#5B6472'],
             'govde' => ['label' => ['tas' => 'Taş duvar gövdesi', 'betonarme' => 'Betonarme duvar (beton, demir, kalıp)', 'blok' => 'Blok duvar örgüsü'][$in['type']], 'mid' => $body, 'color' => '#FFB800'],
             'siva' => ['label' => 'Sıva (iki yüz)', 'mid' => $in['type'] === 'blok' ? $L * $H * 2 * $p['plaster_m2'] : 0, 'color' => '#C9A55A'],
@@ -92,7 +98,7 @@ class GardenWallEstimator extends KitEstimator
     {
         $L = (float) $in['length'];
         $H = (float) $in['height'];
-        $rows = [['Temel betonu (C25)', self::n1($L * 0.3 * 1.05), 'm³', '0,5 × 0,6 m kesit + %5']];
+        $rows = [['Temel kazısı', self::n1($L * 0.7 * 0.7), 'm³', '0,7 × 0,7 m kesit (çalışma payı dahil)'], ['Temel betonu (C25)', self::n1($L * 0.3 * 1.05), 'm³', '0,5 × 0,6 m kesit + %5']];
         if ($in['type'] === 'betonarme') {
             $rows[] = ['Duvar betonu (C25)', self::n1($L * $H * 0.25 * 1.05), 'm³', '25 cm kalınlık'];
             $rows[] = ['İnşaat demiri', number_format($L * ($H * 0.25 + 0.3) * 90, 0, ',', '.'), 'kg', '≈90 kg/m³'];

@@ -255,13 +255,17 @@ class VentilationCalculatorController extends Controller
         ];
 
 
+        // v118: fiyat dönemi sabit '2026-08' değil, hesap motorlarıyla aynı YFK dönemi
+        // (config/worksitem_estimators.php → yfk_period; dönem değişince kalemler "Fiyat yok"a düşmesin)
+        $period = (string) config('worksitem_estimators.yfk_period', '2026-08');
+
         foreach ($catalog as &$items) {
 
             foreach ($items as &$item) {
 
                 $record = $this->prices->byPoz(
                     $item['poz'],
-                    '2026-08',
+                    $period,
                     'YFK'
                 );
 
@@ -278,7 +282,7 @@ class VentilationCalculatorController extends Controller
                 $item['unit'] = $record['unit'] ?? null;
 
                 $item['price_period'] = $found
-                    ? '2026-08'
+                    ? $period
                     : null;
             }
 

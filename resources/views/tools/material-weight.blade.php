@@ -4,19 +4,23 @@
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
 
     <meta charset="UTF-8">
-    <title>İnşaat Malzeme Ağırlığı | WORKSİTEM</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>İnşaat Malzeme Ağırlığı | Worksitem</title>
     <meta name="description" content="Malzeme yoğunluğu ve hacmine göre inşaat malzemelerinin yaklaşık ağırlığını ve nakliye tonajını hesaplayarak lojistik planınızı hazırlayın.">
     <link rel="canonical" href="https://worksitem.com/araclar/malzeme-agirligi">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
+        *,*::before,*::after { box-sizing:border-box; }
         body { font-family:'Inter', sans-serif; background:#fdfdfd; color:#111827; margin:0; padding-bottom:60px;}
-        .container { max-width:800px; margin:40px auto; padding:30px; background:#fff; border:1px solid #e5e7eb; border-radius:16px; box-shadow:0 4px 6px rgba(0,0,0,0.05); }
+        .container { max-width:800px; margin:40px auto; padding:30px; width:calc(100% - 32px); background:#fff; border:1px solid #e5e7eb; border-radius:16px; box-shadow:0 4px 6px rgba(0,0,0,0.05); }
         h1 { font-size:24px; font-weight:800; margin-bottom:10px; color:#101318;}
         .form-group { margin-bottom:20px; }
         label { display:block; font-size:13px; font-weight:700; color:#6b7280; margin-bottom:8px; text-transform:uppercase;}
         input, select { width:100%; padding:14px; border:1px solid #e5e7eb; border-radius:8px; font-family:inherit; font-size:15px; }
         .result-box { background:#f5f3ff; border:2px solid #ddd6fe; padding:20px; border-radius:12px; margin-top:20px; text-align:center;}
-        .result-val { font-size:32px; font-weight:800; color:#101318; }
+        .result-val { font-size:32px; font-weight:800; color:#101318; overflow-wrap:anywhere; }
+        .err { color:#B42318; font-size:14px; margin-top:6px; }
+        @media (max-width:480px) { .container { padding:20px 16px; margin:16px auto; } .result-val { font-size:26px; } }
         .cta { display:block; width:100%; padding:16px; background:#101318; color:#fff; text-align:center; font-weight:800; text-decoration:none; border-radius:8px; margin-top:20px; }
     </style>
     <meta property="og:image" content="https://worksitem.com/brand/og-image.png">
@@ -48,7 +52,8 @@
         </div>
         <div class="form-group">
             <label>Toplam Hacim (m³)</label>
-            <input type="number" id="vol" value="10" oninput="calc()">
+            <input type="number" id="vol" value="10" min="0" step="0.1" inputmode="decimal" oninput="calc()">
+            <p class="err" id="volErr" role="alert" hidden></p>
         </div>
 
         <div class="result-box" data-wc-result>
@@ -76,12 +81,24 @@
         // ------------------------------------------------
         function calc() {
             let density = parseFloat(document.getElementById('material').value);
-            let vol = parseFloat(document.getElementById('vol').value) || 0;
-            
+            let vol = parseFloat(document.getElementById('vol').value);
+            const err = document.getElementById('volErr');
+            const res = document.getElementById('res');
+            if (!(vol > 0) || !isFinite(vol)) {
+                // Negatif/boş/0 hacimde sonuç gösterilmez (eski sonuç da kalmaz)
+                err.textContent = 'Hacim için pozitif bir değer girin.';
+                err.hidden = false;
+                res.innerText = '—';
+                return;
+            }
+            err.hidden = true;
+
             let kg = density * vol;
             let ton = kg / 1000;
-            
-            document.getElementById('res').innerText = ton.toFixed(2) + ' Ton (' + kg.toLocaleString('tr-TR') + ' Kg)';
+            const f2 = new Intl.NumberFormat('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            const f0 = new Intl.NumberFormat('tr-TR', { maximumFractionDigits: 0 });
+
+            res.innerText = f2.format(ton) + ' ton · ' + f0.format(kg) + ' kg';
         }
         document.addEventListener('DOMContentLoaded', calc);
     </script>

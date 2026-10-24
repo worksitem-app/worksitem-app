@@ -9,7 +9,14 @@ class SolarEstimator extends KitEstimator
     /** Fiyatlar: config('worksitem_estimators.ges') (fiyat robotu günceller); sabit yalnız yedek */
     public static function prices(): array
     {
-        return array_replace(self::P, (array) config('worksitem_estimators.ges', []));
+        $p = array_replace(self::P, (array) config('worksitem_estimators.ges', []));
+        // v118: elektrik birim fiyatı tek kaynaktan (enerji aracıyla aynı; fiyat robotu orayı günceller)
+        $kwh = (float) config('pricing.enerji.elektrik_kwh_fiyati', 0);
+        if ($kwh > 0) {
+            $p['kwh_price'] = $kwh;
+        }
+
+        return $p;
     }
 
     public function key(): string { return 'ges'; }

@@ -387,6 +387,11 @@ const C = JSON.parse(document.getElementById('plCfg').textContent);
 const $ = id => document.getElementById(id);
 const NS = 'http://www.w3.org/2000/svg';
 const LIM = C.limits, TYPES = C.types, T = 10;
+// v118: tek parça sınırı — ekleme, kopyalama ve paylaşılan bağlantıyı açma aynı sınırı kullanır
+// (eskiden ekleme 24, kopyalama 12, bağlantı 20'de kesiyordu → paylaşılan mutfak planı parça kaybediyordu).
+// İç duvar / kolon gibi yapı elemanları için +2 pay (eski 14 sınırıyla aynı).
+const MAX_ITEMS = +C.maxItems || (C.variant === 'mutfak' ? 24 : 12), MAX_ALL = MAX_ITEMS + 2;
+function canAdd(type) { return S.items.length < (TYPES[type] && TYPES[type].element ? MAX_ALL : MAX_ITEMS); }
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 let uid = 0;
 
@@ -625,7 +630,7 @@ function decode(s) {
             S.acc = { e: Number.isInteger(+o.st[2]) ? +o.st[2] : -1, tile: C.tiles[o.st[3]] ? o.st[3] : null };
         }
         S.notes = String(o.n || '').slice(0, 300);
-        S.items = (o.i || []).filter(a => C.products[a[0]]).slice(0, 20).map(a => {
+        S.items = (o.i || []).filter(a => C.products[a[0]]).slice(0, MAX_ALL).map(a => {
             const it = mk(a[0], a[1], typeof a[7] === 'string' ? a[7].slice(0, 20) : ''); it.x = +a[2] || 0; it.y = +a[3] || 0; it.rot = [0, 90, 180, 270].includes(+a[4]) ? +a[4] : 0;
             const p = product(it); it.w = a[5] ? clamp(+a[5], p.wr[0], p.wr[1]) : 0; it.d = a[6] ? clamp(+a[6], p.dr[0], p.dr[1]) : 0; return it;
         });
@@ -937,7 +942,7 @@ function rotate(it) {
 }
 function remove(it) { S.items = S.items.filter(o => o !== it); if (S.sel === it.uid) S.sel = null; changed(); }
 function copy(it) {
-    if (S.items.length >= 12) return;
+    if (!canAdd(it.type)) return;
     const c = mk(it.type, it.pid); c.w = it.w; c.d = it.d;
     autoPlace(c, S.items); S.items.push(c); S.sel = c.uid; changed();
 }
@@ -1119,7 +1124,7 @@ function addButtons() {
         : [['kabin', '+ Duşakabin'], ['gomme', '+ Gömme duş'], ['kuvet', '+ Küvet'], ['lavabo', '+ Lavabo'], ['klozet', '+ Klozet'], ['havlupan', '+ Havlupan']];
     list.forEach(([t, s]) => {
         const b = document.createElement('button'); b.type = 'button'; b.textContent = s;
-        b.addEventListener('click', () => { if (S.items.length >= (C.variant === 'mutfak' ? 24 : 12)) return; const it = mk(t); autoPlace(it, S.items); S.items.push(it); S.sel = it.uid; changed(); });
+        b.addEventListener('click', () => { if (!canAdd(t)) return; const it = mk(t); autoPlace(it, S.items); S.items.push(it); S.sel = it.uid; changed(); });
         $('plAdd').appendChild(b);
     });
 }
@@ -1141,7 +1146,7 @@ $('plAuto').addEventListener('click', () => { autoLayout(); changed(); });
 document.querySelectorAll('#plEls button').forEach(b => b.addEventListener('click', () => {
     const t = b.dataset.el;
     if (t === 'win' || t === 'nis') { addWindow(t); return; }
-    if (S.items.length >= 14) return;
+    if (S.items.length >= MAX_ALL) return;
     const it = mk(t); autoPlace(it, S.items); S.items.push(it); S.sel = it.uid; changed();
 }));
 $('plNotes').addEventListener('input', e => { S.notes = e.target.value.slice(0, 300); save(); });

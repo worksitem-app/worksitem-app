@@ -121,8 +121,13 @@
             
             <div class="placeholder-view" id="placeholderView">
                 <span style="font-size:3rem; margin-bottom:15px;">🪄</span>
+                @if(config('services.ai_spend_enabled'))
                 <h2>Yapay Zeka Hazır</h2>
                 <p>Fotoğraf yükleyip "Yeniden Tasarla" butonuna bastığınızda sihir başlayacak.</p>
+                @else
+                <h2>Görselleştirme geçici olarak kapalı</h2>
+                <p>Bu sırada aşağıdaki araçlarla parke, zemin, seramik ve boya maliyetini hesaplayabilirsiniz.</p>
+                @endif
             </div>
 
             <div class="placeholder-view" id="loadingView" style="display:none;">
@@ -185,13 +190,11 @@
             }
 
             const btn = document.getElementById('generateBtn');
+            if (!btn) return;
+            // v118: sayfada olmayan öğe (ör. #ctaBox) düğmeyi "Çiziliyor…"da kilitlemesin
+            const show = (id, v) => { const e = document.getElementById(id); if (e) e.style.display = v; };
             btn.disabled = true;
-            btn.innerHTML = 'Çiziliyor... Lütfen Bekleyin';
-            
-            document.getElementById('placeholderView').style.display = 'none';
-            document.getElementById('resultGrid').style.display = 'none';
-            document.getElementById('ctaBox').style.display = 'none';
-            document.getElementById('loadingView').style.display = 'flex';
+            btn.textContent = 'Çiziliyor... Lütfen Bekleyin';
 
             // Normalde burada Image-to-Image API'ye Base64 görsel + prompt gönderilir.
             // Bu SaaS prototipi için, backend rotasına Text-to-Image isteği atıyoruz (Görsel varmış gibi simüle eder)
@@ -202,34 +205,41 @@
             };
 
             try {
+                show('placeholderView', 'none');
+                show('resultGrid', 'none');
+                show('ctaBox', 'none');
+                show('loadingView', 'flex');
+
                 const response = await fetch('/araclar/oda-planlayici/generate', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': (document.querySelector('meta[name="csrf-token"]') || { getAttribute: () => '' }).getAttribute('content')
                     },
                     body: JSON.stringify(payload)
                 });
 
-                const data = await response.json();
+                let data = {};
+                try { data = await response.json(); } catch (_) { data = {}; }
 
-                if(data.success) {
+                if(data.success && data.image) {
                     document.getElementById('originalImg').src = uploadedImageBase64;
                     document.getElementById('aiImg').src = data.image; // API'den dönen görsel
                     
-                    document.getElementById('loadingView').style.display = 'none';
-                    document.getElementById('resultGrid').style.display = 'grid';
-                    document.getElementById('ctaBox').style.display = 'block';
+                    show('loadingView', 'none');
+                    show('resultGrid', 'grid');
+                    show('ctaBox', 'block');
                 } else {
-                    throw new Error(data.error);
+                    throw new Error(data.error || data.message || 'Görsel üretilemedi. Lütfen tekrar deneyin.');
                 }
             } catch (error) {
-                alert("Hata: " + error.message);
-                document.getElementById('loadingView').style.display = 'none';
-                document.getElementById('placeholderView').style.display = 'flex';
+                alert("Hata: " + (error && error.message ? error.message : 'Görsel üretilemedi.'));
+                show('loadingView', 'none');
+                show('placeholderView', 'flex');
             } finally {
                 btn.disabled = false;
-                btn.innerHTML = '✨ Yeni Bir Tarz Dene';
+                btn.textContent = '✨ Yeni Bir Tarz Dene';
             }
         }
     </script>

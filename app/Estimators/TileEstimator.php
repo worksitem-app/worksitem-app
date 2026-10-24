@@ -154,11 +154,13 @@ class TileEstimator extends KitEstimator
     /** Eski bağlantılar (?floor=20&wall=24) yeni ölçü alanlarına çevrilir: alan, en × 1 m olarak taşınır */
     public function normalize(array $raw): array
     {
-        $num = fn ($v) => is_numeric(str_replace(',', '.', trim((string) $v)));
-        $s = (string) ($raw['surface'] ?? '');
+        $num = fn ($v) => is_scalar($v) && is_numeric(str_replace(',', '.', trim((string) $v)));
+        $s = is_scalar($raw['surface'] ?? '') ? (string) ($raw['surface'] ?? '') : '';
         if (isset($raw['floor']) && $num($raw['floor']) && ! isset($raw['en']) && in_array($s, ['zemin', 'zemin_duvar'], true)) {
-            $raw['en'] = $raw['floor'];
-            $raw['boy'] = 1;
+            // Eski ?floor= bağlantısı: en en fazla 100 m olduğundan 100 m²'yi aşan alan en=100 × boy=alan/100 olarak taşınır
+            $f = (float) str_replace(',', '.', trim((string) $raw['floor']));
+            $raw['en'] = $f > 100 ? 100 : $raw['floor'];
+            $raw['boy'] = $f > 100 ? $f / 100 : 1;
         }
         if ($s === 'duvar' && isset($raw['wall']) && $num($raw['wall']) && ! isset($raw['dw'])) {
             $raw['dw'] = $raw['wall'];

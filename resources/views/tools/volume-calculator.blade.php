@@ -126,6 +126,7 @@
             <p style="font-size: 11px; color: #6b7280; margin-top: 5px;">Hafriyat hesabı için kazı derinliği, havuz için su seviyesi yüksekliği giriniz.</p>
         </div>
 
+        <p id="volErr" role="alert" style="display:none;color:#B42318;font-size:14px;margin:0 0 12px"></p>
         <button type="button" class="btn btn-calc" id="calculateBtn">Hacim Metrajını Getir →</button>
     </div>
 
@@ -139,7 +140,7 @@
         <div class="result-price" id="totalVolume" data-wc-price>0 m³</div>
         
         <p style="font-size: 11px; color: #6b7280; margin-bottom:20px;">
-            ⚠️ Bu değerler geometrik net hesaplamadır. Toprak kazılarında (hafriyat) toprağın kabarma payı (%15-20) eklenebilir.
+            ⚠️ Bu değerler geometrik net hesaplamadır. Toprak kazılarında (hafriyat) zemine göre %20–50 kabarma payı eklenir (hafriyat aracında hesaplanır).
         </p>
 
         <div class="breakdown-grid">
@@ -229,10 +230,17 @@ document.getElementById('calculateBtn').addEventListener('click', function() {
     const l = parseFloat(document.getElementById('length').value) || 0;
     const h = parseFloat(document.getElementById('height').value) || 0;
     
-    if (w <= 0 || l <= 0 || h <= 0) {
-        alert('Lütfen geçerli ölçüler giriniz.');
+    const err = document.getElementById('volErr');
+    if (!(w > 0) || !(l > 0) || !(h > 0) || !isFinite(w * l * h)) {
+        // Negatif/boş girişte uyarı; eski sonuç ekranda kalmasın
+        err.textContent = 'En, boy ve derinlik için pozitif bir değer girin.';
+        err.style.display = 'block';
+        document.getElementById('resultBox').classList.remove('active');
+        document.getElementById('budgetConfirmBox').style.display = 'none';
+        document.getElementById('leadBox').style.display = 'none';
         return;
     }
+    err.style.display = 'none';
 
     // 1. Taban Alanı
     const area = w * l;
@@ -242,12 +250,13 @@ document.getElementById('calculateBtn').addEventListener('click', function() {
     const liters = volume * 1000;
 
     const money = new Intl.NumberFormat('tr-TR', { maximumFractionDigits: 0 });
+    const fmt2 = new Intl.NumberFormat('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-    document.getElementById('totalVolume').innerText = volume.toFixed(2) + ' m³';
-    document.getElementById('baseArea').innerText = area.toFixed(2) + ' m²';
-    document.getElementById('liters').innerText = money.format(liters) + ' Litre';
+    document.getElementById('totalVolume').innerText = fmt2.format(volume) + ' m³';
+    document.getElementById('baseArea').innerText = fmt2.format(area) + ' m²';
+    document.getElementById('liters').innerText = money.format(liters) + ' litre';
 
-    document.getElementById('leadCalculatedData').value = `Taban Alanı: ${area.toFixed(2)}m2 | Toplam Hacim: ${volume.toFixed(2)}m3`;
+    document.getElementById('leadCalculatedData').value = `Taban alanı: ${fmt2.format(area)} m² | Toplam hacim: ${fmt2.format(volume)} m³`;
 
     document.getElementById('resultBox').classList.add('active');
     document.getElementById('budgetConfirmBox').style.display = 'block';

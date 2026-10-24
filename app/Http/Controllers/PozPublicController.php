@@ -200,8 +200,63 @@ class PozPublicController extends Controller
     }
 
     /**
+     * İhale modülü kurum filtresi (v118): seçenek değeri => veride geçen kurum etiketleri.
+     * Aynı kurum veride farklı adlarla geçiyor (ör. ÇŞB ve "ÇŞİDB/YFK"); "Ulaştırma" altında
+     * "Ulaştırma/…" alt kurumları toplanır. Veride bu listede olmayan kurumlar kendi adıyla eklenir.
+     */
+    private const INSTITUTION_GROUPS = [
+        'ÇŞB' => ['label' => 'Çevre, Şehircilik ve İklim Değişikliği Bak. (ÇŞB / YFK)', 'names' => ['ÇŞB', 'ÇŞİDB/YFK', 'ÇŞİDB', 'YFK']],
+        'Karayolları' => ['label' => 'Karayolları Genel Müd.', 'names' => ['Karayolları', 'KGM']],
+        'İller Bankası' => ['label' => 'İller Bankası (İLBANK)', 'names' => ['İller Bankası', 'İLBANK', 'İLBANK İller Bankası']],
+        'DSİ' => ['label' => 'DSİ', 'names' => ['DSİ']],
+        'MSB' => ['label' => 'Millî Savunma Bak. (MSB)', 'names' => ['MSB']],
+        'Kültür/Vakıflar' => ['label' => 'Kültür / Vakıflar', 'names' => ['Kültür/Vakıflar', 'Vakıflar', 'Kültür']],
+        'PTT' => ['label' => 'PTT', 'names' => ['PTT']],
+        'Ulaştırma' => ['label' => 'Ulaştırma (DHMİ, Liman vb.)', 'names' => ['Ulaştırma'], 'prefix' => 'Ulaştırma/'],
+        'Özel' => ['label' => 'Özel / Özel Pozlar', 'names' => ['Özel']],
+    ];
+
+    /** Filtre seçenekleri: sabit gruplar + veride geçen diğer kurumlar. @return array<string,string> değer => etiket */
+    public static function searchInstitutionOptions(): array
+    {
+        $opts = [];
+        foreach (self::INSTITUTION_GROUPS as $key => $g) {
+            $opts[$key] = $g['label'];
+        }
+        try {
+            $present = TenderPoz::query()->where('is_active', true)->distinct()->pluck('institution')->filter()->all();
+        } catch (\Throwable $e) {
+            $present = [];
+        }
+        foreach ($present as $inst) {
+            if (self::groupKeyFor((string) $inst) === null) {
+                $opts[(string) $inst] = (string) $inst;
+            }
+        }
+
+        return $opts;
+    }
+
+    /** Veride geçen kurum adının ait olduğu filtre grubu (yoksa null) */
+    private static function groupKeyFor(string $inst): ?string
+    {
+        foreach (self::INSTITUTION_GROUPS as $key => $g) {
+            if (in_array($inst, $g['names'], true) || (isset($g['prefix']) && str_starts_with($inst, $g['prefix']))) {
+                return $key;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Canlı poz arama API'si (eski: routes/web.php içinde closure).
      * GET /api/pozlar/search?q=...&institution=...
+     *
+     * v118: Kâr durumu "unknown" olan pozlarda teklif fiyatı (offer_unit_price) bilinçli olarak null;
+     * resmî fiyat (official_unit_price = unit_price ya da malzeme+işçilik) yine de döner. Ön yüz eskiden
+     * yanıtta olmayan "unit_price" alanına düşüyordu → NaN. Yanıtta has_official_price / has_offer_price
+     * bayrakları var; fiyatlı pozlar öne sıralanır.
      */
     public function search(Request $request, \App\Services\TenderPricingService $pricing)
     {
@@ -216,7 +271,17 @@ class PozPublicController extends Controller
         $query = TenderPoz::query()->where('is_active', true);
 
         if ($inst !== 'all' && $inst !== '') {
-            $query->where('institution', $inst);
+            $group = self::INSTITUTION_GROUPS[$inst] ?? null;
+            if ($group === null) {
+                $query->where('institution', $inst);
+            } else {
+                $query->where(function ($sub) use ($group) {
+                    $sub->whereIn('institution', $group['names']);
+                    if (isset($group['prefix'])) {
+                        $sub->orWhere('institution', 'LIKE', addcslashes($group['prefix'], '%_\\').'%');
+                    }
+                });
+            }
         }
 
         if ($q !== '') {
@@ -228,8 +293,17 @@ class PozPublicController extends Controller
             });
         }
 
+        // Sıralama: önce teklif fiyatı hesaplanabilenler (kâr durumu bilinen + resmî fiyatı olan),
+        // sonra yalnız resmî fiyatı olanlar, en sonda fiyatsızlar.
+        $hasOfficial = '(COALESCE(unit_price,0) > 0 OR COALESCE(material_price,0) + COALESCE(installation_price,0) > 0)';
+        $hasOffer = "(profit_status = 'excluded' OR (profit_status = 'included' AND COALESCE(included_profit_rate,0) > 0))";
+        $query->orderByRaw("CASE WHEN {$hasOfficial} AND {$hasOffer} THEN 0 WHEN {$hasOfficial} THEN 1 ELSE 2 END");
+
         $rows = $query->orderBy('poz_no')->limit(40)->get()->map(function ($poz) use ($pricing) {
             $calc = $pricing->calculate($poz, 1);
+            $official = $calc['official_unit_price'];
+            $hasOfficialPrice = is_numeric($official) && (float) $official > 0;
+            $offer = $hasOfficialPrice ? $calc['offer_unit_price'] : null;
 
             return [
                 'id' => $poz->id,
@@ -239,10 +313,14 @@ class PozPublicController extends Controller
                 'poz_no' => $poz->poz_no,
                 'description' => $poz->description,
                 'unit' => $poz->unit,
-                'official_unit_price' => $calc['official_unit_price'],
-                'offer_unit_price' => $calc['offer_unit_price'],
-                'quote_status' => $calc['status'],
-                'quote_message' => $calc['reason'],
+                'official_unit_price' => $hasOfficialPrice ? (float) $official : null,
+                'offer_unit_price' => $offer,
+                'target_margin' => $calc['target_margin'],
+                'has_official_price' => $hasOfficialPrice,
+                'has_offer_price' => $offer !== null,
+                'vat_included' => (bool) $calc['vat_included'],
+                'quote_status' => $hasOfficialPrice ? $calc['status'] : 'no_price',
+                'quote_message' => $hasOfficialPrice ? $calc['reason'] : 'Bu poz için kayıtlı fiyat yok.',
             ];
         });
 

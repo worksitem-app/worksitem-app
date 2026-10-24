@@ -8,14 +8,17 @@
     $cfg = (array) config("worksitem_tools.tools.$tool", []);
     $title = $cfg['title'] ?? 'Bu araç';
     $eng = in_array($tool, (array) config('worksitem_tools.engineering_tools', []), true);
-    $planner = str_ends_with($tool, 'planlayici');
+    // v118: oda-planlayici sürükle-bırak 2D/3D planlayıcı değil (AI görsel); kendi adımları var
+    $room = $tool === 'oda-planlayici';
+    $planner = ! $room && str_ends_with($tool, 'planlayici');
+    $takeoff = $tool === 'dijital-metraj';
     $color = $tool === 'duvar-rengi-gorsellestirici';
     $kit = in_array($tool, \App\Estimators\KitRegistry::slugs(), true) || $tool === 'banyo-maliyet-hesaplayici';
-    $ai = in_array($tool, ['otomatik-kesif-fiyatlandirma', 'dijital-metraj'], true);
+    $ai = $tool === 'otomatik-kesif-fiyatlandirma';
     $info = in_array($tool, ['azami-konut-kredisi', 'daire-kira-degeri', 'taks-kaks-hesaplayici', 'insaat-muhendisi-maas-hesabi', 'sgk-asgari-iscilik', 'belge-olusturucu', 'kat-karsiligi-analiz', 'pafta-olcu-hesaplayici', 'kesim-optimizasyonu', 'ihale-modulu', 'birim-fiyat-analiz'], true);
-    $cost = ! $eng && ! $planner && ! $color && ! $ai && ! $info && ($kit
+    $cost = ! $eng && ! $planner && ! $room && ! $takeoff && ! $color && ! $ai && ! $info && ($kit
         || config("worksitem_market.tools.$tool") || str_contains(mb_strtolower($title), 'maliyet'));
-    $kind = $eng ? 'eng' : ($planner ? 'plan' : ($color ? 'color' : ($ai ? 'ai' : ($info ? 'info' : ($cost ? 'cost' : 'qty')))));
+    $kind = $eng ? 'eng' : ($room ? 'room' : ($takeoff ? 'takeoff' : ($planner ? 'plan' : ($color ? 'color' : ($ai ? 'ai' : ($info ? 'info' : ($cost ? 'cost' : 'qty')))))));
     try {
         $priceDate = \App\Support\PriceDate::for($tool)->locale('tr')->translatedFormat('j F Y');
     } catch (\Throwable) {
@@ -49,6 +52,18 @@
             ['2D / 3D görün', 'Planı üstten ve üç boyutlu inceleyin; yazdırın veya bağlantıyla paylaşın.'],
             ['Maliyete geçin', 'Planınızdan maliyet hesaplayıcısına geçin; oradan keşif ve teklif isteyebilirsiniz.'],
         ],
+        'room' => [
+            ['Oda türünü ve stili seçin', 'Salon, yatak odası, mutfak gibi oda türünü ve beğendiğiniz iç mekân stilini seçin.'],
+            ['Örnek görsel üretin', 'Yapay zekâ seçiminize göre örnek bir iç mekân görseli üretir (özellik açıkken). Görsel fikir vermek içindir, proje çizimi değildir.'],
+            ['Stilleri karşılaştırın', 'Farklı stilleri deneyip hangisinin size uygun olduğuna karar verin.'],
+            ['Maliyeti hesaplayın', 'Parke, zemin, seramik ve boya hesaplayıcılarıyla seçtiğiniz tarzın maliyetini görün.'],
+        ],
+        'takeoff' => [
+            ['Planı yükleyin', 'Kat planınızı PDF (ilk sayfa), JPG veya PNG olarak yükleyin; dosya tarayıcınızda açılır.'],
+            ['Ölçeği ayarlayın', 'Ölçüsünü bildiğiniz bir duvarın iki ucuna tıklayın ve gerçek uzunluğunu metre olarak yazın.'],
+            ['Alanları ölçün', 'Odaların köşelerine sırayla tıklayın, başlangıç noktasına tıklayarak kapatın; alan m² olarak listeye eklenir.'],
+            ['Teklif isteyin', 'Toplam alanı tek formla gönderip uygulama teklifi isteyebilirsiniz.'],
+        ],
         'color' => [
             ['Rengi seçin', 'Doğrulanmış renk kataloglarındaki tonları inceleyin.'],
             ['Fotoğrafınızda görün', 'Seçtiğiniz tonu oda veya cephe fotoğrafınız üzerinde yaklaşık olarak önizleyin.'],
@@ -58,8 +73,8 @@
         'ai' => [
             ['Dosyanızı yükleyin', 'PDF, görsel veya CSV proje dosyanızı ekleyin.'],
             ['Kalemleri çıkarın', 'İş kalemleri ve miktarlar okunur; okunamayan veya fiyatlanamayan kalemler ayrıca listelenir.'],
-            ['Kontrol edin', 'Her kalemi düzeltebilir, eksikleri ekleyebilirsiniz. Sonuç bir ön analizdir.'],
-            ['Teklife dönüştürün', $offer],
+            ['Kontrol edin', 'Kalemleri ve miktarları kontrol edin. Sonuç bir ön analizdir, keşif yerine geçmez.'],
+            ['Excel\'e aktarın', 'Sonucu Excel\'e aktarıp kendi keşfinizde düzenleyin.'],
         ],
         default => [
             ['Bilgileri girin', 'Gerekli birkaç değeri yazın ya da seçin.'],

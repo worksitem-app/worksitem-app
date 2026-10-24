@@ -20,7 +20,7 @@
         
         /* APP LAYOUT */
         .sidebar-left { width: 70px; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; padding: 20px 0; z-index: 10;}
-        .main-workspace { flex: 1; display: flex; flex-direction: column; position: relative; background: #121215; overflow: hidden;}
+        .main-workspace { flex: 1; min-width: 0; display: flex; flex-direction: column; position: relative; background: #121215; overflow: hidden;}
         .sidebar-right { width: 320px; background: var(--surface); border-left: 1px solid var(--border); display: flex; flex-direction: column; z-index: 10;}
 
         /* LEFT TOOLBAR */
@@ -34,8 +34,15 @@
         .brand { font-weight: 900; color: #fff; text-decoration: none; display: flex; align-items: center; gap: 10px;}
         .brand span { background: var(--accent); color: #000; padding: 3px 6px; border-radius: 4px; font-size: 10px; font-weight: 900;}
         
-        .canvas-container { flex: 1; overflow: auto; position: relative; cursor: crosshair; display: flex; align-items: center; justify-content: center; }
-        canvas { background: #fff; box-shadow: 0 0 30px rgba(0,0,0,0.5); transform-origin: top left; }
+        .canvas-container { flex: 1; min-width: 0; min-height: 0; overflow: auto; position: relative; cursor: crosshair; display: block; padding: 20px; -webkit-overflow-scrolling: touch; }
+        /* v118: flex ortalama, kaptan büyük planı sol/üstten kesiyordu (o kısma kaydırılamıyordu); margin:auto yalnız küçükken ortalar */
+        canvas { display: block; margin: 0 auto; background: #fff; box-shadow: 0 0 30px rgba(0,0,0,0.5); max-width: none; }
+        .canvas-container.panning, .canvas-container.panning canvas { cursor: grabbing !important; }
+        .zoom-box { display: flex; flex-direction: column; align-items: center; gap: 6px; margin-top: auto; }
+        .zoom-btn { width: 44px; height: 36px; border-radius: 10px; border: 1px solid var(--border); background: transparent; color: #fff; font-size: 16px; font-weight: 800; cursor: pointer; }
+        .zoom-btn:hover { background: rgba(255,255,255,0.1); }
+        .zoom-val { font-size: 11px; color: var(--muted); min-width: 44px; text-align: center; }
+        .m-del { background: none; border: 0; color: #ef4444; cursor: pointer; font-size: 12px; margin-left: 8px; }
         
         .upload-overlay { position: absolute; inset: 20px; border: 2px dashed var(--border); border-radius: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(30,30,36,0.9); z-index: 5;}
         .upload-overlay h2 { margin-bottom: 10px; font-size: 24px; font-weight: 800;}
@@ -94,7 +101,11 @@
             .takeoff-shell{flex-wrap:wrap;height:auto;min-height:0}
             .sidebar-left{width:100%!important;flex-direction:row!important;justify-content:center;gap:12px;padding:10px 0!important;border-right:0!important;border-bottom:1px solid var(--border)}
             .sidebar-left .tool-tooltip{display:none}
-            .main-workspace{flex:1 1 100%!important;height:62vh;min-height:380px}
+            .sidebar-left .tool-btn{margin-bottom:0!important}
+            .zoom-box{flex-direction:row;margin-top:0;margin-left:8px}
+            .canvas-container{padding:8px}
+            /* v118: min-width:0 — yoksa flex öğe büyük canvas kadar genişleyip ekran dışına taşıyor, ölçek tıklanamıyordu */
+            .main-workspace{flex:1 1 100%!important;min-width:0!important;width:100%;height:62vh;min-height:380px}
             .sidebar-right{width:100%!important;border-left:0!important}
             .ws-mobile-note{display:block;margin:0 16px 12px;padding:10px 12px;border-radius:10px;background:#FFF8E1;border:1px solid #FFE08A;font-size:13px;color:#5c4a10}
         }
@@ -118,6 +129,13 @@
 
         <button class="tool-btn active" id="toolArea" title="Alan Ölç (Metrekare)">⬠</button>
         <div class="tool-tooltip">Alan (m²)</div>
+
+        <div class="zoom-box" aria-label="Yakınlaştırma">
+            <button type="button" class="zoom-btn" id="zoomIn" title="Yakınlaştır" aria-label="Yakınlaştır">+</button>
+            <span class="zoom-val" id="zoomVal">100%</span>
+            <button type="button" class="zoom-btn" id="zoomOut" title="Uzaklaştır" aria-label="Uzaklaştır">−</button>
+            <button type="button" class="zoom-btn" id="zoomFit" title="Ekrana sığdır" aria-label="Ekrana sığdır" style="font-size:12px">⤢</button>
+        </div>
     </aside>
 
     {{-- MAIN WORKSPACE --}}
@@ -149,7 +167,7 @@
         <div class="right-footer">
             <div class="total-box">
                 <span>Toplam Alan</span>
-                <strong id="totalArea">0.00 m²</strong>
+                <strong id="totalArea">0,00 m²</strong>
             </div>
             <button class="action-btn" id="btnGetQuote">Ölçümleri Fiyatlandır →</button>
         </div>
@@ -160,9 +178,11 @@
     <div id="scalePrompt">
         <h3>Ölçek Kalibrasyonu</h3>
         <p style="font-size:13px; color:#a1a1aa;">Çizdiğiniz bu çizgi gerçekte kaç metre?</p>
-        <input type="number" id="scaleInput" step="0.1" placeholder="Örn: 5.2">
+        <input type="number" id="scaleInput" step="0.01" min="0.01" inputmode="decimal" placeholder="Örn: 5.2">
+        <p id="scaleErr" style="display:none; color:#f87171; font-size:12px; margin-bottom:10px;">Pozitif bir uzunluk (m) girin.</p>
         <br>
         <button class="file-input-btn" id="btnSaveScale">Uygula</button>
+        <button type="button" id="btnCancelScale" style="display:block; margin:12px auto 0; background:none; border:0; color:#a1a1aa; cursor:pointer;">İptal</button>
     </div>
 
     {{-- B2B LEAD MODAL --}}
@@ -227,14 +247,60 @@
             this.classList.add('active');
             currentTool = this.id.replace('tool', '').toLowerCase();
             
-            if(currentTool === 'move') canvas.style.cursor = 'grab';
-            else canvas.style.cursor = 'crosshair';
+            if(currentTool === 'move') { canvas.style.cursor = 'grab'; canvas.style.touchAction = 'none'; }
+            else { canvas.style.cursor = 'crosshair'; canvas.style.touchAction = ''; }
 
             scalePoints = [];
             currentPolygon = [];
             redraw();
         });
     });
+
+    // YAKINLAŞTIRMA (v118): canvas CSS genişliği değişir; tıklama koordinatı getBoundingClientRect ile ölçeklenir
+    let zoom = 1;
+    const fmt2 = v => new Intl.NumberFormat('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(v);
+    function applyZoom(z, keepCenter = true) {
+        if (!isImageLoaded || !canvas.width) return;
+        z = Math.min(4, Math.max(0.1, z));
+        const cx = (container.scrollLeft + container.clientWidth / 2) / (canvas.width * zoom);
+        const cy = (container.scrollTop + container.clientHeight / 2) / (canvas.height * zoom);
+        zoom = z;
+        canvas.style.width = Math.round(canvas.width * zoom) + 'px';
+        canvas.style.height = Math.round(canvas.height * zoom) + 'px';
+        document.getElementById('zoomVal').textContent = Math.round(zoom * 100) + '%';
+        if (keepCenter) {
+            container.scrollLeft = cx * canvas.width * zoom - container.clientWidth / 2;
+            container.scrollTop = cy * canvas.height * zoom - container.clientHeight / 2;
+        }
+    }
+    function fitZoom() {
+        if (!isImageLoaded || !canvas.width) return;
+        const pad = 2 * (parseFloat(getComputedStyle(container).paddingLeft) || 0);
+        const z = Math.min((container.clientWidth - pad) / canvas.width, 1);
+        applyZoom(z > 0 ? z : 1, false);
+        container.scrollLeft = 0; container.scrollTop = 0;
+    }
+    document.getElementById('zoomIn').addEventListener('click', () => applyZoom(zoom * 1.25));
+    document.getElementById('zoomOut').addEventListener('click', () => applyZoom(zoom / 1.25));
+    document.getElementById('zoomFit').addEventListener('click', fitZoom);
+
+    // KAYDIR (PAN) (v118): eskiden yalnız imleç değişiyordu; artık kabı sürükleyerek kaydırır (fare + dokunma)
+    let pan = null;
+    canvas.addEventListener('pointerdown', function(e) {
+        if (currentTool !== 'move' || !isImageLoaded) return;
+        pan = { x: e.clientX, y: e.clientY, sl: container.scrollLeft, st: container.scrollTop, id: e.pointerId };
+        container.classList.add('panning');
+        try { canvas.setPointerCapture(e.pointerId); } catch (_) {}
+        e.preventDefault();
+    });
+    canvas.addEventListener('pointermove', function(e) {
+        if (!pan || e.pointerId !== pan.id) return;
+        container.scrollLeft = pan.sl - (e.clientX - pan.x);
+        container.scrollTop = pan.st - (e.clientY - pan.y);
+    });
+    const endPan = () => { pan = null; container.classList.remove('panning'); };
+    canvas.addEventListener('pointerup', endPan);
+    canvas.addEventListener('pointercancel', endPan);
 
     // DOSYA YÜKLEME (PDF & IMG)
     document.getElementById('fileInput').addEventListener('change', function(e) {
@@ -258,6 +324,7 @@
                         page.render(renderContext).promise.then(() => {
                             imageObj.src = canvas.toDataURL(); // Çizimi image'a al
                             isImageLoaded = true;
+                            fitZoom();
                             alert("PDF yüklendi! Önce 'Ölçek' aracıyla bir duvarı referans alın.");
                         });
                     });
@@ -273,6 +340,7 @@
                     canvas.height = imageObj.height;
                     isImageLoaded = true;
                     redraw();
+                    fitZoom();
                     alert("Plan yüklendi! Lütfen sol menüden 'Ölçek' (Cetvel) aracını seçip bilinen bir duvarın başını ve sonunu tıklayarak sistemi kalibre edin.");
                 }
                 imageObj.src = event.target.result;
@@ -282,18 +350,23 @@
     });
 
     // CANVAS TIKLAMA OLAYLARI (DİJİTAL METRAJ)
-    canvas.addEventListener('mousedown', function(e) {
-        if(!isImageLoaded) return;
+    // v118: 'click' — dokunmatik ekranda parmakla kaydırma nokta eklemez, yalnız dokunuş ekler
+    canvas.addEventListener('click', function(e) {
+        if(!isImageLoaded || currentTool === 'move') return;
         const rect = canvas.getBoundingClientRect();
-        const x = (e.clientX - rect.left) * (canvas.width / rect.width);
+        if (!rect.width || !rect.height) return;
+        const k = canvas.width / rect.width; // ekran px → canvas px
+        const x = (e.clientX - rect.left) * k;
         const y = (e.clientY - rect.top) * (canvas.height / rect.height);
+        const snap = 14 * k; // kapatma toleransı ekranda ~14 px (yakınlaştırmadan bağımsız)
 
         if (currentTool === 'scale') {
-            if (scalePoints.length < 2) {
-                scalePoints.push({x, y});
-                if (scalePoints.length === 2) {
-                    document.getElementById('scalePrompt').style.display = 'block';
-                }
+            if (scalePoints.length >= 2) scalePoints = []; // yeniden kalibrasyon
+            scalePoints.push({x, y});
+            if (scalePoints.length === 2) {
+                document.getElementById('scaleErr').style.display = 'none';
+                document.getElementById('scalePrompt').style.display = 'block';
+                document.getElementById('scaleInput').focus();
             }
         } 
         else if (currentTool === 'area') {
@@ -302,7 +375,7 @@
                 return;
             }
             // Çift tıkla bitirme simülasyonu
-            if (currentPolygon.length > 2 && Math.abs(x - currentPolygon[0].x) < 20 && Math.abs(y - currentPolygon[0].y) < 20) {
+            if (currentPolygon.length > 2 && Math.abs(x - currentPolygon[0].x) < snap && Math.abs(y - currentPolygon[0].y) < snap) {
                 finishPolygon();
             } else {
                 currentPolygon.push({x, y});
@@ -352,11 +425,15 @@
 
     // ÖLÇEK KAYDET
     document.getElementById('btnSaveScale').addEventListener('click', function() {
-        const meters = parseFloat(document.getElementById('scaleInput').value);
+        const meters = parseFloat(String(document.getElementById('scaleInput').value).replace(',', '.'));
+        const dx0 = scalePoints.length === 2 ? scalePoints[1].x - scalePoints[0].x : 0;
+        const dy0 = scalePoints.length === 2 ? scalePoints[1].y - scalePoints[0].y : 0;
+        if (!(meters > 0) || !Number.isFinite(meters) || Math.hypot(dx0, dy0) < 1) {
+            document.getElementById('scaleErr').style.display = 'block';
+            return;
+        }
         if(meters > 0 && scalePoints.length === 2) {
-            const dx = scalePoints[1].x - scalePoints[0].x;
-            const dy = scalePoints[1].y - scalePoints[0].y;
-            const pxDistance = Math.sqrt(dx*dx + dy*dy);
+            const pxDistance = Math.hypot(dx0, dy0);
             scalePxToM = pxDistance / meters; // 1 metre = X pixel
             
             document.getElementById('scalePrompt').style.display = 'none';
@@ -369,6 +446,12 @@
             document.getElementById('measurementsList').innerHTML = '<div style="color:#16a34a; font-size:12px; text-align:center; margin-top:20px;">Sistem Kalibre Edildi. ✓<br>Şimdi Alan Ölç (⬠) aracıyla odaların etrafını çizin ve kapatmak için başlangıç noktasına tıklayın.</div>';
             redraw();
         }
+    });
+
+    document.getElementById('btnCancelScale').addEventListener('click', function() {
+        document.getElementById('scalePrompt').style.display = 'none';
+        scalePoints = [];
+        redraw();
     });
 
     // ALAN HESAPLAMA (Shoelace Formula)
@@ -401,12 +484,14 @@
         const html = `
             <div class="m-item">
                 <div class="m-name">Ölçüm Alanı ${savedPolygons.length}</div>
-                <div class="m-value">${last.m2.toFixed(2)} m²</div>
+                <div class="m-value">${fmt2(last.m2)} m²</div>
             </div>
         `;
         list.insertAdjacentHTML('beforeend', html);
-        document.getElementById('totalArea').innerText = totalM2.toFixed(2) + ' m²';
+        document.getElementById('totalArea').innerText = fmt2(totalM2) + ' m²';
     }
+
+    // Not (v118): uzunluk (m) ölçümü ve çok sayfalı PDF (yalnız 1. sayfa açılıyor) henüz yok — yeni özellik.
 
     // B2B TEKLİF BUTONU
     document.getElementById('btnGetQuote').addEventListener('click', function() {
@@ -414,7 +499,7 @@
             alert("Lütfen en az bir alanı ölçünüz.");
             return;
         }
-        document.getElementById('leadTotalArea').innerText = totalM2.toFixed(2);
+        document.getElementById('leadTotalArea').innerText = fmt2(totalM2);
         document.getElementById('leadHiddenData').value = `Web Takeoff Metraj: ${totalM2.toFixed(2)} m2`;
         document.getElementById('leadModal').style.display = 'flex';
     });

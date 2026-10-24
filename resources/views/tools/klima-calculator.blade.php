@@ -113,7 +113,7 @@
 
 <main class="wc-wrap">
     <x-calc.hero title="Klima BTU hesaplama: oda için kaç BTU klima gerekir?" crumb="Klima BTU hesabı">
-        Kişi sayısı, yalıtım ve cephe durumuna göre mekanınızın ihtiyacı olan doğru iklimlendirme (klima) kapasitesini bilimsel olarak hesaplayın.
+        Kişi sayısı, yalıtım ve cephe durumuna göre mekanınızın ihtiyaç duyduğu yaklaşık klima kapasitesini (BTU/h) hesaplayın.
     </x-calc.hero>
 
     <div class="wc-grid">
@@ -125,7 +125,7 @@
             </div>
             <div class="form-group">
                 <label>Ortalama Bulunacak Kişi Sayısı</label>
-                <input type="number" id="people" class="form-control" placeholder="Örn: 3" value="3" min="1" step="1">
+                <input type="number" id="people" class="form-control" placeholder="Örn: 3" value="3" min="0" step="1">
             </div>
         </div>
 
@@ -149,6 +149,7 @@
         </div>
 
         <button type="button" class="btn btn-calc" id="calculateBtn">Isı Yükünü ve Kapasiteyi Hesapla →</button>
+        <div id="inputWarn" role="alert" style="display:none; color:#b91c1c; font-size:13px; font-weight:700; margin-top:10px;"></div>
     </div>
 
     <aside class="wc-aside">
@@ -264,15 +265,22 @@
 
 <script>
 document.getElementById('calculateBtn').addEventListener('click', function() {
-    const area = parseFloat(document.getElementById('area').value) || 0;
-    const people = parseInt(document.getElementById('people').value) || 0;
+    const area = parseFloat(document.getElementById('area').value);
+    const peopleRaw = document.getElementById('people').value;
+    const people = peopleRaw === '' ? 0 : parseFloat(peopleRaw);
     const facade = parseFloat(document.getElementById('facade').value) || 1;
     const insulation = parseFloat(document.getElementById('insulation').value) || 1;
+    const inputWarn = document.getElementById('inputWarn');
     
-    if (area <= 0) {
-        alert('Lütfen geçerli bir alan giriniz.');
+    // v118: alert yerine alanın altında uyarı; negatif/0/boş girdide hesap yapılmaz
+    if (!(area > 0) || !(people >= 0) || people !== Math.floor(people) || area > 100000) {
+        inputWarn.textContent = !(area > 0) || area > 100000 ? 'Alan için pozitif bir değer girin.' : 'Kişi sayısı 0 veya pozitif bir tam sayı olmalı.';
+        inputWarn.style.display = 'block';
+        document.getElementById('resultBox').classList.remove('active');
+        document.getElementById('budgetConfirmBox').style.display = 'none';
         return;
     }
+    inputWarn.style.display = 'none';
 
     // 1. Temel Yük (Türkiye ortalaması bölge katsayısı ~350 BTU/m2 alınmıştır)
     const baseLoad = area * 350;
@@ -283,35 +291,38 @@ document.getElementById('calculateBtn').addEventListener('click', function() {
     // 3. Brüt Yük ve Çarpanlar
     let totalLoad = (baseLoad + personLoad) * facade * insulation;
 
-    // 4. Standart Cihaz Önerisi Algoritması
-    let recommended = 9000;
-    if (totalLoad > 9000 && totalLoad <= 12500) recommended = 12000;
-    else if (totalLoad > 12500 && totalLoad <= 19000) recommended = 18000;
-    else if (totalLoad > 19000 && totalLoad <= 25000) recommended = 24000;
-    else if (totalLoad > 25000 && totalLoad <= 38000) recommended = 36000;
-    else if (totalLoad > 38000) recommended = 48000;
+    // 4. Standart cihaz önerisi: yükü karşılayan en küçük standart split kapasite (≤ 48.000 BTU/h)
+    const SIZES = [9000, 12000, 18000, 24000, 36000, 48000];
+    const single = SIZES.find(x => x >= totalLoad) || null;
 
-    // Ekrana Basma
     const formatBtu = (num) => new Intl.NumberFormat('tr-TR').format(Math.ceil(num));
 
-    document.getElementById('recommendedDevice').innerText = formatBtu(recommended) + ' BTU';
+    // Ana sonuç kesilmez: 48.000 üstünde yük gösterilir, çoklu cihaz önerilir
+    let multiCount = 0, multiSize = 0;
+    if (!single) {
+        multiSize = totalLoad <= 4 * 24000 ? 24000 : 48000;
+        multiCount = Math.ceil(totalLoad / multiSize);
+    }
+    document.getElementById('recommendedDevice').innerText = single ? formatBtu(single) + ' BTU' : formatBtu(totalLoad) + ' BTU/h';
     document.getElementById('baseLoad').innerText = formatBtu(baseLoad) + ' BTU';
     document.getElementById('personLoad').innerText = '+' + formatBtu(personLoad) + ' BTU';
     document.getElementById('totalLoad').innerText = formatBtu(totalLoad) + ' BTU';
-    document.getElementById('deviceStandard').innerText = formatBtu(recommended) + ' BTU/h';
+    document.getElementById('deviceStandard').innerText = single ? formatBtu(single) + ' BTU/h' : `${multiCount} × ${formatBtu(multiSize)} BTU/h`;
 
-    // Uzman notu Mantığı
+    // Uzman notu: öneri her zaman toplam yükü karşılar
     let insightStr = '';
-    if (recommended >= 24000 && recommended < 48000) {
-        insightStr = `Alanınızın ısı yükü oldukça yüksek. Tek bir büyük kapasiteli duvar tipi cihaz (Örn: 24.000 BTU) kullanmak yerine, konforu eşit dağıtmak için <strong>iki adet 12.000 BTU cihaz</strong> veya <strong>Salon Tipi</strong> klimaları değerlendirebilirsiniz.`;
-    } else if (recommended >= 48000) {
-        insightStr = `Hesaplanan ısı yükü standart split klimaların (duvar tipi) kapasitesini aşmaktadır. Bu alan için <strong>VRF (Merkezi İklimlendirme)</strong> sistemleri veya <strong>Kanallı / Kaset Tipi</strong> ticari cihazlar projelendirilmelidir. Mekanik ekibimizden destek almanızı öneririz.`;
+    if (!single) {
+        insightStr = `Hesaplanan ısı yükü (${formatBtu(totalLoad)} BTU/h) tek bir split klimanın kapasitesini (48.000 BTU/h) aşıyor. Bu alan için en az <strong>${multiCount} adet ${formatBtu(multiSize)} BTU</strong> cihaz (toplam ${formatBtu(multiCount * multiSize)} BTU/h) ya da <strong>VRF / kanallı</strong> bir sistem projelendirilmelidir.`;
+    } else if (single >= 24000) {
+        const n12 = Math.ceil(totalLoad / 12000), n18 = Math.ceil(totalLoad / 18000);
+        const alt = n18 < n12 ? `<strong>${n18} adet 18.000 BTU</strong>` : `<strong>${n12} adet 12.000 BTU</strong>`;
+        insightStr = `Alanınızın ısı yükü ${formatBtu(totalLoad)} BTU/h. Tek bir ${formatBtu(single)} BTU cihaz yerine, serinliği odaya eşit dağıtmak için ${alt} cihaz (toplam yükü karşılar) da değerlendirilebilir.`;
     } else {
-        insightStr = `Seçtiğiniz yalıtım ve cephe verilerine göre en ideal konforu ve düşük elektrik tüketimini <strong>${formatBtu(recommended)} BTU</strong> kapasiteli inverter bir cihaz sağlayacaktır. Cihazı doğrudan üzerinize üflemeyecek şekilde konumlandırınız.`;
+        insightStr = `Seçtiğiniz yalıtım ve cephe verilerine göre <strong>${formatBtu(single)} BTU</strong> kapasiteli inverter bir cihaz yükü karşılar. Cihazı doğrudan üzerinize üflemeyecek şekilde konumlandırınız.`;
     }
     document.getElementById('insightText').innerHTML = insightStr;
 
-    document.getElementById('leadCalculatedData').value = `Alan: ${area}m2 | Yük: ${formatBtu(totalLoad)} BTU | Önerilen Cihaz: ${formatBtu(recommended)} BTU`;
+    document.getElementById('leadCalculatedData').value = `Alan: ${area}m2 | Yük: ${formatBtu(totalLoad)} BTU | Önerilen Cihaz: ${single ? formatBtu(single) + ' BTU' : multiCount + ' x ' + formatBtu(multiSize) + ' BTU'}`;
 
     document.getElementById('resultBox').classList.add('active');
     document.getElementById('budgetConfirmBox').style.display = 'block';
