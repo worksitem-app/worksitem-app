@@ -38,7 +38,7 @@ class LegalDocumentsTest extends TestCase
         $this->assertStringContainsString('"BreadcrumbList"', $html);
         $this->assertStringContainsString('<link rel="canonical" href="'.url($url).'">', $html);
         $this->assertMatchesRegularExpression('/<h2 id="[a-z0-9-]+"/', $html);
-        $this->assertSame(1, substr_count($html, 'class="wks-footer'));
+        $this->assertSame(1, substr_count($html, '<footer class="wk-footer"'));
     }
 
     public function test_cerez_ayarlari_dugmesi_korunur(): void

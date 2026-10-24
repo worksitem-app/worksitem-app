@@ -2347,7 +2347,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
 
-    // Tema düğmesi artık ortak başlıkta (wks-header); bu sayfada yoksa dinleyici bağlanmaz
+    // Tema düğmesi artık ortak başlıkta (wk-header); bu sayfada yoksa dinleyici bağlanmaz
     if (themeToggle) themeToggle.addEventListener('click', function () {
 
         const dark =

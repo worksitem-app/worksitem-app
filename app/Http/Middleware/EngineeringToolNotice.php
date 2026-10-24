@@ -44,7 +44,7 @@ class EngineeringToolNotice
 
         // Site header'ının hemen altına yerleştir; header yoksa <body> başına.
         $pos = $m[0][1] + strlen($m[0][0]);
-        $headerStart = strpos($html, 'class="wks-header"');
+        $headerStart = strpos($html, '<header class="wk-header"');
         if ($headerStart !== false) {
             $headerEnd = stripos($html, '</header>', $headerStart);
             if ($headerEnd !== false) {

@@ -16,7 +16,7 @@ class UiDenetimV115Test extends TestCase
             $html = $this->get($url)->assertOk()->getContent();
             $this->assertSame(1, substr_count($html, 'id="ws-a11y-css"'), $url);
             $pos = strpos($html, 'id="ws-a11y-css"');
-            $this->assertGreaterThan(strpos($html, 'wks-foot-title') ?: 0, $pos, "$url: katman alt bilgi stillerinden sonra gelmeli");
+            $this->assertGreaterThan(strpos($html, 'id="wk-shell-css"') ?: 0, $pos, "$url: katman alt bilgi stillerinden sonra gelmeli");
             $this->assertStringContainsString('font-size: 16px !important', $html);
         }
     }
