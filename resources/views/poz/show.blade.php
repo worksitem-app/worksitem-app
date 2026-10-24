@@ -1,14 +1,24 @@
 @extends('poz._layout')
 
-@if (config('worksitem_seo.poz_index_only_enriched', true) && ! $poz->seo_enriched)
+@if (config('worksitem_seo.poz_index_only_enriched', false) && ! $poz->seo_enriched)
 @section('robots', 'noindex,follow')
 @endif
-@section('title', $poz->poz_no . ' — ' . \Illuminate\Support\Str::limit($poz->description, 55) . ' | WORKSİTEM')
-@section('description', $poz->meta_description ?: ($poz->poz_no . ' pozunun birim fiyatı ' . $priceFormatted . ' TL/' . $poz->unit . '. Kaynak: ' . $poz->institution . '.'))
+@php
+  // v113 başlık: aranan ifade başta ("<poz no> Birim Fiyatı <yıl>"), tanım kısaltılır, kurum sonda
+  $pozHead = $poz->poz_no.' Birim Fiyatı'.($poz->year ? ' '.$poz->year : '');
+  $pozInst = \App\Support\PozCatalog::shortInstitution($poz->institution);
+  $pozRoom = max(18, 68 - mb_strlen($pozHead) - mb_strlen($pozInst) - 6);
+  $pozTitle = $pozHead.' – '.\Illuminate\Support\Str::limit(\Illuminate\Support\Str::ucfirst(trim((string) $poz->description)), $pozRoom, '…').($pozInst !== '' ? ' | '.$pozInst : '');
+  $pozDesc = $poz->meta_description ?: ($poz->poz_no.' pozunun '.($poz->year ? $poz->year.' ' : '').'birim fiyatı '.$priceFormatted.' TL/'.$poz->unit.' ('.$poz->institution.'). Miktarı girin, toplam tutarı KDV dahil hemen görün; ilgili pozlar ve maliyet hesabı.');
+@endphp
+@section('title', $pozTitle)
+@section('description', $pozDesc)
 @section('canonical', \App\Support\PozUrl::absolute($poz->poz_no))
 
 @section('breadcrumb')
   <a href="/pozlar">Pozlar</a><span>›</span>
+  <a href="{{ $institutionUrl }}">{{ $poz->institution }}</a><span>›</span>
+  <a href="{{ $groupUrl }}">{{ $group }}</a><span>›</span>
   <span>{{ $poz->poz_no }}</span>
 @endsection
 
@@ -47,9 +57,18 @@
     @endif
   </div>
 
+  @if($otherInstitutions->isNotEmpty())
+  <p class="poz-variants">
+    Bu poz numarası başka kurumların listesinde de var:
+    @foreach($otherInstitutions as $v)
+      <a href="{{ \App\Support\PozUrl::path($v->poz_no) }}?kurum={{ \App\Support\PozCatalog::institutionSlug($v->institution) }}" rel="nofollow">{{ $v->institution }} ({{ number_format((float) $v->unit_price, 2, ',', '.') }} TL/{{ $v->unit }})</a>@if(! $loop->last), @endif
+    @endforeach
+  </p>
+  @endif
+
   <div class="poz-actions">
     <a class="poz-btn poz-btn-primary" href="/maliyet-hesapla?poz={{ urlencode($poz->poz_no) }}" data-poz-cta="hesapla">Bu poz ile maliyet hesapla →</a>
-    <a class="poz-btn" href="/pozlar">← Tüm pozlara dön</a>
+    <a class="poz-btn" href="{{ $groupUrl }}">{{ $group }} grubundaki pozlar</a>
   </div>
 </section>
 
@@ -113,7 +132,25 @@
     </section>
     @endif
 
-
+    @if($related->isNotEmpty())
+    <section class="poz-card" aria-labelledby="pozRelatedTitle">
+      <div class="poz-card-head">
+        <div>
+          <div class="poz-card-kicker">{{ $poz->institution }} · {{ $group }} grubu</div>
+          <h2 id="pozRelatedTitle">İlgili pozlar</h2>
+        </div>
+      </div>
+      <ul class="poz-related">
+        @foreach($related as $r)
+        <li>
+          <a href="{{ \App\Support\PozUrl::path($r->poz_no) }}"><code>{{ $r->poz_no }}</code> {{ \Illuminate\Support\Str::limit($r->description, 95) }}</a>
+          <span>{{ number_format((float) $r->unit_price, 2, ',', '.') }} TL/{{ $r->unit }}</span>
+        </li>
+        @endforeach
+      </ul>
+      <a class="poz-more" href="{{ $groupUrl }}">{{ $group }} grubundaki tüm pozlar →</a>
+    </section>
+    @endif
   </div>
 
   <aside class="poz-summary" aria-label="Poz fiyat özeti">
@@ -121,6 +158,15 @@
       <div class="poz-price-label">Kayıtlı birim fiyat</div>
       <div class="poz-price-value">{{ $priceFormatted }} TL</div>
       <div class="poz-price-unit">1 {{ $poz->unit }} için kayıtlı referans değer</div>
+
+      <form class="poz-calc" onsubmit="return false" aria-label="Tutar hesapla" data-price="{{ (float) $poz->unit_price }}">
+        <label for="pozQty">Miktar ({{ $poz->unit }})</label>
+        <input id="pozQty" type="number" inputmode="decimal" min="0" step="any" placeholder="Örn. 120">
+        <div class="poz-calc-out" aria-live="polite">
+          <div><span>Tutar (KDV hariç)</span><strong data-calc="net">—</strong></div>
+          <div><span>KDV %20 dahil</span><strong data-calc="gross">—</strong></div>
+        </div>
+      </form>
 
       <div class="poz-summary-list">
         <div class="poz-summary-row">
@@ -207,6 +253,10 @@
 
 
 
+@if(! empty($sponsorCategories))
+  <x-sponsor.slot tool="poz-sayfalari" :categories="$sponsorCategories" title="Bu imalat için ürünler" />
+@endif
+
 <section class="poz-card" style="margin-top:18px" aria-labelledby="pozFaqTitle">
   <div class="poz-card-head">
     <div>
@@ -247,6 +297,18 @@
 
 @include('partials.ws-track')
 <script>
+(function () {
+  var f = document.querySelector('.poz-calc'); if (!f) return;
+  var price = parseFloat(f.getAttribute('data-price')) || 0, q = f.querySelector('#pozQty'), sent = false;
+  var fmt = function (v) { return v.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' TL'; };
+  q.addEventListener('input', function () {
+    var n = parseFloat(String(q.value).replace(',', '.'));
+    var ok = isFinite(n) && n > 0;
+    f.querySelector('[data-calc=net]').textContent = ok ? fmt(n * price) : '—';
+    f.querySelector('[data-calc=gross]').textContent = ok ? fmt(n * price * 1.2) : '—';
+    if (ok && !sent && window.wsTrack) { sent = true; wsTrack('poz_calc', { poz: @json($poz->poz_no) }); }
+  });
+})();
 document.addEventListener('click', function (e) {
   var a = e.target.closest('[data-poz-cta]'); if (!a || !window.wsTrack) return;
   wsTrack('poz_cta_click', { poz: @json($poz->poz_no), cta: a.getAttribute('data-poz-cta') });

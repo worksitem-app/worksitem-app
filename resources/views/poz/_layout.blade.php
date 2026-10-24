@@ -127,6 +127,30 @@
     .poz-summary-row:last-child{border-bottom:0}
     .poz-summary-row span{color:var(--muted)}
     .poz-summary-row strong{text-align:right}
+    /* v113: tutar hesabı, ilgili pozlar, kurum varyantları, hub listeleri */
+    .poz-calc{margin-top:16px;padding:14px;border:1px solid var(--line);border-radius:14px;background:var(--surface-2)}
+    .poz-calc label{display:block;font-size:12px;font-weight:800;color:var(--muted);margin-bottom:6px}
+    .poz-calc input{width:100%;min-height:44px;padding:0 12px;border:1px solid var(--line);border-radius:10px;font-size:16px;background:var(--surface);color:var(--text)}
+    .poz-calc-out{display:grid;gap:6px;margin-top:10px}
+    .poz-calc-out div{display:flex;justify-content:space-between;gap:10px;font-size:13px}
+    .poz-calc-out span{color:var(--muted)}
+    .poz-related{list-style:none;margin:0;padding:0}
+    .poz-related li{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid var(--line);font-size:13.5px;line-height:1.45}
+    .poz-related li:first-child{border-top:0}
+    .poz-related a{color:var(--text);text-decoration:none}
+    .poz-related a:hover{text-decoration:underline}
+    .poz-related code{font-weight:800;margin-right:6px}
+    .poz-related span{white-space:nowrap;color:var(--muted);font-weight:700}
+    .poz-more{display:inline-block;margin-top:12px;font-size:13px;font-weight:800;color:var(--text)}
+    .poz-variants{margin:14px 0 0;font-size:13px;color:var(--muted);line-height:1.6}
+    .poz-variants a{color:var(--text);font-weight:700}
+    .poz-hub-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;margin-top:18px}
+    .poz-hub-grid a{display:block;padding:14px;border:1px solid var(--line);border-radius:14px;background:var(--surface);color:var(--text);text-decoration:none;font-size:13px;line-height:1.45}
+    .poz-hub-grid a:hover{border-color:var(--text)}
+    .poz-hub-grid strong{display:block;font-size:15px;margin-bottom:4px}
+    .poz-hub-grid em{display:block;font-style:normal;color:var(--muted);margin-top:4px}
+    @media(max-width:640px){.poz-related li{flex-direction:column;gap:2px}}
+    @media(max-width:900px){.poz-summary{order:-1}}   /* mobilde fiyat ve tutar hesabı önce */
     .poz-note{margin-top:16px;padding:13px 14px;border-left:3px solid var(--yellow);border-radius:0 10px 10px 0;background:var(--surface-2);color:var(--muted);font-size:11px;line-height:1.6}
     .poz-prose{color:var(--text);font-size:14px;line-height:1.85;overflow-wrap:anywhere}
     .poz-related-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:14px}

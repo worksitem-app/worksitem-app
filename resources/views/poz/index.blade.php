@@ -376,6 +376,16 @@
 
 @else
 
+    <section class="poz-card" style="margin-top:8px" aria-labelledby="pozBrowseTitle">
+        <div class="poz-card-kicker">Kuruma göre gözat</div>
+        <h2 id="pozBrowseTitle" style="margin:4px 0 0">Resmî poz listeleri</h2>
+        <div class="poz-hub-grid">
+            @foreach(\App\Support\PozCatalog::institutions() as $s => $name)
+                <a href="/pozlar/{{ $s }}"><strong>{{ $name }}</strong>poz grupları ve birim fiyatları</a>
+            @endforeach
+        </div>
+    </section>
+
     <div class="poz-empty-search">
         <div class="poz-empty-search-icon">⌕</div>
 

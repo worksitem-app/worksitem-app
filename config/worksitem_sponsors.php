@@ -348,6 +348,18 @@ return [
                 'genel' => 'Genel',
             ],
         ],
+        // v113: 43 bin resmî poz sayfası. Kategori poz tanımından seçilir (poz_matching); kart yalnız eşleşen pozda çıkar.
+        'poz-sayfalari' => [
+            'label' => 'Poz sayfaları (resmî birim fiyat)',
+            'categories' => [
+                'seramik' => 'Seramik ve porselen karo',
+                'yapistirici' => 'Karo yapıştırıcısı',
+                'derz' => 'Derz dolgu',
+                'yalitim' => 'Su yalıtımı',
+                'sap' => 'Şap ve tesviye',
+                'tamir' => 'Tamir harcı ve grout',
+            ],
+        ],
     ],
 
     /*
@@ -397,6 +409,21 @@ return [
     | Tematik paketler (Markalar için sayfası + `php artisan sponsors:package`).
     | araç → kategoriler. Fiyatlar aşağıda 'pricing' altında.
     */
+    /*
+    | v113: poz tanımı → poz sayfası marka kartı kategorisi (küçük harfle aranır).
+    | Bir poz birden fazla kategoriye girebilir (ör. seramik + yapıştırıcı); en fazla max_cards kart çıkar.
+    */
+    // Söküm, kırım ve taşıma pozlarında marka kartı çıkmaz (ürün satın alma anı değil)
+    'poz_matching_exclude' => '/sökülmesi|söküm|kırılması|yıkılması|taşınması|nakli/u',
+    'poz_matching' => [
+        'seramik' => ['/seramik|porselen karo|\\bkaro\\b|fayans/u'],
+        'yapistirici' => ['/yapıştırıcı|yapıştırma harcı/u'],
+        'derz' => ['/derz dolgu|derz harcı|derzlerinin doldurulması|derzlenmesi/u'],
+        'yalitim' => ['/su yalıtım|su geçirimsiz|nem yalıtım|bitümlü|membran|sürme yalıtım/u'],
+        'sap' => ['/(^|[^a-zçğıöşü])şap([^a-zçğıöşü]|$)|tesviye tabakası|kendinden yayılan/u'],
+        'tamir' => ['/tamir harcı|onarım harcı|grout|epoksi harç|beton onarım/u'],
+    ],
+
     'packages' => [
         'su-yalitimi' => [
             'label' => 'Su Yalıtımı',
@@ -407,6 +434,7 @@ return [
                 'seramik-maliyet-hesaplayici' => ['yalitim'],
                 'cati-maliyet-hesaplayici' => ['yalitim'],
                 'pvc-dograma-hesaplayici' => ['montaj'],
+                'poz-sayfalari' => ['yalitim'],
             ],
         ],
         'seramik-uygulama' => [
@@ -417,6 +445,7 @@ return [
                 'banyo-maliyet-hesaplayici' => ['yapistirici'],
                 'wc-maliyet-hesabi' => ['yapistirici'],
                 'zemin-kaplama' => ['yapistirici'],
+                'poz-sayfalari' => ['yapistirici', 'derz'],
             ],
         ],
         'endustriyel-zemin' => [
@@ -427,6 +456,7 @@ return [
                 'saha-betonu-hesaplayici' => ['sertlestirici', 'kur'],
                 'sap-hesaplayici' => ['sap', 'katki'],
                 'beton-hesaplayici' => ['katki', 'kur'],
+                'poz-sayfalari' => ['sap'],
             ],
         ],
         'boya-cephe' => [
@@ -444,6 +474,7 @@ return [
             'tools' => [
                 'beton-onarim-maliyeti' => ['tamir', 'grout', 'korozyon', 'enjeksiyon'],
                 'deprem-izolator-maliyeti' => ['grout'],
+                'poz-sayfalari' => ['tamir'],
             ],
         ],
         // 'tam-kategori': yukarıdaki beş yapı kimyasalı paketinin hepsi, tek marka (SponsorPackages::get('tam-kategori') birleştirir)
@@ -460,6 +491,7 @@ return [
                 'zemin-kaplama' => ['seramik'],
                 'banyo-planlayici' => ['seramik', 'vitrifiye', 'dus', 'armatur'],
                 'wc-planlayici' => ['seramik', 'vitrifiye', 'armatur'],
+                'poz-sayfalari' => ['seramik'],
             ],
         ],
     ],

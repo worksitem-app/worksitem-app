@@ -111,21 +111,24 @@ class SitemapController extends Controller
          *
          * lastmod yalnız gerçek updated_at varsa yayınlanır.
          */
+        // v113: aynı poz no birden çok kurumda olabilir; her adres bir kez (en güncel tarih)
         TenderPoz::query()
             ->where('is_active', true)
             // İçeriği zenginleştirilmemiş (yalnızca poz no + fiyat) sayfalar dizine girmez; bkz. config/worksitem_seo.php
-            ->when(config('worksitem_seo.poz_index_only_enriched', true), fn ($q) => $q->where('seo_enriched', true))
-            ->select('poz_no', 'updated_at')
+            ->when(config('worksitem_seo.poz_index_only_enriched', false), fn ($q) => $q->where('seo_enriched', true))
+            ->toBase()
+            ->selectRaw('poz_no, MAX(updated_at) as updated_at')
+            ->groupBy('poz_no')
             ->orderBy('poz_no')
-            ->chunk(1000, function ($pozs) use (&$xml, $baseUrl) {
+            ->chunk(2000, function ($pozs) use (&$xml) {
                 foreach ($pozs as $poz) {
-                    $loc = \App\Support\PozUrl::absolute($poz->poz_no);
+                    $loc = \App\Support\PozUrl::absolute((string) $poz->poz_no);
 
                     $xml .= "  <url>\n";
                     $xml .= "    <loc>" . htmlspecialchars($loc, ENT_XML1) . "</loc>\n";
 
                     if ($poz->updated_at) {
-                        $lastmod = $poz->updated_at->toAtomString();
+                        $lastmod = \Illuminate\Support\Carbon::parse($poz->updated_at)->toAtomString();
                         $xml .= "    <lastmod>{$lastmod}</lastmod>\n";
                     }
 
@@ -134,6 +137,14 @@ class SitemapController extends Controller
                     $xml .= "  </url>\n";
                 }
             });
+
+        // v113: kurum ve poz grubu sayfaları (taranabilir poz hiyerarşisi)
+        foreach (\App\Support\PozCatalog::institutions() as $slug => $inst) {
+            $xml .= "  <url>\n    <loc>" . htmlspecialchars($baseUrl . '/pozlar/' . $slug, ENT_XML1) . "</loc>\n    <changefreq>monthly</changefreq>\n    <priority>0.7</priority>\n  </url>\n";
+            foreach (\App\Support\PozCatalog::groups($inst) as $g) {
+                $xml .= "  <url>\n    <loc>" . htmlspecialchars($baseUrl . '/pozlar/' . $slug . '/' . $g['slug'], ENT_XML1) . "</loc>\n    <changefreq>monthly</changefreq>\n    <priority>0.6</priority>\n  </url>\n";
+            }
+        }
 
         $xml .= "</urlset>";
 

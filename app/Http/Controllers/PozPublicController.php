@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\TenderPoz;
+use App\Support\PozCatalog;
 use Illuminate\Http\Request;
 
 class PozPublicController extends Controller
@@ -40,18 +41,29 @@ class PozPublicController extends Controller
         return view('poz.index', compact('pozs', 'institutions', 'institution', 'search', 'popular'));
     }
 
-    public function show(string $pozNo)
+    public function show(Request $request, string $pozNo)
     {
-        $poz = TenderPoz::where('poz_no', $pozNo)
-            ->where('is_active', true)
-            ->firstOrFail();
+        // Aynı poz no birden çok kurumda olabilir (v113): ?kurum= ile seçilir, yoksa öncelikli kurum.
+        // Kanonik adres her zaman /poz/{no}; kurum varyantları robots.txt'de (?kurum=) taranmaz.
+        $variants = PozCatalog::variants($pozNo);
+        abort_if($variants->isEmpty(), 404);
+        $wanted = (string) $request->query('kurum', '');
+        $poz = ($wanted !== '' ? $variants->first(fn ($v) => PozCatalog::institutionSlug((string) $v->institution) === $wanted || $v->institution === $wanted) : null)
+            ?? $variants->first();
+        $otherInstitutions = $variants->reject(fn ($v) => $v->is($poz))->values();
 
-        $related = TenderPoz::where('institution', $poz->institution)
-            ->where('is_active', true)
-            ->where('poz_no', '!=', $poz->poz_no)
-            ->orderBy('poz_no')
-            ->limit(10)
-            ->get();
+        // İlgili pozlar: aynı kurum ve aynı grup (ör. 15.150.*), bu pozun hemen öncesi ve sonrası
+        $group = PozCatalog::groupOf((string) $poz->poz_no);
+        $base = TenderPoz::query()->where('is_active', true)->where('institution', $poz->institution)
+            ->where('poz_no', 'like', str_replace(['%', '_'], ['\\%', '\\_'], $group).'.%')
+            ->where('poz_no', '!=', $poz->poz_no)->select('poz_no', 'description', 'unit', 'unit_price');
+        $before = (clone $base)->where('poz_no', '<', $poz->poz_no)->orderByDesc('poz_no')->limit(5)->get()->reverse();
+        $after = (clone $base)->where('poz_no', '>', $poz->poz_no)->orderBy('poz_no')->limit(10 - $before->count())->get();
+        $related = $before->concat($after)->unique('poz_no')->values();
+
+        $sponsorCategories = PozCatalog::sponsorCategories((string) $poz->description);
+        $groupUrl = PozCatalog::groupUrl((string) $poz->institution, $group);
+        $institutionUrl = PozCatalog::institutionUrl((string) $poz->institution);
 
         $popular = TenderPoz::where('is_active', true)->where('seo_enriched', true)->orderByDesc('unit_price')->limit(5)->get();
         $priceFormatted = number_format((float)$poz->unit_price, 2, ',', '.');
@@ -120,7 +132,9 @@ class PozPublicController extends Controller
             'itemListElement' => [
                 ['@type' => 'ListItem', 'position' => 1, 'name' => 'Ana Sayfa', 'item' => url('/')],
                 ['@type' => 'ListItem', 'position' => 2, 'name' => 'Pozlar', 'item' => url('/pozlar')],
-                ['@type' => 'ListItem', 'position' => 3, 'name' => $poz->poz_no, 'item' => \App\Support\PozUrl::absolute($poz->poz_no)],
+                ['@type' => 'ListItem', 'position' => 3, 'name' => (string) $poz->institution, 'item' => url($institutionUrl)],
+                ['@type' => 'ListItem', 'position' => 4, 'name' => $group.' pozları', 'item' => url($groupUrl)],
+                ['@type' => 'ListItem', 'position' => 5, 'name' => $poz->poz_no, 'item' => \App\Support\PozUrl::absolute($poz->poz_no)],
             ],
         ];
 
@@ -135,8 +149,54 @@ class PozPublicController extends Controller
             'hasFaq',
             'faqSchema',
             'productSchema',
-            'breadcrumbSchema'
+            'breadcrumbSchema',
+            'otherInstitutions',
+            'sponsorCategories',
+            'group',
+            'groupUrl',
+            'institutionUrl'
         ));
+    }
+
+    /** /pozlar/{kurum}: kurumun poz grupları (taranabilir HTML bağlantılar) */
+    public function institution(string $kurum)
+    {
+        $inst = PozCatalog::institutions()[$kurum] ?? null;
+        abort_if($inst === null, 404);
+        $groups = PozCatalog::groups($inst);
+        $total = array_sum(array_column($groups, 'count'));
+
+        return view('poz.institution', [
+            'inst' => $inst, 'slug' => $kurum, 'groups' => $groups, 'total' => $total,
+            'institutions' => PozCatalog::institutions(),
+        ]);
+    }
+
+    /** /pozlar/{kurum}/{grup}: gruptaki pozlar, birim fiyatlarıyla (sayfa başına 100) */
+    public function group(string $kurum, string $grup)
+    {
+        $inst = PozCatalog::institutions()[$kurum] ?? null;
+        abort_if($inst === null, 404);
+        $g = PozCatalog::groups($inst)[$grup] ?? null;
+        abort_if($g === null, 404);
+
+        $pozs = TenderPoz::query()->where('is_active', true)->where('institution', $inst)
+            ->where(fn ($q) => $q->where('poz_no', 'like', $g['group'].'.%')->orWhere('poz_no', $g['group']))
+            ->select('poz_no', 'description', 'unit', 'unit_price', 'year')
+            ->orderBy('poz_no')->get()
+            ->filter(fn ($p) => PozCatalog::groupOf((string) $p->poz_no) === $g['group'])
+            ->unique('poz_no')->values();
+        $page = max(1, (int) request()->query('sayfa', 1));
+        $per = 100;
+        $pages = max(1, (int) ceil($pozs->count() / $per));
+        abort_if($page > $pages, 404);
+
+        return view('poz.group', [
+            'inst' => $inst, 'kurum' => $kurum, 'g' => $g,
+            'pozs' => $pozs->slice(($page - 1) * $per, $per)->values(),
+            'page' => $page, 'pages' => $pages, 'count' => $pozs->count(),
+            'year' => $pozs->max('year'),
+        ]);
     }
 
     /**

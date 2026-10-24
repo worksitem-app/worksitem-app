@@ -347,6 +347,8 @@ Route::get('/duvar-rengi-gorsellestirici', [ToolController::class, 'paintVisuali
  * ───────────────────────────────────────────────────────────────────── */
 
 Route::get('/pozlar', [PozPublicController::class, 'index'])->name('poz.index');
+Route::get('/pozlar/{kurum}', [PozPublicController::class, 'institution'])->name('poz.institution')->where('kurum', '[a-z0-9-]+');
+Route::get('/pozlar/{kurum}/{grup}', [PozPublicController::class, 'group'])->name('poz.group')->where(['kurum' => '[a-z0-9-]+', 'grup' => '[a-z0-9-]+']);
 Route::redirect('/poz', '/pozlar', 301);
 Route::get('/poz/{pozNo}', [PozPublicController::class, 'show'])->name('poz.show')->where('pozNo', '.+');
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');

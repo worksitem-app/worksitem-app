@@ -20,6 +20,8 @@ class SeoMvpTest extends TestCase
 
     public function test_zenginlestirilmemis_poz_noindex_ve_sitemapte_yok(): void
     {
+        // v113: kural varsayılan kapalı; açıkken eski davranış
+        config(['worksitem_seo.poz_index_only_enriched' => true]);
         $this->poz('15.100.1001', false);
         $this->poz('15.100.1002', true);
 

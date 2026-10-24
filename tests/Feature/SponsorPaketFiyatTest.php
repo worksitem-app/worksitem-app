@@ -22,7 +22,8 @@ class SponsorPaketFiyatTest extends TestCase
         $this->assertCount(5, SponsorPackages::families());
         $tam = SponsorPackages::get('tam-kategori');
         $this->assertTrue($tam['exclusive']);
-        $this->assertCount(16, $tam['tools']);                       // sunum: "16 araç"
+        $this->assertCount(16, array_diff_key($tam['tools'], ['poz-sayfalari' => 1]));   // sunum: "16 araç"
+        $this->assertArrayHasKey('poz-sayfalari', $tam['tools']);   // v113: + resmî poz sayfaları
         $this->assertArrayNotHasKey('banyo-planlayici', $tam['tools']); // ek paket Tam Kategori'ye girmez
         $this->assertContains('montaj', $tam['tools']['pvc-dograma-hesaplayici']);
 

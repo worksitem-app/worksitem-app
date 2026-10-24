@@ -13,7 +13,8 @@
         }
         // Aynı öncelikte olanlar her gösterimde karışık sırayla (adil dönüşüm)
         $cards = \App\Models\Sponsor::applyExclusive($q->get())->sortBy(fn ($s) => [$s->priority, mt_rand()])->take((int) config('worksitem_sponsors.max_cards', 3))->values();
-        if ($cards->isNotEmpty()) {
+        // Arama motoru ve önizleme botları markaya raporlanan gösterime sayılmaz (v113)
+        if ($cards->isNotEmpty() && ! preg_match('/bot|crawl|spider|slurp|preview|lighthouse|headless/i', (string) request()->userAgent())) {
             \App\Models\Sponsor::query()->whereIn('id', $cards->pluck('id'))->increment('impressions');
         }
     }
