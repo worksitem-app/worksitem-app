@@ -109,15 +109,26 @@ abstract class KitEstimator
         foreach ($this->steps() as $step) {
             switch ($step['type']) {
                 case 'cards':
-                    $v = (string) ($raw[$step['key']] ?? '');
+                    $v = $raw[$step['key']] ?? '';
+                    $v = is_scalar($v) ? (string) $v : '';   // ?alan[]=x gibi dizi girdiler yok sayılır (500 değil)
                     $in[$step['key']] = isset($step['options'][$v]) ? $v : '';
                     break;
                 case 'numbers':
                     foreach ($step['fields'] as $f) {
-                        $s = str_replace(',', '.', trim((string) ($raw[$f['key']] ?? '')));
+                        $rv = $raw[$f['key']] ?? '';
+                        $s = is_scalar($rv) ? str_replace(',', '.', trim((string) $rv)) : '';
                         $n = is_numeric($s) ? (float) $s : null;
+                        // 0 ve negatif, alt sınırı 0'dan büyük alanda "girilmedi" sayılır (sessizce en küçük değere çekilmez)
+                        if ($n !== null && $n <= 0 && (float) $f['min'] > 0) {
+                            $n = null;
+                        }
                         if ($n !== null) {
-                            $n = min((float) $f['max'], max((float) $f['min'], $n));
+                            $c = min((float) $f['max'], max((float) $f['min'], $n));
+                            if ($c != $n) {
+                                // Sınır dışı değer: hesap sınırla yapılır ve kullanıcıya not düşülür
+                                $in['_clamped_'.$f['key']] = [$n, $c, (string) ($f['label'] ?? $f['key']), (string) ($f['unit'] ?? '')];
+                            }
+                            $n = $c;
                         }
                         $in[$f['key']] = $n ?? ($f['default'] ?? null);
                         $in['_given_'.$f['key']] = $n !== null;
@@ -125,7 +136,7 @@ abstract class KitEstimator
                     break;
                 case 'checks':
                     $vals = $raw[$step['key']] ?? [];
-                    $vals = is_array($vals) ? $vals : explode(',', (string) $vals);
+                    $vals = is_array($vals) ? array_filter($vals, 'is_scalar') : (is_scalar($vals) ? explode(',', (string) $vals) : []);
                     // tekil ?ex_x=1 biçimi de kabul edilir
                     foreach (array_keys($step['options']) as $k) {
                         if (($raw[$k] ?? null) === '1' || ($raw[$k] ?? null) === 1) {
@@ -171,6 +182,7 @@ abstract class KitEstimator
                 $in[$k] = match ($step['type']) { 'checks' => [], 'cards' => '', default => null };
                 if ($step['type'] === 'numbers') {
                     $in['_given_'.$k] = false;
+                    unset($in['_clamped_'.$k]);
                 }
             }
         }
@@ -265,6 +277,19 @@ abstract class KitEstimator
             $items['beklenmedik'] = ['label' => 'Beklenmedik gider payı (%'.round($rate * 100).')', 'mid' => round($sub * $rate / 100) * 100, 'color' => '#D5D9DF'];
         }
         $mid = array_sum(array_column($items, 'mid'));
+        // Toplam 1.000 TL'ye yuvarlanır; 500 TL altındaki küçük işlerde "₺0 – ₺0" çıkmasın diye 100 TL'ye
+        $r = $mid < 500 ? 100 : 1000;
+        $floor = $r === 100 ? 100 : 0;
+        $notes = $c['notes'] ?? [];
+        foreach ($in as $k => $v) {
+            if (str_starts_with((string) $k, '_clamped_') && is_array($v)) {
+                [$given, $used, $label, $unit] = $v;
+                $fmt = fn ($x) => rtrim(rtrim(number_format((float) $x, 2, ',', '.'), '0'), ',');
+                $notes[] = $label.' '.$fmt($given).' '.$unit.' girildi; hesap '.($used < $given ? 'en fazla ' : 'en az ').$fmt($used).' '.$unit.' ile yapıldı.';
+            }
+        }
+        $meta = array_map(fn ($m) => is_array($m) && isset($m[1]) && is_string($m[1])
+            ? [$m[0], preg_replace('/\b(\d+)–\1 iş günü/u', '$1 iş günü', $m[1])] : $m, $c['meta'] ?? []);
         foreach ($items as &$it) {
             $it['low'] = round($it['mid'] * $band['low'] / 100) * 100;
             $it['high'] = round($it['mid'] * $band['high'] / 100) * 100;
@@ -274,14 +299,14 @@ abstract class KitEstimator
         return [
             'ready' => true,
             'items' => $items,
-            'low' => round($mid * $band['low'] / 1000) * 1000,
-            'mid' => round($mid / 1000) * 1000,
-            'high' => round($mid * $band['high'] / 1000) * 1000,
+            'low' => max($floor, round($mid * $band['low'] / $r) * $r),
+            'mid' => max($floor, round($mid / $r) * $r),
+            'high' => max($floor, round($mid * $band['high'] / $r) * $r),
             'per_unit' => isset($c['per_unit']) && $c['per_unit'] > 0 ? round($mid / $c['per_unit'] / 10) * 10 : null,
             'per_unit_label' => $c['per_unit_label'] ?? $this->perUnitLabel(),
-            'meta' => $c['meta'] ?? [],
+            'meta' => $meta,
             'days' => $c['days'] ?? null,
-            'notes' => $c['notes'] ?? [],
+            'notes' => $notes,
             'summary' => $this->summary($in),
         ];
     }

@@ -31,7 +31,7 @@ class CalcKitTest extends TestCase
         Cache::put(FxRates::CACHE_KEY, ['date' => '09.10.2026', 'rates' => ['USD' => 49.2, 'EUR' => 55.2, 'GBP' => 65.2]]);
         $html = $this->get($url)->assertOk()->getContent();
         if (str_contains($html, 'id="kCfg"')) {
-            $this->assertStringContainsString('data-asset="ws-estimator.css"', $html);   // hesap motoruna taşındı
+            $this->assertStringContainsString('data-asset="wk-tool.css"', $html);   // hesap motoruna taşındı
 
             return;
         }
@@ -83,7 +83,7 @@ class CalcKitTest extends TestCase
         $html = $this->followingRedirects()->get($url)->assertOk()->getContent();
         if (str_contains($html, 'id="kCfg"')) {
             // Hesap motoruna taşınmış araç: kendi tasarımı (ayrıntı KitEngineTest)
-            $this->assertStringContainsString('data-asset="ws-estimator.css"', $html);
+            $this->assertStringContainsString('data-asset="wk-tool.css"', $html);
             $this->assertStringContainsString('"BreadcrumbList"', $html);
             $this->assertSame(1, substr_count($html, '<h1'));
 

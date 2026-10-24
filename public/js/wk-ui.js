@@ -35,7 +35,7 @@
       var sync = function () {
         document.querySelectorAll('.wk-option, .wk-segment label').forEach(function (l) {
           var i = l.querySelector('input');
-          if (i) l.classList.toggle('is-checked', i.checked);
+          if (i) { l.classList.add('is-enhanced'); l.classList.toggle('is-checked', i.checked); }
         });
       };
       document.addEventListener('change', sync);

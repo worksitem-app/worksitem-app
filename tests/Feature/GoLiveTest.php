@@ -66,7 +66,8 @@ class GoLiveTest extends TestCase
     {
         // Sunucu /css klasörünü farklı yerden sunsa da tasarım bozulmasın (banyo sayfası gibi)
         $html = $this->get('/araclar/kalip-plywood-maliyeti')->assertOk()->getContent();
-        $this->assertMatchesRegularExpression('#<style data-asset="ws-estimator.css">\s*:root\{#', $html);
-        $this->assertStringNotContainsString('href="/css/ws-estimator.css', $html);
+        // v119: araç düzeni wk-tool.css gömülü gelir (bileşenler wk-ui.css, sürümlü bağlantıyla)
+        $this->assertMatchesRegularExpression('#<style data-asset="wk-tool.css">\s*/\*[^<]*\*/\s*\.wk-root#', $html);
+        $this->assertStringNotContainsString('href="/css/wk-tool.css', $html);
     }
 }

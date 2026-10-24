@@ -41,134 +41,136 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
     <meta name="theme-color" content="#ffffff">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <style data-asset="ws-estimator.css">{!! \App\Support\Asset::inline('css/ws-estimator.css') !!}</style>
+    {{-- v119: araç sayfası tasarım dilinde (wk-). Bileşenler wk-ui.css'te (BrandShell ekler); araç düzeni wk-tool.css'te --}}
+    <style data-asset="wk-tool.css">{!! \App\Support\Asset::inline('css/wk-tool.css') !!}</style>
     @foreach ($schema as $s)
         <script type="application/ld+json">{!! json_encode($s, $jsonFlags) !!}</script>
     @endforeach
 </head>
-<body data-tool-slug="{{ $slug }}">
+<body class="wk-root" data-tool-slug="{{ $slug }}">
 
 <x-site.contech-header />
 
-<main class="bt-wrap">
-    <nav class="bt-crumb" aria-label="Sayfa yolu">
-        <a href="/">Ana sayfa</a> / <a href="/araclar">Araçlar</a> / <span>{{ $page['title'] }}</span>
-    </nav>
-
-    <header class="bt-head">
-        <h1>{{ $page['h1'] }}</h1>
-        <p class="bt-lede">{{ $page['lede'] }}</p>
+<main class="wk-container kit" id="ana-icerik">
+    <div class="wk-pagehead">
+        <nav aria-label="Gezinti yolu"><ol class="wk-crumbs"><li><a href="/">Ana sayfa</a></li><li><a href="/araclar">Araçlar</a></li><li aria-current="page">{{ $page['title'] }}</li></ol></nav>
+        <h1 class="wk-h1">{{ $page['h1'] }}</h1>
+        <p class="wk-lead">{{ $page['lede'] }}</p>
         @if ($quick)
-            <p class="bt-answer"><b>Kısa cevap:</b> {{ $quick[1] }}</p>
+            <p class="kit-answer"><b>Kısa cevap:</b> {{ $quick[1] }}</p>
         @endif
-        <div class="bt-facts">
-            @foreach ($page['facts'] ?? [] as $f)<span>{{ $f }}</span>@endforeach
-            <span>Fiyatlar: {{ $e->pricesLabel() }}</span>
+        <div class="wk-chips">
+            @foreach ($page['facts'] ?? [] as $f)<span class="wk-chip">{{ $f }}</span>@endforeach
+            <span class="wk-chip">Fiyatlar: <b>{{ $e->pricesLabel() }}</b></span>
         </div>
-    </header>
+    </div>
 
     @if ($errors->has('kit'))
-        <div class="bt-errors" role="alert" style="margin-top:16px">{{ $errors->first('kit') }}</div>
+        <div class="wk-note wk-note-danger" role="alert" style="margin-bottom:var(--wk-space-4)"><span>{{ $errors->first('kit') }}</span></div>
     @endif
 
-    <div class="bt-grid">
-        <form class="bt-form" id="kForm" onsubmit="return false" aria-label="Hesap bilgileri">
+    <div class="wk-tool kit-tool">
+        <form class="wk-card kit-form" id="kForm" onsubmit="return false" aria-label="Hesap bilgileri">
+            <ol class="wk-steps">
             @foreach ($steps as $step)
                 @php $n++; @endphp
                 @php $vis = $e->visible($step, $input ?? []); @endphp
-                <section class="bt-step" data-step="{{ $step['key'] ?? 'numbers'.$n }}" @if (! empty($step['show'])) data-show='@json($step['show'])' @endif @if (! empty($step['hide'])) data-hide='@json($step['hide'])' @endif @if (! $vis) hidden @endif>
-                    <h2><i>{{ $n }}</i>{{ $step['title'] }}
-                        @if ($step['type'] === 'checks' || ($step['type'] === 'cards' && ! ($step['required'] ?? false)))<small class="bt-opt-note">isteğe bağlı</small>@endif
-                    </h2>
-                    @if ($step['type'] === 'cards')
-                        <div class="bt-opts c{{ $step['cols'] ?? 3 }}">
-                            @foreach ($step['options'] as $k => $o)
-                                <div class="bt-opt">
-                                    <input type="radio" name="{{ $step['key'] }}" id="o_{{ $n }}_{{ $step['key'] }}_{{ $k }}" value="{{ $k }}" @checked(($input[$step['key']] ?? '') === (string) $k) @disabled(! $vis)>
-                                    <label for="o_{{ $n }}_{{ $step['key'] }}_{{ $k }}"><b>{{ $o['label'] }}</b>@if (! empty($o['hint']))<small>{{ $o['hint'] }}</small>@endif</label>
-                                </div>
-                            @endforeach
-                        </div>
+                <li class="wk-step bt-step" data-step="{{ $step['key'] ?? 'numbers'.$n }}" @if (! empty($step['show'])) data-show='@json($step['show'])' @endif @if (! empty($step['hide'])) data-hide='@json($step['hide'])' @endif @if (! $vis) hidden @endif>
+                    <span class="wk-step-n" aria-hidden="true">{{ $n }}</span>
+                    <div class="wk-step-body">
+                    @if ($step['type'] === 'cards' || $step['type'] === 'checks')
+                        @php $opt = $step['type'] === 'checks' || ! ($step['required'] ?? false); @endphp
+                        <fieldset class="kit-fs">
+                            <legend class="wk-legend-h">{{ $step['title'] }}@if ($opt) <small class="kit-opt-note">isteğe bağlı</small>@endif</legend>
+                            <div class="wk-options kit-opts c{{ $step['type'] === 'checks' ? 2 : ($step['cols'] ?? 3) }}">
+                            @if ($step['type'] === 'cards')
+                                @foreach ($step['options'] as $k => $o)
+                                    <label class="wk-option" for="o_{{ $n }}_{{ $step['key'] }}_{{ $k }}"><input type="radio" name="{{ $step['key'] }}" id="o_{{ $n }}_{{ $step['key'] }}_{{ $k }}" value="{{ $k }}" @checked(($input[$step['key']] ?? '') === (string) $k) @disabled(! $vis)><b>{{ $o['label'] }}</b>@if (! empty($o['hint']))<span>{{ $o['hint'] }}</span>@endif</label>
+                                @endforeach
+                            @else
+                                @foreach ($step['options'] as $k => $label)
+                                    <label class="wk-option"><input type="checkbox" name="{{ $step['key'] }}[]" value="{{ $k }}" @checked(in_array($k, $input[$step['key']] ?? [], true)) @disabled(! $vis)><b>{{ $label }}</b></label>
+                                @endforeach
+                            @endif
+                            </div>
+                        </fieldset>
                     @elseif ($step['type'] === 'numbers')
-                        <div class="bt-dims c{{ $step['cols'] ?? count($step['fields']) }}">
+                        <h2 class="wk-legend-h kit-h">{{ $step['title'] }}</h2>
+                        <div class="kit-dims c{{ $step['cols'] ?? count($step['fields']) }}">
                             @foreach ($step['fields'] as $f)
-                                <div class="bt-field">
-                                    <label for="f_{{ $f['key'] }}">{{ $f['label'] }}</label>
-                                    <div class="bt-input"><input type="number" id="f_{{ $f['key'] }}" name="{{ $f['key'] }}" inputmode="decimal" min="{{ $f['min'] }}" max="{{ $f['max'] }}" step="{{ $f['step'] }}" placeholder="{{ $f['placeholder'] ?? '' }}" @disabled(! $vis)
-                                        value="{{ ! empty($input['_given_'.$f['key']]) ? $input[$f['key']] : '' }}"><span>{{ $f['unit'] }}</span></div>
+                                <div class="wk-field">
+                                    <label class="wk-label" for="f_{{ $f['key'] }}">{{ $f['label'] }}</label>
+                                    <div class="wk-input-unit"><input type="text" class="wk-input" id="f_{{ $f['key'] }}" name="{{ $f['key'] }}" inputmode="decimal" autocomplete="off" pattern="[0-9]*[.,]?[0-9]*" data-min="{{ $f['min'] }}" data-max="{{ $f['max'] }}" placeholder="{{ $f['placeholder'] ?? '' }}" aria-describedby="u_{{ $f['key'] }}" @disabled(! $vis)
+                                        value="{{ ! empty($input['_given_'.$f['key']]) ? str_replace('.', ',', (string) $input[$f['key']]) : '' }}"><span class="wk-unit" id="u_{{ $f['key'] }}">{{ $f['unit'] }}</span></div>
                                 </div>
                             @endforeach
                         </div>
-                        @if (! empty($step['help']))<p class="bt-area">{{ $step['help'] }}</p>@endif
-                    @elseif ($step['type'] === 'checks')
-                        <div class="bt-checks">
-                            @foreach ($step['options'] as $k => $label)
-                                <label class="bt-check"><input type="checkbox" name="{{ $step['key'] }}[]" value="{{ $k }}" @checked(in_array($k, $input[$step['key']] ?? [], true)) @disabled(! $vis)> {{ $label }}</label>
-                            @endforeach
-                        </div>
+                        @if (! empty($step['help']))<p class="wk-hint">{{ $step['help'] }}</p>@endif
                     @endif
-                </section>
+                    </div>
+                </li>
             @endforeach
+            </ol>
 
-            <button type="button" class="bt-cta" id="kNext">İlerle</button>
+            <button type="button" class="wk-btn wk-btn-primary wk-btn-block kit-next" id="kNext">İlerle</button>
         </form>
 
-        <aside class="bt-result" id="resultCard" aria-live="polite" aria-label="Tahmini maliyet">
-            <div class="bt-r-top">
-                <div class="bt-r-label">Tahmini maliyet aralığı</div>
-                <div class="bt-range {{ $ready ? '' : 'is-waiting' }}" id="kTotal">
-                    @if ($ready){{ $tl($est['low']) }}<span class="sep">–</span>{{ $tl($est['high']) }}@else Seçim bekleniyor @endif
+        <aside class="wk-tool-result" aria-label="Tahmini maliyet">
+            <section class="wk-result" id="resultCard" aria-live="polite" aria-labelledby="kResT">
+                <div class="wk-result-top">
+                    <p class="wk-eyebrow" id="kResT">Tahmini maliyet aralığı</p>
+                    <p class="wk-figure {{ $ready ? '' : 'is-waiting' }}" id="kTotal">
+                        @if ($ready)<span><span class="wk-cur">₺</span>{{ number_format($est['low'], 0, ',', '.') }}</span><span class="wk-sep">–</span><span><span class="wk-cur">₺</span>{{ number_format($est['high'], 0, ',', '.') }}</span>@else Seçim bekleniyor @endif
+                    </p>
+                    <p class="wk-small kit-typ" id="kTyp">@if ($ready) En olası tutar <b>{{ $tl($est['mid']) }}</b>@else {{ $page['wait'] }} @endif</p>
+                    <div class="kit-fx" id="kFx" hidden></div>
+                    <ul class="kit-notes" id="kNotes"></ul>
                 </div>
-                <div class="bt-typ" id="kTyp">@if ($ready) En olası tutar <b>{{ $tl($est['mid']) }}</b>@else {{ $page['wait'] }} @endif</div>
-                <div class="bt-fx" id="kFx" hidden></div>
-                <ul class="bt-r-notes" id="kNotes"></ul>
-                <div class="bt-ruler" aria-hidden="true"><i></i></div>
-                <div class="bt-ruler-l" aria-hidden="true"><span>Uygun usta / yerel ürün</span><span>Tasarım ürünü / büyük şehir</span></div>
-            </div>
-            <div class="bt-r-body">
-                <div class="bt-bar" id="kBar" aria-hidden="true"></div>
-                <ul class="bt-lines" id="kLines">
-                    @if ($ready)
-                        @foreach ($est['items'] as $ik => $it)
-                            <li><i style="background:{{ $it['color'] }}"></i><span>{{ $it['label'] }}@if (! empty($sponsorLines[$ik]))<a class="bt-spl" href="{{ $sponsorLines[$ik]['url'] }}" target="_blank" rel="sponsored nofollow noopener" data-sponsor="{{ $sponsorLines[$ik]['id'] }}">Sponsorlu · {{ $sponsorLines[$ik]['brand'] }}</a>@endif</span><b>{{ $tl($it['low']) }} – {{ $tl($it['high']) }}</b></li>
+                <div class="wk-result-body">
+                    <ul class="wk-lines" id="kLines">
+                        @if ($ready)
+                            @php $kSum = max(1, array_sum(array_column($est['items'], 'mid'))); @endphp
+                            @foreach ($est['items'] as $ik => $it)
+                                <li><span>{{ $it['label'] }}@if (! empty($sponsorLines[$ik]))<a class="bt-spl" href="{{ $sponsorLines[$ik]['url'] }}" target="_blank" rel="sponsored nofollow noopener" data-sponsor="{{ $sponsorLines[$ik]['id'] }}">Sponsorlu · {{ $sponsorLines[$ik]['brand'] }}</a>@endif</span><span>{{ $tl($it['mid']) }}</span><span class="wk-share"><i style="width:{{ round($it['mid'] / $kSum * 100, 1) }}%"></i></span></li>
+                            @endforeach
+                        @else
+                            <li class="kit-empty"><span>Kalemler seçimlerinize göre burada listelenir</span><span>—</span></li>
+                        @endif
+                    </ul>
+                    <dl class="kit-meta" id="kMeta"></dl>
+                    <p class="wk-result-meta"><span>Fiyatlar: {{ $e->pricesLabel() }}</span><span aria-hidden="true">·</span><span id="kVat">{{ $e instanceof \App\Estimators\PozEstimator ? 'KDV ayrı kalemde' : 'KDV dahil' }}</span><span aria-hidden="true">·</span><a href="#yontem">Yöntem</a></p>
+                    <p class="wk-result-note">{{ config('worksitem_legal.result_short') }} <a href="/legal/kullanim-kosullari">Koşullar</a></p>
+                    <div class="wk-result-actions">
+                        <button type="button" class="wk-btn wk-btn-primary wk-btn-block" id="quoteBtn" @disabled(! $ready)>Bu aralıkla teklif iste</button>
+                        <a class="kit-link kit-pro" id="proBtn" href="{{ route('tools.kit.pro', ['kit' => $slug]) }}" data-kainta-auto-link="off" @if (! $ready) hidden @endif>
+                            <span class="wk-icon"><svg class="wk-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg></span>
+                            <span><b>Pro rapor: malzeme listesi, iş programı{{ collect($steps)->firstWhere('key', 'quality') ? ', 3 kalite karşılaştırması' : '' }}</b><span class="wk-small">Ücretsiz · telefonunuza gelen kodla 1 dakikada indirin</span></span>
+                        </a>
+                        @if ($plan = $e->planner())
+                            <a class="kit-link" id="planBtn" href="{{ $plan['url'] }}" data-kainta-auto-link="off">
+                                <span class="wk-icon"><svg class="wk-i" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h8v12M15 3v6h6"/></svg></span>
+                                <span><b>{{ $plan['label'] }}</b><span class="wk-small">{{ $plan['hint'] }}</span></span>
+                            </a>
+                        @endif
+                        @foreach ($e->visuals() as $vis)
+                            <a class="kit-link bt-vis" href="{{ $vis['url'] }}" data-kainta-auto-link="off" data-visual="{{ parse_url($vis['url'], PHP_URL_PATH) }}">
+                                <span class="wk-icon"><svg class="wk-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></span>
+                                <span><b>{{ $vis['label'] }}</b><span class="wk-small">{{ $vis['hint'] }}</span></span>
+                            </a>
                         @endforeach
-                    @else
-                        <li><i></i><span>Kalemler seçimlerinize göre burada listelenir</span><b>—</b></li>
-                    @endif
-                </ul>
-                <div class="bt-meta" id="kMeta"></div>
-                <p class="bt-disc">{{ config('worksitem_legal.result_short') }} <a href="/legal/kullanim-kosullari">Koşullar</a></p>
-                <button type="button" class="bt-quote" id="quoteBtn" @disabled(! $ready)>Bu aralıkla teklif iste</button>
-                <a class="bt-pro" id="proBtn" href="{{ route('tools.kit.pro', ['kit' => $slug]) }}" data-kainta-auto-link="off" @if (! $ready) hidden @endif>
-                    <span class="bt-pro-tag">Ücretsiz</span>
-                    <strong>Pro rapor: malzeme listesi, iş programı{{ collect($steps)->firstWhere('key', 'quality') ? ', 3 kalite karşılaştırması' : '' }}</strong>
-                    <small>Telefonunuza gelen kodla 1 dakikada indirin</small>
-                </a>
-                @if ($plan = $e->planner())
-                    <a class="bt-plan" id="planBtn" href="{{ $plan['url'] }}" data-kainta-auto-link="off">
-                        <svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><rect x="3" y="3" width="28" height="28" rx="4" fill="none" stroke="currentColor" stroke-width="2"/><rect x="6" y="6" width="10" height="10" rx="1.5" fill="#FFB800"/><path d="M6 24h8M24 20v8" stroke="currentColor" stroke-width="1.6"/></svg>
-                        <span><strong>{{ $plan['label'] }}</strong><small>{{ $plan['hint'] }}</small></span>
-                    </a>
-                @endif
-                @foreach ($e->visuals() as $vis)
-                    <a class="bt-plan bt-vis" href="{{ $vis['url'] }}" data-kainta-auto-link="off" data-visual="{{ parse_url($vis['url'], PHP_URL_PATH) }}">
-                        <svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><path d="M3 17s5.5-9 14-9 14 9 14 9-5.5 9-14 9S3 17 3 17z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17" cy="17" r="5" fill="#FFB800"/></svg>
-                        <span><strong>{{ $vis['label'] }}</strong><small>{{ $vis['hint'] }}</small></span>
-                    </a>
-                @endforeach
-                <div class="bt-share"><button type="button" id="shareBtn">🔗 Bu hesabı paylaş</button></div>
-            </div>
+                        <div class="bt-share"><button type="button" class="wk-btn wk-btn-ghost wk-btn-block" id="shareBtn"><svg class="wk-i wk-i-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg> Bu hesabı paylaş</button></div>
+                    </div>
+                </div>
+            </section>
         </aside>
     </div>
 
-    <div class="bt-sponsors"><x-sponsor.slot :tool="$slug" :title="$page['sponsor_title'] ?? 'Projeniz için markalar'" /></div>
+    <div class="kit-sponsors"><x-sponsor.slot :tool="$slug" :title="$page['sponsor_title'] ?? 'Projeniz için markalar'" /></div>
 
-    <div class="bt-lead-area" id="teklif">
+    <div class="bt-lead-area kit-lead" id="teklif">
         @if ($errors->any() && ! $errors->has('kit'))
-            <div class="bt-errors" role="alert">
-                <strong>Teklif talebiniz gönderilemedi:</strong>
+            <div class="wk-note wk-note-danger" role="alert">
+                <span><strong>Teklif talebiniz gönderilemedi:</strong></span>
                 <ul>@foreach ($errors->all() as $err)<li>{{ $err }}</li>@endforeach</ul>
             </div>
         @endif
@@ -188,7 +190,7 @@
         <div class="lead-box" id="leadBox" @if ($errors->any() && ! $errors->has('kit')) style="display:block" @endif>
             <h3>{{ $page['lead_title'] ?? $page['service'].' için teklif alın' }}</h3>
             <p>{{ $page['lead_text'] ?? 'Hesapladığınız bilgiler forma eklenir. Kainta İnşaat uzmanları yerinde ölçü alıp yazılı teklif hazırlar.' }}</p>
-            <p class="bt-small" style="margin-top:-8px"><x-inspection-fee-note /></p>
+            <p class="wk-small"><x-inspection-fee-note /></p>
             <form action="{{ route('lead.store') }}" method="POST">
                 @csrf
                 <input type="hidden" name="calculated_service" value="{{ $page['service'] }}">
@@ -200,7 +202,7 @@
                 <input type="hidden" name="budget_confirmed" value="1">
                 <div class="form-group"><label for="ld_name">Adınız soyadınız</label><input type="text" id="ld_name" name="name" value="{{ old('name') }}" class="form-control" required autocomplete="name"></div>
                 <div class="form-group"><label for="ld_phone">Telefon</label><input type="tel" id="ld_phone" name="phone" value="{{ old('phone') }}" class="form-control" required autocomplete="tel" placeholder="05XX XXX XX XX"></div>
-                <div class="form-group"><label for="ld_loc">Şehir / ilçe</label><input type="text" id="ld_loc" name="location" value="{{ old('location') }}" class="form-control" required placeholder="Örn: İzmir, Karşıyaka"></div>
+                <div class="form-group"><label for="ld_loc">Şehir / ilçe</label><input type="text" id="ld_loc" name="location" value="{{ old('location') }}" class="form-control" required placeholder="Örn: İstanbul, Kadıköy"></div>
                 <div class="form-group"><label for="ld_notes">Notunuz (isteğe bağlı)</label><textarea id="ld_notes" name="notes" class="form-control" rows="3">{{ old('notes') }}</textarea></div>
                 <x-lead-consent-fields />
                 <button type="submit" class="btn-submit" {!! \App\Support\Ab::attr('tool_lead_submit') !!}>{{ \App\Support\Ab::text('tool_lead_submit') }}</button>
@@ -212,36 +214,45 @@
     @if (! empty($page['extra_view']))
         @include($page['extra_view'])
     @endif
-
-    <section class="bt-sec">
-        <h2>Nasıl hesaplıyoruz?</h2>
-        <ol class="bt-method">@foreach ($page['method'] as $m)<li>{{ $m }}</li>@endforeach</ol>
-    </section>
-
-    <section class="bt-sec">
-        <h2>Fiyatı en çok ne etkiler?</h2>
-        <ul class="bt-factors">@foreach ($page['factors'] as [$t, $d])<li><b>{{ $t }}</b><span>{{ $d }}</span></li>@endforeach</ul>
-    </section>
-
-    <section class="bt-sec bt-faq">
-        <h2>Sık sorulan sorular</h2>
-        @foreach ($page['faq'] as $i => [$q, $a])
-            <details @if ($i === 0) open @endif><summary>{{ $q }}</summary><p>{{ $a }}</p></details>
-        @endforeach
-        <p class="bt-small">Fiyatlar: {{ $e->pricesLabel() }} · Hazırlayan: Worksitem / <a href="https://kainta.com" rel="noopener">Kainta İnşaat</a> teknik ekibi</p>
-    </section>
-
-    <x-sponsor.brand-cta :tool="$slug" />
-
-    <section class="bt-sec">
-        <h2>İlgili hesaplayıcılar</h2>
-        <div class="bt-related">@foreach ($page['related'] as [$href, $label])<a href="{{ $href }}">{{ $label }}</a>@endforeach</div>
-    </section>
 </main>
 
-<div class="bt-dock is-hidden" id="kDock" aria-hidden="true">
+<section class="wk-band-surface" id="yontem">
+    <div class="wk-container wk-section wk-split">
+        <div class="wk-stack" style="gap:var(--wk-space-3)">
+            <p class="wk-eyebrow">Yöntem</p>
+            <h2 class="wk-h2">Nasıl hesaplıyoruz?</h2>
+            <ol class="kit-method">@foreach ($page['method'] as $m)<li>{{ $m }}</li>@endforeach</ol>
+        </div>
+        <div class="wk-stack" style="gap:var(--wk-space-3)">
+            <h2 class="wk-h3">Fiyatı en çok ne etkiler?</h2>
+            <ul class="kit-factors">@foreach ($page['factors'] as [$t, $d])<li><b>{{ $t }}</b><span>{{ $d }}</span></li>@endforeach</ul>
+        </div>
+    </div>
+</section>
+
+<section class="wk-container wk-section wk-split" id="sss">
+    <div class="wk-stack" style="gap:var(--wk-space-3)">
+        <p class="wk-eyebrow">Sık sorulanlar</p>
+        <h2 class="wk-h2">Sık sorulan sorular</h2>
+        <p class="wk-small">Fiyatlar: {{ $e->pricesLabel() }} · Hazırlayan: Worksitem / <a href="https://kainta.com" rel="noopener">Kainta İnşaat</a> teknik ekibi</p>
+    </div>
+    <div class="wk-faq">
+        @foreach ($page['faq'] as $i => [$q, $a])
+            <details @if ($i === 0) open @endif><summary>{{ $q }}</summary><div>{{ $a }}</div></details>
+        @endforeach
+    </div>
+</section>
+
+<div class="wk-container"><x-sponsor.brand-cta :tool="$slug" /></div>
+
+<section class="wk-container kit-related" aria-labelledby="kRelT">
+    <h2 class="wk-h3" id="kRelT">İlgili hesaplayıcılar</h2>
+    <ul class="wk-toollist kit-rel">@foreach ($page['related'] as [$href, $label])<li><a href="{{ $href }}"><span><b>{{ $label }}</b></span><svg class="wk-i" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></a></li>@endforeach</ul>
+</section>
+
+<div class="kit-dock is-hidden" id="kDock" aria-hidden="true">
     <div><small>Tahmini maliyet</small><strong id="kDockRange">Seçim bekleniyor</strong></div>
-    <button type="button" id="kDockBtn" tabindex="-1">Dökümü gör</button>
+    <button type="button" class="wk-btn wk-btn-primary" id="kDockBtn" tabindex="-1">Dökümü gör</button>
 </div>
 
 <script type="application/json" id="kCfg">{!! json_encode([
@@ -277,8 +288,8 @@
             $('kTotal').textContent = 'Seçim bekleniyor'; $('kTotal').classList.add('is-waiting');
             $('kTyp').textContent = res.blocked ? res.blocked : (res.missing && res.missing.length ? 'Sonuç için eksik: ' + res.missing.join(', ') + '. Seçtikçe maliyet burada anında hesaplanır.' : C.wait);
             if (res.blocked) { $('kTotal').textContent = 'Fiyat yok'; }
-            $('kFx').hidden = true; $('kBar').innerHTML = ''; $('kMeta').innerHTML = ''; $('kNotes').innerHTML = '';
-            $('kLines').innerHTML = '<li><i></i><span>Kalemler seçimlerinize göre burada listelenir</span><b>—</b></li>';
+            $('kFx').hidden = true; $('kMeta').innerHTML = ''; $('kNotes').innerHTML = '';
+            $('kLines').innerHTML = '<li class="kit-empty"><span>Kalemler seçimlerinize göre burada listelenir</span><span>—</span></li>';
             $('quoteBtn').disabled = true; $('proBtn').hidden = true;
             $('kDockRange').textContent = 'Seçim bekleniyor';
             ['leadMin', 'leadMax', 'leadMid', 'leadCalculatedData'].forEach(function (id) { $(id).value = ''; });
@@ -288,25 +299,24 @@
         last = res;
         document.querySelectorAll('.bt-step.is-missing,.bt-input.is-missing').forEach(function (el) { el.classList.remove('is-missing'); });
         $('kTotal').classList.remove('is-waiting');
-        $('kTotal').innerHTML = tl(res.low) + '<span class="sep">–</span>' + tl(res.high);
+        $('kTotal').innerHTML = '<span><span class="wk-cur">₺</span>' + nf.format(res.low) + '</span><span class="wk-sep">–</span><span><span class="wk-cur">₺</span>' + nf.format(res.high) + '</span>';
         $('kTyp').innerHTML = 'En olası tutar <b>' + tl(res.mid) + '</b>' + (res.per_unit && res.per_unit_label ? ' · ' + esc(res.per_unit_label) + ' yaklaşık <b>' + tl(res.per_unit) + '</b>' : '');
         if (res.fx && res.fx.length) {
             $('kFx').innerHTML = res.fx.map(function (f) { return '<span>≈ ' + f[0] + nf.format(f[1]) + ' – ' + f[0] + nf.format(f[2]) + '</span>'; }).join('') + '<span><em>TCMB satış kuru, ' + esc(res.fx_date || '') + '</em></span>';
             $('kFx').hidden = false;
         } else { $('kFx').hidden = true; }
         $('kNotes').innerHTML = (res.notes || []).map(function (n) { return '<li>' + esc(n) + '</li>'; }).join('');
-        var total = 0, bar = '', lines = '';
+        var total = 0, lines = '';
         Object.keys(res.items).forEach(function (k) { total += res.items[k].mid; });
         Object.keys(res.items).forEach(function (k) {
             var it = res.items[k];
-            bar += '<span style="width:' + (it.mid / total * 100).toFixed(2) + '%;background:' + it.color + '"></span>';
             var sp = res.sponsor_lines && res.sponsor_lines[k];
-            lines += '<li><i style="background:' + it.color + '"></i><span>' + esc(it.label)
+            lines += '<li><span>' + esc(it.label)
                 + (sp ? '<a class="bt-spl" href="' + esc(sp.url) + '" target="_blank" rel="sponsored nofollow noopener" data-sponsor="' + sp.id + '">Sponsorlu · ' + esc(sp.brand) + '</a>' : '')
-                + '</span><b>' + tl(it.low) + ' – ' + tl(it.high) + '</b></li>';
+                + '</span><span>' + tl(it.mid) + '</span><span class="wk-share"><i style="width:' + (total ? (it.mid / total * 100).toFixed(1) : 0) + '%"></i></span></li>';
         });
-        $('kBar').innerHTML = bar; $('kLines').innerHTML = lines;
-        $('kMeta').innerHTML = (res.meta || []).map(function (m) { return '<div>' + esc(m[0]) + '<strong>' + esc(m[1]) + '</strong></div>'; }).join('');
+        $('kLines').innerHTML = lines;
+        $('kMeta').innerHTML = (res.meta || []).map(function (m) { return '<div><dt>' + esc(m[0]) + '</dt><dd>' + esc(m[1]) + '</dd></div>'; }).join('');
         $('quoteBtn').disabled = false;
         var q = params().toString();
         $('proBtn').href = C.pro + '?' + q; $('proBtn').hidden = false;
@@ -336,7 +346,7 @@
             }
         });
         var i = 0;
-        form.querySelectorAll('.bt-step').forEach(function (st) { if (!st.hidden) { var n = st.querySelector('h2 > i'); if (n) n.textContent = ++i; } });
+        form.querySelectorAll('.bt-step').forEach(function (st) { if (!st.hidden) { var n = st.querySelector('.wk-step-n'); if (n) n.textContent = ++i; } });
     }
     applyShow();
 
@@ -351,7 +361,8 @@
     }
     function schedule(delay) { clearTimeout(timer); timer = setTimeout(calc, delay); }
 
-    form.addEventListener('input', function (e) { schedule(e.target.type === 'number' ? 350 : 0); });
+    // Sayı alanları metin + ondalık klavye: "2,5" virgülle yazılır, sunucu virgülü noktaya çevirir (tarayıcı virgülü silmez)
+    form.addEventListener('input', function (e) { schedule(e.target.inputMode === 'decimal' ? 350 : 0); });
     form.addEventListener('change', function () { schedule(0); });
 
     function showConfirm() { if ($('leadBox').style.display !== 'block') $('budgetConfirmBox').style.display = 'block'; }
@@ -362,7 +373,6 @@
                 var radios = st.querySelectorAll('input[type=radio]');
                 if (radios.length && !st.querySelector('input[type=radio]:checked')) { st.classList.add('is-missing'); miss = miss || st; }
             });
-            form.querySelectorAll('input[type=number]').forEach(function (inp) { if (inp.value === '' && inp.closest('.bt-step') === (miss || inp.closest('.bt-step'))) {} });
             (miss || form).scrollIntoView({ behavior: 'smooth', block: 'center' });
             return;
         }
