@@ -25,150 +25,6 @@
 <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#ffffff">
-<meta name="color-scheme" content="light">
-<script>
-// Apply the preference before paint; storage may be unavailable in private contexts.
-(()=>{
- let theme;
- try{theme=localStorage.getItem('worksitem-theme');}catch(error){}
- if(theme!=='light'&&theme!=='dark')theme='light';
- document.documentElement.dataset.theme=theme;
- document.querySelector('meta[name="theme-color"]').content=theme==='dark'?'#10151d':'#ffffff';
-})();
-</script>
-<style>
-:root{--bg:#f6f7f9;--surface:#fff;--s2:#eef1f4;--text:#111318;--muted:#656b75;--line:rgba(17,19,24,.1);--yellow:#ffb800;--yellow2:#e9a800;--black:#08090a;--green:#137a47;--shadow:0 20px 60px rgba(0,0,0,.08);--max:1180px}
-html[data-theme=dark]{--bg:#08090a;--surface:#111214;--s2:#17191c;--text:#f7f7f8;--muted:#a7abb3;--line:rgba(255,255,255,.1);--shadow:0 24px 70px rgba(0,0,0,.38)}
-*{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}body{font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}a{color:inherit;text-decoration:none}button{font:inherit}img{max-width:100%;display:block}.container{width:min(calc(100% - 32px),var(--max));margin:auto}
-.navbar{position:sticky;top:0;z-index:1000;background:rgba(246,247,249,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}html[data-theme=dark] .navbar{background:rgba(8,9,10,.9)}.nav-inner{min-height:72px;display:flex;align-items:center;justify-content:space-between;gap:18px}.brand img{height:38px;width:auto}.nav-links{display:flex;gap:4px;align-items:center}.nav-link{padding:10px 12px;border-radius:10px;color:var(--muted);font-size:13px;font-weight:750}.nav-link:hover{background:var(--s2);color:var(--text)}.nav-actions{display:flex;gap:8px}.icon-btn{width:42px;height:42px;border:1px solid var(--line);background:var(--surface);color:var(--text);border-radius:12px;cursor:pointer}.menu-btn{display:none}
-.hero{position:relative;padding:74px 0 44px;overflow:hidden}.hero:before{content:"";position:absolute;width:560px;height:560px;right:-260px;top:-280px;border-radius:50%;background:rgba(255,184,0,.15);filter:blur(75px);pointer-events:none}.hero-grid{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(340px,.88fr);gap:52px;align-items:center}.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid rgba(255,184,0,.32);background:rgba(255,184,0,.1);color:#a97400;border-radius:999px;font-size:11px;font-weight:900;letter-spacing:.9px;text-transform:uppercase}.dot{width:7px;height:7px;background:var(--yellow);border-radius:50%}html[data-theme=dark] .eyebrow{color:var(--yellow)}
-h1{margin-top:20px;font-size:clamp(42px,6.1vw,72px);line-height:.99;letter-spacing:-3.5px;font-weight:950;max-width:820px}h1 span{color:var(--ws-highlight,#9A6E00)}.hero-copy{margin-top:22px;max-width:690px;color:var(--muted);font-size:clamp(16px,2vw,19px);line-height:1.72}.hero-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}.btn{min-height:54px;padding:0 22px;border-radius:13px;display:inline-flex;align-items:center;justify-content:center;border:1px solid transparent;font-size:14px;font-weight:900;transition:.2s}.btn:hover{transform:translateY(-2px)}.btn-primary{background:var(--yellow);color:#080808}.btn-secondary{background:var(--surface);border-color:var(--line)}.trust{display:flex;flex-wrap:wrap;gap:14px 18px;margin-top:24px;color:var(--muted);font-size:12px;font-weight:650}.trust b{color:var(--green)}
-.start-card{background:var(--surface);border:1px solid var(--line);border-radius:24px;padding:24px;box-shadow:var(--shadow)}.start-top{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;margin-bottom:18px}.start-kicker,.kicker{color:var(--yellow2);font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:1.1px}.start-title{font-size:20px;font-weight:950;margin-top:3px}.start-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.start-item{min-height:112px;padding:16px;border:1px solid var(--line);background:var(--s2);border-radius:15px;display:flex;flex-direction:column;justify-content:space-between;transition:.2s}.start-item:hover{transform:translateY(-2px);border-color:rgba(255,184,0,.55)}.start-icon{font-size:22px}.start-item strong{font-size:14px;font-weight:900}.start-item span{display:block;margin-top:4px;color:var(--muted);font-size:11px}.start-footer{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-top:12px;padding-top:14px;border-top:1px solid var(--line)}.start-footer small{font-size:11px;color:var(--muted)}.text-link{font-size:12px;font-weight:900;color:var(--yellow2)}
-.method-strip{padding:12px 0 52px}.method-grid{display:grid;grid-template-columns:repeat(3,1fr);background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden}.method-item{padding:22px;border-right:1px solid var(--line)}.method-item:last-child{border-right:0}.method-item small{display:block;color:var(--yellow2);font-size:10px;font-weight:900;letter-spacing:1px;text-transform:uppercase}.method-item strong{display:block;margin-top:5px;font-size:15px}.method-item p{margin-top:6px;color:var(--muted);font-size:12px;line-height:1.65}
-section.block{padding:72px 0}.section-head{max-width:770px;margin-bottom:30px}h2{margin-top:8px;font-size:clamp(30px,4.5vw,47px);line-height:1.06;letter-spacing:-2px;font-weight:950}.section-head p{margin-top:12px;color:var(--muted);line-height:1.72}
-.tool-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}.tool{min-height:178px;padding:21px;border:1px solid var(--line);background:var(--surface);border-radius:18px;display:flex;flex-direction:column;transition:.2s}.tool:hover{transform:translateY(-4px);border-color:rgba(255,184,0,.46);box-shadow:var(--shadow)}.tool-icon{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:rgba(255,184,0,.12);font-size:19px;margin-bottom:16px}.tool h3{font-size:15px;font-weight:900}.tool p{margin-top:7px;color:var(--muted);font-size:12px;line-height:1.65}.tool .go{margin-top:auto;padding-top:16px;color:var(--yellow2);font-size:12px;font-weight:900}
-.pricing{display:grid;grid-template-columns:1fr 1fr;gap:16px}.pricing-card{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:26px}.pricing-card .num{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;background:var(--yellow);color:#000;font-weight:950;margin-bottom:16px}.pricing-card h3{font-size:19px;font-weight:950}.pricing-card p{margin-top:9px;color:var(--muted);font-size:13px;line-height:1.75}.source-note{margin-top:15px;padding:13px 14px;border-radius:12px;background:var(--s2);color:var(--muted);font-size:11px;line-height:1.6}.data-source-note{margin-top:18px;padding:18px;border-left:4px solid var(--yellow);font-size:12px;line-height:1.7}.data-source-note strong{color:var(--text)}
-.definition{background:var(--black);color:#fff;border-radius:24px;padding:38px;border:1px solid rgba(255,255,255,.08)}.definition-grid{display:grid;grid-template-columns:1fr 1fr;gap:38px}.definition p{color:#adb0b7;margin-top:13px;line-height:1.75}.definition-points{display:grid;gap:10px}.definition-point{padding:15px 16px;border:1px solid rgba(255,255,255,.1);background:#111214;border-radius:13px}.definition-point strong{font-size:13px}.definition-point span{display:block;margin-top:4px;color:#a9adb5;font-size:11px;line-height:1.55}
-.faq{max-width:860px}.faq-item{border-bottom:1px solid var(--line)}.faq-q{width:100%;padding:20px 0;display:flex;justify-content:space-between;gap:18px;border:0;background:none;color:var(--text);text-align:left;font-weight:850;cursor:pointer}.faq-q b{color:var(--yellow2);font-size:20px}.faq-a{display:none;padding:0 0 20px;color:var(--muted);font-size:13px;line-height:1.75}.faq-item.open .faq-a{display:block}
-.cta{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:34px;display:flex;align-items:center;justify-content:space-between;gap:28px}.cta h2{font-size:clamp(28px,4vw,40px)}.cta p{margin-top:9px;color:var(--muted)}footer{padding:32px 0;border-top:1px solid var(--line)}.footer-inner{display:flex;justify-content:space-between;gap:20px;align-items:center}.footer-inner small{color:var(--muted)}.footer-brand{font-weight:950}.footer-brand span{color:var(--yellow2)}.mobile-cta{display:none}
-@media(max-width:980px){.hero-grid{grid-template-columns:1fr}.start-card{max-width:700px}.tool-grid{grid-template-columns:repeat(2,1fr)}.definition-grid{grid-template-columns:1fr}}
-@media(max-width:760px){.container{width:min(calc(100% - 24px),var(--max))}.nav-inner{min-height:64px}.nav-links{display:none;position:absolute;left:12px;right:12px;top:70px;padding:10px;background:var(--surface);border:1px solid var(--line);border-radius:15px;box-shadow:var(--shadow);flex-direction:column;align-items:stretch}.nav-links.open{display:flex}.nav-link{padding:12px}.menu-btn{display:inline-grid;place-items:center}.hero{padding:44px 0 32px}h1{font-size:clamp(39px,11vw,53px);letter-spacing:-2.5px}.hero-actions{display:grid;grid-template-columns:1fr}.btn{width:100%}.trust{display:grid;grid-template-columns:1fr 1fr;gap:9px}.start-card{padding:18px;border-radius:19px}.method-grid{grid-template-columns:1fr}.method-item{border-right:0;border-bottom:1px solid var(--line)}.method-item:last-child{border-bottom:0}section.block{padding:54px 0}.tool-grid,.pricing{grid-template-columns:1fr}.definition{padding:26px 20px}.cta{display:block;padding:26px 20px}.cta .btn{margin-top:18px}.footer-inner{flex-direction:column;align-items:flex-start}.mobile-cta{display:block;position:fixed;left:12px;right:12px;bottom:12px;z-index:999}.mobile-cta a{min-height:56px;border-radius:14px;background:var(--yellow);color:#000;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:950;box-shadow:0 15px 35px rgba(0,0,0,.25)}body{padding-bottom:78px}}
-@media(max-width:440px){.trust,.start-grid{grid-template-columns:1fr}}
-.home-estimator{background:var(--surface);border:1px solid var(--line);border-radius:24px;padding:25px;box-shadow:var(--shadow)}
-.est-kicker{color:var(--yellow2);font-size:10px;font-weight:950;letter-spacing:1.1px}.home-estimator h2{font-size:25px;letter-spacing:-1px;margin-top:4px}.est-sub{color:var(--muted);font-size:12px;margin:5px 0 18px}
-.est-label{font-size:11px;font-weight:900;margin:13px 0 7px}.est-choice,.est-two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.est-mode,.est-input{width:100%;min-height:46px;border:1px solid var(--line);background:var(--s2);color:var(--text);border-radius:11px;padding:0 12px;font:inherit;font-size:12px}.est-mode{cursor:pointer;font-weight:850}.est-mode.active{border-color:var(--yellow);background:rgba(255,184,0,.12)}
-.est-two{margin-top:8px}.est-input{margin-top:8px}.est-submit{width:100%;min-height:52px;margin-top:14px;border:0;border-radius:12px;background:var(--yellow);color:#080808;font-weight:950;cursor:pointer}
-.est-ai{display:block;margin-top:12px;text-align:center;font-size:11px;font-weight:800;color:var(--muted)}.est-ai:hover{color:var(--text)}
-@media(max-width:440px){.est-choice,.est-two{grid-template-columns:1fr}}
-
-/* HOME_AI_ESTIMATOR_V1 */
-.est-ai-upload{margin-top:12px}.est-label small{font-weight:600;color:var(--muted)}
-.est-upload-box{display:block;padding:14px;border:1px dashed #cbd5e1;border-radius:11px;background:#f8fafc;text-align:center;font-size:12px;font-weight:850;cursor:pointer}
-.est-file-name{font-size:10px;color:var(--muted);margin-top:6px}.est-ai-status{margin-top:12px;padding:12px;border-radius:10px;background:#f8fafc;font-size:12px}
-.est-ai-result{margin-top:16px;border-top:1px solid var(--line);padding-top:16px}.est-result-label{font-size:10px;font-weight:950;color:var(--yellow2);letter-spacing:.7px}
-.est-result-total{font-size:27px;font-weight:950;margin:4px 0}.est-result-meta,.budget-breakdown{margin-top:18px;padding:18px 0 2px;border-top:1px solid var(--line)}
-.budget-breakdown[hidden]{display:none!important}
-.budget-breakdown-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:15px}
-.budget-breakdown-head strong{display:block;font-size:15px;line-height:1.3;color:var(--text)}
-.budget-breakdown-head span{display:block;margin-top:3px;font-size:11px;color:var(--muted)}
-.budget-breakdown-items{display:grid;gap:13px}
-.budget-breakdown-item{display:grid;gap:6px}
-.budget-breakdown-row{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:12px}
-.budget-breakdown-name{font-weight:750;color:var(--text)}
-.budget-breakdown-value{display:flex;align-items:center;gap:8px;font-weight:800;color:var(--text);white-space:nowrap}
-.budget-breakdown-percent{font-size:11px;font-weight:700;color:var(--muted)}
-.budget-breakdown-track{height:7px;border-radius:999px;background:var(--s2);overflow:hidden}
-.budget-breakdown-bar{height:100%;border-radius:999px;background:var(--brand)}
-.budget-breakdown-note{margin:13px 0 0;font-size:11px;line-height:1.55;color:var(--muted)}
-@media(max-width:760px){
- .budget-breakdown{margin-top:16px;padding-top:16px}
- .budget-breakdown-row{align-items:flex-start}
- .budget-breakdown-name{max-width:52%}
- .budget-breakdown-value{text-align:right}
-}
-.est-result-note{font-size:10px;color:var(--muted);line-height:1.5}
-.est-result-items{margin:13px 0}.est-result-row{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--line);font-size:11px}
-.est-result-row strong{text-align:right}.est-budget-gate{margin-top:15px;padding:14px;background:#f8fafc;border-radius:12px;font-size:12px}.est-budget-gate p{margin:6px 0 10px;color:var(--muted)}
-.est-budget-actions{display:flex;gap:7px}.est-budget-actions button{flex:1;border:1px solid var(--line);border-radius:9px;padding:10px;font-weight:800;cursor:pointer;background:#fff}
-.est-lead-form{margin-top:12px}.est-lead-form input,.est-lead-form textarea{width:100%;margin-top:7px;padding:11px;border:1px solid var(--line);border-radius:9px;font:inherit}.est-lead-form textarea{min-height:70px}
-.est-lead-form button{width:100%;margin-top:9px;padding:13px;border:0;border-radius:10px;background:var(--yellow);font-weight:950;cursor:pointer}
-.home-estimator [hidden]{display:none!important}
-.est-consent{display:flex;align-items:flex-start;gap:8px;margin-top:12px;color:var(--muted);font-size:11px;cursor:pointer}
-.est-consent input{width:auto;height:auto;margin:3px 0 0;flex-shrink:0}
-.est-errors{margin-bottom:12px;padding:10px;border:1px solid #f87171;border-radius:8px;background:#fef2f2;color:#b91c1c;font-size:11px}
-.est-errors ul{margin:0;padding-left:16px}
-.est-unpriced{margin-top:14px;padding:11px;border:1px solid #f4d06f;border-radius:10px;background:#fff8e6}
-.est-unpriced-title{display:block;margin-bottom:7px;color:#9a6700;font-size:11px}
-.est-unpriced-row{margin-top:5px;color:#6b5b2a;font-size:11px;line-height:1.45}
-.est-list-note{margin-top:8px;color:var(--muted);font-size:10px}
-
-/* Homepage-only presentation; the shared components and pricing engine stay intact. */
-:root{--yellow2:#865b00;--focus:#1764d8}
-html[data-theme=light]{color-scheme:light}
-html[data-theme=dark]{color-scheme:dark;--bg:#10151d;--surface:#18212c;--s2:#202c3a;--text:#f3f6fa;--muted:#b4c0ce;--line:rgba(230,238,250,.18);--yellow2:#ffc94b;--green:#72db9b;--focus:#80b5ff}
-html{scroll-padding-top:24px}
-:focus-visible{outline:3px solid var(--focus);outline-offset:4px}
-.skip-link{position:fixed;left:16px;top:-100px;z-index:2000;background:var(--surface);color:var(--text);padding:12px 18px;border:2px solid var(--focus);border-radius:10px}
-.skip-link:focus{top:12px}
-.home-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:18px;font-size:12px;color:var(--muted)}
-.home-toolbar nav{display:flex;flex-wrap:wrap;gap:16px}
-.home-toolbar a{padding:10px 0;text-decoration:underline;text-underline-offset:4px}
-.theme-toggle{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;min-width:36px;min-height:36px;padding:0;flex:0 0 36px;border:1px solid var(--line);border-radius:50%;background:var(--surface);color:var(--text);font-size:19px;line-height:1;cursor:pointer}.theme-toggle:hover{background:var(--s2)}.theme-toggle:focus-visible{outline:3px solid var(--focus);outline-offset:2px}.theme-toggle[hidden]{display:none}
-.hero{padding-top:44px}.hero-grid{grid-template-columns:minmax(0,1fr) minmax(380px,1fr);gap:36px;align-items:start}
-h1{font-size:clamp(38px,4.7vw,60px);line-height:1.08;letter-spacing:-2px}
-.hero-copy{font-size:17px}.hero-scope{margin-top:16px;font-size:12px;color:var(--muted);max-width:600px}
-.hero-scope a,.est-scope a,.source-note a,.est-consent a{text-decoration:underline;text-underline-offset:3px}
-.home-estimator{scroll-margin-top:24px;min-width:0}.est-choice{grid-template-columns:repeat(3,minmax(0,1fr))}
-.est-mode{padding:12px 6px;line-height:1.5;min-height:68px;font-size:11px}.est-mode[aria-pressed=true]{box-shadow:inset 0 0 0 1px var(--yellow)}
-.est-scope{margin-top:12px;padding:12px;border-left:3px solid var(--yellow);background:var(--s2);border-radius:0 10px 10px 0;font-size:12px;color:var(--muted)}
-.est-scope strong{display:block;margin-bottom:4px;color:var(--text)}
-.est-field{display:block;min-width:0;font-size:11px;font-weight:750;color:var(--muted)}
-.est-field .est-input{margin-top:5px}.est-input{min-width:0}.est-result-row{overflow-wrap:anywhere}.est-result-row>*{min-width:0}
-.est-upload-box,.est-ai-status,.est-budget-gate{background:var(--s2);color:var(--text);border-color:var(--line)}
-.est-budget-actions button,.est-lead-form input,.est-lead-form textarea{background:var(--surface);color:var(--text)}
-.est-budget-actions{flex-wrap:wrap}.est-lead-form button{color:#080808}.est-lead-form input[type=checkbox]{accent-color:#a36d00}
-.est-submit:disabled,.est-lead-form button:disabled{opacity:.65;cursor:wait}
-.file-picker{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
-.est-ai-upload:focus-within .est-upload-box{outline:3px solid var(--focus);outline-offset:3px}
-.est-ai-upload{position:relative}.est-remove-file{background:none;border:0;color:var(--text);text-decoration:underline;min-height:44px;font-size:12px;cursor:pointer}
-.mobile-cta{display:none!important}body{padding-bottom:0}
-.faq-item .faq-a{display:block}.faq-item .faq-a[hidden]{display:none}
-.faq-q{min-height:56px}
-html[data-theme=dark] .est-errors{background:#381d25;color:#ffd4d7;border-color:#b76e7c}
-html[data-theme=dark] .est-unpriced{background:#322b1a;border-color:#8f793d}
-html[data-theme=dark] .est-unpriced-title{color:#ffda80}
-html[data-theme=dark] .est-unpriced-row{color:#e7d5a7}
-@media(max-width:980px){.hero-grid{grid-template-columns:1fr}.hero-copy{max-width:720px}.home-estimator{max-width:720px;width:100%}}
-@media(max-width:760px){.hero{padding-top:28px}.home-toolbar nav{gap:12px}.home-estimator{padding:18px}.trust{grid-template-columns:1fr 1fr}.theme-toggle{width:40px;height:40px;min-width:40px;min-height:40px;flex-basis:40px;font-size:18px}}
-@media(max-width:440px){.est-choice{grid-template-columns:1fr}.est-mode{min-height:46px;text-align:left;padding:10px 14px}.home-toolbar{align-items:flex-start}.home-toolbar nav{gap:0 12px}.hero-actions .btn{padding:0 12px}}
-@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition:none!important;animation:none!important}}
-
-
-.est-phone-field{
- display:flex;
- align-items:stretch;
- width:100%;
-}
-.est-phone-prefix{
- display:flex;
- align-items:center;
- justify-content:center;
- flex:0 0 auto;
- padding:0 14px;
- border:1px solid var(--border,#d9dee7);
- border-right:0;
- border-radius:10px 0 0 10px;
- background:var(--surface-soft,#f6f7f9);
- font-weight:700;
- white-space:nowrap;
-}
-.est-phone-field #estLeadPhone{
- flex:1 1 auto;
- min-width:0;
- border-radius:0 10px 10px 0;
-}
-</style>
 <script type="application/ld+json">
 {"@@context":"https://schema.org","@@type":"WebSite","@@id":"https://worksitem.com/#website","name":"WORKSİTEM","url":"https://worksitem.com/","inLanguage":"tr-TR","description":"İnşaat ve tadilat için maliyet, metraj ve ön keşif araçları; kentsel dönüşümde yeni yapı için yaklaşık bütçe.","publisher":{"@@type":"Organization","name":"Kainta İnşaat","url":"https://kainta.com"}}
 </script>
@@ -195,77 +51,209 @@ html[data-theme=dark] .est-unpriced-row{color:#e7d5a7}
   ]
 }
 </script>
-<link rel="stylesheet" href="/css/worksitem-design.css">
-<style id="ws-v105-home">@media(max-width:760px){.hero h1,h1{font-size:34px;letter-spacing:-1.2px;line-height:1.08}.hero{padding-top:28px}}</style>
-</head>
-<body data-tool-slug="homepage">
-<a class="skip-link" href="#ana-icerik">Ana içeriğe geç</a>
-<x-site.contech-header />
-<div class="container home-toolbar">
- <nav aria-label="Anasayfa bölümleri"><a href="#proje-hesaplayici">Hesaplayıcı</a><a href="#fiyatlama">Hesap yöntemi</a><a href="#sss">Sık sorulanlar</a></nav>
-</div>
-<main id="ana-icerik" tabindex="-1">
-<section class="hero">
-<div class="container hero-grid">
-<div>
-<div class="eyebrow"><span class="dot" aria-hidden="true"></span> İnşaat · Tadilat · Kentsel dönüşüm</div>
-<h1>İnşaat ve tadilat <span>maliyetinizi</span> hesaplayın.</h1>
-<p class="hero-copy">Proje türünüzü, alanınızı ve konumunuzu girin; yaklaşık bütçenizi 2026 fiyatlarıyla ücretsiz görün.@if (\App\Support\Tools::aiFileOn()) Dosyanız varsa yapay zekâ ön keşifle iş kalemlerini inceleyin.@endif Banyo, mutfak, boya gibi işler için {{ \App\Support\Tools::label() }} araç tek yerde.</p>
-<div class="hero-actions">
-<a class="btn btn-primary" href="#proje-hesaplayici" {!! \App\Support\Ab::attr('home_hero_cta') !!}>{{ \App\Support\Ab::text('home_hero_cta') }}</a>
-<a class="btn btn-secondary" href="/araclar">Tüm Hesaplama Araçları</a>
-</div>
-<div class="trust">
-<span><b>✓</b> Dosyasız m² hesabı</span>
-@if (\App\Support\Tools::aiFileOn())<span><b>✓</b> Dosyayla AI ön keşif</span>@else<span><b>✓</b> Üyelik yok, ücretsiz</span>@endif
-<span><b>✓</b> Eksik kalem uyarısı</span>
-<span><b>✓</b> Proje değerlendirme talebi</span>
-</div>
-<p class="hero-scope">Sonuçlar kesin teklif değildir. Projenize özel keşif ve teklif için <a href="https://kainta.com/" target="_blank" rel="noopener noreferrer">Kainta İnşaat</a> ile ilerleyebilirsiniz. <a href="#fiyatlama">Hesap kapsamını inceleyin.</a></p>
-</div>
-
+<meta name="color-scheme" content="light">
 @php
+$homeAi = \App\Support\Tools::aiFileOn();
+$homePilot = \App\Support\Pilot::enabled();
+$homeToolLabel = \App\Support\Tools::label();
+$homePriceDate = \App\Support\PriceDate::for()->locale('tr')->translatedFormat('j F Y');
+$homeReportDays = (int) config('worksitem_inspection.report_days', 5);
+$homeCreditDays = \App\Support\InspectionOffer::creditDays();
+$homeFee = \App\Support\InspectionOffer::feeLabel();
 $homeBuildingTypes = \Illuminate\Support\Facades\DB::table('building_types')
     ->where('is_active', true)
     ->orderBy('category_key')
     ->orderBy('sort_order')
     ->orderBy('id')
-    ->get([
-        'key',
-        'name',
-        'category_key',
-        'category_name',
-        'sort_order',
-    ])
+    ->get(['key', 'name', 'category_key', 'category_name', 'sort_order'])
     ->groupBy('category_key')
-    ->map(function ($items) {
-        return [
-            'category_name' => (string) $items->first()->category_name,
-            'items' => $items->map(function ($item) {
-                return [
-                    'key' => (string) $item->key,
-                    'name' => (string) $item->name,
-                ];
-            })->values(),
-        ];
-    });
+    ->map(fn ($items) => [
+        'category_name' => (string) $items->first()->category_name,
+        'items' => $items->map(fn ($item) => ['key' => (string) $item->key, 'name' => (string) $item->name])->values(),
+    ]);
+// Öne çıkan araçlar: yalnız yayında olanlar (incelemedeki araca götürmeyelim)
+$homeIcons = [
+    'bath' => '<path d="M3 12h18v2a5 5 0 0 1-5 5H8a5 5 0 0 1-5-5z"/><path d="M6 12V6a2 2 0 0 1 3.5-1.3M7 19l-1 2M17 19l1 2"/>',
+    'kitchen' => '<rect x="3" y="4" width="18" height="16" rx="1"/><path d="M3 10h18M9 4v6M7 14h2"/>',
+    'paint' => '<rect x="4" y="3" width="14" height="6" rx="1"/><path d="M18 6h2v5h-8v3M11 14h2v7h-2z"/>',
+    'tile' => '<rect x="4" y="4" width="16" height="16" rx="1"/><path d="M4 12h16M12 4v16"/>',
+    'house' => '<path d="M4 21V9l8-5 8 5v12"/><path d="M9 21v-6h6v6M4 21h16"/>',
+    'cube' => '<path d="M12 3 4 7v10l8 4 8-4V7z"/><path d="M4 7l8 4 8-4M12 11v10"/>',
+    'roof' => '<path d="M2 13 12 5l10 8"/><path d="M5 11v9h14v-9"/>',
+    'list' => '<path d="M4 6h16M4 12h16M4 18h10"/><circle cx="18" cy="18" r="2"/>',
+    'spark' => '<path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6"/>',
+];
+$homeTools = array_values(array_filter([
+    $homeAi ? ['/araclar/otomatik-kesif-fiyatlandirma', 'spark', 'AI ön keşif', 'PDF, görsel veya metraj listesinden iş kalemi ve ön fiyat.', 'Aracı aç', 'otomatik-kesif-fiyatlandirma'] : null,
+    ['/araclar/banyo-maliyet-hesaplayici', 'bath', 'Banyo tadilatı', 'Tip, ölçü ve kaliteye göre kalem kalem banyo bütçesi.', 'Hesapla', 'banyo-maliyet-hesaplayici'],
+    ['/araclar/mutfak-maliyet-hesaplayici', 'kitchen', 'Mutfak tadilatı', 'Dolap, tezgah ve ankastre ile mutfak maliyeti.', 'Hesapla', 'mutfak-maliyet-hesaplayici'],
+    ['/araclar/boya-hesaplayici', 'paint', 'Boya', 'Duvar alanı, kat sayısı ve boya türüyle litre ve tutar.', 'Hesapla', 'boya-hesaplayici'],
+    ['/araclar/seramik-maliyet-hesaplayici', 'tile', 'Seramik', 'Alan, fire ve derzle seramik metrajı ve maliyeti.', 'Hesapla', 'seramik-maliyet-hesaplayici'],
+    ['/maliyet-hesapla?tip=insaat', 'house', 'İnşaat maliyeti', 'Yapı türü ve alana göre yeni bina bütçesi.', 'Hesapla', null],
+    ['/araclar/beton-hesaplayici', 'cube', 'Beton', 'Döşeme, kolon ve temel için m³ ve tutar.', 'Hesapla', 'beton-hesaplayici'],
+    ['/araclar/cati-maliyet-hesaplayici', 'roof', 'Çatı', 'Çatı alanı, sistem ve kaplamaya göre maliyet.', 'Hesapla', 'cati-maliyet-hesaplayici'],
+    ['/pozlar', 'list', 'Poz ve birim fiyat', '43.290+ resmî poz: tanım, birim ve 2026 birim fiyatı.', 'Pozlarda ara', null],
+], fn ($t) => $t && ($t[5] === null || \App\Support\Tools::isActive($t[5]))));
+$homeTools = array_slice($homeTools, 0, 8);
 @endphp
+<style id="wk-home">
+/* v118 ana sayfa — Worksitem tasarım dili (wk-). Bileşenler css/wk-ui.css'te; burada yalnız ana sayfaya özgü düzen
+   ve hesaplayıcı betiğinin ürettiği öğeler (est-*) için tasarım dili eşlemesi var. */
+.wk-root [hidden]{display:none!important}
+.wk-root{min-height:100vh}
+.wk-skip{position:fixed;left:16px;top:-100px;z-index:2000;background:var(--wk-surface);color:var(--wk-ink);padding:12px 18px;border-radius:var(--wk-radius-md);box-shadow:var(--wk-shadow-overlay);font-weight:700}
+.wk-skip:focus{top:12px}
+html{scroll-padding-top:16px}
 
-<aside class="home-estimator" id="proje-hesaplayici" aria-labelledby="estHeading">
-<div class="est-kicker">WORKSİTEM PROJE HESAPLAYICI</div>
-<h2 id="estHeading">Projeniz İçin Yaklaşık İnşaat ve Tadilat Bütçenizi Hesaplayın</h2>
-<p class="est-sub">Birkaç bilgiyle yaklaşık proje bütçenizi oluşturun.</p>
+.wk-hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,540px);gap:var(--wk-space-8);align-items:start}
+.wk-hero-copy{padding-top:var(--wk-space-5);min-width:0;gap:var(--wk-space-4)}
+.wk-hero-actions{display:flex;flex-wrap:wrap;gap:var(--wk-space-3)}
+.wk-hero-scope{max-width:60ch}
+.wk-hero-scope a{color:var(--wk-ink)}
+.wk-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--wk-space-4);margin:var(--wk-space-2) 0 0;padding-top:var(--wk-space-5);border-top:1px solid var(--wk-line)}
+.wk-stats div{display:flex;flex-direction:column;gap:var(--wk-space-1)}
+.wk-stats dd{margin:0}
+@media (max-width:980px){.wk-hero{grid-template-columns:1fr;gap:var(--wk-space-6)}.wk-hero-copy{padding-top:0}}
+@media (max-width:560px){.wk-stats{grid-template-columns:1fr}.wk-hero-actions .wk-btn{flex:1 1 100%}}
 
-<div class="est-label" id="estModeLabel">Ne yapmak istiyorsunuz?</div>
-<div class="est-choice" role="group" aria-labelledby="estModeLabel">
-<button type="button" class="est-mode active" data-tip="insaat" data-intent="insaat" aria-pressed="true">🏗️ Sıfırdan İnşaat</button>
-<button type="button" class="est-mode" data-tip="tadilat" data-intent="tadilat" aria-pressed="false">🛠️ Komple Tadilat</button>
-<button type="button" class="est-mode" data-tip="insaat" data-intent="kentsel_donusum" aria-pressed="false">🏙️ Kentsel Dönüşüm</button>
+/* Hesaplayıcı paneli */
+.est-panel{box-shadow:var(--wk-shadow-raised);scroll-margin-top:16px}
+.est-panel .wk-label{font-size:14px}
+.est-choice{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;padding:4px;border-radius:var(--wk-radius-md);background:var(--wk-surface-2)}
+.est-mode{min-height:44px;padding:4px var(--wk-space-2);border:0;border-radius:9px;background:transparent;color:var(--wk-ink);font:600 15px/1.2 var(--wk-font);cursor:pointer}
+.est-mode:hover{background:var(--wk-surface)}
+.est-mode[aria-pressed="true"]{background:var(--wk-surface);box-shadow:0 0 0 1.5px var(--wk-ink);font-weight:750}
+.est-scope{margin:0;padding:var(--wk-space-3) var(--wk-space-4);border-left:3px solid var(--wk-brand);background:var(--wk-surface-2);border-radius:0 var(--wk-radius-md) var(--wk-radius-md) 0;font-size:14px;line-height:1.55;color:var(--wk-ink)}
+.est-scope strong{display:block;margin-bottom:2px}
+.est-scope a{color:var(--wk-ink)}
+.est-upload{display:grid;grid-template-columns:40px minmax(0,1fr) 20px;gap:var(--wk-space-3);align-items:center;padding:var(--wk-space-3);border:1px dashed var(--wk-line-strong);border-radius:var(--wk-radius-md);color:var(--wk-ink);cursor:pointer}
+.est-upload:hover{background:var(--wk-surface-2)}
+.est-upload b{display:block;font-size:15px;font-weight:650}
+.est-ai-upload{position:relative;display:flex;flex-direction:column;gap:var(--wk-space-2)}
+.est-ai-upload:focus-within .est-upload{outline:3px solid var(--wk-focus);outline-offset:2px}
+.file-picker{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+.est-file-name{font-size:13px;color:var(--wk-muted)}
+.est-remove-file{align-self:flex-start;background:none;border:0;padding:0;color:var(--wk-ink);font:600 14px var(--wk-font);text-decoration:underline;cursor:pointer}
+.est-ai-status{padding:var(--wk-space-3) var(--wk-space-4);border-radius:var(--wk-radius-md);background:var(--wk-surface-2);font-size:14px;color:var(--wk-ink)}
+.est-submit:disabled{opacity:.7;cursor:wait}
+
+/* Sonuç (betik doldurur) */
+.est-ai-result{display:flex;flex-direction:column;gap:var(--wk-space-4);padding-top:var(--wk-space-5);border-top:1px solid var(--wk-line);scroll-margin-top:16px}
+.est-result-label{font-size:12px;font-weight:750;letter-spacing:.08em;text-transform:uppercase;color:var(--wk-accent-text)}
+.est-result-total{font-size:clamp(30px,4vw,40px);line-height:1.05;font-weight:900;letter-spacing:-.03em;font-variant-numeric:tabular-nums;color:var(--wk-ink)}
+.est-result-meta{font-size:14px;color:var(--wk-muted)}
+.est-result-items{display:flex;flex-direction:column}
+.est-result-row{display:flex;justify-content:space-between;gap:var(--wk-space-4);padding:var(--wk-space-2) 0;border-bottom:1px solid var(--wk-line);font-size:15px;overflow-wrap:anywhere}
+.est-result-row>*{min-width:0}
+.est-result-row{flex-wrap:wrap;column-gap:var(--wk-space-4);row-gap:2px}
+.est-result-row>:last-child{margin-left:auto;font-weight:700;font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+.est-list-note,.est-result-note,.budget-breakdown-note{margin:0;font-size:13px;color:var(--wk-muted);line-height:1.5}
+.est-unpriced{padding:var(--wk-space-3) var(--wk-space-4);border-radius:var(--wk-radius-md);background:var(--wk-brand-tint);color:var(--wk-ink);font-size:14px}
+.est-unpriced-title{font-weight:700;margin-bottom:4px}
+.budget-breakdown{display:flex;flex-direction:column;gap:var(--wk-space-3)}
+.budget-breakdown-head strong{display:block;font-size:16px;font-weight:700}
+.budget-breakdown-head span{font-size:13px;color:var(--wk-muted)}
+.budget-breakdown-items{display:grid;gap:var(--wk-space-3)}
+.budget-breakdown-row{display:flex;justify-content:space-between;gap:var(--wk-space-3);font-size:14px}
+.budget-breakdown-name{font-weight:600}
+.budget-breakdown-percent{color:var(--wk-muted);font-variant-numeric:tabular-nums}
+.budget-breakdown-value{font-weight:700;font-variant-numeric:tabular-nums}
+.budget-breakdown-track{height:6px;margin-top:6px;border-radius:3px;background:var(--wk-surface-2);overflow:hidden}
+.budget-breakdown-bar{height:100%;border-radius:3px;background:var(--wk-brand)}
+.est-budget-gate{display:flex;flex-direction:column;gap:var(--wk-space-2);padding:var(--wk-space-4);border-radius:var(--wk-radius-lg);background:var(--wk-brand-tint);color:var(--wk-ink)}
+.est-budget-gate strong{font-size:17px}
+.est-budget-gate p{margin:0;font-size:14px}
+.est-budget-gate a{color:var(--wk-ink)}
+.est-budget-actions{display:flex;flex-wrap:wrap;gap:var(--wk-space-2);margin-top:var(--wk-space-1)}
+.est-budget-actions button{min-height:44px;padding:0 var(--wk-space-4);border-radius:var(--wk-radius-md);border:1px solid var(--wk-line-strong);background:var(--wk-surface);color:var(--wk-ink);font:650 15px var(--wk-font);cursor:pointer}
+.est-budget-actions #estBudgetYes{background:var(--wk-brand);border-color:var(--wk-brand);color:var(--wk-on-brand)}
+#estBudgetThanks{font-size:14px}
+
+/* Teklif formu (betik açar) */
+.est-lead-form{display:flex;flex-direction:column;gap:var(--wk-space-2)}
+.est-lead-form .est-field{font-size:14px;font-weight:650;color:var(--wk-ink);margin-top:var(--wk-space-2)}
+.est-lead-form input:not([type=checkbox]):not([type=hidden]),.est-lead-form select,.est-lead-form textarea{width:100%;min-height:var(--wk-control-h);padding:0 14px;border:1px solid var(--wk-line-strong);border-radius:var(--wk-radius-md);background:var(--wk-surface);color:var(--wk-ink);font:500 16px var(--wk-font)}
+.est-lead-form textarea{min-height:110px;padding:12px 14px;resize:vertical}
+.est-lead-form input[readonly]{background:var(--wk-surface-2)}
+.est-phone-field{display:grid;grid-template-columns:auto minmax(0,1fr);gap:var(--wk-space-2);align-items:center}
+.est-phone-prefix{display:inline-flex;align-items:center;min-height:var(--wk-control-h);padding:0 12px;border:1px solid var(--wk-line);border-radius:var(--wk-radius-md);background:var(--wk-surface-2);font-weight:650}
+.est-lead-form button[type=submit]{margin-top:var(--wk-space-2);min-height:52px;border:0;border-radius:var(--wk-radius-md);background:var(--wk-brand);color:var(--wk-on-brand);font:750 16px var(--wk-font);cursor:pointer}
+.est-lead-form button[type=submit]:hover{background:var(--wk-brand-hover)}
+.est-lead-form button:disabled{opacity:.65;cursor:wait}
+.est-errors{padding:var(--wk-space-3) var(--wk-space-4);border-radius:var(--wk-radius-md);border:1px solid var(--wk-danger);color:var(--wk-danger);font-size:14px}
+.est-errors ul{margin:0;padding-left:18px}
+/* Onay kutuları ortak bileşende satır içi açık renkli; koyu temada token'a çekilir */
+html[data-theme="dark"] .est-lead-form div[style*="#f8fafc"]{background:var(--wk-surface-2)!important;border-color:var(--wk-line)!important}
+html[data-theme="dark"] .est-lead-form div[style*="#f8fafc"] label{color:var(--wk-ink)!important}
+html[data-theme="dark"] .est-lead-form div[style*="#f8fafc"] a{color:var(--wk-focus)!important}
+
+/* Araç kartları: telefonda iki sütun, kısa */
+.wk-home-tools{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media (max-width:1100px){.wk-home-tools{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.wk-home-tools{grid-template-columns:1fr;gap:var(--wk-space-2)}.wk-home-tools .wk-toolcard{flex-direction:row;align-items:center;padding:var(--wk-space-3) var(--wk-space-4);gap:var(--wk-space-3)}.wk-home-tools .wk-toolcard p,.wk-home-tools .wk-go span{display:none}.wk-home-tools .wk-toolcard b{font-size:16px;flex:1}.wk-home-tools .wk-go{margin:0;padding:0}}
+.wk-head-row{display:flex;justify-content:space-between;align-items:end;gap:var(--wk-space-5);flex-wrap:wrap}
+.wk-method{display:grid;gap:var(--wk-space-4)}
+.wk-method .wk-card{display:flex;flex-direction:column;gap:var(--wk-space-2)}
+.wk-method h3{margin:0}
+.wk-method p{margin:0}
+.wk-method .wk-small{line-height:1.55}
+.wk-split>*,.wk-hero>*{min-width:0}
+@media (max-width:560px){.est-panel .wk-grid-2{grid-template-columns:1fr}.wk-stats{display:none}.wk-hero-copy{gap:var(--wk-space-3)}}
+.wk-root .wk-btn{white-space:normal;text-align:center}
+</style>
+</head>
+<body class="wk-root" data-tool-slug="homepage">
+<a class="wk-skip" href="#ana-icerik">Ana içeriğe geç</a>
+<x-site.contech-header />
+<main id="ana-icerik" tabindex="-1" data-kainta-auto-link="off">
+
+<section class="wk-container wk-section" aria-label="Proje hesaplayıcı">
+<div class="wk-hero">
+<div class="wk-stack wk-hero-copy">
+<p class="wk-eyebrow">İnşaat · Tadilat · Kentsel dönüşüm</p>
+<h1 class="wk-display">İnşaat ve tadilat maliyetinizi <span class="wk-mark">hemen</span> hesaplayın.</h1>
+<p class="wk-lead">Proje türünü, alanı ve kaliteyi seçin; 2026 fiyatlarıyla yaklaşık bütçenizi ücretsiz görün.@if ($homeAi) Dosyanız varsa yapay zekâ ön keşifle iş kalemlerini inceleyin.@endif Banyo, mutfak, boya gibi işler için {{ $homeToolLabel }} araç tek yerde.</p>
+<div class="wk-chips">
+<span class="wk-chip"><i class="wk-dot"></i>Ücretsiz, kayıt gerekmez</span>
+<span class="wk-chip">Fiyatlar: <b>{{ $homePriceDate }}</b></span>
+<span class="wk-chip"><b>{{ $homeToolLabel }}</b> hesaplama aracı</span>
 </div>
-<p id="estRenewalScope" class="est-scope" hidden><strong>Kentsel dönüşüm: yeni yapı ön bütçesi</strong>Dosyasız hesap, seçtiğiniz proje bilgilerine göre yeni yapının yaklaşık ön bütçesini verir. Yıkım, tahliye, kira, ruhsat ve diğer dönüşüm giderleri ayrıca değerlendirilir. Destek veya hak sahipliği hesabı yapılmaz. <a href="#kentsel-donusum">Kapsamı okuyun.</a></p>
-<div id="estLegacyProjectFields">
-<label class="est-label" for="estProject">Proje türü</label>
-<select id="estProject" class="est-input">
+<div class="wk-hero-actions">
+<a class="wk-btn wk-btn-primary" href="#proje-hesaplayici" {!! \App\Support\Ab::attr('home_hero_cta') !!}>{{ \App\Support\Ab::text('home_hero_cta') }}</a>
+<a class="wk-btn wk-btn-ghost" href="/araclar">Tüm hesaplama araçları</a>
+</div>
+<dl class="wk-stats">
+<div><dt class="wk-figure-sm wk-num">43.290+</dt><dd class="wk-small">resmî poz ve birim fiyat</dd></div>
+@if ($homePilot)
+<div><dt class="wk-figure-sm wk-num">{{ $homeReportDays }} iş günü</dt><dd class="wk-small">keşiften sonra yazılı teklif ({{ \App\Support\Pilot::areaLabel() }})</dd></div>
+<div><dt class="wk-figure-sm wk-num">{{ $homeFee }}</dt><dd class="wk-small">keşif bedeli; sözleşme {{ $homeCreditDays }} gün içinde imzalanırsa iş bedelinden düşülür</dd></div>
+@else
+<div><dt class="wk-figure-sm wk-num">{{ $homeToolLabel }}</dt><dd class="wk-small">ücretsiz hesaplama aracı</dd></div>
+<div><dt class="wk-figure-sm wk-num">PDF</dt><dd class="wk-small">fiyat tarihli kalem kalem rapor</dd></div>
+@endif
+</dl>
+<p class="wk-small wk-hero-scope">Sonuçlar kesin teklif değildir; il ve ilçe fiyatı değiştirmez, yalnız keşif bölgesini belirler. Projenize özel keşif ve teklif için <a href="https://kainta.com/" target="_blank" rel="noopener noreferrer">Kainta İnşaat</a> ile ilerleyebilirsiniz. <a href="#fiyatlama">Hesap kapsamını inceleyin.</a></p>
+</div>
+
+<aside class="wk-panel est-panel home-estimator" id="proje-hesaplayici" aria-labelledby="estHeading">
+<div class="wk-stack" style="gap:var(--wk-space-1)">
+<p class="wk-eyebrow">Proje hesaplayıcı</p>
+<h2 class="wk-h3" id="estHeading">Yaklaşık bütçenizi hesaplayın</h2>
+</div>
+
+<div class="wk-field">
+<span class="wk-label" id="estModeLabel">Ne yapmak istiyorsunuz?</span>
+<div class="est-choice" role="group" aria-labelledby="estModeLabel">
+<button type="button" class="est-mode active" data-tip="insaat" data-intent="insaat" aria-pressed="true">Sıfırdan inşaat</button>
+<button type="button" class="est-mode" data-tip="tadilat" data-intent="tadilat" aria-pressed="false">Komple tadilat</button>
+<button type="button" class="est-mode" data-tip="insaat" data-intent="kentsel_donusum" aria-pressed="false">Kentsel dönüşüm</button>
+</div>
+</div>
+<p id="estRenewalScope" class="est-scope" hidden><strong>Kentsel dönüşüm: yeni yapı ön bütçesi</strong>Yalnız yeni yapının yaklaşık maliyeti hesaplanır. Yıkım, tahliye, kira, ruhsat ve diğer dönüşüm giderleri ayrıca değerlendirilir; destek veya hak sahipliği hesaplanmaz. <a href="#kentsel-donusum">Kapsamı okuyun.</a></p>
+
+<div id="estLegacyProjectFields" class="wk-field" hidden>
+<label class="wk-label" for="estProject">Proje türü</label>
+<select id="estProject" class="wk-select">
 <option value="villa" @selected(old('project_type') === 'villa')>Villa</option>
 <option value="apartman" @selected(old('project_type') === 'apartman')>Apartman / Bina</option>
 <option value="ofis" @selected(old('project_type') === 'ofis')>Ofis</option>
@@ -274,295 +262,269 @@ $homeBuildingTypes = \Illuminate\Support\Facades\DB::table('building_types')
 </select>
 </div>
 
-<div id="estRenovationScopeFields" hidden>
-<label class="est-label" for="estRenovationScope">
-Tadilat kapsamı
-</label>
-
-<select id="estRenovationScope" class="est-input">
+<div id="estRenovationScopeFields" class="wk-field" hidden>
+<label class="wk-label" for="estRenovationScope">Tadilat kapsamı</label>
+<select id="estRenovationScope" class="wk-select" aria-describedby="estRenovationScopeNote">
 <option value="">Tadilat kapsamını seçin</option>
-<option value="partial">Kısmi Yenileme</option>
-<option value="medium">Orta Kapsamlı Tadilat</option>
-<option value="complete">Komple Anahtar Teslim</option>
+<option value="partial">Kısmi yenileme</option>
+<option value="medium">Orta kapsamlı tadilat</option>
+<option value="complete">Komple anahtar teslim</option>
 </select>
-
-<p class="est-scope" id="estRenovationScopeNote">
-<strong>Kısmi Yenileme:</strong> boya, zemin yenileme ve sınırlı onarımlar.<br>
-<strong>Orta Kapsamlı:</strong> mutfak/banyo, zemin, kapılar ve temel tesisat yenilemeleri.<br>
-<strong>Komple Anahtar Teslim:</strong> elektrik-su altyapısı, yüzeyler, sabit imalatlar ve kapsamlı iç mekân yenilemesi.
-</p>
+<p class="wk-hint" id="estRenovationScopeNote"><b>Kısmi:</b> boya, zemin ve sınırlı onarım. <b>Orta:</b> mutfak/banyo, zemin, kapı ve temel tesisat. <b>Komple:</b> elektrik-su altyapısı, yüzeyler ve sabit imalatlar.</p>
 </div>
 
-<div id="estOfficialBuildingFields" hidden>
-<div id="estBuildingCategoryFields">
-<label class="est-label" for="estBuildingCategory">Yapınızın türü</label>
-<select id="estBuildingCategory" class="est-input">
+<div id="estOfficialBuildingFields" class="wk-stack" style="gap:var(--wk-space-4)" hidden>
+<div id="estBuildingCategoryFields" class="wk-field">
+<label class="wk-label" for="estBuildingCategory">Yapı türü</label>
+<select id="estBuildingCategory" class="wk-select">
 <option value="">Yapı türünü seçin</option>
 @foreach($homeBuildingTypes as $categoryKey => $category)
 <option value="{{ $categoryKey }}">{{ $category['category_name'] }}</option>
 @endforeach
 </select>
 </div>
-
-<label class="est-label" for="estBuildingType">Yapı alt türü</label>
-<select id="estBuildingType" class="est-input" disabled>
+<div class="wk-field">
+<label class="wk-label" for="estBuildingType">Yapı alt türü</label>
+<select id="estBuildingType" class="wk-select" disabled aria-describedby="estOfficialBuildingNote">
 <option value="">Önce yapı türünü seçin</option>
 </select>
-
-<p class="est-scope" id="estOfficialBuildingNote">
-Seçtiğiniz yapı türü ve toplam alana göre yaklaşık ön bütçe güvenli sunucu hesabıyla oluşturulur. Sonuç kesin teklif değildir. Fiyatlara KDV dahil değildir.
-</p>
+<p class="wk-hint" id="estOfficialBuildingNote">Yapı türü ve toplam alana göre sunucuda hesaplanır. Kesin teklif değildir; fiyatlara KDV dahil değildir.</p>
+</div>
 </div>
 
-<div class="est-two">
-<label class="est-field" for="estCity">İl <small>(keşif bölgesi için; fiyatı değiştirmez)</small>
-<select id="estCity" class="est-input" autocomplete="address-level1" required>
+<div class="wk-grid-2">
+<div class="wk-field">
+<label class="wk-label" for="estArea">Toplam alan</label>
+<div class="wk-input-unit"><input id="estArea" class="wk-input" type="number" min="20" step="0.01" required value="{{ old('calculated_area') }}" placeholder="Örn. 120" inputmode="decimal" aria-describedby="estAreaUnit"><span class="wk-unit" id="estAreaUnit">m²</span></div>
+</div>
+<div class="wk-field" id="estFloorsField" hidden>
+<label class="wk-label" for="estFloors">Kat sayısı</label>
+<input id="estFloors" class="wk-input" type="number" min="1" step="1" value="" placeholder="Örn. 1" inputmode="numeric">
+</div>
+<div class="wk-field">
+<label class="wk-label" for="estCity">İl <small>(keşif bölgesi; fiyatı değiştirmez)</small></label>
+<select id="estCity" class="wk-select" autocomplete="address-level1" required>
 <option value="">İl seçin</option>
 @foreach(config('turkey.provinces', []) as $province)
 <option value="{{ $province }}" @selected(old('city') === $province)>{{ $province }}</option>
 @endforeach
 </select>
-</label>
-<label class="est-field" for="estDistrict">İlçe<input id="estDistrict" class="est-input" value="{{ old('district') }}" placeholder="Örn. Ümraniye" autocomplete="address-level2" maxlength="150"></label>
 </div>
-<div class="est-two">
-<label class="est-field" for="estArea">Toplam inşaat / uygulama alanı (m²)<input id="estArea" class="est-input" type="number" min="20" step="0.01" required value="{{ old('calculated_area') }}" placeholder="Toplam m²" inputmode="decimal"></label>
-<label id="estFloorsField" class="est-field" for="estFloors">Kat sayısı (proje bilgisi)<input id="estFloors" class="est-input" type="number" min="1" step="1" required value="" placeholder="Örn. 1" inputmode="numeric"></label>
+</div>
+<div class="wk-field">
+<label class="wk-label" for="estDistrict">İlçe <small>(isteğe bağlı)</small></label>
+<input id="estDistrict" class="wk-input" value="{{ old('district') }}" placeholder="Örn. Kadıköy" autocomplete="address-level2" maxlength="150">
 </div>
 
-<div id="estQualityFields">
-<label class="est-label" for="estQuality">Malzeme ve uygulama kalitesi</label>
-<select id="estQuality" class="est-input">
+<fieldset class="wk-segment" id="estQualityFields">
+<legend>Malzeme kalitesi</legend>
+<label><input type="radio" name="estQualityPick" value="economic">Ekonomik</label>
+<label><input type="radio" name="estQualityPick" value="standard" checked>Standart</label>
+<label><input type="radio" name="estQualityPick" value="premium">Premium</label>
+<label><input type="radio" name="estQualityPick" value="luxury">Lüks</label>
+<select id="estQuality" hidden aria-hidden="true" tabindex="-1">
 <option value="economic">Ekonomik</option>
 <option value="standard" selected>Standart</option>
 <option value="premium">Premium</option>
 <option value="luxury">Lüks</option>
 </select>
-</div>
-
-<div class="est-ai-upload" id="estAiUpload" @unless(\App\Support\Tools::aiFileOn()) hidden @endunless>
- <div class="est-label">Proje dosyanız var mı? <small>Opsiyonel</small></div>
- <label for="estFile" class="est-upload-box">📄 PDF, JPG, PNG veya CSV yükleyin</label>
- <input id="estFile" class="file-picker" type="file" accept=".pdf,.jpg,.jpeg,.png,.csv" aria-describedby="estFileName" @unless(\App\Support\Tools::aiFileOn()) disabled @endunless>
- <div id="estFileName" class="est-file-name" aria-live="polite">Dosyanız yoksa m² üzerinden ön bütçe oluşturulur. En fazla 10 MB.</div>
- <button type="button" id="estRemoveFile" class="est-remove-file" hidden>Dosyayı kaldır · m² ile hesapla</button>
-</div>
+</fieldset>
 
 <div id="estAiStatus" class="est-ai-status" role="status" aria-live="polite" hidden></div>
 
-<div id="estAiResult" class="est-ai-result" @if(!$errors->any()) hidden @endif>
- <div id="estResultLabel" class="est-result-label"></div>
- <div id="estResultTotal" class="est-result-total"></div>
- <div id="estResultMeta" class="est-result-meta"></div>
- <div id="estResultItems" class="est-result-items"></div>
+<button type="button" id="estSubmit" class="wk-btn wk-btn-primary wk-btn-block est-submit">Ön bütçemi hesapla</button>
 
- <section id="estBudgetBreakdown" class="budget-breakdown" aria-labelledby="estBudgetBreakdownTitle" hidden>
-  <div class="budget-breakdown-head">
-   <div>
-    <strong id="estBudgetBreakdownTitle">Bütçenin ana dağılımı</strong>
-    <span>Yaklaşık iş grupları</span>
-   </div>
-  </div>
-
-  <div id="estBudgetBreakdownItems" class="budget-breakdown-items"></div>
-
-  <p class="budget-breakdown-note">
-   İş grubu dağılımları yaklaşık ön bütçe niteliğindedir; proje kapsamı ve teknik şartnameye göre değişebilir.
-  </p>
- </section>
-
- <p id="estResultNote" class="est-result-note"></p>
-
- <div id="estBudgetGate" class="est-budget-gate" hidden data-mode="complete">
-  <strong id="estBudgetTitle">Bu bütçe projeniz için uygun mu?</strong>
-  <p id="estBudgetText">Uygunsa projenizi <a href="https://kainta.com" target="_blank" rel="noopener">Kainta İnşaat</a> mühendisleri değerlendirsin.</p>
-  <div class="est-budget-actions" id="estBudgetActions">
-   <button type="button" id="estBudgetYes">✓ Bütçe uygun</button>
-   <button type="button" id="estBudgetNo">Sadece sonucu görmek istedim</button>
-  </div>
-  <div id="estBudgetThanks" hidden>Sonucunuzu inceleyebilirsiniz. İletişim bilgileriniz alınmayacaktır.</div>
- </div>
-
- <form action="{{ route('lead.store') }}" method="POST" id="estLeadForm" class="est-lead-form" @if(!$errors->any()) hidden @endif>
-  @csrf
-  <input type="hidden" name="calculated_service" id="estLeadService" value="{{ old('calculated_service', 'WORKSİTEM Ön Bütçe') }}">
-  <input type="hidden" name="has_file" id="estLeadHasFile" value="{{ old('has_file', '0') }}">
-  <input type="hidden" name="budget_confirmed" id="estLeadBudgetConfirmed" value="{{ old('budget_confirmed', '0') }}">
-  <input type="hidden" name="calculation_id" id="estLeadCalculationId" value="{{ old('calculation_id') }}">
-<input type="hidden" name="calculated_area" id="estLeadArea" value="{{ old('calculated_area') }}">
-  <input type="hidden" name="estimated_cost" id="estLeadCost" value="{{ old('estimated_cost') }}">
-  <input type="hidden" name="estimated_min" id="estLeadMin" value="{{ old('estimated_min') }}">
-  <input type="hidden" name="estimated_max" id="estLeadMax" value="{{ old('estimated_max') }}">
-  <input type="hidden" name="project_type" id="estLeadType" value="{{ old('project_type') }}">
-  <input type="hidden" name="city" id="estLeadCity" value="{{ old('city') }}">
-  <input type="hidden" name="district" id="estLeadDistrict" value="{{ old('district') }}">
-  <input type="hidden" name="project_data" id="estLeadProjectData" value="{{ is_array(old('project_data')) ? json_encode(old('project_data'), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) : old('project_data') }}">
-  <input type="hidden" name="utm_source" value="{{ old('utm_source', request('utm_source')) }}">
-  <input type="hidden" name="utm_medium" value="{{ old('utm_medium', request('utm_medium')) }}">
-  <input type="hidden" name="utm_campaign" value="{{ old('utm_campaign', request('utm_campaign')) }}">
-  <input type="hidden" name="utm_content" value="{{ old('utm_content', request('utm_content')) }}">
-  <input type="hidden" name="utm_term" value="{{ old('utm_term', request('utm_term')) }}">
-  <input type="hidden" name="price_version" value="{{ $priceVersion }}">
-
-  @if($errors->any())
-   <div class="est-errors" role="alert">
-    <ul>
-     @foreach($errors->all() as $error)
-      <li>{{ $error }}</li>
-     @endforeach
-    </ul>
-   </div>
-  @endif
-
-  <label class="est-field" for="estLeadTimeline">Projeye ne zaman başlamayı planlıyorsunuz?</label>
-  <select id="estLeadTimeline" name="timeline" required>
-   <option value="">Başlangıç zamanı seçin</option>
-   <option value="now" @selected(old('timeline') === 'now')>Hemen / 1 ay içinde</option>
-   <option value="soon" @selected(old('timeline') === 'soon')>1–3 ay içinde</option>
-   <option value="later" @selected(old('timeline') === 'later')>3–6 ay içinde</option>
-   <option value="research" @selected(old('timeline') === 'research')>Şimdilik araştırıyorum</option>
-  </select>
-  <label class="est-field" for="estLeadName">Ad Soyad / Firma</label>
-  <input type="text" id="estLeadName" name="name" required maxlength="150" autocomplete="name" placeholder="Ad Soyad / Firma" value="{{ old('name') }}">
-  <label class="est-field" for="estLeadPhone">Telefon</label>
-  <div class="est-phone-field">
-   <span class="est-phone-prefix" aria-label="Türkiye ülke kodu">🇹🇷 +90</span>
-   <input type="tel" id="estLeadPhone" name="phone" required minlength="10" maxlength="18" autocomplete="tel-national" inputmode="tel" placeholder="532 123 45 67" value="{{ old('phone') }}">
-  </div>
-  <label class="est-field" for="estLeadLocation">Proje konumu (şehir / ilçeden oluşturulur)</label>
-  <input type="text" name="location" id="estLeadLocation" required readonly placeholder="Proje konumu" value="{{ old('location') }}">
-  <label class="est-field" for="estLeadNotes">Açık adres ve proje notu</label>
-  <textarea id="estLeadNotes" name="notes" maxlength="3000" placeholder="Açık adres ve proje hakkında ek bilgi">{{ old('notes') }}</textarea>
-  @include('components.lead-consent-fields')
-  <button type="submit" id="estSubmitBtn">Net teklif talebini gönder →</button>
- </form>
+<div class="est-ai-upload" id="estAiUpload" @unless($homeAi) hidden @endunless>
+<label for="estFile" class="est-upload">
+<span class="wk-icon"><svg class="wk-i" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M12 18v-6M9 15l3-3 3 3"/></svg></span>
+<span><b>Proje dosyam var</b><span class="wk-small">PDF, JPG, PNG veya CSV ile AI ön keşif (isteğe bağlı)</span></span>
+<svg class="wk-i" viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+</label>
+<input id="estFile" class="file-picker" type="file" accept=".pdf,.jpg,.jpeg,.png,.csv" aria-describedby="estFileName" @unless($homeAi) disabled @endunless>
+<div id="estFileName" class="est-file-name" aria-live="polite">Dosyanız yoksa m² üzerinden ön bütçe oluşturulur. En fazla 10 MB.</div>
+<button type="button" id="estRemoveFile" class="est-remove-file" hidden>Dosyayı kaldır · m² ile hesapla</button>
 </div>
 
-<button type="button" id="estSubmit" class="est-submit">ÖN BÜTÇEYİ OLUŞTUR →</button>
-</aside>
+<div id="estAiResult" class="est-ai-result" @if(!$errors->any()) hidden @endif>
+<div id="estResultLabel" class="est-result-label"></div>
+<div id="estResultTotal" class="est-result-total" aria-live="polite"></div>
+<div id="estResultMeta" class="est-result-meta"></div>
+<div id="estResultItems" class="est-result-items"></div>
 
+<section id="estBudgetBreakdown" class="budget-breakdown" aria-labelledby="estBudgetBreakdownTitle" hidden>
+<div class="budget-breakdown-head">
+<strong id="estBudgetBreakdownTitle">Bütçenin ana dağılımı</strong>
+<span>Yaklaşık iş grupları</span>
+</div>
+<div id="estBudgetBreakdownItems" class="budget-breakdown-items"></div>
+<p class="budget-breakdown-note">İş grubu dağılımları yaklaşık ön bütçe niteliğindedir; proje kapsamı ve teknik şartnameye göre değişebilir.</p>
+</section>
+
+<p id="estResultNote" class="est-result-note"></p>
+
+<div id="estBudgetGate" class="est-budget-gate" hidden data-mode="complete">
+<strong id="estBudgetTitle">Bu bütçe projeniz için uygun mu?</strong>
+<p id="estBudgetText">Uygunsa projenizi <a href="https://kainta.com" target="_blank" rel="noopener">Kainta İnşaat</a> mühendisleri değerlendirsin.</p>
+<div class="est-budget-actions" id="estBudgetActions">
+<button type="button" id="estBudgetYes">Bütçe uygun</button>
+<button type="button" id="estBudgetNo">Sadece sonucu görmek istedim</button>
+</div>
+<div id="estBudgetThanks" hidden>Sonucunuzu inceleyebilirsiniz. İletişim bilgileriniz alınmayacaktır.</div>
+</div>
+
+<form action="{{ route('lead.store') }}" method="POST" id="estLeadForm" class="est-lead-form" @if(!$errors->any()) hidden @endif>
+@csrf
+<input type="hidden" name="calculated_service" id="estLeadService" value="{{ old('calculated_service', 'WORKSİTEM Ön Bütçe') }}">
+<input type="hidden" name="has_file" id="estLeadHasFile" value="{{ old('has_file', '0') }}">
+<input type="hidden" name="budget_confirmed" id="estLeadBudgetConfirmed" value="{{ old('budget_confirmed', '0') }}">
+<input type="hidden" name="calculation_id" id="estLeadCalculationId" value="{{ old('calculation_id') }}">
+<input type="hidden" name="calculated_area" id="estLeadArea" value="{{ old('calculated_area') }}">
+<input type="hidden" name="estimated_cost" id="estLeadCost" value="{{ old('estimated_cost') }}">
+<input type="hidden" name="estimated_min" id="estLeadMin" value="{{ old('estimated_min') }}">
+<input type="hidden" name="estimated_max" id="estLeadMax" value="{{ old('estimated_max') }}">
+<input type="hidden" name="project_type" id="estLeadType" value="{{ old('project_type') }}">
+<input type="hidden" name="city" id="estLeadCity" value="{{ old('city') }}">
+<input type="hidden" name="district" id="estLeadDistrict" value="{{ old('district') }}">
+<input type="hidden" name="project_data" id="estLeadProjectData" value="{{ is_array(old('project_data')) ? json_encode(old('project_data'), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) : old('project_data') }}">
+<input type="hidden" name="utm_source" value="{{ old('utm_source', request('utm_source')) }}">
+<input type="hidden" name="utm_medium" value="{{ old('utm_medium', request('utm_medium')) }}">
+<input type="hidden" name="utm_campaign" value="{{ old('utm_campaign', request('utm_campaign')) }}">
+<input type="hidden" name="utm_content" value="{{ old('utm_content', request('utm_content')) }}">
+<input type="hidden" name="utm_term" value="{{ old('utm_term', request('utm_term')) }}">
+<input type="hidden" name="price_version" value="{{ $priceVersion }}">
+
+@if($errors->any())
+<div class="est-errors" role="alert">
+<ul>
+@foreach($errors->all() as $error)
+<li>{{ $error }}</li>
+@endforeach
+</ul>
+</div>
+@endif
+
+<label class="est-field" for="estLeadTimeline">Projeye ne zaman başlamayı planlıyorsunuz?</label>
+<select id="estLeadTimeline" name="timeline" required>
+<option value="">Başlangıç zamanı seçin</option>
+<option value="now" @selected(old('timeline') === 'now')>Hemen / 1 ay içinde</option>
+<option value="soon" @selected(old('timeline') === 'soon')>1–3 ay içinde</option>
+<option value="later" @selected(old('timeline') === 'later')>3–6 ay içinde</option>
+<option value="research" @selected(old('timeline') === 'research')>Şimdilik araştırıyorum</option>
+</select>
+<label class="est-field" for="estLeadName">Ad soyad / firma</label>
+<input type="text" id="estLeadName" name="name" required maxlength="150" autocomplete="name" placeholder="Ad soyad / firma" value="{{ old('name') }}">
+<label class="est-field" for="estLeadPhone">Telefon</label>
+<div class="est-phone-field">
+<span class="est-phone-prefix" aria-label="Türkiye ülke kodu">+90</span>
+<input type="tel" id="estLeadPhone" name="phone" required minlength="10" maxlength="18" autocomplete="tel-national" inputmode="tel" placeholder="532 123 45 67" value="{{ old('phone') }}">
+</div>
+<label class="est-field" for="estLeadLocation">Proje konumu <small>(il ve ilçeden oluşturulur)</small></label>
+<input type="text" name="location" id="estLeadLocation" required readonly placeholder="Proje konumu" value="{{ old('location') }}">
+<label class="est-field" for="estLeadNotes">Açık adres ve proje notu</label>
+<textarea id="estLeadNotes" name="notes" maxlength="3000" placeholder="Açık adres ve proje hakkında ek bilgi">{{ old('notes') }}</textarea>
+@include('components.lead-consent-fields')
+<button type="submit" id="estSubmitBtn">Net teklif talebini gönder</button>
+</form>
+</div>
+</aside>
+</div>
+</section>
+
+<section class="wk-band-surface" id="araclar">
+<div class="wk-container wk-section wk-stack" style="gap:var(--wk-space-6)">
+<div class="wk-head-row">
+<div class="wk-stack" style="gap:var(--wk-space-2)"><p class="wk-eyebrow">Sık kullanılanlar</p><h2 class="wk-h2">İşinize göre hesaplayıcı seçin</h2></div>
+<a class="wk-btn wk-btn-ghost" href="/araclar">Tüm {{ $homeToolLabel }} aracı gör</a>
+</div>
+<div class="wk-tools wk-home-tools">
+@foreach ($homeTools as [$href, $icon, $title, $desc, $go])
+<a class="wk-toolcard" href="{{ $href }}"><span class="wk-icon"><svg class="wk-i" viewBox="0 0 24 24" aria-hidden="true">{!! $homeIcons[$icon] !!}</svg></span><b>{{ $title }}</b><p>{{ $desc }}</p><span class="wk-go"><span>{{ $go }}</span> <svg class="wk-i wk-i-sm" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
+@endforeach
+</div>
 </div>
 </section>
 
 <x-site.audience-band />
 
-<section class="method-strip">
-<div class="container"><div class="method-grid">
-<div class="method-item"><small>Dosyasız hesap</small><strong>m² üzerinden yaklaşık bütçe</strong><p>Sıfırdan inşaatta yapı alt türü ve toplam alan; tadilatta ise kapsam ve toplam alan kullanılır. İl ve ilçe proje bağlamı için kaydedilir.</p></div>
-@if (\App\Support\Tools::aiFileOn())<div class="method-item"><small>Dosyalı analiz</small><strong>İş kalemlerinin ara toplamı</strong><p>PDF, görsel veya CSV içindeki iş kalemleri analiz edilir. Fiyatı ya da miktarı belirlenemeyen işler ayrıca gösterilir.</p></div>@endif
-<div class="method-item"><small>Profesyonel teklif</small><strong>Projeye özel değerlendirme</strong><p>Ön bütçe kesin teklif değildir. Kapsam, malzeme seçimi ve saha koşulları için Kainta İnşaat'tan değerlendirme talep edebilirsiniz.</p></div>
-</div></div>
-</section>
-
-<section class="block" id="araclar">
-<div class="container">
-<div class="section-head"><div class="kicker">Öne çıkan araçlar</div><h2>İnşaat maliyeti ve metraj araçları</h2><p>Proje bütçesi, beton, seramik, alçıpan ve çatı için ihtiyacınıza uygun hesaplayıcıyı seçin.</p></div>
-<div class="tool-grid">
-<a class="tool" href="/maliyet-hesapla?tip=insaat"><div class="tool-icon">₺</div><h3>İnşaat Maliyeti Hesaplama</h3><p>Yapı türü, alan ve proje detaylarına göre yaklaşık yatırım bütçesi oluşturun.</p><span class="go">Hesapla →</span></a>
-@if (\App\Support\Tools::aiFileOn())<a class="tool" href="/araclar/otomatik-kesif-fiyatlandirma"><div class="tool-icon">✨</div><h3>AI Ön Keşif & Fiyatlandırma</h3><p>PDF, görsel veya proje dosyasından iş kalemi ve metraj ön analizi oluşturun.</p><span class="go">Aracı aç →</span></a>@endif
-<a class="tool" href="/araclar/dijital-metraj"><div class="tool-icon">📐</div><h3>Dijital Metraj</h3><p>PDF veya görsel proje üzerinden ölçekli alan ve metraj çalışması yapın.</p><span class="go">Metraj yap →</span></a>
-<a class="tool" href="/araclar/beton-hesaplayici"><div class="tool-icon">🧱</div><h3>Beton Hesaplama</h3><p>Beton hacmi, yaklaşık miktar ve ilgili maliyet hesabını oluşturun.</p><span class="go">Hesapla →</span></a>
-<a class="tool" href="/araclar/seramik-maliyet-hesaplayici"><div class="tool-icon">◫</div><h3>Seramik Maliyeti</h3><p>Alan, fire ve uygulama kapsamına göre seramik metraj ve maliyetini hesaplayın.</p><span class="go">Hesapla →</span></a>
-<a class="tool" href="/araclar/alcipan-hesaplayici"><div class="tool-icon">▦</div><h3>Alçıpan Hesaplama</h3><p>Bölme duvar ve alçıpan sistemleri için yaklaşık metraj ve maliyet görün.</p><span class="go">Hesapla →</span></a>
-<a class="tool" href="/araclar/cati-maliyet-hesaplayici"><div class="tool-icon">⌂</div><h3>Çatı Maliyeti</h3><p>Çatı alanı, sistem ve uygulama tipine göre yaklaşık maliyeti inceleyin.</p><span class="go">Hesapla →</span></a>
-<a class="tool" href="/maliyet-hesapla?tip=tadilat"><div class="tool-icon">🛠️</div><h3>Tadilat Maliyeti Hesaplama</h3><p>Ev, ofis ve mağaza yenileme işleri için yaklaşık tadilat bütçenizi hesaplayın.</p><span class="go">Tadilat maliyetini hesapla →</span></a>
+<section class="wk-container wk-section wk-split" id="nasil-calisir">
+<div class="wk-stack" style="gap:var(--wk-space-3)">
+<p class="wk-eyebrow">Nasıl çalışır</p>
+<h2 class="wk-h2">Hesaptan teklife üç adım</h2>
+<p class="wk-body-muted">Worksitem; ev sahiplerinin, ustaların, firmaların ve mühendislerin maliyet, metraj ve planlama hesaplarını ücretsiz yaptığı bir platformdur. Fiyatlar resmî birim fiyatlar ve piyasa araştırmasıyla güncellenir; her raporda fiyat tarihi yazar. Teklif istemek zorunlu değildir; telefonunuz izniniz olmadan kimseyle paylaşılmaz.</p>
 </div>
-</div>
-</section>
-
-<section class="block" id="fiyatlama">
-<div class="container">
-<div class="section-head"><div class="kicker">Hesaplama yöntemi ve sınırları</div><h2>İnşaat ve Tadilat Ön Bütçesi Nasıl Hesaplanır?</h2><p>WORKSİTEM ana sayfası @if (\App\Support\Tools::aiFileOn())iki farklı yöntem kullanır: dosyasız m² hesabı ve dosyadan iş kalemi analizi. Sonuçları karşılaştırırken aynı kapsamı temsil edip etmediklerini kontrol edin.@else şu an dosyasız m² hesabı kullanır; dosyadan iş kalemi analizi yakında açılacak.@endif</p></div>
-<div class="pricing">
-<article class="pricing-card"><div class="num">1</div><h3>Dosyasız m² hesabı</h3><p>Sıfırdan inşaatta seçilen yapı alt türü bir yapı sınıfına eşlenir ve doğrulanmış m² birim fiyatı toplam alanla çarpılarak hesaplanır. Tadilatta toplam alan ve seçilen tadilat kapsamı merkezi piyasa m² fiyat modeliyle hesaplanır. İl ve ilçe bu hızlı hesapta fiyat katsayısı olarak uygulanmaz.</p><div class="source-note">Alanı tüm proje için girin. Kat sayısı toplam alanla yeniden çarpılmaz. Sonuç yaklaşık ön bütçedir; ayrıntılı metraj veya ayrı ayrı fiyatlandırılmış işçilik ve malzeme teklifi değildir.</div></article>
-@if (\App\Support\Tools::aiFileOn())<article class="pricing-card"><div class="num">2</div><h3>Dosyadan AI ön keşif</h3><p>Dosyadaki iş kalemleri, miktarlar ve eşleşen birim fiyatlarla ara toplam oluşturulur. Fiyatlandırılamayan kalemler ara toplama dahil edilmez. Dosyada bulunmayan işler için otomatik olarak tam proje bütçesi üretilmez.</p><div class="source-note">Şehir ve beyan ettiğiniz toplam alan, bu dosya analizindeki kalem miktarlarını otomatik değiştirmez. Dosyanın okunabilirliği ve kapsamı sonucu etkiler.</div></article>@endif
-</div>
-<div class="source-note data-source-note">
-<strong>Veri kaynağı ve güncellik:</strong> Sıfırdan inşaat hesabında seçilen yapı alt türü bir yapı sınıfına bağlanır. Bu sınıf için merkezi fiyat motorunda onaylı ve aktif piyasa fiyatı varsa taban referans olarak o kayıt; yoksa ÇŞİDB 2026 Yapı Yaklaşık Birim Maliyetleri resmî referansı kullanılır. Kullanıcıya gösterilen ön bütçe bu taban referansın piyasa ve proje katsayılarıyla sunucu tarafında hesaplanmasıyla oluşturulur; seçtiğiniz il ve ilçe şu an fiyatı değiştirmez, yalnızca keşif bölgesini belirler. Tadilat hesabı onaylı piyasa m² fiyatları ve seçilen tadilat kapsamı üzerinden hesaplanır. Dosya analizinde yalnızca eşleşen ve fiyatlandırılabilen iş kalemleri ara toplama dahil edilir. Sonuçlar yaklaşık ön bütçedir; kesin teklif değildir.
-</div>
-</div>
-</section>
-
-<section class="block" id="kentsel-donusum" aria-labelledby="renewalHeading">
-<div class="container"><div class="pricing-card">
-<div class="kicker">Kentsel dönüşüm ön değerlendirmesi</div>
-<h2 id="renewalHeading">Kentsel Dönüşüm Yeni Yapı Maliyeti ve Kapsamı</h2>
-<p>Kentsel dönüşüm seçeneği, dosyasız hesapta mevcut sıfırdan inşaat yöntemiyle yeni yapının yaklaşık bütçesini gösterir. Yıkım, tahliye, kira, ruhsat ve diğer dönüşüm giderleri bu tahmine ayrıca eklenmelidir; burada destek veya hak sahipliği hesaplanmaz.</p>
-@if (\App\Support\Tools::aiFileOn())<p>Dosya yüklerseniz sonuç yalnızca analiz edilen ve fiyatlandırılabilen iş kalemlerinin ara toplamıdır. Dönüşümün tamamı için proje, mevcut yapı ve uygulama kapsamı birlikte değerlendirilmelidir.</p>@endif
-<a class="btn btn-secondary" href="#proje-hesaplayici" id="chooseRenewal" style="margin-top:18px">Kentsel dönüşüm ön bütçesini incele →</a>
-</div></div>
-</section>
-
-<section class="block" id="nasil-calisir">
-<div class="container"><div class="definition"><div class="definition-grid">
-<div><div class="kicker">WORKSİTEM nedir?</div><h2>İnşaat ve tadilatta bütçe, plan ve teklif tek yerde.</h2><p>WORKSİTEM; ev sahiplerinin, ustaların, firmaların ve mühendislerin maliyet, metraj ve planlama hesaplarını ücretsiz yaptığı bir platformdur. Fiyatlar resmî birim fiyatlar ve piyasa araştırmasıyla güncellenir; her raporda fiyat tarihi yazar. Sonucu beğenen kullanıcı tek formla keşif ve teklif ister.</p></div>
-<div class="definition-points">
-<div class="definition-point"><strong>1. Hesapla</strong><span>Banyo, mutfak, boya, seramik, çatı veya bina: aracı seçin, birkaç soruyu yanıtlayın, sonucu anında görün.</span></div>
-<div class="definition-point"><strong>2. Planla ve raporla</strong><span>2D / 3D planlayıcıda ürünleri yerleştirin; kalem kalem dökümü PDF olarak indirip paylaşın.</span></div>
-<div class="definition-point"><strong>3. Teklif al</strong><span>Kainta İnşaat Uzmanlarından keşif ve yazılı teklif isteyin. Pilot dönemde keşif ve uygulama {{ \App\Support\Pilot::areaLabel() }}'da.</span></div>
-<div class="definition-point"><strong>4. Karar ver</strong><span>Bütçe, kapsam ve teklif elinizde; telefonunuz izniniz olmadan kimseyle paylaşılmaz.</span></div>
-</div></div></div></div>
+<ol class="wk-steps">
+<li class="wk-step"><span class="wk-step-n" aria-hidden="true">1</span><div class="wk-step-body"><h3 class="wk-h3">Hesaplayın</h3><p class="wk-body-muted">Banyo, mutfak, boya, seramik, çatı veya bina: aracı seçin, birkaç soruyu yanıtlayın; tutar ve kalem dökümü anında çıkar.</p></div></li>
+<li class="wk-step"><span class="wk-step-n" aria-hidden="true">2</span><div class="wk-step-body"><h3 class="wk-h3">Raporu alın</h3><p class="wk-body-muted">Fiyat tarihli PDF raporu indirin; planlayıcılarda ürünleri yerleştirin. Ustayla konuşurken elinizde olsun.</p></div></li>
+<li class="wk-step"><span class="wk-step-n" aria-hidden="true">3</span><div class="wk-step-body"><h3 class="wk-h3">Yerinde keşif isteyin</h3><p class="wk-body-muted">@if ($homePilot){{ \App\Support\Pilot::areaLabel() }}'da {{ \App\Support\Pilot::provider() }} uzmanı yerinde ölçer; {{ $homeReportDays }} iş günü içinde kalem kalem yazılı teklif verir.@else Kainta İnşaat uzmanlarından keşif ve yazılı teklif isteyin.@endif</p></div></li>
+</ol>
 </section>
 
 <x-site.why audience="all" />
 <x-site.ab-script />
 
-<section class="block" id="sss">
-<div class="container">
-<div class="section-head"><div class="kicker">Sık sorulan sorular</div><h2>İnşaat Maliyeti Hesaplama Hakkında Sık Sorulan Sorular</h2></div>
-<div class="faq">
-<div class="faq-item"><button class="faq-q" type="button" aria-expanded="false"><span>WORKSİTEM sonucu kesin teklif midir?</span><b aria-hidden="true">+</b></button><div class="faq-a">Hayır. Sonuçlar yaklaşık maliyet ve karar desteği içindir. Kesin teklif için proje, mahal, metraj, malzeme seçimi, uygulama koşulları ve saha bilgileri ayrıca değerlendirilmelidir.</div></div>
-<div class="faq-item"><button class="faq-q" type="button" aria-expanded="false"><span>İnşaat maliyeti m² üzerinden nasıl hesaplanır?</span><b aria-hidden="true">+</b></button><div class="faq-a">Sıfırdan inşaat hesabında seçtiğiniz yapı alt türü ilgili yapı sınıfına eşlenir; doğrulanmış m² birim fiyatı toplam alanla çarpılarak yaklaşık ön bütçe oluşturulur. Tadilat hesabında ise toplam alan ve seçilen tadilat kapsamı merkezi piyasa m² fiyat modeliyle değerlendirilir. İl ve ilçe bu hızlı hesapta fiyat katsayısı olarak uygulanmaz.</div></div>
-<div class="faq-item"><button class="faq-q" type="button" aria-expanded="false"><span>Kentsel dönüşüm hesabına hangi giderler dahil?</span><b aria-hidden="true">+</b></button><div class="faq-a">Dosyasız kentsel dönüşüm hesabı yalnızca yeni yapı için sıfırdan inşaat yöntemiyle ön bütçe üretir. Yıkım, tahliye, kira, ruhsat ve diğer dönüşüm giderleri ayrıca değerlendirilir. Destek ve hak sahipliği hesabı yapılmaz.</div></div>
-<div class="faq-item"><button class="faq-q" type="button" aria-expanded="false"><span>Kaba inşaat ve anahtar teslim metrekare birim fiyatı farkı nedir?</span><b aria-hidden="true">+</b></button><div class="faq-a">Kaba inşaat ve anahtar teslim m² birim fiyatı aynı kapsamı ifade etmez. Kaba inşaat, projede tanımlanan taşıyıcı sistem ve kaba yapı imalatlarıyla sınırlı olabilir; anahtar teslim kapsam ise sözleşmeye göre elektrik, mekanik, ince işler, kaplamalar ve diğer tamamlayıcı imalatları içerebilir. WORKSİTEM ana sayfa sonucu bu iki kapsam için ayrı ayrı kesin teklif vermez; ekranda belirtilen hesaplama yöntemine göre yaklaşık ön bütçe sunar. Kapsam karşılaştırması için metraj ve teknik şartname birlikte değerlendirilmelidir.</div></div>
-@if (\App\Support\Tools::aiFileOn())<div class="faq-item"><button class="faq-q" type="button" aria-expanded="false"><span>Hangi proje dosyalarını yükleyebilirim?</span><b aria-hidden="true">+</b></button><div class="faq-a">En fazla 10 MB boyutunda PDF, CSV, JPG, JPEG veya PNG dosyası yükleyebilirsiniz. Dosyanız yoksa toplam m² üzerinden hesap yapabilirsiniz. Dosya analizi için okunabilir ölçü ve iş kalemi bilgileri gerekir.</div></div>@endif
-<div class="faq-item"><button class="faq-q" type="button" aria-expanded="false"><span>Fiyatlandırılamayan işler toplamda yer alır mı?</span><b aria-hidden="true">+</b></button><div class="faq-a">Hayır. Fiyatı veya güvenilir miktarı bulunamayan kalemler ayrı gösterilir ve hesaplanan ara toplama dahil edilmez. Bütün dosya kalemleri fiyatlandırılmış olsa bile dosyada yer almayan proje işleri bu tutara dahil değildir.</div></div>
-<div class="faq-item"><button class="faq-q" type="button" aria-expanded="false"><span>Net teklif almak için ne yapmalıyım?</span><b aria-hidden="true">+</b></button><div class="faq-a">Hesaplama sonucundan sonra proje değerlendirmesi talep edebilirsiniz. İletişim bilgilerinizi ve proje notunuzu paylaşmanızın ardından kapsam ve saha koşulları değerlendirilir. İstanbul'da yerinde keşif bedeli {{ \App\Support\InspectionOffer::feeLabel() }}; keşiften sonra 15 gün içinde sözleşme imzalanırsa bu bedel iş bedelinden düşülür.</div></div>
+<section class="wk-container wk-section wk-split" id="fiyatlama">
+<div class="wk-stack" style="gap:var(--wk-space-3)">
+<p class="wk-eyebrow">Hesaplama yöntemi ve sınırları</p>
+<h2 class="wk-h2">İnşaat ve tadilat ön bütçesi nasıl hesaplanır?</h2>
+<p class="wk-body-muted">Ana sayfa hesaplayıcısı @if ($homeAi)iki yöntem kullanır: dosyasız m² hesabı ve dosyadan iş kalemi analizi. Sonuçları karşılaştırırken aynı kapsamı temsil edip etmediklerini kontrol edin.@else şu an dosyasız m² hesabı kullanır; dosyadan iş kalemi analizi yakında açılacak.@endif</p>
 </div>
+<div class="wk-method">
+<article class="wk-card"><h3 class="wk-h3">Dosyasız m² hesabı</h3><p class="wk-body-muted">Sıfırdan inşaatta seçilen yapı alt türü bir yapı sınıfına eşlenir ve doğrulanmış m² birim fiyatı toplam alanla çarpılır. Tadilatta toplam alan ve seçilen kapsam merkezi piyasa m² fiyat modeliyle hesaplanır. İl ve ilçe fiyatı değiştirmez.</p><p class="wk-small">Alanı tüm proje için girin. Sonuç yaklaşık ön bütçedir; ayrıntılı metraj veya ayrı ayrı fiyatlandırılmış işçilik ve malzeme teklifi değildir.</p></article>
+@if ($homeAi)<article class="wk-card"><h3>Dosyadan AI ön keşif</h3><p class="wk-body-muted">Dosyadaki iş kalemleri, miktarlar ve eşleşen birim fiyatlarla ara toplam oluşturulur. Fiyatlandırılamayan kalemler ara toplama dahil edilmez; dosyada olmayan işler için tam proje bütçesi üretilmez.</p><p class="wk-small">Şehir ve beyan ettiğiniz alan dosyadaki kalem miktarlarını değiştirmez. Dosyanın okunabilirliği ve kapsamı sonucu etkiler.</p></article>@endif
+<article class="wk-card" id="kentsel-donusum" aria-labelledby="renewalHeading"><h3 class="wk-h3" id="renewalHeading">Kentsel dönüşüm: yeni yapı maliyeti ve kapsamı</h3><p class="wk-body-muted">Kentsel dönüşüm seçeneği sıfırdan inşaat yöntemiyle yeni yapının yaklaşık bütçesini gösterir. Yıkım, tahliye, kira, ruhsat ve diğer dönüşüm giderleri ayrıca eklenmelidir; destek veya hak sahipliği hesaplanmaz.</p>@if ($homeAi)<p class="wk-small">Dosya yüklerseniz sonuç yalnız analiz edilen ve fiyatlandırılabilen kalemlerin ara toplamıdır.</p>@endif<p><a class="wk-btn wk-btn-secondary" href="#proje-hesaplayici" id="chooseRenewal">Dönüşüm bütçesini hesapla</a></p></article>
+<p class="wk-small"><b>Veri kaynağı ve güncellik:</b> Sıfırdan inşaatta yapı sınıfı için merkezi fiyat motorunda onaylı piyasa fiyatı varsa o, yoksa ÇŞİDB 2026 Yapı Yaklaşık Birim Maliyetleri kullanılır; piyasa ve proje katsayıları sunucuda uygulanır. Tadilat hesabı onaylı piyasa m² fiyatlarıyla yapılır. Fiyat tarihi her sonuçta ve raporda yazar.</p>
 </div>
 </section>
 
-<section class="block"><div class="container"><div class="cta"><div><div class="kicker">Projeniz için başlayın</div><h2>Önce bütçeyi görün, kapsamı birlikte netleştirelim.</h2><p>İnşaat, tadilat veya kentsel dönüşüm projenizi tanımlayın.</p></div><a class="btn btn-primary" href="#proje-hesaplayici">Ön Bütçemi Hesapla →</a></div></div></section>
+@if ($homePilot)
+<section class="wk-container" style="padding-bottom:var(--wk-space-8)">
+<div class="wk-band">
+<div class="wk-stack" style="gap:var(--wk-space-2)">
+<p class="wk-eyebrow">Pilot bölge: {{ \App\Support\Pilot::areaLabel() }}</p>
+<h2 class="wk-h2">Hesapladığınız işi tek elden yaptırın.</h2>
+<p style="max-width:60ch">Keşfi, teklifi ve uygulamayı {{ \App\Support\Pilot::provider() }} yapar. Keşif bedeli {{ $homeFee }}; {{ $homeCreditDays }} gün içinde sözleşme imzalanırsa iş bedelinden düşülür.</p>
+</div>
+<a class="wk-btn wk-btn-primary" href="#proje-hesaplayici">Hesapla, keşif iste</a>
+<span class="wk-band-stripes" aria-hidden="true"></span>
+</div>
+</section>
+@endif
 
-
-@include('components.collaboration-cta')
+<section class="wk-container wk-split" id="sss" style="padding-bottom:var(--wk-space-8)">
+<div class="wk-stack" style="gap:var(--wk-space-3)"><p class="wk-eyebrow">Sık sorulanlar</p><h2 class="wk-h2">İnşaat maliyeti hesaplama hakkında sık sorulanlar</h2><p class="wk-body-muted">Fiyatlar nereden geliyor, il neden fiyatı değiştirmiyor: <a href="#fiyatlama">Hesaplama yöntemi</a></p></div>
+<div class="wk-faq">
+<details open><summary>Worksitem sonucu kesin teklif midir?</summary><div>Hayır. Sonuçlar yaklaşık maliyet ve karar desteği içindir. Kesin teklif için proje, mahal, metraj, malzeme seçimi, uygulama koşulları ve saha bilgileri ayrıca değerlendirilmelidir.</div></details>
+<details><summary>İnşaat maliyeti m² üzerinden nasıl hesaplanır?</summary><div>Sıfırdan inşaat hesabında seçtiğiniz yapı alt türü ilgili yapı sınıfına eşlenir; doğrulanmış m² birim fiyatı toplam alanla çarpılarak yaklaşık ön bütçe oluşturulur. Tadilat hesabında ise toplam alan ve seçilen tadilat kapsamı merkezi piyasa m² fiyat modeliyle değerlendirilir. İl ve ilçe bu hızlı hesapta fiyat katsayısı olarak uygulanmaz.</div></details>
+<details><summary>Kentsel dönüşüm hesabına hangi giderler dahil?</summary><div>Dosyasız kentsel dönüşüm hesabı yalnızca yeni yapı için sıfırdan inşaat yöntemiyle ön bütçe üretir. Yıkım, tahliye, kira, ruhsat ve diğer dönüşüm giderleri ayrıca değerlendirilir. Destek ve hak sahipliği hesabı yapılmaz.</div></details>
+<details><summary>Kaba inşaat ve anahtar teslim metrekare birim fiyatı farkı nedir?</summary><div>Kaba inşaat ve anahtar teslim m² birim fiyatı aynı kapsamı ifade etmez. Kaba inşaat, projede tanımlanan taşıyıcı sistem ve kaba yapı imalatlarıyla sınırlı olabilir; anahtar teslim kapsam ise sözleşmeye göre elektrik, mekanik, ince işler, kaplamalar ve diğer tamamlayıcı imalatları içerebilir. Ana sayfa sonucu bu iki kapsam için ayrı ayrı kesin teklif vermez; ekranda belirtilen yönteme göre yaklaşık ön bütçe sunar.</div></details>
+@if ($homeAi)<details><summary>Hangi proje dosyalarını yükleyebilirim?</summary><div>En fazla 10 MB boyutunda PDF, CSV, JPG, JPEG veya PNG dosyası yükleyebilirsiniz. Dosyanız yoksa toplam m² üzerinden hesap yapabilirsiniz. Dosya analizi için okunabilir ölçü ve iş kalemi bilgileri gerekir.</div></details>@endif
+<details><summary>Fiyatlandırılamayan işler toplamda yer alır mı?</summary><div>Hayır. Fiyatı veya güvenilir miktarı bulunamayan kalemler ayrı gösterilir ve hesaplanan ara toplama dahil edilmez. Bütün dosya kalemleri fiyatlandırılmış olsa bile dosyada yer almayan proje işleri bu tutara dahil değildir.</div></details>
+<details><summary>Net teklif almak için ne yapmalıyım?</summary><div>Hesaplama sonucundan sonra proje değerlendirmesi talep edebilirsiniz. İletişim bilgilerinizi ve proje notunuzu paylaşmanızın ardından kapsam ve saha koşulları değerlendirilir. İstanbul'da yerinde keşif bedeli {{ $homeFee }}; keşiften sonra {{ $homeCreditDays }} gün içinde sözleşme imzalanırsa bu bedel iş bedelinden düşülür.</div></details>
+</div>
+</section>
 
 </main>
 
 <x-site.contech-footer />
-<div class="mobile-cta"><a href="/maliyet-hesapla">₺ Maliyeti Hesapla →</a></div>
 
-<script>
-(function(){
-document.querySelectorAll('.faq-item').forEach((item,index)=>{
- const button=item.querySelector('.faq-q');
- const answer=item.querySelector('.faq-a');
- answer.id='homeFaqAnswer'+index;
- answer.hidden=!item.classList.contains('open');
- button.setAttribute('aria-controls',answer.id);
- button.setAttribute('aria-expanded',String(!answer.hidden));
- button.querySelector('b').setAttribute('aria-hidden','true');
-});
-document.querySelectorAll('.faq-q').forEach(btn=>btn.addEventListener('click',()=>{
- const item=btn.closest('.faq-item');
- const wasOpen=item.classList.contains('open');
-
- document.querySelectorAll('.faq-item').forEach(other=>{
-  other.classList.remove('open');
-  other.querySelector('.faq-a').hidden=true;
-  other.querySelector('.faq-q').setAttribute('aria-expanded','false');
-  const icon=other.querySelector('.faq-q b');
-  if(icon)icon.textContent='+';
- });
-
- if(!wasOpen){
-  item.classList.add('open');
-  item.querySelector('.faq-a').hidden=false;
-  btn.setAttribute('aria-expanded','true');
-  const icon=btn.querySelector('b');
-  if(icon)icon.textContent='−';
- }
-}));
+<script id="wk-home-quality">
+// Kalite seçimi: görünür segment, betiğin okuduğu gizli #estQuality ile eşlenir
+(function () {
+    var sel = document.getElementById('estQuality');
+    var picks = document.querySelectorAll('input[name="estQualityPick"]');
+    if (!sel || !picks.length) return;
+    picks.forEach(function (r) {
+        r.addEventListener('change', function () {
+            if (!r.checked) return;
+            sel.value = r.value;
+            sel.dispatchEvent(new Event('input', { bubbles: true }));
+            sel.dispatchEvent(new Event('change', { bubbles: true }));
+        });
+    });
+    function sync() { picks.forEach(function (r) { r.checked = r.value === sel.value; }); }
+    sel.addEventListener('change', sync);
+    addEventListener('pageshow', function () { setTimeout(sync, 0); });
+    sync();
 })();
 </script>
 
@@ -575,7 +537,7 @@ if(!calcBtn||!fileInput)return;
 
 const HOME_PRICES=@json($homePrices ?? []);
 const HOME_BUILDING_TYPES=@json($homeBuildingTypes ?? []);
-const CALCULATE_LABEL='ÖN BÜTÇEYİ OLUŞTUR →';
+const CALCULATE_LABEL='Ön bütçemi hesapla';
 let activeAbortController=null;
 let currentRequestId=0;
 
@@ -1014,7 +976,7 @@ async function executeRenovationEstimate(){
  }
 
  calcBtn.disabled=true;
- calcBtn.textContent='TADİLAT BÜTÇESİ HESAPLANIYOR...';
+ calcBtn.textContent='Tadilat bütçesi hesaplanıyor…';
 
  $('estAiStatus').hidden=true;
  $('estAiStatus').textContent='';
@@ -1093,7 +1055,7 @@ async function executeOfficialBuildingEstimate(){
  activeAbortController=controller;
 
  calcBtn.disabled=true;
- calcBtn.textContent='RESMÎ MALİYET HESAPLANIYOR...';
+ calcBtn.textContent='Maliyet hesaplanıyor…';
 
  $('estAiStatus').hidden=false;
  $('estAiStatus').textContent=
@@ -1495,7 +1457,7 @@ async function executeFileAnalysis(file){
  activeAbortController=controller;
 
  calcBtn.disabled=true;
- calcBtn.textContent='DOSYA ANALİZ EDİLİYOR...';
+ calcBtn.textContent='Dosya analiz ediliyor…';
  $('estAiStatus').hidden=false;
  $('estAiStatus').textContent='Dosyadan iş kalemleri ve metrajlar analiz ediliyor...';
 
