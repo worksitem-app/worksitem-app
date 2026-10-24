@@ -99,6 +99,11 @@
     .poz-title{position:relative;z-index:1;max-width:980px;margin:12px 0 0;font-size:clamp(28px,3.4vw,40px);line-height:1.08;letter-spacing:-1.8px;font-weight:950}
     .poz-title-code{color:var(--yellow-dark)}
     .poz-lead{position:relative;z-index:1;max-width:900px;margin:16px 0 0;color:var(--muted);font-size:15px}
+    .poz-hero-price{position:relative;z-index:1;margin:14px 0 0;font-size:17px;line-height:1.4}
+    .poz-hero-price span:first-child{display:inline-block;margin-right:6px;font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+    .poz-hero-price strong{font-size:26px;font-weight:950;letter-spacing:-.5px}
+    .poz-hero-src{color:var(--muted);font-size:14px}
+    @media(max-width:760px){.poz-detail-hero .poz-lead{display:none}}
     .poz-badges{position:relative;z-index:1;display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
     .poz-badge{display:inline-flex;align-items:center;min-height:34px;padding:0 11px;border:1px solid var(--line);border-radius:999px;background:var(--surface-2);font-size:11px;font-weight:800;color:var(--muted)}
     .poz-badge strong{color:var(--text);margin-left:5px}

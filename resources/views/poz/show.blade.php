@@ -44,6 +44,9 @@
     — {{ $poz->description }}
   </h1>
 
+  {{-- v115: trafiğin çoğu bu sayfaya "birim fiyatı" aramasıyla geliyor; fiyat mobilde ilk ekranda görünsün --}}
+  <p class="poz-hero-price"><span>Birim fiyat</span> <strong>{{ $priceFormatted }} TL</strong> / {{ $poz->unit }}<span class="poz-hero-src"> · {{ $poz->institution }}{{ $poz->year ? ' '.$poz->year : '' }}</span></p>
+
   <p class="poz-lead">
     {{ $poz->institution }} kaynağındaki bu pozun tanımını, birimini, güncel kayıtlı birim fiyatını ve WORKSİTEM üzerindeki ilgili pozları tek ekranda inceleyin.
   </p>

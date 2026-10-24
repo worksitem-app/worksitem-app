@@ -114,6 +114,13 @@
 #ws-cookie-banner .ws-ck-settings[hidden]{display:none}
 #ws-cookie-banner label{display:flex;gap:10px;align-items:flex-start;margin:6px 0}
 #ws-cookie-banner label small{display:block;color:#a1a1aa}
+/* v115: mobilde bant ekranın üçte birini kaplıyor, poz fiyatını ve form alanlarını örtüyordu → tek satır düğme, sıkı boşluk */
+@media(max-width:520px){
+#ws-cookie-banner{left:8px;right:8px;bottom:8px;padding:12px 12px 10px;font-size:13px;line-height:1.45}
+#ws-cookie-banner p{margin:0 0 9px}
+#ws-cookie-banner .ws-ck-actions{flex-wrap:nowrap;gap:6px}
+#ws-cookie-banner button{flex:1 1 0;min-width:0;padding:10px 6px;min-height:44px}
+}
 </style>
 <div id="ws-cookie-banner" role="dialog" aria-live="polite" aria-label="Çerez tercihleri" hidden>
     <p>Sitenin çalışması için zorunlu çerezleri kullanıyoruz. Ziyaret istatistikleri ve reklam ölçümü için çerezleri ise yalnızca onay verirseniz kullanırız. Ayrıntılar: <a href="/legal/cerez-politikasi">Çerez Politikası</a></p>
