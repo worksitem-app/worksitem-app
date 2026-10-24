@@ -58,6 +58,11 @@ class BrandShell
             $html = substr($html, 0, $pos).'<style id="ws-brand-css">'.\App\Support\Asset::inline('css/ws-brand.css').'</style>'."\n".substr($html, $pos);
         }
 
+        // v115 UI/UX denetimi: ortak erişilebilirlik katmanı sayfanın en sonunda (sayfa ve bileşen stillerinin üstüne yazar)
+        if (! str_contains($html, 'id="ws-a11y-css"') && ($b = strripos($html, '</body>')) !== false) {
+            $html = substr($html, 0, $b).'<style id="ws-a11y-css">'.\App\Support\Asset::inline('css/ws-a11y.css').'</style>'.substr($html, $b);
+        }
+
         $response->setContent(self::deferFonts($html));
 
         return $response;

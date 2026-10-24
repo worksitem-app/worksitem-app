@@ -114,8 +114,8 @@
 
             <div class="options">
                 <div>
-                    <label>Proje Tipi</label>
-                    <select name="project_type">
+                    <label for="boqProjectType">Proje Tipi</label>
+                    <select name="project_type" id="boqProjectType">
                         <option value="genel">Genel İnşaat</option>
                         <option value="konut">Konut Projesi</option>
                         <option value="ticari">Ticari Yapı</option>
@@ -124,8 +124,8 @@
                     </select>
                 </div>
                 <div>
-                    <label>Kalite Sınıfı</label>
-                    <select name="quality">
+                    <label for="boqQuality">Kalite Sınıfı</label>
+                    <select name="quality" id="boqQuality">
                         <option value="ekonomik">Ekonomik</option>
                         <option value="standart" selected>Standart</option>
                         <option value="lüks">Lüks</option>
