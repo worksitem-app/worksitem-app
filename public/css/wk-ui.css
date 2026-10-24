@@ -7,6 +7,7 @@
 
 @layer wk-base {
   :where(.wk-root), :where(.wk-root) * { box-sizing: border-box; }
+  :where(body.wk-root) { margin: 0; }
   :where(.wk-root) { background: var(--wk-page); color: var(--wk-ink); font-family: var(--wk-font); font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
   :where(.wk-root) a { color: var(--wk-focus); text-underline-offset: 3px; }
   :where(.wk-root) a:hover { color: var(--wk-focus-hover); }

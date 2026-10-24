@@ -83,7 +83,8 @@ class UxAnalizV110Test extends TestCase
             $this->assertStringContainsString("'$e'", $home);
         }
         $this->assertStringContainsString('window.wsTrack', $home);
-        $this->assertStringContainsString('class="faq-q" type="button" aria-expanded="false"', $home);
+        // v118: SSS yerel <details>/<summary> (klavye ve ekran okuyucu desteği betiksiz)
+        $this->assertMatchesRegularExpression('#id="sss".*?<div class="wk-faq">\s*<details open><summary>#s', $home);
     }
 
     public function test_ai_araci_ic_jargon_kullanmaz(): void
