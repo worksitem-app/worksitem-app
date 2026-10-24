@@ -12,7 +12,6 @@
         h1{font-size:22px;margin:14px 0 8px}
         p{color:#5B6472;line-height:1.6;margin:0 0 18px}
         button{background:#FFB800;color:#101318;border:0;border-radius:12px;font-weight:800;font-size:15px;padding:12px 20px;cursor:pointer}
-        @media (prefers-color-scheme:dark){body{background:#0B0F16;color:#E6E9EE}.c{background:#141A24;border-color:#232C3A}p{color:#C9CFD8}}
     </style>
 </head>
 <body>

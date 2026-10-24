@@ -100,8 +100,11 @@ class BrandShell
         return $add === '' ? $html : substr($html, 0, $pos).$add."\n".substr($html, $pos);
     }
 
-    /** Kayıtlı tema (worksitem-theme) ilk boyamadan önce; kayıt yoksa sayfanın kendi data-theme'i kalır */
-    public const THEME_INIT_SCRIPT = '<script id="wk-theme-init">try{var t=localStorage.getItem("worksitem-theme");if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>';
+    /**
+     * Varsayılan tema AÇIK (telefon/bilgisayar koyu modda olsa da). Koyu tema yalnız kullanıcı düğmeyle seçince
+     * (worksitem-theme=dark) ve ilk boyamadan önce uygulanır.
+     */
+    public const THEME_INIT_SCRIPT = '<script id="wk-theme-init">(function(){var t="light";try{if(localStorage.getItem("worksitem-theme")==="dark")t="dark"}catch(e){}document.documentElement.setAttribute("data-theme",t)})()</script>';
 
     /**
      * for= özelliği olmayan <label>'ı, ardından gelen ilk id'li alana bağlar (arada başka label ya da alan yoksa).

@@ -28,7 +28,7 @@
     let theme;
     try { theme = localStorage.getItem('worksitem-theme'); } catch (error) {}
     if (theme !== 'light' && theme !== 'dark') {
-      theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      theme = 'light';
     }
     document.documentElement.dataset.theme = theme;
   })();

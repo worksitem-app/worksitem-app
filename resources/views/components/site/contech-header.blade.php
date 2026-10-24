@@ -101,7 +101,7 @@
     }
     var saved = null;
     try { saved = localStorage.getItem(KEY); } catch (e) {}
-    applyTheme(saved === 'dark' || (saved !== 'light' && root.getAttribute('data-theme') === 'dark') ? 'dark' : 'light');
+    applyTheme(saved === 'dark' ? 'dark' : 'light'); // varsayılan açık; koyu yalnız kullanıcı seçince
     document.querySelectorAll('[data-wk-theme-toggle]').forEach(function (b) {
         b.addEventListener('click', function () {
             var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
