@@ -67,9 +67,8 @@ class InspectionPaymentTest extends TestCase
                 && $b['buyer']['gsmNumber'] === '+905327654321'
                 && $b['basketItems'][0]['itemType'] === 'VIRTUAL';
         });
-        // Sipariş SMS'i müşteriye ve ekibe
-        Http::assertSent(fn (HttpRequest $r) => str_contains($r->url(), 'netgsm') && $r['messages'][0]['no'] === '5327654321');
-        Http::assertSent(fn (HttpRequest $r) => str_contains($r->url(), 'netgsm') && $r['messages'][0]['no'] === '5329998877');
+        // v109: ödeme sayfasına gidilirken sipariş SMS'i GİTMEZ (yalnız talep alındı SMS'i gitmiş olabilir)
+        Http::assertNotSent(fn (HttpRequest $r) => str_contains($r->url(), 'netgsm') && str_contains((string) ($r['messages'][0]['msg'] ?? ''), 'Keşif'));
 
         // iyzico dönüşü: oturumsuz, CSRF'siz POST
         $this->flushSession();
@@ -81,6 +80,9 @@ class InspectionPaymentTest extends TestCase
         $this->assertSame('odendi', $lead->inspection_status);
         $this->assertNotNull($lead->inspection_paid_at);
         $this->assertSame('999', $lead->inspection_data['iyzico']['payment_id']);
+        // Ödeme onaylanınca müşteriye ve ekibe SMS
+        Http::assertSent(fn (HttpRequest $r) => str_contains($r->url(), 'netgsm') && $r['messages'][0]['no'] === '5327654321' && str_contains($r['messages'][0]['msg'], 'ödemeniz alındı'));
+        Http::assertSent(fn (HttpRequest $r) => str_contains($r->url(), 'netgsm') && $r['messages'][0]['no'] === '5329998877' && str_contains($r['messages'][0]['msg'], 'ÖDENDİ'));
 
         $this->get($res->headers->get('Location'))->assertRedirect(route('kesif.payment'));
         $this->get(route('kesif.payment'))->assertOk()->assertSee('Keşif ödemeniz alındı')->assertSee("wsTrack('purchase'", false);

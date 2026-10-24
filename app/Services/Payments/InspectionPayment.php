@@ -6,7 +6,6 @@ use App\Models\Lead;
 use App\Services\Sms\NetgsmSms;
 use App\Support\InspectionOffer;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
 
 /**
  * Keşif ödemesi: iyzico ortak ödeme sayfasını başlatır, dönüşü doğrular,
@@ -170,23 +169,16 @@ class InspectionPayment
         $this->teamSms("Worksitem KEŞİF SİPARİŞİ: {$lead->name}, {$lead->phone}, {$lead->city}, ".($lead->inspection_payment_method === 'havale' ? 'HAVALE' : 'KART')." {$lead->public_id}");
     }
 
+    /** v109: kart ödemesi onaylanınca müşteriye SMS + sözleşme e-postası, ekibe SMS + sözleşmeli e-posta */
     private function notifyPaid(Lead $lead): void
     {
         $total = InspectionOffer::tl(InspectionOffer::amounts()['total']);
         $this->sms->send((string) $lead->phone, "Kainta İnşaat: {$total} keşif ödemeniz alındı ({$lead->public_id}). Uzmanımız randevu için sizi arayacak. 0850 346 49 83");
         $this->teamSms("Worksitem KEŞİF ÖDENDİ: {$lead->name}, {$lead->phone}, {$lead->city}, {$total} {$lead->public_id} - randevu verin");
 
-        $to = trim((string) config('worksitem_leads.notification_email'));
-        if ($to !== '') {
-            try {
-                Mail::raw(
-                    "Keşif ödemesi kartla ALINDI — müşteriyi arayıp randevu verin.\n\nTalep no: {$lead->public_id}\nAd soyad: {$lead->name}\nTelefon: {$lead->phone}\nŞehir: {$lead->city}\nTutar: {$total}\niyzico ödeme no: ".($lead->inspection_data['iyzico']['payment_id'] ?? '-'),
-                    fn ($m) => $m->to($to)->subject('WORKSITEM | KEŞİF ÖDENDİ | '.($lead->name ?: 'İsimsiz').' | '.$lead->public_id)
-                );
-            } catch (\Throwable $e) {
-                Log::error('Keşif ödeme e-postası gönderilemedi', ['lead' => $lead->public_id, 'error' => $e->getMessage()]);
-            }
-        }
+        $notifier = app(InspectionNotifier::class);
+        $notifier->teamEmail($lead, 'odendi');
+        $notifier->customerCopy($lead, paid: true);
     }
 
     private function teamSms(string $msg): void
