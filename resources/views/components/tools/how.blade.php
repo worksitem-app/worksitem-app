@@ -27,7 +27,7 @@
     $steps = match ($kind) {
         'cost' => [
             ['Ölçü ve seçimleri girin', 'Alan, kalite ve kapsam gibi birkaç soruyu yanıtlayın; her seçimde sonuç anında güncellenir.'],
-            ['Güncel fiyatlarla hesaplayın', 'Malzeme ve işçilik resmî birim fiyatlar ve piyasa araştırmasıyla fiyatlanır'.($priceDate ? '; bu aracın fiyat tarihi '.$priceDate : '').'. Fiyatlar her sabah çalışan fiyat robotuyla güncellenir, uzman kontrol eder.'],
+            ['Güncel fiyatlarla hesaplayın', 'Malzeme ve işçilik resmî birim fiyatlar ve piyasa araştırmasıyla fiyatlanır'.($priceDate ? '; bu aracın fiyat tarihi '.$priceDate : '').'. Fiyat robotu her sabah piyasayı tarar; yeni fiyat uzman onayından sonra yayına girer.'],
             $kit ? ['Dökümü raporlayın', 'Kalem kalem döküm ve detaylı Pro rapor; PDF olarak indirin veya bağlantıyla paylaşın.'] : ['Dökümü inceleyin', 'Kalemleri ve varsayımları inceleyin; yazdırın, PDF alın veya ekibinizle paylaşın.'],
             ['Teklife dönüştürün', $offer],
         ],
@@ -70,7 +70,7 @@
     };
     $why = [
         ['Ücretsiz, üyeliksiz', 'Hesaplamak için kayıt veya ödeme gerekmez.'],
-        ['Güncel fiyat', 'Resmî poz fiyatları ve piyasa araştırması, her sabah güncellenir.'],
+        ['Güncel fiyat', 'Resmî poz fiyatları ve piyasa araştırması; fiyat tarihi raporda yazar.'],
         ['Telefonunuz sizde kalır', 'İzniniz olmadan kimseyle paylaşılmaz.'],
         ['Kararınız sizin', 'Sonuç yol gösterir; teklif almak zorunlu değildir.'],
     ];

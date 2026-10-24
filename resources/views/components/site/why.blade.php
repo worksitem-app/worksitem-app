@@ -11,11 +11,11 @@
         'users' => [
             'kicker' => 'Ev sahipleri ve proje sahipleri için',
             'title' => 'Ustayla konuşmadan önce bütçenizi bilin.',
-            'cta' => ['Ücretsiz hesapla', '/araclar'],
+            'cta' => ['Ücretsiz hesapla', '/#proje-hesaplayici'],
             'items' => [
                 [($tools >= 10 ? $tools : 'Onlarca').' ücretsiz araç', 'Banyo, mutfak, boya, seramik, çatı, inşaat maliyeti, metraj ve 2D/3D planlayıcılar. Üyelik ve ödeme yok.'],
-                ['Güncel ve tarihli fiyat', 'Resmî birim fiyatlar ve piyasa araştırması her sabah güncellenir, uzman kontrol eder. Her raporda fiyat tarihi yazar.'],
-                ['Tarafsız sonuç', 'Sponsorlar hesabı ve fiyatları etkilemez; sponsorlu içerik her zaman etiketlidir.'],
+                ['Güncel ve tarihli fiyat', 'Resmî birim fiyatlar ve piyasa araştırmasıyla güncellenir, uzman onaylar. Her raporda fiyat tarihi yazar.'],
+                ['Tarafsız sonuç', 'Sponsorlar ve uygulama ortağımız hesabı ve fiyatları etkilemez; sponsorlu içerik her zaman etiketlidir.'],
                 ['Kontrol sizde', 'Telefonunuz izniniz olmadan kimseyle paylaşılmaz. Teklif istemek zorunlu değildir.'],
             ],
         ],
@@ -33,11 +33,11 @@
         'pilot' => [
             'kicker' => \App\Support\Pilot::areaLabel().'\'da keşif ve uygulama',
             'title' => 'Hesapladığınız işi '.\App\Support\Pilot::provider().' yapsın.',
-            'cta' => ['Yerinde keşif iste', '/maliyet-hesapla'],
+            'cta' => ['Hesapla, keşif iste', '/maliyet-hesapla#calculator'],
             'items' => [
                 ['Yerinde keşif', 'Kainta İnşaat uzmanı yerinde ölçer, ihtiyacı netleştirir. Keşif bedeli ve koşulları teklif öncesinde açıkça yazılır.'],
                 ['Yazılı teklif', 'Keşiften sonra '.(int) config('worksitem_inspection.report_days', 5).' iş günü içinde rapor ve kalem kalem yazılı teklif.'],
-                ['Tek muhatap', 'Keşif, teklif, uygulama ve fatura aynı firmadan; sözleşmede hizmeti veren taraf açıkça yazar.'],
+                ['Tek muhatap', 'Keşif, teklif ve uygulamada tek muhatap; sözleşmede hizmeti veren taraf ve faturayı kesen açıkça yazar.'],
                 ['Pilot bölge', \App\Support\Pilot::areaLabel().' dışından gelen talepleri kaydediyoruz; bölgenize açıldığımızda haber veriyoruz.'],
             ],
         ],

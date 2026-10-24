@@ -37,9 +37,11 @@
         @endif
     </div>
     <div class="ws-bc-side">
+        @if ($free < $max)
         <div class="ws-bc-slots" aria-label="Sponsor alanı durumu">
             <b>{{ $free }} / {{ $max }}</b><span>{{ $free > 0 ? 'sponsor alanı boş' : 'alanlar dolu · bekleme listesi' }}</span>
         </div>
+        @endif
         <a class="ws-bc-btn" href="{{ $href }}" data-brand-cta="{{ $tool }}">Bu araçta yer alın →</a>
         <a class="ws-bc-link" href="{{ route('sponsor.page') }}#paketler">Paketleri inceleyin</a>
         @if (\App\Support\Pilot::firmSignupOpen())<a class="ws-bc-link" href="{{ route('firms.page', ['arac' => $tool]) }}#kayit" data-firm-cta="{{ $tool }}">Usta / firma mısınız? Ücretsiz üye olun</a>@endif
