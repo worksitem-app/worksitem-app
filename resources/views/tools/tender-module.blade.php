@@ -90,6 +90,16 @@
         .input-qty{background:#fff!important;color:#101318!important}
         .toolbar{background:#fff!important}
         .tab-btn[disabled]{opacity:.55;cursor:not-allowed}
+        .summary-totals{display:flex;gap:40px;flex-wrap:wrap}
+        .summary-footer{flex-wrap:wrap;gap:16px}
+        .price-legend{font-size:12px;color:var(--text-muted);margin-top:12px;line-height:1.5}
+        .price-warn{font-size:13px;font-weight:700;color:#8A4B00;background:#FFF4E0;border:1px solid #F5C77A;border-radius:8px;padding:10px 12px;margin-top:10px}
+        .poz-price.none,.price-none{color:#9a3412!important;font-weight:700;font-size:12px}
+        .price-tag{display:inline-block;font-size:10px;font-weight:800;border-radius:999px;padding:1px 6px;margin-left:4px;background:#eef2ff;color:#3730a3;vertical-align:middle}
+        .price-sub{display:block;font-size:11px;color:var(--text-muted);font-weight:600}
+        tr.no-price td{background:#FFF7ED}
+        .row-del{background:none;border:0;color:#ef4444;font-size:12px;cursor:pointer;margin-left:6px;padding:2px 4px}
+        .row-no{font-family:monospace;font-weight:800;color:var(--primary)}
         .tab-btn small{font-size:10px;font-weight:800;background:#FFF8E1;color:#8A6200;border-radius:999px;padding:2px 6px;margin-left:6px;text-transform:none}
         @media (max-width: 900px){
             .app-container{flex-direction:column;height:auto;min-height:0}
@@ -114,14 +124,13 @@
             <div class="sidebar-header">
                 <h2>Poz Kütüphanesi</h2>
                 <div class="search-box">
-                    <select class="filter-select" id="instFilter" onchange="fetchPozs()">
+                    <select class="filter-select" id="instFilter" aria-label="Kurum">
                         <option value="all">Tüm Kurumlar</option>
-                        <option value="ÇŞB">Çevre ve Şehircilik Bakanlığı</option>
-                        <option value="Karayolları">Karayolları Genel Müd.</option>
-                        <option value="İller Bankası">İller Bankası</option>
-                        <option value="Özel">Özel / Özel Pozlar</option>
+                        @foreach (\App\Http\Controllers\PozPublicController::searchInstitutionOptions() as $instVal => $instLabel)
+                            <option value="{{ $instVal }}">{{ $instLabel }}</option>
+                        @endforeach
                     </select>
-                    <input type="text" class="search-input" id="searchInput" placeholder="Poz No veya Tanım Ara..." oninput="fetchPozs()">
+                    <input type="text" class="search-input" id="searchInput" placeholder="Poz No veya Tanım Ara..." aria-label="Poz ara">
                 </div>
             </div>
             
@@ -142,33 +151,40 @@
                 <table id="tenderTable">
                     <thead>
                         <tr>
-                            <th width="15%">POZ NO</th>
-                            <th width="35%">İŞ KALEMİ TANIMI</th>
-                            <th width="10%">BİRİM</th>
-                            <th width="12%" class="col-right">MİKTAR</th>
-                            <th width="13%" class="col-right">BİRİM FİYAT</th>
+                            <th width="12%">POZ NO</th>
+                            <th width="30%">İŞ KALEMİ TANIMI</th>
+                            <th width="7%">BİRİM</th>
+                            <th width="11%" class="col-right">MİKTAR</th>
+                            <th width="12%" class="col-right" title="Kurumun yayımladığı birim fiyat">RESMÎ BİRİM FİYAT</th>
+                            <th width="13%" class="col-right" id="offerHead" title="Hedef kâr marjıyla hesaplanan teklif birim fiyatı">TEKLİF BİRİM FİYATI</th>
                             <th width="15%" class="col-right">TUTAR</th>
                         </tr>
                     </thead>
                     <tbody id="tenderBody">
                         <tr id="emptyRow">
-                            <td colspan="6" style="text-align:center; padding:80px; color:var(--text-muted);">
+                            <td colspan="7" style="text-align:center; padding:80px; color:var(--text-muted);">
                                 <div style="font-size:32px; margin-bottom:15px; color:var(--primary);">⌁</div>
                                 Sol panelden poz arayın ve tıklayarak ekleyin.
                             </td>
                         </tr>
                     </tbody>
                 </table>
+                <p class="price-legend" id="priceLegend">Resmî birim fiyat: kurumun yayımladığı fiyat (KDV hariç). Teklif birim fiyatı: resmî fiyattan hedef kâr marjıyla hesaplanan önerilen teklif fiyatıdır, resmî fiyat değildir. Tutar teklif fiyatıyla; teklif fiyatı hesaplanamayan pozda resmî fiyatla hesaplanır. Fiyatı olmayan pozlar toplama girmez.</p>
+                <p class="price-warn" id="priceWarn" role="status" hidden></p>
             </div>
 
             <div class="summary-footer">
                 <div class="summary-item">
                     <span class="summary-label">Proje Unvanı</span>
-                    <span style="font-size:16px; font-weight:800; color:#fff;">WORKSİTEM Örnek İhale Dosyası</span>
+                    <span style="font-size:16px; font-weight:800; color:var(--text-main);">WORKSİTEM Örnek İhale Dosyası</span>
                 </div>
-                <div style="display:flex; gap:50px;">
+                <div class="summary-totals">
                     <div class="summary-item col-right">
-                        <span class="summary-label">Toplam Tutar (KDV Hariç)</span>
+                        <span class="summary-label">Resmî fiyatlarla toplam (KDV hariç)</span>
+                        <span class="summary-value" id="officialTotal">0,00 ₺</span>
+                    </div>
+                    <div class="summary-item col-right">
+                        <span class="summary-label">Tutar toplamı (KDV hariç)</span>
                         <span class="summary-value" id="subTotal">0,00 ₺</span>
                     </div>
                     <div class="summary-item col-right">
@@ -181,96 +197,184 @@
     </div>
 
     <script>
+        // v119: fiyatsız poz NaN üretmez; DOM textContent ile kurulur (depolanmış XSS yok);
+        // satır silme addEventListener ile (poz no'da ' olsa da çalışır).
         let items = [];
+        let fetchSeq = 0;
+        const fmt = new Intl.NumberFormat('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        const money = v => fmt.format(v) + ' ₺';
+        const num = v => { const n = (v === null || v === undefined || v === '') ? NaN : Number(v); return Number.isFinite(n) && n > 0 ? n : null; };
+        function el(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined && text !== null) e.textContent = String(text); return e; }
+
+        function msg(text, color) {
+            const pozList = document.getElementById('pozList');
+            pozList.replaceChildren();
+            const d = el('div', null, text);
+            d.style.cssText = 'text-align:center; padding:30px; font-size:13px; color:' + (color || 'var(--text-muted)');
+            pozList.appendChild(d);
+        }
 
         async function fetchPozs() {
             const q = document.getElementById('searchInput').value;
             const inst = document.getElementById('instFilter').value;
             const pozList = document.getElementById('pozList');
+            const seq = ++fetchSeq;
 
             try {
-                const res = await fetch(`/api/pozlar/search?q=${encodeURIComponent(q)}&institution=${encodeURIComponent(inst)}`);
+                const res = await fetch(`/api/pozlar/search?q=${encodeURIComponent(q)}&institution=${encodeURIComponent(inst)}`, { headers: { 'Accept': 'application/json' } });
+                if (!res.ok) throw new Error('HTTP ' + res.status);
                 const data = await res.json();
+                if (seq !== fetchSeq) return; // eski yanıt yenisinin üstüne yazmasın
 
-                if(data.length === 0) {
-                    pozList.innerHTML = '<div style="text-align:center; padding:30px; color:var(--text-muted); font-size:13px;">Eşleşen poz bulunamadı.</div>';
-                    return;
-                }
+                if (!Array.isArray(data) || data.length === 0) { msg('Eşleşen poz bulunamadı.'); return; }
 
-                pozList.innerHTML = '';
+                pozList.replaceChildren();
                 data.forEach(p => {
-                    const priceFormatted = new Intl.NumberFormat('tr-TR', { minimumFractionDigits: 2 }).format(p.offer_unit_price ?? p.unit_price);
-                    const div = document.createElement('div');
-                    div.className = 'poz-item';
-                    div.onclick = () => addPoz(p.poz_no, p.description, p.unit, p.offer_unit_price ?? p.unit_price);
-                    div.innerHTML = `
-                        <div class="poz-no">${p.poz_no}</div>
-                        <div class="poz-name">${p.description}</div>
-                        <div class="poz-meta"><span>${p.institution}</span><span class="poz-price">${priceFormatted} ₺</span></div>
-                    `;
+                    const official = num(p.official_unit_price);
+                    const offer = official ? num(p.offer_unit_price) : null;
+                    const div = el('div', 'poz-item');
+                    div.tabIndex = 0;
+                    div.setAttribute('role', 'button');
+                    const add = () => addPoz(p);
+                    div.addEventListener('click', add);
+                    div.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); add(); } });
+                    div.appendChild(el('div', 'poz-no', p.poz_no));
+                    div.appendChild(el('div', 'poz-name', p.description));
+                    const meta = el('div', 'poz-meta');
+                    meta.appendChild(el('span', null, p.institution));
+                    if (offer) {
+                        const pr = el('span', 'poz-price', money(offer));
+                        pr.appendChild(el('span', 'price-sub', 'teklif · resmî ' + money(official)));
+                        meta.appendChild(pr);
+                    } else if (official) {
+                        const pr = el('span', 'poz-price', money(official));
+                        pr.appendChild(el('span', 'price-sub', 'resmî fiyat'));
+                        meta.appendChild(pr);
+                    } else {
+                        meta.appendChild(el('span', 'poz-price none', 'fiyat yok'));
+                    }
+                    div.appendChild(meta);
                     pozList.appendChild(div);
                 });
-            } catch(e) {
-                pozList.innerHTML = '<div style="color:#ef4444; text-align:center; font-size:13px;">API bağlantı hatası.</div>';
+            } catch (e) {
+                if (seq === fetchSeq) msg('Poz listesi alınamadı. Lütfen tekrar deneyin.', '#b91c1c');
             }
         }
 
-        function addPoz(no, name, unit, price) {
+        let searchTimer = null;
+        document.getElementById('searchInput').addEventListener('input', () => { clearTimeout(searchTimer); searchTimer = setTimeout(fetchPozs, 250); });
+        document.getElementById('instFilter').addEventListener('change', fetchPozs);
+
+        function addPoz(p) {
             document.getElementById('emptyRow').style.display = 'none';
-            let existing = items.find(i => i.no === no);
-            if(existing) {
+            const existing = items.find(i => i.no === p.poz_no && i.inst === p.institution);
+            if (existing) {
                 existing.qty += 1;
-                document.getElementById('qty_' + String(no).replace(/\./g, '_')).value = existing.qty;
-                updateRow(no);
+                existing.qtyInput.value = existing.qty;
+                updateRow(existing);
                 return;
             }
-            items.push({ no: no, name: name, unit: unit, price: parseFloat(price), qty: 1 });
-            renderRow(no, name, unit, price);
+            const official = num(p.official_unit_price);
+            const offer = official ? num(p.offer_unit_price) : null;
+            const item = { no: p.poz_no, inst: p.institution, name: p.description, unit: p.unit, official, offer, price: offer ?? official, qty: 1 };
+            items.push(item);
+            renderRow(item);
             calculateTotals();
         }
 
-        function renderRow(no, name, unit, price) {
-            let tbody = document.getElementById('tenderBody');
-            let tr = document.createElement('tr');
-            let cleanNo = String(no).replace(/\./g, '_');
-            tr.id = 'row_' + cleanNo;
-            let formattedPrice = new Intl.NumberFormat('tr-TR', { minimumFractionDigits: 2 }).format(price);
-            
-            tr.innerHTML = `
-                <td style="font-family:monospace; font-weight:800; color:var(--primary); cursor:pointer;" onclick="removeRow('${no}')" title="Silmek için tıklayın">${no} <span style="color:#ef4444; font-size:10px; vertical-align:top;">✕</span></td>
-                <td style="font-weight:600;">${name}</td>
-                <td>${unit}</td>
-                <td class="col-right"><input type="number" id="qty_${cleanNo}" class="input-qty" value="1" step="0.01" oninput="updateRow('${no}')"></td>
-                <td class="col-right">${formattedPrice} ₺</td>
-                <td class="col-right row-total" id="total_${cleanNo}">${formattedPrice} ₺</td>
-            `;
+        function renderRow(item) {
+            const tbody = document.getElementById('tenderBody');
+            const tr = el('tr');
+            if (item.price === null) tr.className = 'no-price';
+
+            const tdNo = el('td');
+            tdNo.appendChild(el('span', 'row-no', item.no));
+            const del = el('button', 'row-del', '✕');
+            del.type = 'button';
+            del.title = 'Satırı sil';
+            del.setAttribute('aria-label', 'Satırı sil: ' + item.no);
+            del.addEventListener('click', () => removeRow(item));
+            tdNo.appendChild(del);
+            tr.appendChild(tdNo);
+
+            const tdName = el('td', null, item.name);
+            tdName.style.fontWeight = '600';
+            tr.appendChild(tdName);
+            tr.appendChild(el('td', null, item.unit));
+
+            const tdQty = el('td', 'col-right');
+            const inp = el('input', 'input-qty');
+            inp.type = 'number'; inp.min = '0'; inp.step = '0.01'; inp.value = '1';
+            inp.setAttribute('aria-label', 'Miktar: ' + item.no);
+            inp.addEventListener('input', () => updateRow(item));
+            tdQty.appendChild(inp);
+            tr.appendChild(tdQty);
+            item.qtyInput = inp;
+
+            tr.appendChild(el('td', item.official ? 'col-right' : 'col-right price-none', item.official ? money(item.official) : 'fiyat yok'));
+            const tdOffer = el('td', 'col-right');
+            if (item.offer) {
+                tdOffer.textContent = money(item.offer);
+            } else {
+                tdOffer.className = 'col-right price-none';
+                tdOffer.textContent = item.official ? 'hesaplanamadı' : 'fiyat yok';
+                if (item.official) tdOffer.appendChild(el('span', 'price-sub', 'tutarda resmî fiyat kullanılır'));
+            }
+            tr.appendChild(tdOffer);
+
+            const tdTot = el('td', 'col-right row-total');
+            tr.appendChild(tdTot);
+            item.totalCell = tdTot;
+            item.row = tr;
             tbody.appendChild(tr);
+            paintTotal(item);
         }
 
-        function updateRow(no) {
-            let cleanNo = String(no).replace(/\./g, '_');
-            let item = items.find(i => i.no === no);
-            let qty = parseFloat(document.getElementById('qty_' + cleanNo).value) || 0;
+        function paintTotal(item) {
+            const c = item.totalCell;
+            c.replaceChildren();
+            if (item.price === null) {
+                c.textContent = 'fiyatsız';
+                c.classList.add('price-none');
+                c.appendChild(el('span', 'price-sub', 'toplama girmez'));
+                return;
+            }
+            c.textContent = money(item.qty * item.price);
+            if (!item.offer) c.appendChild(el('span', 'price-tag', 'resmî'));
+        }
+
+        function updateRow(item) {
+            let qty = parseFloat(item.qtyInput.value);
+            if (!Number.isFinite(qty) || qty < 0) qty = 0; // negatif miktar toplamı eksiye çekmesin
             item.qty = qty;
-            let total = qty * item.price;
-            document.getElementById('total_' + cleanNo).innerText = new Intl.NumberFormat('tr-TR', { minimumFractionDigits: 2 }).format(total) + ' ₺';
+            paintTotal(item);
             calculateTotals();
         }
 
-        function removeRow(no) {
-            let cleanNo = String(no).replace(/\./g, '_');
-            items = items.filter(i => i.no !== no);
-            document.getElementById('row_' + cleanNo).remove();
-            if(items.length === 0) document.getElementById('emptyRow').style.display = 'table-row';
+        function removeRow(item) {
+            items = items.filter(i => i !== item);
+            item.row.remove();
+            if (items.length === 0) document.getElementById('emptyRow').style.display = 'table-row';
             calculateTotals();
         }
 
         function calculateTotals() {
-            let subTotal = 0;
-            items.forEach(i => { subTotal += (i.qty * i.price); });
-            let grandTotal = subTotal * 1.20;
-            document.getElementById('subTotal').innerText = new Intl.NumberFormat('tr-TR', { minimumFractionDigits: 2 }).format(subTotal) + ' ₺';
-            document.getElementById('grandTotal').innerText = new Intl.NumberFormat('tr-TR', { minimumFractionDigits: 2 }).format(grandTotal) + ' ₺';
+            let subTotal = 0, officialTotal = 0, noPrice = 0, officialFallback = 0;
+            items.forEach(i => {
+                if (i.price === null) { noPrice++; return; }
+                subTotal += i.qty * i.price;
+                officialTotal += i.qty * i.official;
+                if (!i.offer) officialFallback++;
+            });
+            document.getElementById('officialTotal').textContent = money(officialTotal);
+            document.getElementById('subTotal').textContent = money(subTotal);
+            document.getElementById('grandTotal').textContent = money(subTotal * 1.20);
+            const parts = [];
+            if (noPrice) parts.push(noPrice + ' poz fiyatsız; toplama dahil edilmedi.');
+            if (officialFallback) parts.push(officialFallback + ' pozda teklif fiyatı hesaplanamadı; tutarda resmî fiyat kullanıldı.');
+            const w = document.getElementById('priceWarn');
+            w.textContent = parts.join(' ');
+            w.hidden = parts.length === 0;
         }
 
         document.addEventListener('DOMContentLoaded', fetchPozs);

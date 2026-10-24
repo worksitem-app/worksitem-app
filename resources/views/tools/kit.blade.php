@@ -97,7 +97,7 @@
                                 <div class="bt-field">
                                     <label for="f_{{ $f['key'] }}">{{ $f['label'] }}</label>
                                     <div class="bt-input"><input type="number" id="f_{{ $f['key'] }}" name="{{ $f['key'] }}" inputmode="decimal" min="{{ $f['min'] }}" max="{{ $f['max'] }}" step="{{ $f['step'] }}" placeholder="{{ $f['placeholder'] ?? '' }}" @disabled(! $vis)
-                                        value="{{ ! empty($input['_given_'.$f['key']]) ? $input[$f['key']] : '' }}"><span>{{ $f['unit'] }}</span></div>
+                                        value="{{ isset($input['_clamped'][$f['key']]) && is_scalar($query[$f['key']] ?? null) ? $query[$f['key']] : (! empty($input['_given_'.$f['key']]) ? $input[$f['key']] : '') }}"><span>{{ $f['unit'] }}</span></div>
                                 </div>
                             @endforeach
                         </div>
@@ -123,7 +123,7 @@
                 </div>
                 <div class="bt-typ" id="kTyp">@if ($ready) En olası tutar <b>{{ $tl($est['mid']) }}</b>@else {{ $page['wait'] }} @endif</div>
                 <div class="bt-fx" id="kFx" hidden></div>
-                <ul class="bt-r-notes" id="kNotes"></ul>
+                <ul class="bt-r-notes" id="kNotes">@foreach ((array) ($est['notices'] ?? []) as $nt)<li class="is-notice" style="color:#FFB800">{{ $nt }}</li>@endforeach @if ($ready)@foreach ((array) ($est['notes'] ?? []) as $nt)<li>{{ $nt }}</li>@endforeach @endif</ul>
                 <div class="bt-ruler" aria-hidden="true"><i></i></div>
                 <div class="bt-ruler-l" aria-hidden="true"><span>Uygun usta / yerel ürün</span><span>Tasarım ürünü / büyük şehir</span></div>
             </div>
@@ -269,6 +269,11 @@
         return q;
     }
 
+    // Aralık dışı / geçersiz değer notları (sunucu: notices)
+    function notices(res) {
+        return (res.notices || []).map(function (n) { return '<li class="is-notice" style="color:#FFB800">' + esc(n) + '</li>'; }).join('');
+    }
+
     function render(res) {
         var card = $('resultCard');
         card.classList.remove('bt-loading');
@@ -277,7 +282,7 @@
             $('kTotal').textContent = 'Seçim bekleniyor'; $('kTotal').classList.add('is-waiting');
             $('kTyp').textContent = res.blocked ? res.blocked : (res.missing && res.missing.length ? 'Sonuç için eksik: ' + res.missing.join(', ') + '. Seçtikçe maliyet burada anında hesaplanır.' : C.wait);
             if (res.blocked) { $('kTotal').textContent = 'Fiyat yok'; }
-            $('kFx').hidden = true; $('kBar').innerHTML = ''; $('kMeta').innerHTML = ''; $('kNotes').innerHTML = '';
+            $('kFx').hidden = true; $('kBar').innerHTML = ''; $('kMeta').innerHTML = ''; $('kNotes').innerHTML = notices(res);
             $('kLines').innerHTML = '<li><i></i><span>Kalemler seçimlerinize göre burada listelenir</span><b>—</b></li>';
             $('quoteBtn').disabled = true; $('proBtn').hidden = true;
             $('kDockRange').textContent = 'Seçim bekleniyor';
@@ -294,7 +299,7 @@
             $('kFx').innerHTML = res.fx.map(function (f) { return '<span>≈ ' + f[0] + nf.format(f[1]) + ' – ' + f[0] + nf.format(f[2]) + '</span>'; }).join('') + '<span><em>TCMB satış kuru, ' + esc(res.fx_date || '') + '</em></span>';
             $('kFx').hidden = false;
         } else { $('kFx').hidden = true; }
-        $('kNotes').innerHTML = (res.notes || []).map(function (n) { return '<li>' + esc(n) + '</li>'; }).join('');
+        $('kNotes').innerHTML = notices(res) + (res.notes || []).map(function (n) { return '<li>' + esc(n) + '</li>'; }).join('');
         var total = 0, bar = '', lines = '';
         Object.keys(res.items).forEach(function (k) { total += res.items[k].mid; });
         Object.keys(res.items).forEach(function (k) {

@@ -165,7 +165,6 @@ return [
     ['path' => 'worksitem_estimators.ges.mount_kwp.cati', 'tool' => 'gunes-paneli-hesaplama', 'label' => 'Çatı konstrüksiyonu (kWp)', 'q' => 'güneş paneli çatı montaj konstrüksiyonu fiyatı panel başına', 'unit' => 'kWp', 'factor' => 1.818182],
     ['path' => 'worksitem_estimators.ges.install_kwp', 'tool' => 'gunes-paneli-hesaplama', 'label' => 'Kablo, koruma ve montaj (kWp)', 'q' => 'güneş enerjisi kurulum işçilik kw başına fiyatı', 'unit' => 'kWp'],
     ['path' => 'worksitem_estimators.ges.battery_kwh', 'tool' => 'gunes-paneli-hesaplama', 'label' => 'Batarya (kWh)', 'q' => 'lifepo4 güneş enerjisi bataryası kwh fiyatı', 'unit' => 'kWh'],
-    ['path' => 'worksitem_estimators.ges.kwh_price', 'tool' => 'gunes-paneli-hesaplama', 'label' => 'Elektrik birim fiyatı (mesken)', 'q' => 'mesken elektrik kwh fiyatı vergiler dahil EPDK', 'unit' => 'kWh'],
     ['path' => 'worksitem_bathroom.unit.demolition_m2', 'tool' => 'banyo-maliyet-hesaplayici', 'label' => 'Banyo kırım + moloz', 'q' => 'banyo kırım moloz atımı m2 fiyatı', 'unit' => 'm²', 'unit_keys' => ['banyo_kirim_m2']],
     ['path' => 'worksitem_bathroom.unit.plumbing_base', 'tool' => 'banyo-maliyet-hesaplayici', 'label' => 'Banyo komple tesisat (sabit)', 'q' => 'banyo komple tesisat yenileme fiyatı su pis su', 'unit' => 'iş', 'unit_keys' => ['banyo_tesisat_sabit']],
     ['path' => 'worksitem_bathroom.unit.surface_removal', 'tool' => 'banyo-maliyet-hesaplayici', 'label' => 'Vitrifiye sökümü', 'q' => 'banyo klozet lavabo söküm ücreti', 'unit' => 'iş', 'unit_keys' => ['banyo_yuzey_sokum']],

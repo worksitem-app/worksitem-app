@@ -88,6 +88,7 @@
         .btn-submit { background: var(--accent); color: #000; margin-top: 10px; }
         .btn-submit:hover { background: #e5a500; }
 
+        .wc-warn { color:#b91c1c; font-size:13px; font-weight:700; margin-top:10px; }
         @media(max-width: 600px) {
             .form-grid, .breakdown-grid, .budget-confirm-actions { grid-template-columns: 1fr; }
             .card, .result-box, .lead-box, .budget-confirm-box { padding: 20px; }
@@ -135,21 +136,70 @@
             <p style="font-size: 11px; color: #6b7280; margin-top: 5px;">Kalan % pay müteahhidin satışa sunacağı net inşaat payı olacaktır.</p>
         </div>
 
+@php
+    // Maliyet kaynağı tahmini-bina-maliyeti ile aynı: PriceService::buildingClass (resmî ÇŞB 2026) × building.market_factor
+    $kkResmi = [];
+    foreach (['3B', '4A'] as $kkC) {
+        $kkV = null;
+        try {
+            $kkR = app(\App\Services\PriceService::class)->buildingClass($kkC, '2026');
+            $kkV = is_array($kkR) && ($kkR['price'] ?? 0) > 0 ? (float) $kkR['price'] : null;
+        } catch (\Throwable) {
+        }
+        // Yedek: ÇŞB 2026 tebliği (RG 03.02.2026, 33157) — config/worksitem_mevzuat_2026.php
+        $kkResmi[$kkC] = $kkV ?? (float) config('worksitem_mevzuat_2026.yapi_sinif.'.$kkC);
+    }
+    $kkFactor = 1.6;
+    try {
+        $kkF = \Illuminate\Support\Facades\Schema::hasTable('pricing_settings')
+            ? \Illuminate\Support\Facades\DB::table('pricing_settings')->where('key', 'building.market_factor')->value('value') : null;
+        if (is_numeric($kkF) && (float) $kkF > 0) $kkFactor = (float) $kkF;
+    } catch (\Throwable) {
+    }
+    $kkNf = fn ($v) => number_format($v, 0, ',', '.');
+    $kkPiyasa3B = round($kkResmi['3B'] * $kkFactor);
+@endphp
         <div class="form-grid">
             <div class="form-group">
-                <label>İnşaat Maliyeti (ÇŞB Sınıfı)</label>
-                <select id="costPerM2" class="form-control">
-                    <option value="18000" selected>3B Sınıfı (Standart Konut - ~18.000 TL/m²)</option>
-                    <option value="25000">4A Sınıfı (Lüks Konut - ~25.000 TL/m²)</option>
+                <label>İnşaat Maliyeti Varsayımı</label>
+                <select id="costPreset" class="form-control">
+                    <option value="{{ $kkPiyasa3B }}" selected>3B konut, piyasa tahmini (~{{ $kkNf($kkPiyasa3B) }} TL/m²)</option>
+                    <option value="{{ round($kkResmi['4A'] * $kkFactor) }}">4A lüks konut, piyasa tahmini (~{{ $kkNf(round($kkResmi['4A'] * $kkFactor)) }} TL/m²)</option>
+                    <option value="{{ round($kkResmi['3B']) }}">3B resmî ÇŞB 2026 değeri ({{ $kkNf($kkResmi['3B']) }} TL/m²)</option>
+                    <option value="{{ round($kkResmi['4A']) }}">4A resmî ÇŞB 2026 değeri ({{ $kkNf($kkResmi['4A']) }} TL/m²)</option>
                 </select>
             </div>
             <div class="form-group">
+                <label>İnşaat Maliyeti (TL/m², brüt)</label>
+                <input type="number" id="costPerM2" class="form-control" value="{{ $kkPiyasa3B }}" min="0" step="100">
+            </div>
+        </div>
+        <p style="font-size: 11px; color: #6b7280; margin: -10px 0 20px;">Piyasa tahmini = ÇŞB 2026 yapı sınıfı birim maliyeti × {{ str_replace('.', ',', (string) $kkFactor) }} piyasa katsayısı (Bina maliyeti aracıyla aynı kaynak). Resmî değer KDV hariçtir ve harç/proje bedeli hesabı içindir; gerçek yapım maliyeti genellikle daha yüksektir.</p>
+
+        <div class="form-grid">
+            <div class="form-group">
                 <label>Bölge Satış Fiyatı (TL/m²)</label>
-                <input type="number" id="salePrice" class="form-control" placeholder="Örn: 45000" value="45000" min="10000" step="1000">
+                <input type="number" id="salePrice" class="form-control" placeholder="Örn: 45000" value="45000" min="0" step="1000">
+            </div>
+            <div class="form-group">
+                <label>Emsal Harici Alan Oranı (%)</label>
+                <select id="exRate" class="form-control">
+                    <option value="0">%0</option>
+                    <option value="10">%10</option>
+                    <option value="20" selected>%20</option>
+                    <option value="30">%30 (üst sınır)</option>
+                </select>
             </div>
         </div>
 
+        <div class="form-group">
+            <label>Ek Giderler (% maliyete)</label>
+            <input type="number" id="extraRate" class="form-control" value="10" min="0" max="100" step="1">
+            <p style="font-size: 11px; color: #6b7280; margin-top: 5px;">Proje, ruhsat ve harçlar, arsa sahibine kira yardımı, finansman ve satış giderleri gibi kalemler için. KDV ve vergiler dahil değildir.</p>
+        </div>
+
         <button type="button" class="btn btn-calc" id="calculateBtn">Müteahhit Kârını ve Riski Hesapla →</button>
+        <p class="wc-warn" id="formErr" role="alert" hidden></p>
     </div>
 
     <aside class="wc-aside">
@@ -162,7 +212,7 @@
         <div class="result-price" id="netProfit" data-wc-price>0 TL</div>
         
         <p style="font-size: 11px; color: #6b7280; margin-bottom:20px;">
-            ⚠️ Hatırlatma: Müteahhit toplam brüt alanın %100'ünü inşa etmek için para harcar, ancak sadece kendi % payına düşen daireleri satarak gelir elde eder.
+            Müteahhit brüt alanın tamamını inşa eder, ancak yalnız kendi payına düşen satılabilir alanı (emsale dahil alan × pay) satar. Emsal harici alanlar (merdiven, asansör, şaft) maliyete girer, satışa girmez.
         </p>
 
         <div class="breakdown-grid">
@@ -171,11 +221,11 @@
                 <strong id="grossArea">0 m²</strong>
             </div>
             <div class="break-item highlight">
-                <span>Müteahhit Payı (Satılabilir)</span>
+                <span>Müteahhit Payı (Satılabilir, emsale dahil)</span>
                 <strong id="contractorArea">0 m²</strong>
             </div>
             <div class="break-item">
-                <span>Toplam İnşaat Maliyeti</span>
+                <span>Toplam Maliyet (ek giderler dahil)</span>
                 <strong id="totalCost">0 TL</strong>
             </div>
             <div class="break-item highlight">
@@ -263,38 +313,43 @@
 
 <script>
 document.getElementById('calculateBtn').addEventListener('click', function() {
-    const area = parseFloat(document.getElementById('area').value) || 0;
-    const kaks = parseFloat(document.getElementById('kaks').value) || 0;
-    const ownerShare = parseFloat(document.getElementById('ownerShare').value) || 0;
-    const costPerM2 = parseFloat(document.getElementById('costPerM2').value) || 0;
-    const salePrice = parseFloat(document.getElementById('salePrice').value) || 0;
-    
-    if (area <= 0 || kaks <= 0 || ownerShare < 0 || ownerShare >= 100) {
-        alert('Lütfen geçerli değerler giriniz. Arsa payı %100 olamaz.');
-        return;
-    }
+    const num = id => { const v = document.getElementById(id).value; return v === '' ? NaN : parseFloat(v); };
+    const area = num('area'), kaks = num('kaks'), ownerShare = num('ownerShare');
+    const costPerM2 = num('costPerM2'), salePrice = num('salePrice'), extraRate = num('extraRate');
+    const exRate = (parseFloat(document.getElementById('exRate').value) || 0) / 100;
+    const formErr = document.getElementById('formErr');
+    const fail = msg => { formErr.textContent = msg; formErr.hidden = false; document.getElementById('resultBox').classList.remove('active'); };
+    formErr.hidden = true;
 
-    // 1. Brüt İnşaat Alanı (Emsal * Alan + %30 Merdiven/Balkon Emsal Dışı Payı)
-    const grossArea = area * kaks * 1.30;
+    if (!(area > 0) || !(kaks > 0) || !(costPerM2 > 0) || !(salePrice > 0)) return fail('Arsa alanı, emsal, maliyet ve satış fiyatı için pozitif bir değer girin.');
+    if (!(ownerShare >= 0) || ownerShare >= 100) return fail('Arsa sahibi payı 0 ile 99 arasında olmalı.');
+    if (!(extraRate >= 0) || extraRate > 100) return fail('Ek gider oranı 0 ile 100 arasında olmalı.');
 
-    // 2. Müteahhit ve Arsa Sahibi Payları
+    // 1. Emsale dahil alan (satılabilir alanın üst sınırı) ve brüt inşaat alanı
+    //    PAİY: emsal harici alanlar en çok %30; oran kullanıcı seçimi, satışa girmez
+    const emsalArea = area * kaks;
+    const grossArea = emsalArea * (1 + exRate);
+
+    // 2. Müteahhit satılabilir payı: yalnız emsale dahil alan üzerinden
     const contractorPercentage = (100 - ownerShare) / 100;
-    const contractorArea = grossArea * contractorPercentage;
+    const contractorArea = emsalArea * contractorPercentage;
 
-    // 3. Maliyet (Müteahhit BRÜT ALANIN TAMAMINI İNŞA EDER)
-    const totalCost = grossArea * costPerM2;
+    // 3. Maliyet: brüt alanın tamamı × birim maliyet + ek giderler
+    const buildCost = grossArea * costPerM2;
+    const totalCost = buildCost * (1 + extraRate / 100);
 
-    // 4. Beklenen Gelir (Müteahhit SADECE KENDİ PAYINI SATAR)
+    // 4. Gelir: müteahhit yalnız kendi payını satar
     const totalRevenue = contractorArea * salePrice;
 
-    // 5. Net Kâr ve Marj
+    // 5. Net kâr ve maliyete göre kâr oranı
     const netProfit = totalRevenue - totalCost;
     const profitMargin = (netProfit / totalCost) * 100;
 
     const money = new Intl.NumberFormat('tr-TR', { maximumFractionDigits: 0 });
+    const pct = v => v.toLocaleString('tr-TR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 
-    document.getElementById('grossArea').innerText = grossArea.toFixed(1) + ' m²';
-    document.getElementById('contractorArea').innerText = contractorArea.toFixed(1) + ' m²';
+    document.getElementById('grossArea').innerText = money.format(grossArea) + ' m²';
+    document.getElementById('contractorArea').innerText = money.format(contractorArea) + ' m²';
     document.getElementById('totalCost').innerText = money.format(totalCost) + ' TL';
     document.getElementById('totalRevenue').innerText = money.format(totalRevenue) + ' TL';
 
@@ -315,22 +370,24 @@ document.getElementById('calculateBtn').addEventListener('click', function() {
 
     if (profitMargin < 10) {
         insightBox.className = 'ai-insight danger';
-        insightTitle.innerText = `Yüksek Risk Uyarısı! (Kârlılık: %${profitMargin.toFixed(1)})`;
-        insightText.innerHTML = `Bu projede kârlılık oranınız <strong>%${profitMargin.toFixed(1)}</strong> olarak çıkıyor. Enflasyon ve beklenmedik inşaat giderleri (harfiyat şoku, demir zamları) göz önüne alındığında bu oran çok tehlikelidir. Arsa sahibi payını düşürmeli veya satış rakamları yüksek bir bölgeye odaklanmalısınız.`;
+        insightTitle.innerText = `Yüksek risk (maliyete göre kâr: %${pct(profitMargin)})`;
+        insightText.innerHTML = `Bu projede kârlılık oranınız <strong>%${pct(profitMargin)}</strong> olarak çıkıyor. Enflasyon ve beklenmedik inşaat giderleri (harfiyat şoku, demir zamları) göz önüne alındığında bu oran çok tehlikelidir. Arsa sahibi payını düşürmeli veya satış rakamları yüksek bir bölgeye odaklanmalısınız.`;
         insightIcon.innerText = '⚠️';
     } else if (profitMargin >= 10 && profitMargin <= 25) {
         insightBox.className = 'ai-insight';
-        insightTitle.innerText = `Ortalama Kârlılık (Kârlılık: %${profitMargin.toFixed(1)})`;
-        insightText.innerHTML = `Kârlılık oranınız <strong>%${profitMargin.toFixed(1)}</strong> seviyesinde. Finansmanı nakit olarak çözebilirseniz uygulanabilir bir proje, ancak kredi faizleriyle ilerlenecekse dikkatli bütçe yönetimi gerekir.`;
+        insightTitle.innerText = `Orta kârlılık (maliyete göre kâr: %${pct(profitMargin)})`;
+        insightText.innerHTML = `Kârlılık oranınız <strong>%${pct(profitMargin)}</strong> seviyesinde. Finansmanı nakit olarak çözebilirseniz uygulanabilir bir proje, ancak kredi faizleriyle ilerlenecekse dikkatli bütçe yönetimi gerekir.`;
         insightIcon.innerText = '⚖️';
     } else {
         insightBox.className = 'ai-insight success';
-        insightTitle.innerText = `Kârlı görünüyor (Kârlılık: %${profitMargin.toFixed(1)})`;
-        insightText.innerHTML = `Kârlılık oranınız <strong>%${profitMargin.toFixed(1)}</strong> seviyesi ile yatırım için oldukça cazip görünüyor. Arsada teknik bir engel yoksa vakit kaybetmeden avan projeyi çizdirip sözleşme aşamasına geçebilirsiniz.`;
+        insightTitle.innerText = `Kârlı görünüyor (maliyete göre kâr: %${pct(profitMargin)})`;
+        insightText.innerHTML = `Maliyete göre kâr <strong>%${pct(profitMargin)}</strong>. Varsayımlarınız (satış fiyatı, maliyet, ek giderler) doğruysa proje kârlı görünüyor; karar öncesi avan proje ve güncel teklif ile doğrulayın.`;
         insightIcon.innerText = '📈';
     }
 
-    document.getElementById('leadCalculatedData').value = `Toplam Brüt: ${grossArea.toFixed(1)}m2 | Kâr Marjı: %${profitMargin.toFixed(1)} | Satış Geliri: ${money.format(totalRevenue)} TL | Maliyet: ${money.format(totalCost)} TL`;
+    insightText.innerHTML += ' <br><small>KDV, vergiler ve fiyat artışı dahil değildir.</small>';
+
+    document.getElementById('leadCalculatedData').value = `Toplam Brüt: ${money.format(grossArea)}m2 (emsal harici %${Math.round(exRate*100)}) | Maliyete göre kâr: %${pct(profitMargin)} | Satış Geliri: ${money.format(totalRevenue)} TL | Maliyet: ${money.format(totalCost)} TL`;
 
     document.getElementById('resultBox').classList.add('active');
     document.getElementById('budgetConfirmBox').style.display = 'block';
@@ -339,6 +396,10 @@ document.getElementById('calculateBtn').addEventListener('click', function() {
     document.getElementById('qualifiedMessage').style.display = 'none';
     
     setTimeout(() => { document.getElementById('resultBox').scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 150);
+});
+
+document.getElementById('costPreset').addEventListener('change', function() {
+    document.getElementById('costPerM2').value = this.value;
 });
 
 document.getElementById('btnYes').addEventListener('click', function() {

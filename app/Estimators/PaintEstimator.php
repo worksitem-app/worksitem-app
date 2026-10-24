@@ -275,10 +275,11 @@ class PaintEstimator extends KitEstimator
         // Boyanan yüzeye çevirmek için: tipik dairede 1 m² zemine (duvar katsayısı + tavan) m² yüzey düşer.
         $perFloor = (float) $p['wall_factor'] + 1.0;
         $floorEq = ($wall + $ceil) / $perFloor;
-        $base = $this->setting('paint_labor_standard_m2', $p['labor_m2']);
-        if ($floorEq > $this->setting('paint_labor_large_threshold', 500)) {
-            $base = $this->setting('paint_labor_large_base_m2', 175);
-        }
+        // Kademeli: eşiğe kadar standart, eşiği aşan kısım büyük iş fiyatı (v119 — eskiden tüm alan düşüyordu, 501 m² < 500 m²)
+        $std = $this->setting('paint_labor_standard_m2', $p['labor_m2']);
+        $thr = $this->setting('paint_labor_large_threshold', 500);
+        $lrg = $this->setting('paint_labor_large_base_m2', 175);
+        $base = $floorEq > 0 ? (min($floorEq, $thr) * $std + max(0, $floorEq - $thr) * $lrg) / $floorEq : $std;
         $base /= $perFloor;   // → boyanan yüzey m²'si başına
         $laborF = ($coats === 3 ? 1.3 : 1.0) * ['iyi' => 1.0, 'orta' => 1.15, 'kotu' => 1.5][$in['state']] * ($this->has($in, 'extras', 'furniture') ? 1.1 : 1.0);
         $doors = ($in['target'] ?? '') === 'oda' ? 1 : max(3, (int) round((float) $in['floor'] / 20));

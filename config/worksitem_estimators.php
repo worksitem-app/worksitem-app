@@ -188,7 +188,7 @@ return [
             'gazbeton10' => ['10 cm gazbeton', 6.7, 70, 35, 200],
             'gazbeton15' => ['15 cm gazbeton', 6.7, 100, 40, 210],
             'gazbeton20' => ['20 cm gazbeton', 6.7, 130, 45, 220],
-            'bims19' => ['19 cm bims blok', 10, 42, 90, 240],
+            'bims19' => ['19 cm bims blok (39×19×19)', 12.5, 42, 90, 240],   // 40×20 modül (1 cm derz) → 12,5 adet/m² (bahçe duvarı ile aynı)
         ],
         'plaster_m2' => 380,                        // kaba + ince sıva, tek yüz (malzeme + işçilik)
         'lintel_m' => 650,                          // kapı/pencere lento
@@ -202,8 +202,11 @@ return [
         'extra_month' => 0.35, 'net_m2' => 55, 'transport' => 6000,
     ],
     'kalip' => [
-        'm2' => ['plywood' => 1175.39, 'ahsap' => 997.21],   // ÇŞB poz birim fiyatları (işçilik dahil)
-        'ratio' => ['doseme' => 6, 'kolon' => 10, 'radye' => 3],
+        // ÇŞB poz birim fiyatları (işçilik dahil) KDV hariçtir; araç "KDV dahil" gösterdiği için %20 KDV eklenir (v119)
+        'm2' => ['plywood' => 1175.39 * 1.2, 'ahsap' => 997.21 * 1.2],
+        // Radye: kalıp yalnız çevrede → hacim katsayısı yerine çevre × kalınlık (FormworkEstimator); 'radye' yedek değer
+        // (20×20 m, 60 cm radye: 80 m × 0,6 m = 48 m² / 240 m³ ≈ 0,2 m²/m³)
+        'ratio' => ['doseme' => 6, 'kolon' => 10, 'radye' => 0.3],
         'shoring_m2' => 120,
     ],
     'hafriyat' => [
@@ -249,5 +252,5 @@ return [
     // v102: sınıf sabitlerinden taşındı (fiyat robotu günceller)
     'radyator' => ['h60' => 2600, 'h50' => 2200, 'h90' => 3600, 'mount' => 1200, 'valve' => 450, 'thermo' => 1300, 'piping_m2' => 650, 'boiler' => [36000, 42000, 60000], 'boiler_install' => 9000],
     'izolator' => ['unit' => ['konut' => 175035, 'agir' => 208199, 'hastane' => 240644]],   // KDV hariç, izolatör başına
-    'ges' => ['panel_kwp' => 10000, 'inverter_kwp' => 6000, 'mount_kwp' => ['cati' => 3500, 'arazi' => 5500], 'install_kwp' => 4000, 'project' => 15000, 'battery_kwh' => 12000, 'kwh_price' => 3.5],
+    'ges' => ['panel_kwp' => 10000, 'inverter_kwp' => 6000, 'mount_kwp' => ['cati' => 3500, 'arazi' => 5500], 'install_kwp' => 4000, 'project' => 15000, 'battery_kwh' => 12000],   // kwh_price: config/pricing.php enerji.elektrik_kwh_fiyati (v119 tek kaynak)
 ];

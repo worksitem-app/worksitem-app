@@ -101,6 +101,8 @@ class BathPlannerController extends Controller
                 'back' => $back,
                 'renderUrl' => route('tools.banyo_planner_render'),
                 'variant' => $variant,
+                // v119: parça sınırı tek yerden (ekleme, kopyalama, paylaşılan bağlantı aynı sınırı kullanır)
+                'maxItems' => self::maxItems($variant),
                 'bathCalc' => route('tools.banyo_calculator'),
                 'query' => array_filter($request->only(['bathType', 'scope', 'quality', 'ex_tavan', 'ex_elektrik']), fn ($v) => is_string($v) && $v !== '' && strlen($v) < 20),
             ],
@@ -111,6 +113,12 @@ class BathPlannerController extends Controller
     }
 
     /** Sponsor ürünleri önce, örnek ürünler sonra */
+    /** Plana eklenebilecek parça sayısı (yapı elemanları için ön yüz +2 pay verir) */
+    public static function maxItems(string $variant): int
+    {
+        return $variant === 'mutfak' ? 24 : 12;
+    }
+
     public static function mergeProducts(array $examples, array $sponsored): array
     {
         foreach ($sponsored as $type => $list) {

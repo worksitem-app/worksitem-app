@@ -11,6 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root { --bg: #f5f6f8; --card-bg: #ffffff; --border: #e5e7eb; --yellow: #9a6e00; --text: #101318; --muted: #5b6472; --cyan: #8a6200; --red: #ef4444; }
+        *,*::before,*::after{box-sizing:border-box}
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 0; overflow-x: hidden; }
         .container { max-width: 1200px; margin: 40px auto; padding: 0 4%; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
         @media(max-width: 992px) { .container { grid-template-columns: 1fr; } }
@@ -43,12 +44,13 @@
             <div class="form-card">
                 <div style="border-bottom:1px solid var(--border); padding-bottom:10px; margin-bottom:15px; font-weight:700; color:var(--yellow);">PROJEDE İSTENEN (GEREKEN)</div>
                 <div class="grid-2">
-                    <div class="form-group"><label>Projedeki Demir Çapı (Ø)</label><input type="number" id="d1" class="form-control" value="12" oninput="calc()"></div>
-                    <div class="form-group"><label>Projedeki Döşeme Aralığı (cm)</label><input type="number" id="s1" class="form-control" value="15" oninput="calc()"></div>
+                    <div class="form-group"><label>Projedeki Demir Çapı (Ø)</label><input type="number" id="d1" class="form-control" value="12" min="6" max="40" oninput="calc()"></div>
+                    <div class="form-group"><label>Projedeki Döşeme Aralığı (cm)</label><input type="number" id="s1" class="form-control" value="15" min="1" oninput="calc()"></div>
                 </div>
                 
                 <div style="border-bottom:1px solid var(--border); padding-bottom:10px; margin-bottom:15px; font-weight:700; color:var(--cyan); margin-top:10px;">ŞANTİYEDE BULUNAN (MEVCUT)</div>
-                <div class="form-group"><label>Elinizdeki Demir Çapı (Ø)</label><input type="number" id="d2" class="form-control" value="14" oninput="calc()"></div>
+                <div class="form-group"><label>Eleman Tipi</label><select id="elem" class="form-control" onchange="calc()"><option value="20" selected>Döşeme ana donatısı, kısa doğrultu (≤ 20 cm)</option><option value="25">Döşeme dağıtma / uzun doğrultu donatısı (≤ 25 cm)</option><option value="25">Perde gövde donatısı (≤ 25 cm)</option><option value="30">Temel / diğer (≤ 30 cm)</option></select></div>
+                <div class="form-group"><label>Elinizdeki Demir Çapı (Ø)</label><input type="number" id="d2" class="form-control" value="14" min="6" max="40" oninput="calc()"></div>
             </div>
         </div>
         <div>
@@ -83,9 +85,20 @@
         }
         // ------------------------------------------------
         function calc() {
-            let d1 = parseFloat(document.getElementById('d1').value) || 0; // mm
-            let s1 = parseFloat(document.getElementById('s1').value) || 0; // cm
-            let d2 = parseFloat(document.getElementById('d2').value) || 0; // mm
+            let d1 = parseFloat(document.getElementById('d1').value); // mm
+            let s1 = parseFloat(document.getElementById('s1').value); // cm
+            let d2 = parseFloat(document.getElementById('d2').value); // mm
+            const sMax = parseFloat(document.getElementById('elem').value) || 20; // cm
+            let notesBox = document.getElementById('ai_notes');
+            const addNotes = (arr) => { notesBox.innerHTML = ''; arr.forEach(n => { let li = document.createElement('li'); li.innerText = n; li.style.marginBottom = "5px"; notesBox.appendChild(li); }); };
+
+            // v119: negatif/0/boş girdide hesap yapılmaz (eskiden Infinity / Ø0 çıkıyordu)
+            if (!(d1 > 0) || !(s1 > 0) || !(d2 > 0)) {
+                ['r_area_req', 'r_area_new', 'r_s2'].forEach(id => document.getElementById(id).innerText = '—');
+                addNotes(['Çap ve aralık için pozitif bir değer girin.']);
+                return;
+            }
+            const f2 = (x) => x.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
             // Çapı cm'ye çevirip alanını buluyoruz (A = pi * d^2 / 4)
             let area1 = Math.PI * Math.pow((d1/10), 2) / 4; 
@@ -97,27 +110,28 @@
             // Yeni aralık = (Yeni Tekil Alan * 100) / Gereken Toplam Alan
             let s2 = (area2 * 100) / reqAreaPerMeter;
 
-            document.getElementById('r_area_req').innerText = reqAreaPerMeter.toFixed(2) + ' cm²/m';
-            document.getElementById('r_area_new').innerText = area2.toFixed(2) + ' cm²';
+            document.getElementById('r_area_req').innerText = f2(reqAreaPerMeter) + ' cm²/m';
+            document.getElementById('r_area_new').innerText = f2(area2) + ' cm²';
             
             // Güvenli tarafta kalmak için aşağı yuvarlama yapıyoruz (Örn: 20.4 cm çıktıysa şantiyede 20 cm döşenir)
             let safeSpacing = Math.floor(s2);
             document.getElementById('r_s2').innerText = 'Ø' + d2 + ' / ' + safeSpacing + ' cm';
 
             let notes = [];
-            notes.push("Matematiksel karşılık " + s2.toFixed(2) + " cm olsa da, güvenli tarafta kalmak için şantiyede aralık aşağıya (" + safeSpacing + " cm) yuvarlanmıştır.");
+            notes.push("Matematiksel karşılık " + f2(s2) + " cm olsa da, güvenli tarafta kalmak için şantiyede aralık aşağıya (" + safeSpacing + " cm) yuvarlanmıştır.");
             
-            if(safeSpacing > 30) {
-                notes.push("⚠️ DİKKAT: TS500 ve TBDY 2018 yönetmeliklerine göre döşemelerde/perdelerde maksimum donatı aralığı sınırları (genellikle 1.5 katı veya 20-30 cm) aşılmamalıdır. Yeni aralığınız çok geniş!");
+            // TS 500 11.4 (plak): kısa doğrultu ana donatı aralığı ≤ 1,5h ve ≤ 20 cm, uzun doğrultu ≤ 25 cm; TBDY 2018 7.6: perde gövdesi ≤ 25 cm
+            if (safeSpacing > sMax) {
+                notes.push("⚠️ DİKKAT: Bu eleman için azami donatı aralığı " + sMax + " cm (TS 500 / TBDY 2018; döşemede ayrıca 1,5 × döşeme kalınlığını aşamaz). " + safeSpacing + " cm uygulanamaz: daha ince çap kullanın ya da aralığı " + sMax + " cm alıp donatı alanını kontrol ettirin.");
+            }
+            if (safeSpacing < 5) {
+                notes.push("⚠️ Aralık 5 cm'nin altında; beton yerleşimi zorlaşır. Daha kalın çap kullanmayı değerlendirin.");
             }
             if(d2 < d1) {
                 notes.push("Daha ince çaplı demire geçiş yaptınız. Bu durum aralığı sıklaştırarak beton yerleşimini (agregaların geçişini) zorlaştırabilir. Şantiyede vibratör kullanımına ekstra dikkat ediniz.");
             }
             notes.push("Tahvil işlemi statik müellif (proje mühendisi) onayı olmadan kesinlikle uygulanmamalıdır.");
-            
-            let notesBox = document.getElementById('ai_notes');
-            notesBox.innerHTML = '';
-            notes.forEach(n => { let li = document.createElement('li'); li.innerText = n; li.style.marginBottom = "5px"; notesBox.appendChild(li); });
+            addNotes(notes);
         }
         document.addEventListener('DOMContentLoaded', calc);
     </script>

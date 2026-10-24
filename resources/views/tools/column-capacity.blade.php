@@ -4,11 +4,12 @@
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
 
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Kolon Eksenel Taşıma Kapasitesi | WORKSİTEM</title>
-    <meta name="description" content="Beton sınıfı, kolon kesiti ve donatı miktarına göre betonarme kolonun teorik maksimum eksenel taşıma kapasitesini hesaplayın.">
+    <meta name="description" content="Beton sınıfı ve kolon kesitine göre TBDY 2018 eksenel yük sınırını (Nd ≤ 0,40·fck·Ac) ve kolonun saf eksenel taşıma gücünü hesaplayın.">
     <link rel="canonical" href="https://worksitem.com/araclar/kolon-tasima-kapasitesi">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <style>
+    <style>*,*::before,*::after{box-sizing:border-box} .ws-warn{color:#b91c1c;font-size:13px;font-weight:600;margin-top:10px;} .ws-sub{font-size:13px;color:#374151;margin-top:8px;line-height:1.5;} .result-val{overflow-wrap:anywhere;} 
         body { font-family:'Inter', sans-serif; background:#fdfdfd; color:#111827; margin:0; padding-bottom:60px;}
         .container { max-width:800px; margin:40px auto; padding:30px; background:#fff; border:1px solid #e5e7eb; border-radius:16px; box-shadow:0 4px 6px rgba(0,0,0,0.05); }
         h1 { font-size:24px; font-weight:800; margin-bottom:10px; color:#101318;}
@@ -34,16 +35,16 @@
 <body class="wc" data-tool-slug="column-capacity">
     <x-site.contech-header />
     <div class="container">
-        <x-calc.hero title="Kolon eksenel taşıma kapasitesi hesaplama" crumb="Kolon kapasitesi">Beton sınıfı ve donatı miktarına göre betonarme bir kolonun teorik maksimum eksenel yük taşıma kapasitesini (Nd) hesaplayın.</x-calc.hero>
+        <x-calc.hero title="Kolon eksenel taşıma kapasitesi hesaplama" crumb="Kolon kapasitesi">Betonarme bir kolona deprem yönetmeliğine göre verilebilecek en büyük tasarım eksenel yükünü (TBDY 2018: Nd ≤ 0,40·fck·Ac) ve saf eksenel taşıma gücünü hesaplayın.</x-calc.hero>
         
         <div class="grid-2">
             <div class="form-group">
                 <label>Kolon Genişliği (b) - cm</label>
-                <input type="number" id="width" value="30" oninput="calc()">
+                <input type="number" id="width" value="30" min="1" oninput="calc()">
             </div>
             <div class="form-group">
                 <label>Kolon Derinliği (h) - cm</label>
-                <input type="number" id="depth" value="50" oninput="calc()">
+                <input type="number" id="depth" value="50" min="1" oninput="calc()">
             </div>
         </div>
 
@@ -59,14 +60,16 @@
             </div>
             <div class="form-group">
                 <label>Toplam Boyuna Donatı Alanı (cm²)</label>
-                <input type="number" id="steelArea" value="15" oninput="calc()">
+                <input type="number" id="steelArea" value="15" min="0" oninput="calc()">
             </div>
         </div>
 
         <div class="result-box" data-wc-result>
-            <div style="font-size:14px; color:#101318; font-weight:600; margin-bottom:5px;">TEORİK EKSENEL KAPASİTE (Yaklaşık)</div>
+            <div style="font-size:14px; color:#101318; font-weight:600; margin-bottom:5px;">TBDY SINIRI: AZAMİ TASARIM EKSENEL YÜKÜ (Nd,max = 0,40·fck·Ac)</div>
             <div class="result-val" id="res" data-wc-price>0 Ton</div>
-            <div style="font-size:12px; color:#101318; margin-top:10px;">Not: TS500 basitleştirilmiş formülü kullanılmıştır. Moment etkileri dahil değildir.</div>
+            <div class="ws-sub" id="nor"></div>
+            <div class="ws-warn" id="warn" role="alert" hidden></div>
+            <div style="font-size:12px; color:#101318; margin-top:10px;">Not: TBDY 2018 7.3.1.2'ye göre kolonun tasarım eksenel kuvveti Nd ≤ 0,40·fck·Ac olmalıdır; kolona verilecek yük bu sınırla karşılaştırılır. Saf eksenel taşıma gücü (Nor, TS 500) moment ve burkulma etkisini içermez, tasarımda yük sınırı olarak kullanılmaz.</div>
         </div>
 
         <a href="/maliyet-hesapla?service=statik-guclendirme" class="cta">Bina Güçlendirme ve Statik Proje İçin Teklif Al →</a>
@@ -89,25 +92,34 @@
         }
         // ------------------------------------------------
         function calc() {
-            let b = parseFloat(document.getElementById('width').value) || 0;
-            let h = parseFloat(document.getElementById('depth').value) || 0;
-            let fck = parseFloat(document.getElementById('concrete').value) || 25;
-            let ast = parseFloat(document.getElementById('steelArea').value) || 0;
-            
-            // Alan cm2'den mm2'ye
-            let Ac = (b * 10) * (h * 10); 
-            let Ast_mm = ast * 100;
-            
-            // Fyd (Donatı akma) genelde S420 için 365 MPa tasarım değeri alınır
-            let fyd = 365;
-            // Fcd (Beton tasarım) fck / 1.5
-            let fcd = fck / 1.5;
+            const b = parseFloat(document.getElementById('width').value);
+            const h = parseFloat(document.getElementById('depth').value);
+            const fck = parseFloat(document.getElementById('concrete').value) || 25;
+            const ast = parseFloat(document.getElementById('steelArea').value);
+            const res = document.getElementById('res'), nor = document.getElementById('nor'), warn = document.getElementById('warn');
 
-            // Nd = 0.85 * fcd * (Ac - Ast) + fyd * Ast
-            let Nd_Newton = (0.85 * fcd * (Ac - Ast_mm)) + (fyd * Ast_mm);
-            let Nd_Ton = Nd_Newton / 9810; // Newton to Ton
-            
-            document.getElementById('res').innerText = Math.round(Nd_Ton).toLocaleString('tr-TR') + ' Ton';
+            // v119: negatif/0/boş girdide hesap yapılmaz
+            if (!(b > 0) || !(h > 0) || !(ast >= 0)) { res.innerText = '—'; nor.innerText = ''; warn.innerText = 'Kolon ölçüleri için pozitif bir değer, donatı alanı için 0 veya pozitif bir değer girin.'; warn.hidden = false; return; }
+
+            const Ac = (b * 10) * (h * 10);   // mm²
+            const Ast_mm = ast * 100;          // mm²
+            const fmtT = (n) => Math.round(n / 9810).toLocaleString('tr-TR') + ' Ton';   // N → ton
+
+            // TBDY 2018 7.3.1.2: Nd ≤ 0,40·fck·Ac (ana sonuç)
+            const NdMax = 0.40 * fck * Ac;
+            // TS 500: saf eksenel taşıma gücü Nor = 0,85·fcd·(Ac − As) + fyd·As ; fcd = fck/1,5 ; S420 fyd = 365 MPa (ikincil)
+            const fyd = 365, fcd = fck / 1.5;
+            const Nor = 0.85 * fcd * (Ac - Ast_mm) + fyd * Ast_mm;
+
+            res.innerText = fmtT(NdMax);
+            nor.innerText = 'Saf eksenel taşıma gücü (Nor, moment yok; tasarımda yük sınırı olarak kullanılmaz): ' + fmtT(Nor);
+
+            const notes = [];
+            const rho = Ast_mm / Ac;
+            if (rho < 0.01 || rho > 0.04) notes.push('Boyuna donatı oranı %' + (rho * 100).toLocaleString('tr-TR', { maximumFractionDigits: 2 }) + '. TBDY 2018 7.3.2.1: %1 ile %4 arasında olmalı.');
+            if (Math.min(b, h) < 30 || Ac < 75000) notes.push('TBDY 2018 7.3.1.1: kolonun kısa kenarı en az 30 cm, kesit alanı en az 750 cm² olmalı.');
+            warn.innerText = notes.join(' ');
+            warn.hidden = notes.length === 0;
         }
         document.addEventListener('DOMContentLoaded', calc);
     </script>

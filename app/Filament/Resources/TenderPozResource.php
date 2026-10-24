@@ -23,7 +23,7 @@ class TenderPozResource extends Resource
     {
         return $form->schema([
             Forms\Components\TextInput::make('year')->label('Yıl')->required(),
-            Forms\Components\Select::make('institution')->label('Kurum')->options(['ÇŞB' => 'ÇŞB', 'Karayolları' => 'Karayolları', 'İller Bankası' => 'İller Bankası', 'Özel' => 'Özel'])->required(),
+            Forms\Components\Select::make('institution')->label('Kurum')->options(fn () => static::institutionOptions())->required(),
             Forms\Components\TextInput::make('poz_no')->label('Poz No')->required(),
             Forms\Components\Textarea::make('description')->label('Poz Tanımı')->required()->columnSpanFull(),
             Forms\Components\TextInput::make('unit')->label('Birim')->required(),
@@ -41,10 +41,20 @@ class TenderPozResource extends Resource
             Tables\Columns\TextColumn::make('year')->label('Yıl'),
         ])
         ->filters([
-            Tables\Filters\SelectFilter::make('institution')->label('Kurum Filtresi')->options(['ÇŞB' => 'ÇŞB', 'Karayolları' => 'Karayolları', 'Özel' => 'Özel']),
+            Tables\Filters\SelectFilter::make('institution')->label('Kurum Filtresi')->options(fn () => static::institutionOptions()),
         ])
         ->actions([Tables\Actions\EditAction::make()])
         ->bulkActions([Tables\Actions\BulkActionGroup::make([Tables\Actions\DeleteBulkAction::make()])]);
+    }
+
+    /** v119: kurum listesi sabit 4 seçenek değil; içe aktarılan kurumlar (ÇŞİDB/YFK, PTT, Kültür/Vakıflar…) da seçilebilsin */
+    public static function institutionOptions(): array
+    {
+        $base = ['ÇŞB', 'ÇŞİDB/YFK', 'Karayolları', 'İller Bankası', 'İLBANK', 'DSİ', 'MSB', 'Kültür/Vakıflar', 'PTT', 'Ulaştırma', 'Özel'];
+        $fromDb = TenderPoz::query()->whereNotNull('institution')->distinct()->pluck('institution')->all();
+        $all = array_values(array_unique(array_merge($base, $fromDb)));
+
+        return array_combine($all, $all);
     }
 
     public static function getPages(): array {

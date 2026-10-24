@@ -9,6 +9,8 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.js"></script>
     <style>
         :root { --bg: #f5f6f8; --surface: #ffffff; --text: #101318; --muted: #6b7280; --line: #e4e7eb; --accent: #f97316; --radius: 16px; }
+        *,*::before,*::after{box-sizing:border-box}
+        .ws-warn { color:#b91c1c; font-size:13px; font-weight:600; margin-top:10px; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 60px; margin:0; }
         .header { background: #fff; padding: 15px 20px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; }
         .container { max-width: 900px; margin: 40px auto; padding: 0 20px; }
@@ -35,18 +37,19 @@
 
     <div class="card">
         <div class="form-grid">
-            <div><label>Makine Türü</label>
+            <div><label>Makine Türü (operatörsüz, yakıtsız kuru kira)</label>
             <select id="machineType" class="form-control">
-                <option value="{{ (float) data_get($pricing ?? [], 'is_makinesi.ekskavator_gun', 8000) }}" data-fuel="12">Paletli Ekskavatör (30 Ton) - {{ number_format((float) data_get($pricing ?? [], 'is_makinesi.ekskavator_gun', 8000), 0, ',', '.') }} TL/Gün</option>
-                <option value="{{ (float) data_get($pricing ?? [], 'is_makinesi.beko_gun', 5000) }}" data-fuel="8">Beko Loder (Kazıcı Yükleyici) - {{ number_format((float) data_get($pricing ?? [], 'is_makinesi.beko_gun', 5000), 0, ',', '.') }} TL/Gün</option>
-                <option value="{{ (float) data_get($pricing ?? [], 'is_makinesi.mobil_vinc_gun', 12000) }}" data-fuel="15">Mobil Vinç (35 Ton) - {{ number_format((float) data_get($pricing ?? [], 'is_makinesi.mobil_vinc_gun', 12000), 0, ',', '.') }} TL/Gün</option>
-                <option value="{{ (float) data_get($pricing ?? [], 'is_makinesi.kule_vinc_ay', 250000) }}" data-fuel="0">Kule Vinç (Aylık Sabit) - {{ number_format((float) data_get($pricing ?? [], 'is_makinesi.kule_vinc_ay', 250000), 0, ',', '.') }} TL/Ay</option>
+                <option value="{{ (float) data_get($pricing ?? [], 'is_makinesi.ekskavator_gun', 8000) }}" data-fuel="12" data-period="day">Paletli Ekskavatör (30 Ton) - {{ number_format((float) data_get($pricing ?? [], 'is_makinesi.ekskavator_gun', 8000), 0, ',', '.') }} TL/Gün</option>
+                <option value="{{ (float) data_get($pricing ?? [], 'is_makinesi.beko_gun', 5000) }}" data-fuel="8" data-period="day">Beko Loder (Kazıcı Yükleyici) - {{ number_format((float) data_get($pricing ?? [], 'is_makinesi.beko_gun', 5000), 0, ',', '.') }} TL/Gün</option>
+                <option value="{{ (float) data_get($pricing ?? [], 'is_makinesi.mobil_vinc_gun', 12000) }}" data-fuel="15" data-period="day">Mobil Vinç (35 Ton) - {{ number_format((float) data_get($pricing ?? [], 'is_makinesi.mobil_vinc_gun', 12000), 0, ',', '.') }} TL/Gün</option>
+                <option value="{{ (float) data_get($pricing ?? [], 'is_makinesi.kule_vinc_ay', 250000) }}" data-fuel="0" data-period="month">Kule Vinç (Aylık Sabit) - {{ number_format((float) data_get($pricing ?? [], 'is_makinesi.kule_vinc_ay', 250000), 0, ',', '.') }} TL/Ay</option>
             </select></div>
-            <div><label>Çalışma Süresi (Gün)</label><input type="number" id="days" class="form-control" value="30"></div>
+            <div><label>Çalışma Süresi (Gün)</label><input type="number" id="days" class="form-control" value="30" min="1" max="3650"></div>
             <div><label>Motorin (Mazot) Litre Fiyatı (TL)</label><input type="number" id="fuelPrice" class="form-control" value="{{ (float) data_get($pricing ?? [], 'akaryakit.motorin_l', 45) }}"></div>
             <div><label>Operatör Günlük Yevmiye (TL)</label><input type="number" id="operator" class="form-control" value="{{ (float) data_get($pricing ?? [], 'iscilik.operator_gun', 2500) }}"></div>
         </div>
-        <button class="btn" id="calcBtn">Toplam Makine Amortismanını Hesapla</button>
+        <button class="btn" id="calcBtn">Toplam ekipman maliyetini hesapla</button>
+        <div class="ws-warn" id="warn" role="alert" hidden></div>
     </div>
 
     <div class="result-box" id="resBox" data-wc-result>
@@ -69,9 +72,19 @@ document.getElementById('calcBtn').addEventListener('click', () => {
     const days = parseFloat(document.getElementById('days').value);
     const fuelPrice = parseFloat(document.getElementById('fuelPrice').value);
     const opPrice = parseFloat(document.getElementById('operator').value);
+    const warn = document.getElementById('warn');
 
-    // Kule vinç aylık girilmişse günü aya çevir
-    let isMonthly = rentVal > 100000; 
+    // v119: negatif/0/boş girdide hesap yapılmaz (eskiden NaN / negatif TL çıkıyordu)
+    if (!(days > 0) || !(fuelPrice >= 0) || !(opPrice >= 0) || !(rentVal > 0)) {
+        warn.innerText = 'Çalışma süresi için pozitif bir değer, yakıt ve operatör ücreti için 0 veya pozitif bir değer girin.';
+        warn.hidden = false;
+        document.getElementById('resBox').style.display = 'none';
+        return;
+    }
+    warn.hidden = true;
+
+    // Aylık/günlük kira: fiyata göre değil, seçilen makinenin kira dönemine göre (data-period)
+    const isMonthly = sel.options[sel.selectedIndex].dataset.period === 'month';
     let rentCost = isMonthly ? (rentVal * (days/30)) : (rentVal * days);
     
     // Günde 8 saat çalışma varsayımı

@@ -75,8 +75,8 @@
         <div class="form-group"><label>1. Taraf (İşveren / Arsa Sahibi / Müşteri)</label><input type="text" id="clientName" value="Örnek Yatırım A.Ş."></div>
         <div class="form-group"><label>2. Taraf (Yüklenici / Müteahhit / Taşeron)</label><input type="text" id="contractorName" value="Örnek Yüklenici A.Ş."></div>
         <div class="form-group"><label>Proje / İşin Adı</label><input type="text" id="projectName" value="Örnek 24 Daireli Konut Projesi"></div>
-        <div class="form-group"><label>Bedel / Oran (TL veya %)</label><input type="text" id="price" value="35.500.000 TL"></div>
-        <div class="form-group"><label>Süre / Tarih</label><input type="text" id="duration" value="12 Ay"></div>
+        <div class="form-group"><label for="price" id="priceLabel">Sözleşme bedeli (KDV hariç)</label><input type="text" id="price" value="35.500.000 TL"></div>
+        <div class="form-group"><label for="duration" id="durationLabel">Teslim süresi</label><input type="text" id="duration" value="12 ay"></div>
         
         <button class="btn" onclick="generatePDF()">📄 PDF Olarak İndir</button>
         <button class="btn btn-word" onclick="exportWord()">📝 Word (.doc) Olarak İndir</button>
@@ -107,7 +107,7 @@
             <strong>MADDE 2 - İŞİN KONUSU</strong><br>
             İşbu sözleşmenin konusu; İŞVEREN'e ait <span class="dynamic-text outProject"></span> işlerinin, projelerine, teknik şartnamelere ve fen kurallarına uygun olarak anahtar teslim yapılmasıdır.<br><br>
             <strong>MADDE 3 - BEDEL VE SÜRE</strong><br>
-            İşin toplam bedeli KDV hariç <span class="dynamic-text outPrice"></span> olarak belirlenmiştir. İşin teslim süresi, yer teslimi yapıldığı tarihten itibaren <span class="dynamic-text outDuration"></span>'dır.<br><br>
+            İşin toplam bedeli KDV hariç <span class="dynamic-text outPrice"></span> olarak belirlenmiştir. İşin teslim süresi, yer teslimi yapıldığı tarihten itibaren <span class="dynamic-text outDuration"></span> olarak belirlenmiştir.<br><br>
             <strong>MADDE 4 - ÖDEME ŞEKLİ VE HAKEDİŞ</strong><br>
             İşveren, sözleşme bedelini aylık imalat hakediş raporlarına istinaden ödeyecektir. İmalat onaylanmadan hakediş düzenlenemez ve ödeme yapılamaz.`
         },
@@ -119,7 +119,7 @@
             <strong>MADDE 2 - İŞİN KONUSU</strong><br>
             İşbu sözleşmenin konusu; mülkiyeti ARSA SAHİBİ'ne ait olan taşınmaz üzerinde <span class="dynamic-text outProject"></span> projesinin yapımı ve bağımsız bölümlerin paylaşımıdır.<br><br>
             <strong>MADDE 3 - PAYLAŞIM ORANI VE TESLİM SÜRESİ</strong><br>
-            Taraflar, yapılacak bağımsız bölümlerin <span class="dynamic-text outPrice"></span> oranında paylaşılması hususunda mutabık kalmıştır. İnşaatın tamamlanıp iskanın alınması için öngörülen süre ruhsat tarihinden itibaren <span class="dynamic-text outDuration"></span>'dır.<br><br>
+            Taraflar, yapılacak bağımsız bölümlerin <span class="dynamic-text outPrice"></span> oranında paylaşılması hususunda mutabık kalmıştır. İnşaatın tamamlanıp iskânın alınması için öngörülen süre, ruhsat tarihinden itibaren <span class="dynamic-text outDuration"></span> olarak belirlenmiştir.<br><br>
             <strong>MADDE 4 - GİDERLER VE HARÇLAR</strong><br>
             Proje çizimi, yapı denetim, ruhsat harçları, SGK primleri ve tüm inşaat yapım maliyetleri tamamen MÜTEAHHİT'e aittir.`
         },
@@ -131,7 +131,7 @@
             <strong>MADDE 2 - KONU</strong><br>
             <span class="dynamic-text outProject"></span> üzerine yapılacak inşaat faaliyeti karşılığında arsa paylarının devri ve satışının vaat edilmesidir.<br><br>
             <strong>MADDE 3 - BEDEL VE SÜRE</strong><br>
-            Sözleşmeye konu arsa paylarının satış bedeli / devir şartı <span class="dynamic-text outPrice"></span> olarak belirlenmiştir. Tarafların yükümlülüklerini yerine getirme süresi <span class="dynamic-text outDuration"></span>'dır.`
+            Sözleşmeye konu arsa paylarının satış bedeli / devir şartı <span class="dynamic-text outPrice"></span> olarak belirlenmiştir. Tarafların yükümlülüklerini yerine getirme süresi <span class="dynamic-text outDuration"></span> olarak belirlenmiştir.`
         },
         taseron: {
             title: "TAŞERON (ALT YÜKLENİCİ) SÖZLEŞMESİ",
@@ -141,7 +141,7 @@
             <strong>MADDE 2 - İŞİN KONUSU</strong><br>
             Taşeron, <span class="dynamic-text outProject"></span> projesindeki taşere edilen belirli imalatları fen ve sanat kurallarına uygun olarak yapmayı taahhüt eder.<br><br>
             <strong>MADDE 3 - BEDEL VE SÜRE</strong><br>
-            Taşeronun yapacağı işlerin toplam götürü bedeli / tahmini tutarı <span class="dynamic-text outPrice"></span>'dir. İşlerin tamamlanması için tanınan süre <span class="dynamic-text outDuration"></span>'dır.<br><br>
+            Taşeronun yapacağı işlerin toplam götürü bedeli / tahmini tutarı KDV hariç <span class="dynamic-text outPrice"></span> olarak belirlenmiştir. İşlerin tamamlanması için tanınan süre <span class="dynamic-text outDuration"></span> olarak belirlenmiştir.<br><br>
             <strong>MADDE 4 - İŞ GÜVENLİĞİ VE SİGORTA</strong><br>
             Taşeron, kendi çalışanlarının özlük haklarından, SGK primlerinden ve iş sağlığı güvenliği tedbirlerinden tek başına hukuken sorumludur.`
         },
@@ -154,8 +154,8 @@
             1. Şantiye alanında baret, fosforlu yelek ve çelik burunlu iş ayakkabısı olmadan kesinlikle çalışmayacağımı,<br>
             2. Yüksekte çalışmalarda standartlara uygun emniyet kemeri kullanacağımı,<br>
             3. Mesleki Yeterlilik Belgem (MYK) ve yasal İSG Eğitimim olmadan işbaşı yapmayacağımı,<br>
-            4. İhlal durumunda hak edişimden <span class="dynamic-text outPrice"></span> tutarında cezai kesinti yapılmasını kabul ettiğimi,<br>
-            <span class="dynamic-text outDuration"></span> tarihi itibariyle gayrikabili rücu beyan ve taahhüt ederim.`
+            4. Bu kurallara aykırı davrandığım her ihlalde hak edişimden <span class="dynamic-text outPrice"></span> tutarında kesinti yapılmasını kabul ettiğimi<br><br>
+            <span class="dynamic-text outDuration"></span> tarihinde beyan ve taahhüt ederim.`
         },
         teklif: {
             title: "İNŞAAT İŞİ FİYAT TEKLİF MEKTUBU",
@@ -176,7 +176,7 @@
             <strong>MADDE 2 - KONU</strong><br>
             <span class="dynamic-text outProject"></span> projesinin mimari, statik, resmi onay ve ihale süreçlerinin İşveren adına yönetilmesi ve denetlenmesidir.<br><br>
             <strong>MADDE 3 - HİZMET BEDELİ</strong><br>
-            Sözleşme kapsamındaki danışmanlık hizmet bedeli <span class="dynamic-text outPrice"></span> olarak belirlenmiştir. Hizmet süresi <span class="dynamic-text outDuration"></span>'dır.`
+            Sözleşme kapsamındaki danışmanlık hizmet bedeli <span class="dynamic-text outPrice"></span> olarak belirlenmiştir. Hizmet süresi <span class="dynamic-text outDuration"></span> olarak belirlenmiştir.`
         },
         kabul: {
             title: "GEÇİCİ / KESİN KABUL TUTANAĞI",
@@ -196,7 +196,7 @@
             <strong>MADDE 2 - KONU</strong><br>
             Alıcı'nın yapımını üstlendiği <span class="dynamic-text outProject"></span> şantiyesi için gerekli yapı malzemelerinin tedariği ve teslimidir.<br><br>
             <strong>MADDE 3 - BEDEL VE TESLİMAT</strong><br>
-            Sözleşme kapsamındaki malzemelerin toplam bedeli <span class="dynamic-text outPrice"></span>'dir. Teslimat süresi sipariş onayından itibaren <span class="dynamic-text outDuration"></span>'dır.`
+            Sözleşme kapsamındaki malzemelerin toplam bedeli KDV hariç <span class="dynamic-text outPrice"></span> olarak belirlenmiştir. Teslimat süresi, sipariş onayından itibaren <span class="dynamic-text outDuration"></span> olarak belirlenmiştir.`
         },
         kiralama: {
             title: "İNŞAAT EKİPMANI VE İŞ MAKİNESİ KİRALAMA SÖZLEŞMESİ",
@@ -204,15 +204,46 @@
             body: `<strong>MADDE 1 - TARAFLAR</strong><br>
             Kiralayan şantiye yetkilisi <span class="dynamic-text outClient"></span> ile Kiraya veren ekipman sahibi <span class="dynamic-text outContractor"></span> arasında akdedilmiştir.<br><br>
             <strong>MADDE 2 - KONU VE SÜRE</strong><br>
-            <span class="dynamic-text outProject"></span> işinde kullanılmak üzere belirlenen iş makinesi ve ekipmanlarının kiralanmasıdır. Kiralama süresi <span class="dynamic-text outDuration"></span>'dır.<br><br>
+            <span class="dynamic-text outProject"></span> işinde kullanılmak üzere belirlenen iş makinesi ve ekipmanlarının kiralanmasıdır. Kiralama süresi <span class="dynamic-text outDuration"></span> olarak belirlenmiştir.<br><br>
             <strong>MADDE 3 - KİRA BEDELİ VE YAKIT</strong><br>
-            Kira bedeli KDV hariç <span class="dynamic-text outPrice"></span>'dir. Makinenin rutin bakımları Kiraya Verene; günlük yakıt (mazot) sarfiyatı ve güvenliği Kiralayana aittir.`
+            Kira bedeli KDV hariç <span class="dynamic-text outPrice"></span> olarak belirlenmiştir. Makinenin rutin bakımları Kiraya Verene; günlük yakıt (mazot) sarfiyatı ve güvenliği Kiralayana aittir.`
         }
     };
+
+    // v119: "Bedel" ve "Süre / Tarih" alanları şablona göre anlam değiştirir (ör. İSG'de ceza tutarı ve
+    // beyan tarihi; kabul tutanağında bitiş tarihi). Etiket, tür ve varsayılan şablondan gelir.
+    const today = () => new Date().toISOString().slice(0, 10);
+    const fields = {
+        anahtar_teslim:   { price: ['bedel', 'Sözleşme bedeli (KDV hariç)', '35.500.000 TL'], duration: ['sure', 'Teslim süresi', '12 ay'] },
+        kat_karsiligi:    { price: ['oran', 'Paylaşım oranı (arsa sahibi / müteahhit)', '%50 arsa sahibi, %50 müteahhit'], duration: ['sure', 'İnşaat ve iskân süresi', '24 ay'] },
+        arsa_satis_vaadi: { price: ['bedel', 'Satış bedeli / devir şartı', '12.000.000 TL'], duration: ['sure', 'Yükümlülük süresi', '24 ay'] },
+        taseron:          { price: ['bedel', 'Götürü bedel (KDV hariç)', '4.500.000 TL'], duration: ['sure', 'İş süresi', '6 ay'] },
+        malzeme:          { price: ['bedel', 'Malzeme bedeli (KDV hariç)', '1.250.000 TL'], duration: ['sure', 'Teslimat süresi', '15 gün'] },
+        danismanlik:      { price: ['bedel', 'Hizmet bedeli', '1.200.000 TL'], duration: ['sure', 'Hizmet süresi', '12 ay'] },
+        kiralama:         { price: ['bedel', 'Kira bedeli (KDV hariç)', '180.000 TL / ay'], duration: ['sure', 'Kiralama süresi', '3 ay'] },
+        isg:              { price: ['ceza', 'İhlal başına kesinti tutarı', '5.000 TL'], duration: ['tarih', 'Beyan tarihi', today] },
+        teklif:           { price: ['bedel', 'Teklif bedeli (KDV hariç)', '35.500.000 TL'], duration: ['sure', 'İş süresi', '12 ay'] },
+        kabul:            { price: ['bedel', 'Sözleşme bedeli', '35.500.000 TL'], duration: ['tarih', 'İşin bitirildiği tarih', today] },
+    };
+    let fieldKinds = { price: 'bedel', duration: 'sure' };
+
+    function applyFields(type) {
+        const f = fields[type] || fields.anahtar_teslim;
+        ['price', 'duration'].forEach(key => {
+            const [kind, label, def] = f[key];
+            const input = document.getElementById(key);
+            document.getElementById(key + 'Label').textContent = label;
+            if (key === 'duration') input.type = kind === 'tarih' ? 'date' : 'text';
+            // Alanın anlamı değiştiyse (bedel→ceza, süre→tarih) eski değer taşınmaz; varsayılan konur
+            if (fieldKinds[key] !== kind || input.value === '') input.value = typeof def === 'function' ? def() : def;
+            fieldKinds[key] = kind;
+        });
+    }
 
     function changeTemplate() {
         const type = document.getElementById('contractType').value;
         const temp = templates[type];
+        applyFields(type);
         
         document.getElementById('outTitle').innerText = temp.title;
         document.getElementById('outContent').innerHTML = temp.body;
@@ -226,22 +257,27 @@
         const c1 = document.getElementById('clientName').value;
         const c2 = document.getElementById('contractorName').value;
         const p = document.getElementById('projectName').value;
-        const pr = document.getElementById('price').value;
-        const d = document.getElementById('duration').value;
+        // Boş alan cümlede boşluk bırakmasın: yer tutucu
+        const blank = v => (String(v).trim() === '' ? '…………' : String(v).trim());
+        const durIn = document.getElementById('duration');
+        let d = durIn.value;
+        if (durIn.type === 'date' && /^\d{4}-\d{2}-\d{2}$/.test(d)) { const [y, m, g] = d.split('-'); d = g + '.' + m + '.' + y; }
+        const pr = blank(document.getElementById('price').value);
+        d = blank(d);
 
         document.getElementById('outClientSign').innerText = c1;
         document.getElementById('outContractorSign').innerText = c2;
         document.getElementById('outDate').innerText = new Date().toLocaleDateString('tr-TR');
 
-        document.querySelectorAll('.outClient').forEach(el => el.innerText = c1);
-        document.querySelectorAll('.outContractor').forEach(el => el.innerText = c2);
-        document.querySelectorAll('.outProject').forEach(el => el.innerText = p);
+        document.querySelectorAll('.outClient').forEach(el => el.innerText = blank(c1));
+        document.querySelectorAll('.outContractor').forEach(el => el.innerText = blank(c2));
+        document.querySelectorAll('.outProject').forEach(el => el.innerText = blank(p));
         document.querySelectorAll('.outPrice').forEach(el => el.innerText = pr);
         document.querySelectorAll('.outDuration').forEach(el => el.innerText = d);
     }
 
     const inputsToListen = ['clientName', 'contractorName', 'projectName', 'price', 'duration'];
-    inputsToListen.forEach(id => { document.getElementById(id).addEventListener('input', updateDoc); });
+    inputsToListen.forEach(id => { document.getElementById(id).addEventListener('input', updateDoc); document.getElementById(id).addEventListener('change', updateDoc); });
 
     changeTemplate();
 
@@ -251,7 +287,8 @@
             margin: [10, 0, 10, 0],
             filename: 'Sozlesme_Taslagi.pdf',
             image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 2 },
+            // v119: kaydırılmış sayfada ilk sayfa boş + imzalar kayboluyordu; yakalama sayfa başından yapılır
+            html2canvas: { scale: 2, scrollX: 0, scrollY: 0 },
             jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
         };
         // Tüm araç çıktılarında aynı Worksitem logolu başlık ve alt bilgi

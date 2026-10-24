@@ -38,8 +38,9 @@ class UnitPriceSeeder extends Seeder
             ['category' => 'harc', 'key' => 'harc_cimento_50kg', 'name' => 'Çimento (50kg Torba)', 'price' => 220.00, 'unit' => 'TL/Adet'],
             
             // Proje Bazlı (Bina Maliyetleri)
-            ['category' => 'bina', 'key' => 'bina_sinif_3b_m2', 'name' => '3B Sınıfı Bina Maliyeti', 'price' => 16000.00, 'unit' => 'TL/m2'],
-            ['category' => 'bina', 'key' => 'bina_sinif_4a_m2', 'name' => '4A Sınıfı Bina Maliyeti', 'price' => 21050.00, 'unit' => 'TL/m2'],
+            // ÇŞB 2026 Yapı Yaklaşık Birim Maliyetleri Tebliği (RG 03.02.2026, 33157): III-B 21.050, IV-A 26.450 TL/m²
+            ['category' => 'bina', 'key' => 'bina_sinif_3b_m2', 'name' => '3B Sınıfı Bina Maliyeti', 'price' => 21050.00, 'unit' => 'TL/m2'],
+            ['category' => 'bina', 'key' => 'bina_sinif_4a_m2', 'name' => '4A Sınıfı Bina Maliyeti', 'price' => 26450.00, 'unit' => 'TL/m2'],
         ];
 
         foreach ($prices as $price) {

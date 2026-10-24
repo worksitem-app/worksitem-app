@@ -77,6 +77,7 @@
         .btn-submit { background: var(--accent); color: #000; margin-top: 10px; }
         .btn-submit:hover { background: #e5a500; }
 
+        .wc-warn { color:#b91c1c; font-size:13px; font-weight:700; margin-top:10px; }
         @media(max-width: 600px) {
             .form-grid, .breakdown-grid, .budget-confirm-actions { grid-template-columns: 1fr; }
             .card, .result-box, .lead-box, .budget-confirm-box { padding: 20px; }
@@ -108,13 +109,16 @@
     <div class="card wc-panel">
         <h3 style="font-size: 14px; margin-bottom: 15px; color: var(--text);">1. Yapı Bilgileri ve Rayiç Bedel</h3>
         
+@php($mv = config('worksitem_mevzuat_2026'))
         <div class="form-grid">
             <div class="form-group">
                 <label>İnşaat Türü (Asgari İşçilik Oranı)</label>
                 <select id="constType" class="form-control">
-                    <option value="9" selected>Karkas / Betonarme Bina (%9.00)</option>
-                    <option value="12">Yığma İnşaat (%12.00)</option>
-                    <option value="7">Prefabrik Yapı (%7.00)</option>
+                    <option value="{{ $mv['asgari_iscilik_oran']['karkas'] }}" selected>Betonarme karkas bina (%9)</option>
+                    <option value="{{ $mv['asgari_iscilik_oran']['yigma'] }}">Yığma bina (%12)</option>
+                    <option value="{{ $mv['asgari_iscilik_oran']['celik'] }}">Çelik konstrüksiyon (%9)</option>
+                    <option value="{{ $mv['asgari_iscilik_oran']['yari_prefabrik'] }}">Yarı prefabrik (%7)</option>
+                    <option value="{{ $mv['asgari_iscilik_oran']['tam_prefabrik'] }}">Tam prefabrik (%6)</option>
                 </select>
             </div>
             <div class="form-group">
@@ -123,10 +127,28 @@
             </div>
         </div>
 
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Yapı Sınıfı (ÇŞB 2026)</label>
+                <select id="yClass" class="form-control">
+                    @foreach($mv['yapi_sinif'] as $c => $v)
+                        <option value="{{ $v }}" @selected($c === '3B')>{{ substr($c, 0, 1) === '3' ? 'III' : (substr($c, 0, 1) === '4' ? 'IV' : 'V') }}-{{ substr($c, 1) }}: {{ number_format($v, 0, ',', '.') }} TL/m²</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Yapı Yaklaşık Birim Maliyeti (TL/m²)</label>
+                <input type="number" id="unitPrice" class="form-control" value="{{ $mv['yapi_sinif']['3B'] }}" min="1" step="50">
+            </div>
+        </div>
+        <p style="font-size: 11px; color: #6b7280; margin: -10px 0 20px;">* ÇŞB 2026 yapı yaklaşık birim maliyetleri (RG 03.02.2026, sayı 33157). Konutta 21,50 m'ye kadar yapılar çoğunlukla III-B'dir. Yapınız başka yılda ruhsat aldıysa o yılın değerini girin.</p>
+
         <div class="form-group">
-            <label>ÇŞB Yapı Yaklaşık Birim Maliyeti (TL/m²)</label>
-            <input type="number" id="unitPrice" class="form-control" value="16000" min="1" step="100">
-            <p style="font-size: 11px; color: #6b7280; margin-top: 5px;">* 2026 Yılı III. Sınıf B Grubu (Standart Konut) rayici ortalama 16.000 TL olarak varsayılmıştır. Kendi yapı sınıfınıza göre güncelleyebilirsiniz.</p>
+            <label>İnceleme Türü</label>
+            <select id="reviewType" class="form-control">
+                <option value="unite" selected>SGK ünitesince ön değerlendirme (%25 eksiltme uygulanır)</option>
+                <option value="denetim">Müfettiş / SMMM / YMM incelemesi (eksiltme yok)</option>
+            </select>
         </div>
 
         <h3 style="font-size: 14px; margin-top: 25px; margin-bottom: 15px; color: var(--text);">2. SGK Bildirim Matrahı</h3>
@@ -137,7 +159,8 @@
             <p style="font-size: 11px; color: #6b7280; margin-top: 5px;">* Bugüne kadar SGK'ya yasal olarak bildirdiğiniz toplam brüt işçilik tutarını giriniz. Bildirim yoksa 0 bırakınız.</p>
         </div>
 
-        <button type="button" class="btn btn-calc" id="calculateBtn">Mevzuat Analizini ve Cezayı Hesapla →</button>
+        <button type="button" class="btn btn-calc" id="calculateBtn">Fark İşçilik Primini Hesapla →</button>
+        <p class="wc-warn" id="formErr" role="alert" hidden></p>
     </div>
 
     <aside class="wc-aside">
@@ -146,11 +169,11 @@
         Bilgileri girip hesaplayın; sonuç, döküm ve yaklaşık bütçe burada görünür.
     </div>
     <div class="result-box wc-result" data-wc-result id="resultBox">
-        <div class="result-label">ÖDENMESİ GEREKEN FARK SGK PRİMİ (CEZA)</div>
+        <div class="result-label">TAHMİNİ FARK İŞÇİLİK PRİMİ</div>
         <div class="result-price" id="penaltyPrice" data-wc-price>0 TL</div>
         
         <p style="font-size: 11px; color: #6b7280; margin-bottom:20px;">
-            ⚠️ Bu tablo %37.5 prim oranı (Kısa vadeli sigorta, MYÖ, GSS, İşsizlik vb.) üzerinden hesaplanmıştır.
+            2026 prim oranı %38,75 (işçi %15 + işveren %23,75; kısa vade, MYÖ, GSS ve işsizlik dahil) üzerinden hesaplanmıştır. Gecikme zammı ve idari para cezası dahil değildir.
         </p>
 
         <div class="breakdown-grid">
@@ -159,7 +182,7 @@
                 <strong id="officialCost">0 TL</strong>
             </div>
             <div class="break-item">
-                <span>İndirimli Asgari İşçilik Oranı</span>
+                <span id="rateLbl">Uygulanan Asgari İşçilik Oranı</span>
                 <strong id="discountedRate">%0.00</strong>
             </div>
             <div class="break-item">
@@ -175,8 +198,8 @@
         <div class="ai-insight">
             <div class="ai-insight-icon">⚖️</div>
             <div class="ai-insight-text">
-                <strong>Hukuk ve SGK Mevzuat Notu</strong>
-                <p>Hesaplamada yasa gereği Asgari İşçilik Oranı üzerinden <strong>%25 eksiltme (sistematik indirim)</strong> uygulanmıştır. Çıkan Fark SPEK (Eksik Bildirim) tutarı üzerinden %37.5 oranında prim borcu (gecikme zammı hariç) tahakkuk ettirilir.</p>
+                <strong>SGK Mevzuat Notu</strong>
+                <p id="lawNote">Hesaplanıyor...</p>
             </div>
         </div>
     </div>
@@ -206,7 +229,7 @@
     {{-- B2B LEAD FORM --}}
     <div class="lead-box" id="leadBox">
         <h3>SGK Danışmanlığı ve İskan Takibi Teklifi</h3>
-        <p>Bürokratik engellere takılmadan, iskan ruhsatınızı en uygun maliyetle ve hızla almanız için profesyonel destek sunuyoruz.</p>
+        <p>Bürokratik engellere takılmadan, iskan sürecinizde profesyonel destek sunuyoruz.</p>
 
         <form action="{{ route('lead.store') }}" method="POST">
             @csrf
@@ -243,39 +266,52 @@
 
 <script>
 document.getElementById('calculateBtn').addEventListener('click', function() {
-    const area = parseFloat(document.getElementById('area').value) || 0;
-    const unitPrice = parseFloat(document.getElementById('unitPrice').value) || 0;
+    const num = id => { const v = document.getElementById(id).value; return v === '' ? NaN : parseFloat(v); };
+    const area = num('area'), unitPrice = num('unitPrice');
     const baseRate = parseFloat(document.getElementById('constType').value) || 0; // % olarak
-    const declared = parseFloat(document.getElementById('declared').value) || 0;
-    
-    if (area <= 0 || unitPrice <= 0) {
-        alert('Lütfen geçerli alan ve birim maliyeti giriniz.');
-        return;
-    }
+    const declaredRaw = document.getElementById('declared').value;
+    const declared = declaredRaw === '' ? 0 : parseFloat(declaredRaw);
+    const review = document.getElementById('reviewType').value;
+    const formErr = document.getElementById('formErr');
+    const fail = msg => { formErr.textContent = msg; formErr.hidden = false; document.getElementById('resultBox').classList.remove('active'); };
+    formErr.hidden = true;
+    if (!(area > 0) || !(unitPrice > 0)) return fail('Alan ve birim maliyet için pozitif bir değer girin.');
+    if (!(declared >= 0)) return fail('Bildirilen matrah negatif olamaz.');
 
-    // 1. Resmi İnşaat Maliyeti
+    // 1. Resmî inşaat maliyeti
     const officialCost = area * unitPrice;
 
-    // 2. İndirimli İşçilik Oranı (%25 yasal eksiltme)
-    const discountRate = baseRate * 0.75; // Örn: %9 -> %6.75
+    // 2. %25 eksiltme yalnız ünitece ön değerlendirmede; 16.05.2026'dan beri hiç bildirim yapılmamış işlerde de yok (Alomaliye 2026 rehberi)
+    const eksiltme = review === 'unite' && declared > 0;
+    const appliedRate = eksiltme ? baseRate * 0.75 : baseRate; // Örn: %9 -> %6,75
 
-    // 3. Bildirilmesi Gereken Toplam İşçilik (Asgari Matrah)
-    const requiredLabor = officialCost * (discountRate / 100);
+    // 3. Bildirilmesi gereken asgari işçilik matrahı
+    const requiredLabor = officialCost * (appliedRate / 100);
 
-    // 4. Fark SPEK (Eksik Bildirim)
-    let diffLabor = requiredLabor - declared;
-    if(diffLabor < 0) diffLabor = 0; // Bildirim fazlaysa ceza çıkmaz
+    // 4. Fark işçilik (eksik bildirim)
+    const diffLabor = Math.max(0, requiredLabor - declared);
 
-    // 5. Ceza Tutarı (Fark Primi - %37.5)
-    const penalty = diffLabor * 0.375;
+    // 5. Fark prim — 2026 oranı %38,75 (config/worksitem_mevzuat_2026.php)
+    const PRIM = {{ (float) config('worksitem_mevzuat_2026.asgari_iscilik_prim', 0.3875) }};
+    const penalty = diffLabor * PRIM;
 
     const money = new Intl.NumberFormat('tr-TR', { maximumFractionDigits: 0 });
+    const pct = v => v.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
     document.getElementById('penaltyPrice').innerText = money.format(penalty) + ' TL';
     document.getElementById('officialCost').innerText = money.format(officialCost) + ' TL';
-    document.getElementById('discountedRate').innerText = '%' + discountRate.toFixed(2);
+    document.getElementById('discountedRate').innerText = '%' + pct(appliedRate);
+    document.getElementById('rateLbl').innerText = eksiltme ? 'Asgari İşçilik Oranı (%25 eksiltmeli)' : 'Asgari İşçilik Oranı (eksiltmesiz)';
     document.getElementById('requiredLabor').innerText = money.format(requiredLabor) + ' TL';
     document.getElementById('diffLabor').innerText = money.format(diffLabor) + ' TL';
+
+    let note = eksiltme
+        ? 'Ünitece ön değerlendirmede asgari işçilik oranına %25 eksiltme uygulanmıştır. '
+        : (review === 'unite'
+            ? 'Hiç işçilik bildirilmemiş işlerde (16.05.2026\'dan beri) %25 eksiltme uygulanmaz; oran eksiltmesiz alınmıştır. '
+            : 'Müfettiş, SMMM veya YMM incelemesinde %25 eksiltme uygulanmaz. ');
+    note += 'Fark işçilik üzerinden %38,75 prim hesaplanmıştır; gecikme zammı ve idari para cezası dahil değildir. Kesin tutarı SGK ünitesi belirler.';
+    document.getElementById('lawNote').innerText = note;
 
     document.getElementById('leadCalculatedData').value = `Resmi Maliyet: ${money.format(officialCost)} TL | Gerekli İşçilik: ${money.format(requiredLabor)} TL | Fark SPEK: ${money.format(diffLabor)} TL | Tahmini Prim: ${money.format(penalty)} TL`;
 
@@ -286,6 +322,10 @@ document.getElementById('calculateBtn').addEventListener('click', function() {
     document.getElementById('qualifiedMessage').style.display = 'none';
     
     setTimeout(() => { document.getElementById('resultBox').scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 150);
+});
+
+document.getElementById('yClass').addEventListener('change', function() {
+    document.getElementById('unitPrice').value = this.value;
 });
 
 document.getElementById('btnYes').addEventListener('click', function() {

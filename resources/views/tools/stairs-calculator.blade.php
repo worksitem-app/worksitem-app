@@ -11,6 +11,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root { --bg:#f8fafc; --surface:#ffffff; --border:#e2e8f0; --primary:#101318; --primary-light:#fff8e1; --text-main:#0f172a; --text-muted:#64748b; --green:#059669; --transition:all 0.25s ease;}
+        *,*::before,*::after{box-sizing:border-box}
+        .ws-warn { color:#b91c1c; font-size:13px; font-weight:600; margin-top:10px; }
         body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--text-main); margin:0; padding-bottom:80px; }
         .navbar { display:flex; justify-content:space-between; align-items:center; padding:1rem 5%; background:var(--surface); border-bottom:1px solid var(--border); position:sticky; top:0; z-index:50;}
         .logo-wrapper { display:flex; align-items:center; gap:8px; text-decoration:none; }
@@ -48,20 +50,21 @@
         <div>
             <x-calc.hero title="Merdiven basamak hesaplama" crumb="Merdiven">İdeal basamak genişliğini (2R+T=63) ve mermer kaplama bütçesini planlayın.</x-calc.hero>
             <div class="form-card">
-                <div class="form-group"><label>Kat Yüksekliği (m)</label><input type="number" id="h" class="form-control" value="3.00" step="0.05" oninput="calc()"></div>
+                <div class="form-group"><label>Kat Yüksekliği (m)</label><input type="number" id="h" class="form-control" value="3.00" step="0.05" min="0.5" max="10" oninput="calc()"></div>
                 <div class="grid-2">
-                    <div class="form-group"><label>Hedef Rıht Yüksekliği (cm)</label><input type="number" id="r_tar" class="form-control" value="17" step="0.5" oninput="calc()"></div>
-                    <div class="form-group"><label>Basamak Genişliği (m)</label><input type="number" id="w" class="form-control" value="1.20" step="0.1" oninput="calc()"></div>
+                    <div class="form-group"><label>Hedef Rıht Yüksekliği (cm)</label><input type="number" id="r_tar" class="form-control" value="17" step="0.5" min="12" max="20" oninput="calc()"></div>
+                    <div class="form-group"><label>Basamak Genişliği (m)</label><input type="number" id="w" class="form-control" value="1.20" step="0.1" min="0.5" max="10" oninput="calc()"></div>
                 </div>
             </div>
         </div>
         <div>
             <div class="form-card" style="border-color:var(--primary); position:sticky; top:100px;" data-wc-result>
                 <div class="result-header">MİMARİ ÇIKTI</div>
-                <div class="res-item"><span>Gereken Basamak Sayısı</span> <strong id="r_steps">0 Adet</strong></div>
+                <div class="res-item"><span>Rıht Sayısı (basamak = rıht − 1)</span> <strong id="r_steps">0 Adet</strong></div>
                 <div class="res-item"><span>Tam Rıht Yüksekliği</span> <strong id="r_riht">0 cm</strong></div>
                 <div class="res-item"><span>İdeal Basamak Genişliği (Adım)</span> <strong id="r_tread">0 cm</strong></div>
                 <div class="res-item total"><span>MERMER KAPLAMA MALİYETİ</span> <strong id="r_cost" data-wc-price>0 TL</strong></div>
+                <div class="ws-warn" id="warn" role="alert" hidden></div>
                 
                 <x-tools.lead-cta service="ince-isler" />
             </div>
@@ -87,25 +90,42 @@
         const P_MERDIVEN = @json($pricing['merdiven'] ?? []);
 
         function calc() {
-            let h = (parseFloat(document.getElementById('h').value)||0) * 100; 
-            let r_tar = parseFloat(document.getElementById('r_tar').value)||17; 
-            let w = parseFloat(document.getElementById('w').value)||1.2;
-            
-            let steps = Math.round(h / r_tar);
-            if(steps === 0) steps = 1;
+            const hm = parseFloat(document.getElementById('h').value);
+            const r_tar = parseFloat(document.getElementById('r_tar').value);
+            const w = parseFloat(document.getElementById('w').value);
+            const warn = document.getElementById('warn');
+            const ids = ['r_steps', 'r_riht', 'r_tread', 'r_cost'];
+
+            // v119: negatif/0/boş ya da aralık dışı girdide hesap yapılmaz
+            if (!(hm > 0) || !(w > 0) || !(r_tar > 0) || hm > 20 || w > 20) {
+                ids.forEach(id => document.getElementById(id).innerText = '—');
+                warn.innerText = 'Kat yüksekliği, rıht ve basamak genişliği için pozitif bir değer girin.'; warn.hidden = false;
+                return;
+            }
+            if (r_tar < 12 || r_tar > 20) {
+                ids.forEach(id => document.getElementById(id).innerText = '—');
+                warn.innerText = 'Hedef rıht yüksekliği 12–20 cm arasında olmalı.'; warn.hidden = false;
+                return;
+            }
+            const h = hm * 100;
+            let steps = Math.max(1, Math.round(h / r_tar));
             let actualRiser = h / steps;
-            
-            let tread = 63 - (2 * actualRiser); // Blondel Formülü
+            let tread = 63 - (2 * actualRiser); // Blondel: 2R + T = 63
             
             let price = P_MERDIVEN['beyaz_mermer_m'] || 1573.25;
             let cost = steps * w * price;
+            const f2 = (x) => x.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
             document.getElementById('r_steps').innerText = steps + ' Adet'; 
-            document.getElementById('r_riht').innerText = actualRiser.toFixed(2) + ' cm'; 
-            document.getElementById('r_tread').innerText = tread.toFixed(2) + ' cm'; 
+            document.getElementById('r_riht').innerText = f2(actualRiser) + ' cm'; 
+            document.getElementById('r_tread').innerText = f2(tread) + ' cm'; 
             document.getElementById('r_cost').innerText = new Intl.NumberFormat('tr-TR').format(Math.round(cost)) + ' TL';
 
-            document.querySelector('.cta-btn').setAttribute('href', `/maliyet-hesapla?service=ince-isler&area=${steps*w}`);
+            // Planlı Alanlar İmar Yönetmeliği 31. madde: konut ortak merdiveninde rıht ≤ 18 cm, basamak ≥ 27 cm
+            const notes = [];
+            if (actualRiser > 18 || tread < 27) notes.push('İmar Yönetmeliği (konut ortak merdiveni): rıht en çok 18 cm, basamak en az 27 cm olmalı.');
+            warn.innerText = notes.join(' ');
+            warn.hidden = notes.length === 0;
         } document.addEventListener('DOMContentLoaded', calc);
     </script>
 <x-calc.kit />

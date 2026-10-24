@@ -62,7 +62,7 @@
             let bill = parseFloat(document.getElementById('bill').value)||0;
             let sunHours = parseFloat(document.getElementById('sun').value);
             
-            let kwhPrice = P_ENERJI['elektrik_kwh_fiyati'] || 2.25;
+            let kwhPrice = P_ENERJI['elektrik_kwh_fiyati'] || 3.24;
             let kwCost = P_ENERJI['ges_kw_maliyeti'] || 25000;
 
             let monthlyKwh = bill / kwhPrice;
