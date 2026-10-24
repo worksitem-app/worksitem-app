@@ -11,7 +11,7 @@
 <meta property="og:locale" content="tr_TR">
 <meta property="og:site_name" content="WORKSİTEM">
 <meta property="og:title" content="İnşaat ve Tadilat Maliyeti Hesaplama 2026 – Ücretsiz | WORKSİTEM">
-<meta property="og:description" content="Projenizi planlayın: m² ile yaklaşık bütçe@if (\App\Support\Tools::aiFileOn()), dosya ile AI ön keşif@endif. Kentsel dönüşümde yeni yapı maliyetini kapsam sınırlarıyla inceleyin.">
+<meta property="og:description" content="Projenizi planlayın: m² ile yaklaşık bütçe{{ \App\Support\Tools::aiFileOn() ? ', dosya ile AI ön keşif' : '' }}. Kentsel dönüşümde yeni yapı maliyetini kapsam sınırlarıyla inceleyin.">
 <meta property="og:url" content="https://worksitem.com/">
 <meta property="og:image" content="https://worksitem.com/brand/og-image.png">
 <meta property="og:image:width" content="1200">
@@ -185,7 +185,7 @@ html[data-theme=dark] body .wks-brand img,html[data-theme=dark] body .wks-foot-l
 {"@@context":"https://schema.org","@@type":"ItemList","name":"WORKSİTEM öne çıkan inşaat araçları","itemListElement":[{"@@type":"ListItem","position":1,"name":"İnşaat maliyeti hesaplama","url":"https://worksitem.com/maliyet-hesapla"},{"@@type":"ListItem","position":2,"name":"AI ön keşif ve ön fiyatlandırma","url":"https://worksitem.com/araclar/otomatik-kesif-fiyatlandirma"},{"@@type":"ListItem","position":3,"name":"Dijital metraj","url":"https://worksitem.com/araclar/dijital-metraj"},{"@@type":"ListItem","position":4,"name":"Beton hesaplama","url":"https://worksitem.com/araclar/beton-hesaplayici"}]}
 </script>
 <script type="application/ld+json">
-{"@@context":"https://schema.org","@@type":"WebPage","@@id":"https://worksitem.com/#webpage","url":"https://worksitem.com/","name":"İnşaat ve Tadilat Maliyeti Hesaplama 2026 – Ücretsiz | WORKSİTEM","inLanguage":"tr-TR","isPartOf":{"@@id":"https://worksitem.com/#website"},"description":"m² ile yaklaşık inşaat ve tadilat bütçesi, dosya ile AI ön keşif ve kentsel dönüşümde yeni yapı maliyeti ön değerlendirmesi."}
+{"@@context":"https://schema.org","@@type":"WebPage","@@id":"https://worksitem.com/#webpage","url":"https://worksitem.com/","name":"İnşaat ve Tadilat Maliyeti Hesaplama 2026 – Ücretsiz | WORKSİTEM","inLanguage":"tr-TR","isPartOf":{"@@id":"https://worksitem.com/#website"},"description":"m² ile yaklaşık inşaat ve tadilat bütçesi{{ \App\Support\Tools::aiFileOn() ? ', dosya ile AI ön keşif' : '' }} ve kentsel dönüşümde yeni yapı maliyeti ön değerlendirmesi."}
 </script>
 <script type="application/ld+json">
 {

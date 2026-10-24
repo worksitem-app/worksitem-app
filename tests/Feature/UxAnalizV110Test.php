@@ -69,6 +69,7 @@ class UxAnalizV110Test extends TestCase
 
     public function test_cta_etiketleri_hedefleriyle_eslesir(): void
     {
+        config(['worksitem_pilot.enabled' => true, 'worksitem_pilot.firm_signup' => false]);
         $home = $this->get('/')->assertOk()->getContent();
         $this->assertStringContainsString('href="/#proje-hesaplayici">Ücretsiz hesapla →', $home);
         $this->assertStringContainsString('href="/maliyet-hesapla#calculator">Hesapla, keşif iste →', $home);
