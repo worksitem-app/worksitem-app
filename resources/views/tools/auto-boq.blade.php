@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Auto-BOQ | Keşif Fiyatlandırıcı | Worksitem</title>
+    <title>AI Ön Keşif ve Fiyatlandırma | Worksitem</title>
     <meta name="description" content="Proje dosyanızı (PDF, görsel, Excel) yükleyin; yapay zekâ ön keşif ve metraj çıkarsın, yaklaşık maliyeti hesaplasın.">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
@@ -85,8 +85,8 @@
 
 <div class="container">
     <div style="text-align:center; margin-bottom:30px;">
-        <span class="ai-badge">✦ AI Destekli Keşif Analizi v3.0</span>
-        <h1>Auto-BOQ (Keşif Fiyatlandırıcı)</h1>
+        <span class="ai-badge">✦ Yapay zekâ destekli ön keşif</span>
+        <h1>AI Ön Keşif ve Fiyatlandırma</h1>
         <p class="subtitle">PDF, Excel, JPG dosyanızı veya yazılı metraj listenizi yükleyin. Yapay zeka iş kalemlerini çıkarır, doğrulanmış rayiçlerle fiyatlandırır.</p>
     </div>
 
@@ -120,14 +120,14 @@
                         <option value="konut">Konut Projesi</option>
                         <option value="ticari">Ticari Yapı</option>
                         <option value="altyapi">Altyapı</option>
-                        <option value="renovasyon">Renovasyon</option>
+                        <option value="renovasyon">Tadilat</option>
                     </select>
                 </div>
                 <div>
                     <label>Kalite Sınıfı</label>
                     <select name="quality">
-                        <option value="standart">Standart</option>
                         <option value="ekonomik">Ekonomik</option>
+                        <option value="standart" selected>Standart</option>
                         <option value="lüks">Lüks</option>
                     </select>
                 </div>
@@ -150,7 +150,7 @@
     <div class="card loader-box" id="loaderBox">
         <div class="loader-icon">🚜</div>
         <div class="loader-title" id="loaderTitle">Yapay Zeka Dosyayı Okuyor...</div>
-        <div class="loader-sub" id="loaderSub">Gemini Vision ile iş kalemleri çıkarılıyor.</div>
+        <div class="loader-sub" id="loaderSub">İş kalemleri ve miktarlar çıkarılıyor.</div>
         <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
     </div>
 

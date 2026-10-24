@@ -11,7 +11,7 @@
 <meta property="og:locale" content="tr_TR">
 <meta property="og:site_name" content="WORKSİTEM">
 <meta property="og:title" content="İnşaat ve Tadilat Maliyeti Hesaplama 2026 – Ücretsiz | WORKSİTEM">
-<meta property="og:description" content="Projenizi planlayın: m² ile yaklaşık bütçe, dosya ile AI ön keşif. Kentsel dönüşümde yeni yapı maliyetini kapsam sınırlarıyla inceleyin.">
+<meta property="og:description" content="Projenizi planlayın: m² ile yaklaşık bütçe@if (\App\Support\Tools::aiFileOn()), dosya ile AI ön keşif@endif. Kentsel dönüşümde yeni yapı maliyetini kapsam sınırlarıyla inceleyin.">
 <meta property="og:url" content="https://worksitem.com/">
 <meta property="og:image" content="https://worksitem.com/brand/og-image.png">
 <meta property="og:image:width" content="1200">
@@ -196,7 +196,9 @@ html[data-theme=dark] body .wks-brand img,html[data-theme=dark] body .wks-foot-l
     {"@@type":"Question","name":"İnşaat maliyeti m² üzerinden nasıl hesaplanır?","acceptedAnswer":{"@@type":"Answer","text":"Sıfırdan inşaat hesabında seçtiğiniz yapı alt türü ilgili yapı sınıfına eşlenir; doğrulanmış m² birim fiyatı toplam alanla çarpılarak yaklaşık ön bütçe oluşturulur. Tadilat hesabında ise toplam alan ve seçilen tadilat kapsamı merkezi piyasa m² fiyat modeliyle değerlendirilir. İl ve ilçe bu hızlı hesapta fiyat katsayısı olarak uygulanmaz."}},
     {"@@type":"Question","name":"Kentsel dönüşüm hesabına hangi giderler dahil?","acceptedAnswer":{"@@type":"Answer","text":"Dosyasız kentsel dönüşüm hesabı yalnızca yeni yapı için sıfırdan inşaat yöntemiyle ön bütçe üretir. Yıkım, tahliye, kira, ruhsat ve diğer dönüşüm giderleri ayrıca değerlendirilir. Destek ve hak sahipliği hesabı yapılmaz."}},
     {"@@type":"Question","name":"Kaba inşaat ve anahtar teslim metrekare birim fiyatı farkı nedir?","acceptedAnswer":{"@@type":"Answer","text":"Kaba inşaat ve anahtar teslim m² birim fiyatı aynı kapsamı ifade etmez. Kaba inşaat, projede tanımlanan taşıyıcı sistem ve kaba yapı imalatlarıyla sınırlı olabilir; anahtar teslim kapsam ise sözleşmeye göre elektrik, mekanik, ince işler, kaplamalar ve diğer tamamlayıcı imalatları içerebilir. WORKSİTEM ana sayfa sonucu bu iki kapsam için ayrı ayrı kesin teklif vermez; ekranda belirtilen hesaplama yöntemine göre yaklaşık ön bütçe sunar. Kapsam karşılaştırması için metraj ve teknik şartname birlikte değerlendirilmelidir."}},
+@if (\App\Support\Tools::aiFileOn())
     {"@@type":"Question","name":"Hangi proje dosyalarını yükleyebilirim?","acceptedAnswer":{"@@type":"Answer","text":"En fazla 10 MB boyutunda PDF, CSV, JPG, JPEG veya PNG dosyası yükleyebilirsiniz. Dosyanız yoksa toplam m² üzerinden hesap yapabilirsiniz. Dosya analizi için okunabilir ölçü ve iş kalemi bilgileri gerekir."}},
+@endif
     {"@@type":"Question","name":"Fiyatlandırılamayan işler toplamda yer alır mı?","acceptedAnswer":{"@@type":"Answer","text":"Hayır. Fiyatı veya güvenilir miktarı bulunamayan kalemler ayrı gösterilir ve hesaplanan ara toplama dahil edilmez. Bütün dosya kalemleri fiyatlandırılmış olsa bile dosyada yer almayan proje işleri bu tutara dahil değildir."}},
     {"@@type":"Question","name":"Net teklif almak için ne yapmalıyım?","acceptedAnswer":{"@@type":"Answer","text":"Hesaplama sonucundan sonra proje değerlendirmesi talep edebilirsiniz. İletişim bilgilerinizi ve proje notunuzu paylaşmanızın ardından kapsam ve saha koşulları değerlendirilir. İstanbul'da yerinde keşif bedeli {{ \App\Support\InspectionOffer::feeLabel() }}; keşiften sonra 15 gün içinde sözleşme imzalanırsa bu bedel iş bedelinden düşülür."}}
   ]
@@ -217,14 +219,14 @@ html[data-theme=dark] body .wks-brand img,html[data-theme=dark] body .wks-foot-l
 <div>
 <div class="eyebrow"><span class="dot" aria-hidden="true"></span> İnşaat · Tadilat · Kentsel dönüşüm</div>
 <h1>İnşaat ve tadilat <span>maliyetinizi</span> hesaplayın.</h1>
-<p class="hero-copy">Proje türünüzü, alanınızı ve konumunuzu girin; yaklaşık bütçenizi 2026 fiyatlarıyla ücretsiz görün.@if (config('services.ai_spend_enabled')) Dosyanız varsa yapay zekâ ön keşifle iş kalemlerini inceleyin.@endif Banyo, mutfak, boya gibi işler için {{ \App\Support\Tools::label() }} araç tek yerde.</p>
+<p class="hero-copy">Proje türünüzü, alanınızı ve konumunuzu girin; yaklaşık bütçenizi 2026 fiyatlarıyla ücretsiz görün.@if (\App\Support\Tools::aiFileOn()) Dosyanız varsa yapay zekâ ön keşifle iş kalemlerini inceleyin.@endif Banyo, mutfak, boya gibi işler için {{ \App\Support\Tools::label() }} araç tek yerde.</p>
 <div class="hero-actions">
 <a class="btn btn-primary" href="#proje-hesaplayici" {!! \App\Support\Ab::attr('home_hero_cta') !!}>{{ \App\Support\Ab::text('home_hero_cta') }}</a>
 <a class="btn btn-secondary" href="/araclar">Tüm Hesaplama Araçları</a>
 </div>
 <div class="trust">
 <span><b>✓</b> Dosyasız m² hesabı</span>
-@if (config('services.ai_spend_enabled'))<span><b>✓</b> Dosyayla AI ön keşif</span>@else<span><b>✓</b> Üyelik yok, ücretsiz</span>@endif
+@if (\App\Support\Tools::aiFileOn())<span><b>✓</b> Dosyayla AI ön keşif</span>@else<span><b>✓</b> Üyelik yok, ücretsiz</span>@endif
 <span><b>✓</b> Eksik kalem uyarısı</span>
 <span><b>✓</b> Proje değerlendirme talebi</span>
 </div>
@@ -322,7 +324,7 @@ Seçtiğiniz yapı türü ve toplam alana göre yaklaşık ön bütçe güvenli 
 </div>
 
 <div class="est-two">
-<label class="est-field" for="estCity">İl
+<label class="est-field" for="estCity">İl <small>(keşif bölgesi için; fiyatı değiştirmez)</small>
 <select id="estCity" class="est-input" autocomplete="address-level1" required>
 <option value="">İl seçin</option>
 @foreach(config('turkey.provinces', []) as $province)
@@ -347,10 +349,10 @@ Seçtiğiniz yapı türü ve toplam alana göre yaklaşık ön bütçe güvenli 
 </select>
 </div>
 
-<div class="est-ai-upload" id="estAiUpload">
+<div class="est-ai-upload" id="estAiUpload" @unless(\App\Support\Tools::aiFileOn()) hidden @endunless>
  <div class="est-label">Proje dosyanız var mı? <small>Opsiyonel</small></div>
  <label for="estFile" class="est-upload-box">📄 PDF, JPG, PNG veya CSV yükleyin</label>
- <input id="estFile" class="file-picker" type="file" accept=".pdf,.jpg,.jpeg,.png,.csv" aria-describedby="estFileName">
+ <input id="estFile" class="file-picker" type="file" accept=".pdf,.jpg,.jpeg,.png,.csv" aria-describedby="estFileName" @unless(\App\Support\Tools::aiFileOn()) disabled @endunless>
  <div id="estFileName" class="est-file-name" aria-live="polite">Dosyanız yoksa m² üzerinden ön bütçe oluşturulur. En fazla 10 MB.</div>
  <button type="button" id="estRemoveFile" class="est-remove-file" hidden>Dosyayı kaldır · m² ile hesapla</button>
 </div>
@@ -456,7 +458,7 @@ Seçtiğiniz yapı türü ve toplam alana göre yaklaşık ön bütçe güvenli 
 <section class="method-strip">
 <div class="container"><div class="method-grid">
 <div class="method-item"><small>Dosyasız hesap</small><strong>m² üzerinden yaklaşık bütçe</strong><p>Sıfırdan inşaatta yapı alt türü ve toplam alan; tadilatta ise kapsam ve toplam alan kullanılır. İl ve ilçe proje bağlamı için kaydedilir.</p></div>
-<div class="method-item"><small>Dosyalı analiz</small><strong>İş kalemlerinin ara toplamı</strong><p>PDF, görsel veya CSV içindeki iş kalemleri analiz edilir. Fiyatı ya da miktarı belirlenemeyen işler ayrıca gösterilir.</p></div>
+@if (\App\Support\Tools::aiFileOn())<div class="method-item"><small>Dosyalı analiz</small><strong>İş kalemlerinin ara toplamı</strong><p>PDF, görsel veya CSV içindeki iş kalemleri analiz edilir. Fiyatı ya da miktarı belirlenemeyen işler ayrıca gösterilir.</p></div>@endif
 <div class="method-item"><small>Profesyonel teklif</small><strong>Projeye özel değerlendirme</strong><p>Ön bütçe kesin teklif değildir. Kapsam, malzeme seçimi ve saha koşulları için Kainta İnşaat'tan değerlendirme talep edebilirsiniz.</p></div>
 </div></div>
 </section>
@@ -466,7 +468,7 @@ Seçtiğiniz yapı türü ve toplam alana göre yaklaşık ön bütçe güvenli 
 <div class="section-head"><div class="kicker">Öne çıkan araçlar</div><h2>İnşaat maliyeti ve metraj araçları</h2><p>Proje bütçesi, beton, seramik, alçıpan ve çatı için ihtiyacınıza uygun hesaplayıcıyı seçin.</p></div>
 <div class="tool-grid">
 <a class="tool" href="/maliyet-hesapla?tip=insaat"><div class="tool-icon">₺</div><h3>İnşaat Maliyeti Hesaplama</h3><p>Yapı türü, alan ve proje detaylarına göre yaklaşık yatırım bütçesi oluşturun.</p><span class="go">Hesapla →</span></a>
-<a class="tool" href="/araclar/otomatik-kesif-fiyatlandirma"><div class="tool-icon">✨</div><h3>AI Ön Keşif & Fiyatlandırma</h3><p>PDF, görsel veya proje dosyasından iş kalemi ve metraj ön analizi oluşturun.</p><span class="go">Aracı aç →</span></a>
+@if (\App\Support\Tools::aiFileOn())<a class="tool" href="/araclar/otomatik-kesif-fiyatlandirma"><div class="tool-icon">✨</div><h3>AI Ön Keşif & Fiyatlandırma</h3><p>PDF, görsel veya proje dosyasından iş kalemi ve metraj ön analizi oluşturun.</p><span class="go">Aracı aç →</span></a>@endif
 <a class="tool" href="/araclar/dijital-metraj"><div class="tool-icon">📐</div><h3>Dijital Metraj</h3><p>PDF veya görsel proje üzerinden ölçekli alan ve metraj çalışması yapın.</p><span class="go">Metraj yap →</span></a>
 <a class="tool" href="/araclar/beton-hesaplayici"><div class="tool-icon">🧱</div><h3>Beton Hesaplama</h3><p>Beton hacmi, yaklaşık miktar ve ilgili maliyet hesabını oluşturun.</p><span class="go">Hesapla →</span></a>
 <a class="tool" href="/araclar/seramik-maliyet-hesaplayici"><div class="tool-icon">◫</div><h3>Seramik Maliyeti</h3><p>Alan, fire ve uygulama kapsamına göre seramik metraj ve maliyetini hesaplayın.</p><span class="go">Hesapla →</span></a>
@@ -479,13 +481,13 @@ Seçtiğiniz yapı türü ve toplam alana göre yaklaşık ön bütçe güvenli 
 
 <section class="block" id="fiyatlama">
 <div class="container">
-<div class="section-head"><div class="kicker">Hesaplama yöntemi ve sınırları</div><h2>İnşaat ve Tadilat Ön Bütçesi Nasıl Hesaplanır?</h2><p>WORKSİTEM ana sayfası iki farklı yöntem kullanır: dosyasız m² hesabı ve dosyadan iş kalemi analizi. Sonuçları karşılaştırırken aynı kapsamı temsil edip etmediklerini kontrol edin.</p></div>
+<div class="section-head"><div class="kicker">Hesaplama yöntemi ve sınırları</div><h2>İnşaat ve Tadilat Ön Bütçesi Nasıl Hesaplanır?</h2><p>WORKSİTEM ana sayfası @if (\App\Support\Tools::aiFileOn())iki farklı yöntem kullanır: dosyasız m² hesabı ve dosyadan iş kalemi analizi. Sonuçları karşılaştırırken aynı kapsamı temsil edip etmediklerini kontrol edin.@else şu an dosyasız m² hesabı kullanır; dosyadan iş kalemi analizi yakında açılacak.@endif</p></div>
 <div class="pricing">
 <article class="pricing-card"><div class="num">1</div><h3>Dosyasız m² hesabı</h3><p>Sıfırdan inşaatta seçilen yapı alt türü bir yapı sınıfına eşlenir ve doğrulanmış m² birim fiyatı toplam alanla çarpılarak hesaplanır. Tadilatta toplam alan ve seçilen tadilat kapsamı merkezi piyasa m² fiyat modeliyle hesaplanır. İl ve ilçe bu hızlı hesapta fiyat katsayısı olarak uygulanmaz.</p><div class="source-note">Alanı tüm proje için girin. Kat sayısı toplam alanla yeniden çarpılmaz. Sonuç yaklaşık ön bütçedir; ayrıntılı metraj veya ayrı ayrı fiyatlandırılmış işçilik ve malzeme teklifi değildir.</div></article>
-<article class="pricing-card"><div class="num">2</div><h3>Dosyadan AI ön keşif</h3><p>Dosyadaki iş kalemleri, miktarlar ve eşleşen birim fiyatlarla ara toplam oluşturulur. Fiyatlandırılamayan kalemler ara toplama dahil edilmez. Dosyada bulunmayan işler için otomatik olarak tam proje bütçesi üretilmez.</p><div class="source-note">Şehir ve beyan ettiğiniz toplam alan, bu dosya analizindeki kalem miktarlarını otomatik değiştirmez. Dosyanın okunabilirliği ve kapsamı sonucu etkiler.</div></article>
+@if (\App\Support\Tools::aiFileOn())<article class="pricing-card"><div class="num">2</div><h3>Dosyadan AI ön keşif</h3><p>Dosyadaki iş kalemleri, miktarlar ve eşleşen birim fiyatlarla ara toplam oluşturulur. Fiyatlandırılamayan kalemler ara toplama dahil edilmez. Dosyada bulunmayan işler için otomatik olarak tam proje bütçesi üretilmez.</p><div class="source-note">Şehir ve beyan ettiğiniz toplam alan, bu dosya analizindeki kalem miktarlarını otomatik değiştirmez. Dosyanın okunabilirliği ve kapsamı sonucu etkiler.</div></article>@endif
 </div>
 <div class="source-note data-source-note">
-<strong>Veri kaynağı ve güncellik:</strong> Sıfırdan inşaat hesabında seçilen yapı alt türü bir yapı sınıfına bağlanır. Bu sınıf için merkezi fiyat motorunda onaylı ve aktif piyasa fiyatı varsa taban referans olarak o kayıt; yoksa ÇŞİDB 2026 Yapı Yaklaşık Birim Maliyetleri resmî referansı kullanılır. Kullanıcıya gösterilen ön bütçe bu taban referansın merkezi piyasa, proje ve genel konum katsayılarıyla sunucu tarafında değerlendirilmesiyle oluşturulur; kullanıcının seçtiği il ve ilçe bu sürümde ayrıca fiyat katsayısı üretmez. Tadilat hesabı onaylı piyasa m² fiyatları ve seçilen tadilat kapsamı üzerinden hesaplanır. Dosya analizinde yalnızca eşleşen ve fiyatlandırılabilen iş kalemleri ara toplama dahil edilir. Sonuçlar yaklaşık ön bütçedir; kesin teklif değildir.
+<strong>Veri kaynağı ve güncellik:</strong> Sıfırdan inşaat hesabında seçilen yapı alt türü bir yapı sınıfına bağlanır. Bu sınıf için merkezi fiyat motorunda onaylı ve aktif piyasa fiyatı varsa taban referans olarak o kayıt; yoksa ÇŞİDB 2026 Yapı Yaklaşık Birim Maliyetleri resmî referansı kullanılır. Kullanıcıya gösterilen ön bütçe bu taban referansın piyasa ve proje katsayılarıyla sunucu tarafında hesaplanmasıyla oluşturulur; seçtiğiniz il ve ilçe şu an fiyatı değiştirmez, yalnızca keşif bölgesini belirler. Tadilat hesabı onaylı piyasa m² fiyatları ve seçilen tadilat kapsamı üzerinden hesaplanır. Dosya analizinde yalnızca eşleşen ve fiyatlandırılabilen iş kalemleri ara toplama dahil edilir. Sonuçlar yaklaşık ön bütçedir; kesin teklif değildir.
 </div>
 </div>
 </section>
@@ -495,14 +497,14 @@ Seçtiğiniz yapı türü ve toplam alana göre yaklaşık ön bütçe güvenli 
 <div class="kicker">Kentsel dönüşüm ön değerlendirmesi</div>
 <h2 id="renewalHeading">Kentsel Dönüşüm Yeni Yapı Maliyeti ve Kapsamı</h2>
 <p>Kentsel dönüşüm seçeneği, dosyasız hesapta mevcut sıfırdan inşaat yöntemiyle yeni yapının yaklaşık bütçesini gösterir. Yıkım, tahliye, kira, ruhsat ve diğer dönüşüm giderleri bu tahmine ayrıca eklenmelidir; burada destek veya hak sahipliği hesaplanmaz.</p>
-<p>Dosya yüklerseniz sonuç yalnızca analiz edilen ve fiyatlandırılabilen iş kalemlerinin ara toplamıdır. Dönüşümün tamamı için proje, mevcut yapı ve uygulama kapsamı birlikte değerlendirilmelidir.</p>
+@if (\App\Support\Tools::aiFileOn())<p>Dosya yüklerseniz sonuç yalnızca analiz edilen ve fiyatlandırılabilen iş kalemlerinin ara toplamıdır. Dönüşümün tamamı için proje, mevcut yapı ve uygulama kapsamı birlikte değerlendirilmelidir.</p>@endif
 <a class="btn btn-secondary" href="#proje-hesaplayici" id="chooseRenewal" style="margin-top:18px">Kentsel dönüşüm ön bütçesini incele →</a>
 </div></div>
 </section>
 
 <section class="block" id="nasil-calisir">
 <div class="container"><div class="definition"><div class="definition-grid">
-<div><div class="kicker">WORKSİTEM nedir?</div><h2>İnşaat ve tadilatta bütçe, plan ve teklif tek yerde.</h2><p>WORKSİTEM; ev sahiplerinin, ustaların, firmaların ve mühendislerin maliyet, metraj ve planlama hesaplarını ücretsiz yaptığı bir platformdur. Fiyatlar resmî birim fiyatlar ve piyasa araştırmasıyla her sabah güncellenir. Sonucu beğenen kullanıcı tek formla keşif ve teklif ister.</p></div>
+<div><div class="kicker">WORKSİTEM nedir?</div><h2>İnşaat ve tadilatta bütçe, plan ve teklif tek yerde.</h2><p>WORKSİTEM; ev sahiplerinin, ustaların, firmaların ve mühendislerin maliyet, metraj ve planlama hesaplarını ücretsiz yaptığı bir platformdur. Fiyatlar resmî birim fiyatlar ve piyasa araştırmasıyla güncellenir; her raporda fiyat tarihi yazar. Sonucu beğenen kullanıcı tek formla keşif ve teklif ister.</p></div>
 <div class="definition-points">
 <div class="definition-point"><strong>1. Hesapla</strong><span>Banyo, mutfak, boya, seramik, çatı veya bina: aracı seçin, birkaç soruyu yanıtlayın, sonucu anında görün.</span></div>
 <div class="definition-point"><strong>2. Planla ve raporla</strong><span>2D / 3D planlayıcıda ürünleri yerleştirin; kalem kalem dökümü PDF olarak indirip paylaşın.</span></div>
@@ -518,13 +520,13 @@ Seçtiğiniz yapı türü ve toplam alana göre yaklaşık ön bütçe güvenli 
 <div class="container">
 <div class="section-head"><div class="kicker">Sık sorulan sorular</div><h2>İnşaat Maliyeti Hesaplama Hakkında Sık Sorulan Sorular</h2></div>
 <div class="faq">
-<div class="faq-item"><button class="faq-q" type="button"><span>WORKSİTEM sonucu kesin teklif midir?</span><b>+</b></button><div class="faq-a">Hayır. Sonuçlar yaklaşık maliyet ve karar desteği içindir. Kesin teklif için proje, mahal, metraj, malzeme seçimi, uygulama koşulları ve saha bilgileri ayrıca değerlendirilmelidir.</div></div>
-<div class="faq-item"><button class="faq-q" type="button"><span>İnşaat maliyeti m² üzerinden nasıl hesaplanır?</span><b>+</b></button><div class="faq-a">Sıfırdan inşaat hesabında seçtiğiniz yapı alt türü ilgili yapı sınıfına eşlenir; doğrulanmış m² birim fiyatı toplam alanla çarpılarak yaklaşık ön bütçe oluşturulur. Tadilat hesabında ise toplam alan ve seçilen tadilat kapsamı merkezi piyasa m² fiyat modeliyle değerlendirilir. İl ve ilçe bu hızlı hesapta fiyat katsayısı olarak uygulanmaz.</div></div>
-<div class="faq-item"><button class="faq-q" type="button"><span>Kentsel dönüşüm hesabına hangi giderler dahil?</span><b>+</b></button><div class="faq-a">Dosyasız kentsel dönüşüm hesabı yalnızca yeni yapı için sıfırdan inşaat yöntemiyle ön bütçe üretir. Yıkım, tahliye, kira, ruhsat ve diğer dönüşüm giderleri ayrıca değerlendirilir. Destek ve hak sahipliği hesabı yapılmaz.</div></div>
-<div class="faq-item"><button class="faq-q" type="button"><span>Kaba inşaat ve anahtar teslim metrekare birim fiyatı farkı nedir?</span><b>+</b></button><div class="faq-a">Kaba inşaat ve anahtar teslim m² birim fiyatı aynı kapsamı ifade etmez. Kaba inşaat, projede tanımlanan taşıyıcı sistem ve kaba yapı imalatlarıyla sınırlı olabilir; anahtar teslim kapsam ise sözleşmeye göre elektrik, mekanik, ince işler, kaplamalar ve diğer tamamlayıcı imalatları içerebilir. WORKSİTEM ana sayfa sonucu bu iki kapsam için ayrı ayrı kesin teklif vermez; ekranda belirtilen hesaplama yöntemine göre yaklaşık ön bütçe sunar. Kapsam karşılaştırması için metraj ve teknik şartname birlikte değerlendirilmelidir.</div></div>
-<div class="faq-item"><button class="faq-q" type="button"><span>Hangi proje dosyalarını yükleyebilirim?</span><b>+</b></button><div class="faq-a">En fazla 10 MB boyutunda PDF, CSV, JPG, JPEG veya PNG dosyası yükleyebilirsiniz. Dosyanız yoksa toplam m² üzerinden hesap yapabilirsiniz. Dosya analizi için okunabilir ölçü ve iş kalemi bilgileri gerekir.</div></div>
-<div class="faq-item"><button class="faq-q" type="button"><span>Fiyatlandırılamayan işler toplamda yer alır mı?</span><b>+</b></button><div class="faq-a">Hayır. Fiyatı veya güvenilir miktarı bulunamayan kalemler ayrı gösterilir ve hesaplanan ara toplama dahil edilmez. Bütün dosya kalemleri fiyatlandırılmış olsa bile dosyada yer almayan proje işleri bu tutara dahil değildir.</div></div>
-<div class="faq-item"><button class="faq-q" type="button"><span>Net teklif almak için ne yapmalıyım?</span><b>+</b></button><div class="faq-a">Hesaplama sonucundan sonra proje değerlendirmesi talep edebilirsiniz. İletişim bilgilerinizi ve proje notunuzu paylaşmanızın ardından kapsam ve saha koşulları değerlendirilir. İstanbul'da yerinde keşif bedeli {{ \App\Support\InspectionOffer::feeLabel() }}; keşiften sonra 15 gün içinde sözleşme imzalanırsa bu bedel iş bedelinden düşülür.</div></div>
+<div class="faq-item"><button class="faq-q" type="button" aria-expanded="false"><span>WORKSİTEM sonucu kesin teklif midir?</span><b aria-hidden="true">+</b></button><div class="faq-a">Hayır. Sonuçlar yaklaşık maliyet ve karar desteği içindir. Kesin teklif için proje, mahal, metraj, malzeme seçimi, uygulama koşulları ve saha bilgileri ayrıca değerlendirilmelidir.</div></div>
+<div class="faq-item"><button class="faq-q" type="button" aria-expanded="false"><span>İnşaat maliyeti m² üzerinden nasıl hesaplanır?</span><b aria-hidden="true">+</b></button><div class="faq-a">Sıfırdan inşaat hesabında seçtiğiniz yapı alt türü ilgili yapı sınıfına eşlenir; doğrulanmış m² birim fiyatı toplam alanla çarpılarak yaklaşık ön bütçe oluşturulur. Tadilat hesabında ise toplam alan ve seçilen tadilat kapsamı merkezi piyasa m² fiyat modeliyle değerlendirilir. İl ve ilçe bu hızlı hesapta fiyat katsayısı olarak uygulanmaz.</div></div>
+<div class="faq-item"><button class="faq-q" type="button" aria-expanded="false"><span>Kentsel dönüşüm hesabına hangi giderler dahil?</span><b aria-hidden="true">+</b></button><div class="faq-a">Dosyasız kentsel dönüşüm hesabı yalnızca yeni yapı için sıfırdan inşaat yöntemiyle ön bütçe üretir. Yıkım, tahliye, kira, ruhsat ve diğer dönüşüm giderleri ayrıca değerlendirilir. Destek ve hak sahipliği hesabı yapılmaz.</div></div>
+<div class="faq-item"><button class="faq-q" type="button" aria-expanded="false"><span>Kaba inşaat ve anahtar teslim metrekare birim fiyatı farkı nedir?</span><b aria-hidden="true">+</b></button><div class="faq-a">Kaba inşaat ve anahtar teslim m² birim fiyatı aynı kapsamı ifade etmez. Kaba inşaat, projede tanımlanan taşıyıcı sistem ve kaba yapı imalatlarıyla sınırlı olabilir; anahtar teslim kapsam ise sözleşmeye göre elektrik, mekanik, ince işler, kaplamalar ve diğer tamamlayıcı imalatları içerebilir. WORKSİTEM ana sayfa sonucu bu iki kapsam için ayrı ayrı kesin teklif vermez; ekranda belirtilen hesaplama yöntemine göre yaklaşık ön bütçe sunar. Kapsam karşılaştırması için metraj ve teknik şartname birlikte değerlendirilmelidir.</div></div>
+@if (\App\Support\Tools::aiFileOn())<div class="faq-item"><button class="faq-q" type="button" aria-expanded="false"><span>Hangi proje dosyalarını yükleyebilirim?</span><b aria-hidden="true">+</b></button><div class="faq-a">En fazla 10 MB boyutunda PDF, CSV, JPG, JPEG veya PNG dosyası yükleyebilirsiniz. Dosyanız yoksa toplam m² üzerinden hesap yapabilirsiniz. Dosya analizi için okunabilir ölçü ve iş kalemi bilgileri gerekir.</div></div>@endif
+<div class="faq-item"><button class="faq-q" type="button" aria-expanded="false"><span>Fiyatlandırılamayan işler toplamda yer alır mı?</span><b aria-hidden="true">+</b></button><div class="faq-a">Hayır. Fiyatı veya güvenilir miktarı bulunamayan kalemler ayrı gösterilir ve hesaplanan ara toplama dahil edilmez. Bütün dosya kalemleri fiyatlandırılmış olsa bile dosyada yer almayan proje işleri bu tutara dahil değildir.</div></div>
+<div class="faq-item"><button class="faq-q" type="button" aria-expanded="false"><span>Net teklif almak için ne yapmalıyım?</span><b aria-hidden="true">+</b></button><div class="faq-a">Hesaplama sonucundan sonra proje değerlendirmesi talep edebilirsiniz. İletişim bilgilerinizi ve proje notunuzu paylaşmanızın ardından kapsam ve saha koşulları değerlendirilir. İstanbul'da yerinde keşif bedeli {{ \App\Support\InspectionOffer::feeLabel() }}; keşiften sonra 15 gün içinde sözleşme imzalanırsa bu bedel iş bedelinden düşülür.</div></div>
 </div>
 </div>
 </section>
@@ -1850,6 +1852,38 @@ restoreFormState();
 updateModeState();
 initTrPhoneField();
 syncLocationFields();
+})();
+</script>
+@include('partials.ws-track')
+{{-- v110 huni ölçümü: başladı → sonuç gördü → teklif formunu açtı → gönderdi; sonuç görmeden ayrılanda son alan --}}
+<script id="ws-v110-funnel">
+(function () {
+    var box = document.getElementById('proje-hesaplayici');
+    if (!box || !window.wsTrack) return;
+    var started = false, result = false, last = '';
+    var mode = function () { var a = box.querySelector('[aria-pressed="true"],.active[data-mode]'); return a ? (a.getAttribute('data-mode') || a.textContent.trim()).slice(0, 40) : ''; };
+    box.addEventListener('focusin', function (e) {
+        var f = e.target.closest('input,select,textarea'); if (!f) return;
+        last = f.id || f.name || '';
+        if (!started) { started = true; wsTrack('estimator_start', { field: last }); }
+    });
+    var res = document.getElementById('estAiResult');
+    if (res && 'MutationObserver' in window) {
+        new MutationObserver(function () {
+            if (!res.hidden && !result) { result = true; wsTrack('estimator_result', { mode: mode() }); }
+        }).observe(res, { attributes: true, attributeFilter: ['hidden'] });
+    }
+    var form = document.getElementById('estLeadForm');
+    if (form && 'MutationObserver' in window) {
+        var opened = false;
+        new MutationObserver(function () {
+            if (!form.hidden && !opened) { opened = true; wsTrack('estimator_lead_open', {}); }
+        }).observe(form, { attributes: true, attributeFilter: ['hidden'] });
+        form.addEventListener('submit', function () { wsTrack('estimator_lead_submit', {}); });
+    }
+    addEventListener('pagehide', function () {
+        if (started && !result) wsTrack('estimator_abandon', { last_field: last, transport_type: 'beacon' });
+    });
 })();
 </script>
 </body>

@@ -48,7 +48,7 @@
   </div>
 
   <div class="poz-actions">
-    <a class="poz-btn poz-btn-primary" href="/maliyet-hesapla?poz={{ urlencode($poz->poz_no) }}">Bu poz ile maliyet hesapla →</a>
+    <a class="poz-btn poz-btn-primary" href="/maliyet-hesapla?poz={{ urlencode($poz->poz_no) }}" data-poz-cta="hesapla">Bu poz ile maliyet hesapla →</a>
     <a class="poz-btn" href="/pozlar">← Tüm pozlara dön</a>
   </div>
 </section>
@@ -150,7 +150,7 @@
         Bu değer WORKSİTEM veritabanındaki poz kaydının referans birim fiyatıdır. Projeye özel piyasa teklifi değildir; miktar, malzeme, saha ve uygulama koşulları ayrıca değerlendirilmelidir.
       </div>
 
-      <a class="poz-btn poz-btn-primary" style="width:100%;margin-top:16px" href="/maliyet-hesapla?poz={{ urlencode($poz->poz_no) }}">
+      <a class="poz-btn poz-btn-primary" style="width:100%;margin-top:16px" href="/maliyet-hesapla?poz={{ urlencode($poz->poz_no) }}" data-poz-cta="hesapla">
         Maliyet hesabına geç →
       </a>
     </section>
@@ -172,7 +172,7 @@
    */
   $showAutoBoqCta =
       request()->getHost() === 'app.worksitem.com'
-      || $autoBoqStatus === 'active';
+      || ($autoBoqStatus === 'active' && \App\Support\Tools::aiFileOn());
 @endphp
 
 <section class="poz-cta">
@@ -189,7 +189,7 @@
   <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end">
     <a
       class="poz-btn poz-btn-primary"
-      href="/maliyet-hesapla?poz={{ urlencode($poz->poz_no) }}"
+      href="/maliyet-hesapla?poz={{ urlencode($poz->poz_no) }}" data-poz-cta="hesapla"
     >
       Maliyet hesapla →
     </a>
@@ -244,5 +244,13 @@
     </details>
   @endif
 </section>
+
+@include('partials.ws-track')
+<script>
+document.addEventListener('click', function (e) {
+  var a = e.target.closest('[data-poz-cta]'); if (!a || !window.wsTrack) return;
+  wsTrack('poz_cta_click', { poz: @json($poz->poz_no), cta: a.getAttribute('data-poz-cta') });
+});
+</script>
 
 @endsection

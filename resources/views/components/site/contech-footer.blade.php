@@ -727,7 +727,7 @@ html[data-theme="dark"] .wks-footer{
                 <li>2026 fiyat verileri</li>
                 <li>Ön bütçe</li>
                 <li>Teknik hesaplama</li>
-                <li>AI ön keşif</li>
+                @if (\App\Support\Tools::aiFileOn())<li>AI ön keşif</li>@endif
             </ul>
 
             <div class="wks-foot-contact">
@@ -771,9 +771,15 @@ html[data-theme="dark"] .wks-footer{
                     Beton Hesaplayıcı
                 </a>
 
+                @if (\App\Support\Tools::aiFileOn())
                 <a href="/araclar/otomatik-kesif-fiyatlandirma">
                     AI Ön Keşif
                 </a>
+                @else
+                <a href="/maliyet-hesapla">
+                    Tadilat Maliyeti
+                </a>
+                @endif
             </div>
 
         </nav>

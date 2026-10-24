@@ -58,7 +58,7 @@ class PilotTest extends TestCase
         $home = $this->get('/')->assertOk()->getContent();
         $this->assertStringNotContainsString('Bölgemdeki işleri al', $home);
         $this->assertStringNotContainsString('href="/firma-uyeligi"', $home);
-        $this->assertStringContainsString('Yerinde keşif iste', $home);
+        $this->assertStringContainsString('Hesapla, keşif iste', $home);   // v110: etiket hedefle eşleşir
         $this->assertStringContainsString('İstanbul&#039;da keşif ve uygulama', $home);
 
         $tool = $this->get('/araclar/boya-hesaplayici')->assertOk()->getContent();
