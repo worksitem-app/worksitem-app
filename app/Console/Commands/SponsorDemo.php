@@ -52,9 +52,10 @@ class SponsorDemo extends Command
         (clone $q)->delete();
 
         $slots = [];
-        foreach (SponsorPackages::get(SponsorPackages::ALL)['tools'] as $tool => $cats) {
+        $all = SponsorPackages::get(SponsorPackages::ALL);
+        foreach ($all['tools'] as $tool => $cats) {
             foreach ($cats as $cat) {
-                $slots[] = [$tool, $cat, $chem, true];
+                $slots[] = [$tool, $cat, $chem, SponsorPackages::isExclusiveSlot($all, $tool, $cat)];
             }
         }
         if ($tile) {

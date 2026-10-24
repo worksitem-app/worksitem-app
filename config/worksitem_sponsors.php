@@ -488,6 +488,8 @@ return [
         ],
         'boya-cephe' => [
             'label' => 'Boya ve Cephe',
+            // v115: Tam Kategori içinde de paylaşımlı — kalem başına en çok 3 marka, münhasırlık yok (boya markaları da satılabilir)
+            'shared' => true,
             'desc' => 'İç ve dış cephe boyası, dekoratif boya, renklendirme ve mantolama sistemi.',
             'tools' => [
                 'boya-hesaplayici' => ['boya', 'dis_cephe', 'astar', 'hazirlik', 'dekoratif'],

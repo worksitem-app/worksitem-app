@@ -21,7 +21,7 @@ class SponsorPackage extends Command
         {--starts= : Başlangıç (YYYY-AA-GG)}
         {--ends= : Bitiş (YYYY-AA-GG)}
         {--amount= : Anlaşma bedeli, TL KDV hariç (rapor için)}
-        {--exclusive : Münhasır (kategoride tek marka); Tam Kategori paketinde her zaman açık}
+        {--exclusive : Münhasır (kategoride tek marka); Tam Kategori paketinde boya ve cephe dışındaki kalemlerde her zaman açık}
         {--active : Hemen yayına al (yalnız imzalı sözleşmeyle)}
         {--dry-run : Kaydetmeden göster}';
 
@@ -66,9 +66,9 @@ class SponsorPackage extends Command
                     'cta_label' => 'İncele', 'logo_url' => $this->option('logo') ?: null, 'priority' => 10, 'active' => $active,
                     'starts_on' => $this->option('starts') ?: null, 'ends_on' => $this->option('ends') ?: null,
                     'contract_amount' => $this->option('amount') !== null ? (float) $this->option('amount') : null,
-                    'notes' => 'Paket: '.$pkg['label'].($exclusive ? ' '.Sponsor::EXCLUSIVE_MARK : ''),
+                    'notes' => 'Paket: '.$pkg['label'].(SponsorPackages::isExclusiveSlot($pkg, $tool, $cat, (bool) $this->option('exclusive')) ? ' '.Sponsor::EXCLUSIVE_MARK : ''),
                 ];
-                $this->line(sprintf('  %-30s %-22s %s', $tool, $cat, $active ? 'YAYINDA' : 'kapalı'));
+                $this->line(sprintf('  %-30s %-22s %s%s', $tool, $cat, $active ? 'YAYINDA' : 'kapalı', SponsorPackages::isExclusiveSlot($pkg, $tool, $cat, (bool) $this->option('exclusive')) ? ' · tek marka' : ''));
                 if (! $this->option('dry-run')) {
                     Sponsor::query()->updateOrCreate(['brand' => $brand, 'tool_slug' => $tool, 'category' => $cat], $row);
                 }

@@ -115,7 +115,7 @@
         @foreach ($pkgs as $pk => $p)
             @php($price = \App\Services\Sponsors\SponsorPackages::monthly($pk))
             <div class="mk-card" id="paket-{{ $pk }}"><h3>{{ $p['label'] }}@if (! empty($p['addon'])) <small style="font-weight:600;color:var(--muted)">· ek paket</small>@endif</h3><p>{{ $p['desc'] }}</p>
-                @if ($price)<p class="mk-price"><strong>{{ \App\Services\Sponsors\SponsorPackages::tl($price) }} / ay</strong> + KDV · {{ $pm }} ay pilot · {{ count($p['tools']) }} araç · {{ ! empty($p['exclusive']) ? 'kategoride tek marka' : 'kalem başına en çok '.(int) config('worksitem_sponsors.max_cards', 3).' marka' }}</p>@endif
+                @if ($price)<p class="mk-price"><strong>{{ \App\Services\Sponsors\SponsorPackages::tl($price) }} / ay</strong> + KDV · {{ $pm }} ay pilot · {{ count($p['tools']) }} araç · {{ ! empty($p['exclusive']) ? (isset($p['exclusive_slots']) && count($p['exclusive_slots']) < \App\Services\Sponsors\SponsorPackages::slots($p) ? 'yapı kimyasallarında kategoride tek marka' : 'kategoride tek marka') : 'kalem başına en çok '.(int) config('worksitem_sponsors.max_cards', 3).' marka' }}</p>@endif
                 <ul>@foreach ($p['tools'] as $t => $cats)<li>{{ ($toolTitles[$t] ?? '') ?: (config("worksitem_sponsors.tools.$t.label") ?: $t) }}</li>@endforeach</ul>
             </div>
         @endforeach

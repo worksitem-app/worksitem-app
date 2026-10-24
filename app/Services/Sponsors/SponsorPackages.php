@@ -12,19 +12,27 @@ class SponsorPackages
     {
         $out = (array) config('worksitem_sponsors.packages', []);
         $merged = [];
+        $exclusiveSlots = [];
         foreach ($out as $p) {
             if (! empty($p['addon'])) {
                 continue;   // ek paketler Tam Kategori'ye girmez
             }
             foreach ($p['tools'] as $tool => $cats) {
                 $merged[$tool] = array_values(array_unique(array_merge($merged[$tool] ?? [], $cats)));
+                if (empty($p['shared'])) {
+                    foreach ($cats as $c) {
+                        $exclusiveSlots[$tool.'|'.$c] = true;
+                    }
+                }
             }
         }
         $all = [self::ALL => [
             'label' => 'Tam Kategori',
-            'desc' => 'Beş yapı kimyasalı paketinin bütün araç ve kalemleri, kategoride tek marka.',
+            'desc' => 'Beş paketin bütün araç ve kalemleri; yapı kimyasallarında kategoride tek marka, boya ve cephede kalem başına en çok 3 marka.',
             'tools' => $merged,
             'exclusive' => true,
+            // v115: münhasır olan (araç|kategori) çiftleri; 'shared' paketlerin (Boya ve Cephe) kalemleri hariç
+            'exclusive_slots' => array_keys($exclusiveSlots),
         ]];
         // Sıra: beş aile, Tam Kategori, ek paketler
         $families = array_filter($out, fn ($p) => empty($p['addon']));
@@ -42,6 +50,22 @@ class SponsorPackages
     public static function families(): array
     {
         return array_filter(self::all(), fn ($p, $k) => $k !== self::ALL && empty($p['addon']), ARRAY_FILTER_USE_BOTH);
+    }
+
+    /** Bu pakette bu kalem münhasır mı (Tam Kategori'de paylaşımlı aileler hariç; --exclusive ile açılan pakette hepsi) */
+    public static function isExclusiveSlot(array $pkg, string $tool, string $cat, bool $forced = false): bool
+    {
+        if (isset($pkg['exclusive_slots'])) {
+            return in_array($tool.'|'.$cat, $pkg['exclusive_slots'], true);
+        }
+
+        return $forced || ! empty($pkg['exclusive']);
+    }
+
+    /** Münhasır kalem sayısı */
+    public static function exclusiveSlots(array $pkg): int
+    {
+        return isset($pkg['exclusive_slots']) ? count($pkg['exclusive_slots']) : (! empty($pkg['exclusive']) ? self::slots($pkg) : 0);
     }
 
     /** Paketteki (araç, kategori) çifti sayısı */

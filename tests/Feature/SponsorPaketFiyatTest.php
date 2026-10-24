@@ -44,7 +44,7 @@ class SponsorPaketFiyatTest extends TestCase
         $this->assertSame('Diger Marka', $line['yapistirici']['brand']);
 
         $this->artisan('sponsors:package', ['package' => 'tam-kategori', '--brand' => 'Kurucu Marka', '--url' => 'https://example.com', '--active' => true])->assertSuccessful();
-        $this->assertSame(SponsorPackages::slots(SponsorPackages::get('tam-kategori')), Sponsor::where('notes', 'like', '%'.Sponsor::EXCLUSIVE_MARK.'%')->count());
+        $this->assertSame(SponsorPackages::exclusiveSlots(SponsorPackages::get('tam-kategori')), Sponsor::where('notes', 'like', '%'.Sponsor::EXCLUSIVE_MARK.'%')->count());
 
         // Diğer marka daha öncelikli olsa bile münhasır kategoride görünmez
         Sponsor::where('brand', 'Diger Marka')->update(['priority' => 1]);
@@ -55,11 +55,29 @@ class SponsorPaketFiyatTest extends TestCase
         $this->assertStringNotContainsString('Diger Marka', $html);
     }
 
+    public function test_tam_kategoride_boya_paylasimli_diger_kalemler_tek_marka(): void
+    {
+        $tam = SponsorPackages::get('tam-kategori');
+        $this->assertTrue(SponsorPackages::isExclusiveSlot($tam, 'seramik-maliyet-hesaplayici', 'yapistirici'));
+        $this->assertTrue(SponsorPackages::isExclusiveSlot($tam, 'poz-sayfalari', 'yalitim_bitum'));
+        $this->assertFalse(SponsorPackages::isExclusiveSlot($tam, 'boya-hesaplayici', 'boya'));
+        $this->assertFalse(SponsorPackages::isExclusiveSlot($tam, 'poz-sayfalari', 'boya_ic'));
+        $this->assertLessThan(SponsorPackages::slots($tam), SponsorPackages::exclusiveSlots($tam));
+
+        $this->artisan('sponsors:package', ['package' => 'tam-kategori', '--brand' => 'Kurucu Marka', '--url' => 'https://example.com', '--active' => true])->assertSuccessful();
+        $this->artisan('sponsors:package', ['package' => 'boya-cephe', '--brand' => 'Boya Marka', '--url' => 'https://example.org', '--active' => true])->assertSuccessful();
+        $boya = SponsorLines::for('boya-hesaplayici', ['boya'], []);
+        $this->assertNotNull($boya['boya'] ?? null);
+        $brands = Sponsor::query()->live()->where('tool_slug', 'boya-hesaplayici')->where('category', 'boya')->get();
+        $this->assertSame(['Boya Marka', 'Kurucu Marka'], Sponsor::applyExclusive($brands)->pluck('brand')->sort()->values()->all());
+        $this->assertSame(0, Sponsor::where('brand', 'Kurucu Marka')->where('tool_slug', 'boya-hesaplayici')->where('notes', 'like', '%'.Sponsor::EXCLUSIVE_MARK.'%')->count());
+    }
+
     public function test_markalar_sayfasi_fiyatlari_gosterir(): void
     {
         $this->get('/markalar-icin')->assertOk()
             ->assertSee('Tam Kategori')->assertSee('₺55.000 / ay', false)->assertSee('₺18.000 / ay', false)
-            ->assertSee('Seramik ve Banyo')->assertSee('kategoride tek marka')->assertSee('Kurucu sponsor');
+            ->assertSee('Seramik ve Banyo')->assertSee('yapı kimyasallarında kategoride tek marka')->assertSee('Kurucu sponsor');
     }
 
     public function test_demo_seramik_markasi_ek_pakette(): void
